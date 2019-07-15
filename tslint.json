@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-airbnb",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "quotemark": false,
+    "import-name": false,
+    "max-line-length": false,
+    "trailing-comma": false,
+    "semicolon": false,
+    "no-console": false,
+    "object-literal-sort-keys": false
+  }
+}

@@ -1,0 +1,27 @@
+const { resolve } = require("path");
+
+module.exports = {
+  target: "node",
+  entry: "./src/main.ts",
+  output: {
+    filename: "main.js",
+    path: resolve(__dirname, "../dist"),
+    libraryTarget: "commonjs2",
+    devtoolModuleFilenameTemplate: "file:///[absolute-resource-path]"
+  },
+  resolve: {
+    extensions: [".ts", ".js"]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        loader: "ts-loader"
+      }
+    ]
+  },
+  externals: {
+    vscode: "commonjs vscode"
+  }
+};
