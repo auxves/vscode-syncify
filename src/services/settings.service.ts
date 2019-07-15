@@ -7,13 +7,18 @@ export class SettingsService {
   public getSettings(): ISettings {
     const filepath = resolve(state.context.globalStoragePath, "settings.json");
     if (!existsSync(filepath)) {
+      this.setSettings(defaultSettings);
       return defaultSettings;
     }
 
-    return {
-      ...defaultSettings,
-      ...JSON.parse(readFileSync(filepath, "utf-8"))
-    };
+    try {
+      return {
+        ...defaultSettings,
+        ...JSON.parse(readFileSync(filepath, "utf-8"))
+      };
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   public setSettings(settings: ISettings) {

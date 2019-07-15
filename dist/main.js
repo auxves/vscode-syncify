@@ -291,9 +291,15 @@ class SettingsService {
     getSettings() {
         const filepath = path_1.resolve(state_1.state.context.globalStoragePath, "settings.json");
         if (!fs_1.existsSync(filepath)) {
+            this.setSettings(settings_model_1.defaultSettings);
             return settings_model_1.defaultSettings;
         }
-        return Object.assign({}, settings_model_1.defaultSettings, JSON.parse(fs_1.readFileSync(filepath, "utf-8")));
+        try {
+            return Object.assign({}, settings_model_1.defaultSettings, JSON.parse(fs_1.readFileSync(filepath, "utf-8")));
+        }
+        catch (err) {
+            throw new Error(err);
+        }
     }
     setSettings(settings) {
         if (!fs_1.existsSync(state_1.state.context.globalStoragePath)) {

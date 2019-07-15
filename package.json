@@ -1,6 +1,7 @@
 {
   "name": "syncify",
   "displayName": "Syncify",
+  "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
   "version": "0.0.1",
