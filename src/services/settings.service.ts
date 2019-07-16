@@ -43,8 +43,11 @@ export class SettingsService {
 
   public async openSettings() {
     const filepath = resolve(state.context.globalStoragePath, "settings.json");
-    const document = await workspace.openTextDocument(filepath);
-    await window.showTextDocument(document, ViewColumn.One, true);
+    await window.showTextDocument(
+      await workspace.openTextDocument(filepath),
+      ViewColumn.One,
+      true
+    );
   }
 
   public async resetSettings(): Promise<void> {
