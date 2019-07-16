@@ -62,6 +62,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.136",
     "fs-extra": "^8.1.0",
-    "lodash": "^4.17.14"
+    "lodash": "^4.17.14",
+    "simple-git": "^1.121.0"
   }
 }

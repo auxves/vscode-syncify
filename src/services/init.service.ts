@@ -1,11 +1,13 @@
 import { commands } from "vscode";
 import { state } from "../state";
+import { EnvironmentService } from "./environment.service";
 import { FactoryService } from "./factory.service";
 import { FileSystemService } from "./fs.service";
 import { SettingsService } from "./settings.service";
 
 export class InitService {
   public static async init() {
+    state.env = new EnvironmentService();
     state.fs = new FileSystemService();
     state.settings = new SettingsService();
     const settings = await state.settings.getSettings();

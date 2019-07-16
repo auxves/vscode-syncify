@@ -1,23 +1,37 @@
+import { IProfile } from "./profile.model";
 import { SyncMethod } from "./sync-method.model";
 
 export interface ISettings {
   method: SyncMethod;
-  [SyncMethod.Repo]: {
+  repo: {
     url: string;
+    profiles: IProfile[];
+    currentProfile: string;
   };
-  [SyncMethod.File]: {
+  file: {
     path: string;
-    bob: string;
   };
+  ignoredItems: string[];
 }
 
 export const defaultSettings: ISettings = {
   method: SyncMethod.Repo,
-  [SyncMethod.Repo]: {
-    url: null
+  repo: {
+    url: null,
+    profiles: [
+      {
+        branch: "master",
+        name: "main"
+      }
+    ],
+    currentProfile: "main"
   },
-  [SyncMethod.File]: {
-    path: null,
-    bob: null
-  }
+  file: {
+    path: null
+  },
+  ignoredItems: [
+    "/workspaceStorage",
+    "/globalStorage/state.vscdb*",
+    "/globalStorage/arnohovhannisyan.syncify/settings.json"
+  ]
 };
