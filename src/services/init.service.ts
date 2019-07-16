@@ -21,6 +21,10 @@ export class InitService {
       state.env.locations.userFolder
     );
 
+    if (settings.watchSettings) {
+      state.watcher.startWatching();
+    }
+
     this.registerCommands();
   }
 

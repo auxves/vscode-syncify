@@ -75,6 +75,8 @@ export class RepoService implements ISyncService {
   }
 
   public async upload(): Promise<void> {
+    state.watcher.stopWatching();
+
     const configured = await this.isConfigured();
     if (!configured) {
       return;
@@ -95,9 +97,17 @@ export class RepoService implements ISyncService {
     });
 
     window.setStatusBarMessage("Syncify: Uploaded", 2000);
+
+    const settings = await state.settings.getSettings();
+
+    if (settings.watchSettings) {
+      state.watcher.startWatching();
+    }
   }
 
   public async download(): Promise<void> {
+    state.watcher.stopWatching();
+
     const configured = await this.isConfigured();
     if (!configured) {
       return;
@@ -116,6 +126,12 @@ export class RepoService implements ISyncService {
     });
 
     window.setStatusBarMessage("Syncify: Downloaded", 2000);
+
+    const settings = await state.settings.getSettings();
+
+    if (settings.watchSettings) {
+      state.watcher.startWatching();
+    }
   }
 
   public async isConfigured(): Promise<boolean> {

@@ -51,7 +51,14 @@ export class SettingsService {
   }
 
   public async resetSettings(): Promise<void> {
-    this.setSettings(defaultSettings);
+    state.watcher.stopWatching();
+
+    await this.setSettings(defaultSettings);
+
     await state.sync.reset();
+
+    if (defaultSettings.watchSettings) {
+      state.watcher.startWatching();
+    }
   }
 }
