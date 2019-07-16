@@ -1,12 +1,14 @@
 import { commands } from "vscode";
 import { state } from "../state";
 import { FactoryService } from "./factory.service";
+import { FileSystemService } from "./fs.service";
 import { SettingsService } from "./settings.service";
 
 export class InitService {
   public static async init() {
+    state.fs = new FileSystemService();
     state.settings = new SettingsService();
-    const settings = state.settings.getSettings();
+    const settings = await state.settings.getSettings();
     state.sync = FactoryService.generate(settings.method);
     this.registerCommands();
   }
@@ -27,7 +29,11 @@ export class InitService {
       ),
       commands.registerCommand(
         "syncify.reset",
-        state.sync.reset.bind(state.sync)
+        state.settings.resetSettings.bind(state.settings)
+      ),
+      commands.registerCommand(
+        "syncify.openSettings",
+        state.settings.openSettings.bind(state.settings)
       )
     );
   }

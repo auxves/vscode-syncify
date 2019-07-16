@@ -6,7 +6,7 @@
   "license": "MIT",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.36.0"
+    "vscode": "^1.35.0"
   },
   "categories": [
     "Other"
@@ -32,6 +32,10 @@
       {
         "command": "syncify.reset",
         "title": "%cmd(syncify.reset).name%"
+      },
+      {
+        "command": "syncify.openSettings",
+        "title": "%cmd(syncify.openSettings).name%"
       }
     ]
   },
@@ -43,6 +47,7 @@
     "test": "yarn compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
+    "@types/fs-extra": "^8.0.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.12.21",
     "ts-loader": "^6.0.4",
@@ -53,5 +58,10 @@
     "vscode": "^1.1.35",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.6"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.136",
+    "fs-extra": "^8.1.0",
+    "lodash": "^4.17.14"
   }
 }

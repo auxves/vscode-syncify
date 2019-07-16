@@ -2,5 +2,6 @@
   "cmd(syncify.sync).name": "Syncify: Sync",
   "cmd(syncify.upload).name": "Syncify: Upload",
   "cmd(syncify.download).name": "Syncify: Download",
-  "cmd(syncify.reset).name": "Syncify: Reset"
+  "cmd(syncify.reset).name": "Syncify: Reset",
+  "cmd(syncify.openSettings).name": "Syncify: Open Settings"
 }

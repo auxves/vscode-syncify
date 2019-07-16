@@ -1,3 +1,4 @@
 export enum SyncMethod {
-  RepoService = "repoService"
+  Repo = "repo",
+  File = "file"
 }
