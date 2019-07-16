@@ -120,7 +120,13 @@ export class RepoService implements ISyncService {
 
   public async isConfigured(): Promise<boolean> {
     const settings = await state.settings.getSettings();
-    return !!settings.repo.url;
+    return (
+      !!settings.repo.url &&
+      !!settings.repo.currentProfile &&
+      settings.repo.profiles.filter(
+        profile => profile.name === settings.repo.currentProfile
+      ).length === 1
+    );
   }
 
   public async reset(): Promise<void> {
