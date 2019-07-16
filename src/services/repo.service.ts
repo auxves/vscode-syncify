@@ -9,7 +9,7 @@ export class RepoService implements ISyncService {
   private git: SimpleGit;
 
   constructor() {
-    this.git = createSimpleGit(state.env.locations.userFolder);
+    this.git = createSimpleGit(state.env.locations.userFolder).silent(true);
   }
 
   public async init() {
