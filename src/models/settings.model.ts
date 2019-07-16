@@ -12,6 +12,7 @@ export interface ISettings {
     path: string;
   };
   ignoredItems: string[];
+  autoUploadDelay: number;
 }
 
 export const defaultSettings: ISettings = {
@@ -33,5 +34,6 @@ export const defaultSettings: ISettings = {
     "/workspaceStorage",
     "/globalStorage/state.vscdb*",
     "/globalStorage/arnohovhannisyan.syncify/settings.json"
-  ]
+  ],
+  autoUploadDelay: 20
 };

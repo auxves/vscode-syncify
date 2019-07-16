@@ -3,5 +3,6 @@
   "cmd(syncify.upload).name": "Syncify: Upload",
   "cmd(syncify.download).name": "Syncify: Download",
   "cmd(syncify.reset).name": "Syncify: Reset",
-  "cmd(syncify.openSettings).name": "Syncify: Open Settings"
+  "cmd(syncify.openSettings).name": "Syncify: Open Settings",
+  "info(upload).initiating": "Syncify: Uploading in {0} seconds"
 }

@@ -43,8 +43,10 @@
     "vscode:prepublish": "webpack --config .webpack/production.js",
     "compile": "webpack --config .webpack/development.js",
     "watch": "webpack --config .webpack/development.js --watch",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "yarn compile && node ./node_modules/vscode/bin/test"
+    "postinstall": "yarn vscode:types",
+    "postuninstall": "yarn vscode:types",
+    "test": "yarn compile && node ./node_modules/vscode/bin/test",
+    "vscode:types": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
@@ -63,6 +65,7 @@
     "@types/lodash": "^4.14.136",
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.14",
-    "simple-git": "^1.121.0"
+    "simple-git": "^1.121.0",
+    "vscode-chokidar": "^2.1.7"
   }
 }

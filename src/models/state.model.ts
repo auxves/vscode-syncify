@@ -1,7 +1,9 @@
 import { ExtensionContext } from "vscode";
 import { EnvironmentService } from "../services/environment.service";
 import { FileSystemService } from "../services/fs.service";
+import { LocalizationService } from "../services/localization.service";
 import { SettingsService } from "../services/settings.service";
+import { WatcherService } from "../services/watcher.service";
 import { ISyncService } from "./sync.model";
 
 export interface IExtensionState {
@@ -10,4 +12,6 @@ export interface IExtensionState {
   settings?: SettingsService;
   fs?: FileSystemService;
   env?: EnvironmentService;
+  watcher?: WatcherService;
+  localize: (key: string, ...args: string[]) => string;
 }
