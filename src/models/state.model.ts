@@ -15,3 +15,9 @@ export interface IExtensionState {
   watcher?: WatcherService;
   localize: (key: string, ...args: string[]) => string;
 }
+
+export const state: IExtensionState = {
+  localize: LocalizationService.prototype.localize.bind(
+    new LocalizationService()
+  )
+};

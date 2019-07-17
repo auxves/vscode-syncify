@@ -2,7 +2,7 @@ import { merge } from "lodash";
 import { resolve } from "path";
 import { ViewColumn, window, workspace } from "vscode";
 import { defaultSettings, ISettings } from "../models/settings.model";
-import { state } from "../state";
+import { state } from "../models/state.model";
 
 export class SettingsService {
   public async getSettings(): Promise<ISettings> {

@@ -22,6 +22,7 @@ module.exports = {
     ]
   },
   externals: {
-    vscode: "commonjs vscode"
+    vscode: "commonjs vscode",
+    "vscode-fsevents": "commonjs vscode-fsevents"
   }
 };

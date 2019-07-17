@@ -1,5 +1,5 @@
 import { normalize, resolve } from "path";
-import { state } from "../state";
+import { state } from "../models/state.model";
 
 export class EnvironmentService {
   public locations = {

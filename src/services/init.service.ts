@@ -1,5 +1,5 @@
 import { commands } from "vscode";
-import { state } from "../state";
+import { state } from "../models/state.model";
 import { EnvironmentService } from "./environment.service";
 import { FactoryService } from "./factory.service";
 import { FileSystemService } from "./fs.service";

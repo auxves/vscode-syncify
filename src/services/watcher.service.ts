@@ -1,6 +1,6 @@
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
-import { state } from "../state";
+import { state } from "../models/state.model";
 import { UtilityService } from "./utility.service";
 
 export class WatcherService {

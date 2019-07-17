@@ -32,9 +32,9 @@ export const defaultSettings: ISettings = {
     path: null
   },
   ignoredItems: [
-    "/workspaceStorage",
-    "/globalStorage/state.vscdb*",
-    "/globalStorage/arnohovhannisyan.syncify/settings.json"
+    "workspaceStorage",
+    "globalStorage/state.vscdb*",
+    "globalStorage/arnohovhannisyan.syncify/settings.json"
   ],
   autoUploadDelay: 20,
   watchSettings: false

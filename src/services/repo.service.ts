@@ -2,8 +2,8 @@ import { resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { window } from "vscode";
 import { IProfile } from "../models/profile.model";
+import { state } from "../models/state.model";
 import { ISyncService } from "../models/sync.model";
-import { state } from "../state";
 
 export class RepoService implements ISyncService {
   private git: SimpleGit;
