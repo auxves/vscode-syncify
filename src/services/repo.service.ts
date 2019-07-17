@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
-import { window } from "vscode";
+import { commands, extensions, window } from "vscode";
 import { IProfile } from "../models/profile.model";
 import { state } from "../models/state.model";
 import { ISyncService } from "../models/sync.model";
@@ -86,7 +86,22 @@ export class RepoService implements ISyncService {
 
     window.setStatusBarMessage("Syncify: Uploading", 2000);
 
+    const installedExtensions = extensions.all
+      .filter(ext => !ext.packageJSON.isBuiltin)
+      .map(ext => ext.id);
+
+    await state.fs.write(
+      resolve(state.env.locations.userFolder, "extensions.json"),
+      JSON.stringify(installedExtensions, null, 2)
+    );
+
     const profile = await this.getProfile();
+
+    const branches = await this.git.branchLocal();
+
+    if (!branches.all.includes(profile.branch)) {
+      await this.git.checkoutLocalBranch(profile.branch);
+    }
 
     await this.git.add(".");
 
@@ -121,13 +136,63 @@ export class RepoService implements ISyncService {
 
     await this.git.reset("hard");
 
+    const branches = await this.git.branchLocal();
+
+    if (branches.current !== profile.branch) {
+      await this.git.deleteLocalBranch(profile.branch);
+      await this.git.checkoutBranch(profile.branch, `origin/${profile.branch}`);
+    }
+
     await this.git.pull("origin", profile.branch, {
       "--force": null
     });
 
-    window.setStatusBarMessage("Syncify: Downloaded", 2000);
-
     const settings = await state.settings.getSettings();
+
+    try {
+      const extensionsFromFile = JSON.parse(
+        await state.fs.read(
+          resolve(state.env.locations.userFolder, "extensions.json")
+        )
+      );
+
+      const toInstall = state.extensions.getMissingExtensions(
+        extensionsFromFile
+      );
+
+      await Promise.all(
+        toInstall.map(ext => state.extensions.installExtension(ext))
+      );
+
+      if (settings.removeExtensions) {
+        const toDelete = state.extensions.getUnneededExtensions(
+          extensionsFromFile
+        );
+
+        const needToReload = toDelete.some(
+          ext => extensions.getExtension(ext).isActive
+        );
+
+        await Promise.all(
+          toDelete.map(ext => state.extensions.uninstallExtension(ext))
+        );
+
+        if (needToReload) {
+          const yes = state.localize("btn(yes)");
+          const result = await window.showInformationMessage(
+            state.localize("info(download).needToReload"),
+            yes
+          );
+          if (result === yes) {
+            commands.executeCommand("workbench.action.reloadWindow");
+          }
+        }
+      }
+    } catch (err) {
+      throw err;
+    }
+
+    window.setStatusBarMessage("Syncify: Downloaded", 2000);
 
     if (settings.watchSettings) {
       state.watcher.startWatching();

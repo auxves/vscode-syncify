@@ -14,6 +14,7 @@ export interface ISettings {
   ignoredItems: string[];
   autoUploadDelay: number;
   watchSettings: boolean;
+  removeExtensions: boolean;
 }
 
 export const defaultSettings: ISettings = {
@@ -37,5 +38,6 @@ export const defaultSettings: ISettings = {
     "globalStorage/arnohovhannisyan.syncify/settings.json"
   ],
   autoUploadDelay: 20,
-  watchSettings: false
+  watchSettings: false,
+  removeExtensions: true
 };

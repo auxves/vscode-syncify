@@ -4,5 +4,9 @@
   "cmd(syncify.download).name": "Syncify: Download",
   "cmd(syncify.reset).name": "Syncify: Reset",
   "cmd(syncify.openSettings).name": "Syncify: Open Settings",
-  "info(upload).initiating": "Syncify: Uploading in {0} seconds"
+  "info(upload).initiating": "Syncify: Uploading in {0} seconds",
+  "info(download).needToReload": "Syncify: Would you like to reload to finish the procedure?",
+  "btn(yes)": "Yes",
+  "btn(no)": "No",
+  "btn(ok)": "OK"
 }

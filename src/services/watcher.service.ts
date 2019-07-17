@@ -10,7 +10,6 @@ export class WatcherService {
   });
 
   constructor(private ignoredItems: string[], private userFolder: string) {
-    this.ignoredItems = this.ignoredItems.map(item => `**/${item}`);
     extensions.onDidChange(async () => {
       if (this.watching && window.state.focused) {
         await this.upload();

@@ -1,6 +1,7 @@
 import { commands } from "vscode";
 import { state } from "../models/state.model";
 import { EnvironmentService } from "./environment.service";
+import { ExtensionService } from "./extension.service";
 import { FactoryService } from "./factory.service";
 import { FileSystemService } from "./fs.service";
 import { SettingsService } from "./settings.service";
@@ -17,9 +18,11 @@ export class InitService {
     state.sync = FactoryService.generate(settings.method);
 
     state.watcher = new WatcherService(
-      settings.ignoredItems,
+      settings.ignoredItems.map(item => `**/${item}`),
       state.env.locations.userFolder
     );
+
+    state.extensions = new ExtensionService();
 
     if (settings.watchSettings) {
       state.watcher.startWatching();
