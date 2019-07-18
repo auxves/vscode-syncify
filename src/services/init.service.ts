@@ -6,6 +6,7 @@ import { FactoryService } from "./factory.service";
 import { FileSystemService } from "./fs.service";
 import { SettingsService } from "./settings.service";
 import { WatcherService } from "./watcher.service";
+import { WebviewService } from "./webview.service";
 
 export class InitService {
   public static async init() {
@@ -23,6 +24,7 @@ export class InitService {
     );
 
     state.extensions = new ExtensionService();
+    state.webview = new WebviewService();
 
     if (settings.watchSettings) {
       state.watcher.startWatching();

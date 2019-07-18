@@ -1,6 +1,9 @@
 const { resolve } = require("path");
 
 module.exports = {
+  stats: {
+    warningsFilter: /Critical dependency: the request of a dependency is an expression/
+  },
   target: "node",
   entry: "./src/main.ts",
   output: {

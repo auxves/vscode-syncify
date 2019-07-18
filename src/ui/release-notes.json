@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "details": "Pragma Support",
+      "type": "NEW",
+      "color": "success",
+      "author": "arnohovhannisyan",
+      "pullRequest": "2"
+    }
+  ]
+}
