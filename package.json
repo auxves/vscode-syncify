@@ -8,8 +8,24 @@
   "engines": {
     "vscode": "^1.35.0"
   },
+  "homepage": "https://github.com/arnohovhannisyan/Syncify",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arnohovhannisyan/Syncify"
+  },
+  "bugs": {
+    "url": "https://github.com/arnohovhannisyan/Syncify/issues",
+    "email": "arnohovhannisyan0@gmail.com"
+  },
+  "extensionKind": "ui",
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "sync",
+    "vscode-sync",
+    "settings-sync",
+    "syncify"
   ],
   "activationEvents": [
     "*"
@@ -45,6 +61,7 @@
     "watch": "webpack --config .webpack/development.js --watch",
     "postinstall": "yarn vscode:types",
     "postuninstall": "yarn vscode:types",
+    "lint": "tslint -c ./tslint.json -p .",
     "test": "yarn compile && node ./node_modules/vscode/bin/test",
     "vscode:types": "node ./node_modules/vscode/bin/install"
   },
