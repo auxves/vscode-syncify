@@ -3,3 +3,4 @@ node_modules
 *.vsix
 scripts/start.sh
 .vscode-test
+.vsce
