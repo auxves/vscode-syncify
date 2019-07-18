@@ -66,8 +66,6 @@ export class RepoService implements ISyncService {
       return;
     }
 
-    window.setStatusBarMessage(state.localize("info(sync).syncing"));
-
     await this.init();
 
     await this.copyFilesToRepo();
