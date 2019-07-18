@@ -1,9 +1,11 @@
-import { relative, resolve } from "path";
+import { basename, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, window } from "vscode";
 import { IProfile } from "../models/profile.model";
+import { ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
 import { ISyncService } from "../models/sync.model";
+import { PragmaService } from "./pragma.service";
 
 export class RepoService implements ISyncService {
   private git: SimpleGit;
@@ -63,7 +65,11 @@ export class RepoService implements ISyncService {
       return;
     }
 
+    window.setStatusBarMessage(state.localize("info(sync).syncing"));
+
     await this.init();
+
+    await this.copyFilesToRepo();
 
     const [uploadDiff, , profile] = await Promise.all([
       this.git.diff(),
@@ -91,7 +97,7 @@ export class RepoService implements ISyncService {
 
     await this.init();
 
-    window.setStatusBarMessage("Syncify: Uploading", 2000);
+    window.setStatusBarMessage(state.localize("info(upload).uploading"), 2000);
 
     const installedExtensions = extensions.all
       .filter(ext => !ext.packageJSON.isBuiltin)
@@ -110,18 +116,7 @@ export class RepoService implements ISyncService {
       await this.git.checkoutLocalBranch(profile.branch);
     }
 
-    const files = await state.fs.listFiles(state.env.locations.userFolder);
-
-    await Promise.all(
-      files.map(async file => {
-        const contents = await state.fs.read(file);
-        const newPath = resolve(
-          state.env.locations.repoFolder,
-          relative(state.env.locations.userFolder, file)
-        );
-        return state.fs.write(newPath, contents);
-      })
-    );
+    await this.copyFilesToRepo();
 
     await this.git.add(".");
 
@@ -131,7 +126,7 @@ export class RepoService implements ISyncService {
       "--force": null
     });
 
-    window.setStatusBarMessage("Syncify: Uploaded", 2000);
+    window.setStatusBarMessage(state.localize("info(upload).uploaded"), 2000);
 
     const settings = await state.settings.getSettings();
 
@@ -150,7 +145,10 @@ export class RepoService implements ISyncService {
 
     await this.init();
 
-    window.setStatusBarMessage("Syncify: Downloading", 2000);
+    window.setStatusBarMessage(
+      state.localize("info(download).downloading"),
+      2000
+    );
 
     const profile = await this.getProfile();
 
@@ -169,21 +167,7 @@ export class RepoService implements ISyncService {
 
     const settings = await state.settings.getSettings();
 
-    const files = await state.fs.listFiles(state.env.locations.repoFolder);
-
-    await Promise.all(
-      files.map(async file => {
-        const contents = await state.fs.read(file);
-        const newPath = resolve(
-          state.env.locations.userFolder,
-          relative(state.env.locations.repoFolder, file)
-        );
-        const currentContents = await state.fs.read(newPath);
-        if (currentContents !== contents) {
-          return state.fs.write(newPath, contents);
-        }
-      })
-    );
+    await this.copyFilesFromRepo(settings);
 
     try {
       const extensionsFromFile = JSON.parse(
@@ -228,7 +212,10 @@ export class RepoService implements ISyncService {
       throw err;
     }
 
-    window.setStatusBarMessage("Syncify: Downloaded", 2000);
+    window.setStatusBarMessage(
+      state.localize("info(download).downloaded"),
+      2000
+    );
 
     if (settings.watchSettings) {
       state.watcher.startWatching();
@@ -247,7 +234,7 @@ export class RepoService implements ISyncService {
   }
 
   public async reset(): Promise<void> {
-    window.showInformationMessage("Syncify: Settings have been reset");
+    window.showInformationMessage(state.localize("info(reset).resetComplete"));
   }
 
   private async getProfile(): Promise<IProfile> {
@@ -257,5 +244,63 @@ export class RepoService implements ISyncService {
     )[0];
 
     return currentProfile ? currentProfile : settings.repo.profiles[0];
+  }
+
+  private async copyFilesToRepo(): Promise<void> {
+    const files = await state.fs.listFiles(state.env.locations.userFolder);
+
+    const filesToPragma = ["settings.json", "keybindings.json"];
+
+    await Promise.all(
+      files.map(async file => {
+        const contents = await state.fs.read(file);
+        const newPath = resolve(
+          state.env.locations.repoFolder,
+          relative(state.env.locations.userFolder, file)
+        );
+
+        if (filesToPragma.includes(basename(file))) {
+          return state.fs.write(
+            newPath,
+            await PragmaService.processBeforeUpload(contents)
+          );
+        }
+
+        return state.fs.write(newPath, contents);
+      })
+    );
+  }
+
+  private async copyFilesFromRepo(settings: ISettings): Promise<void> {
+    const files = await state.fs.listFiles(state.env.locations.repoFolder);
+
+    const filesToPragma = ["settings.json", "keybindings.json"];
+
+    await Promise.all(
+      files.map(async file => {
+        const contents = await state.fs.read(file);
+        const newPath = resolve(
+          state.env.locations.userFolder,
+          relative(state.env.locations.repoFolder, file)
+        );
+        const currentContents = await state.fs.read(newPath);
+
+        if (filesToPragma.includes(basename(file))) {
+          const afterPragma = PragmaService.processBeforeWrite(
+            currentContents,
+            contents,
+            settings.hostname
+          );
+          if (currentContents !== afterPragma) {
+            return state.fs.write(newPath, afterPragma);
+          }
+          return;
+        }
+
+        if (currentContents !== contents) {
+          return state.fs.write(newPath, contents);
+        }
+      })
+    );
   }
 }
