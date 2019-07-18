@@ -1,4 +1,5 @@
 import { normalize, resolve } from "path";
+import { OperatingSystem } from "../models/os.model";
 import { state } from "../models/state.model";
 
 export class EnvironmentService {
@@ -7,8 +8,13 @@ export class EnvironmentService {
     repoFolder: null
   };
 
+  public os: OperatingSystem;
+
   constructor() {
+    this.os = process.platform as OperatingSystem;
+
     const slash = normalize("/");
+
     if (!process.env.VSCODE_PORTABLE) {
       const path = resolve(state.context.globalStoragePath, "../../..").concat(
         slash

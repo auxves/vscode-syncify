@@ -16,6 +16,7 @@ export interface ISettings {
   watchSettings: boolean;
   removeExtensions: boolean;
   syncOnStartup: boolean;
+  hostname: string;
 }
 
 export const defaultSettings: ISettings = {
@@ -42,5 +43,6 @@ export const defaultSettings: ISettings = {
   autoUploadDelay: 20,
   watchSettings: false,
   removeExtensions: true,
-  syncOnStartup: false
+  syncOnStartup: false,
+  hostname: null
 };

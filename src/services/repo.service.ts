@@ -1,9 +1,10 @@
-import { relative, resolve } from "path";
+import { basename, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, window } from "vscode";
 import { IProfile } from "../models/profile.model";
 import { state } from "../models/state.model";
 import { ISyncService } from "../models/sync.model";
+import { PragmaService } from "./pragma.service";
 
 export class RepoService implements ISyncService {
   private git: SimpleGit;
@@ -112,6 +113,8 @@ export class RepoService implements ISyncService {
 
     const files = await state.fs.listFiles(state.env.locations.userFolder);
 
+    const filesToPragma = ["settings.json", "keybindings.json"];
+
     await Promise.all(
       files.map(async file => {
         const contents = await state.fs.read(file);
@@ -119,6 +122,14 @@ export class RepoService implements ISyncService {
           state.env.locations.repoFolder,
           relative(state.env.locations.userFolder, file)
         );
+
+        if (filesToPragma.includes(basename(file))) {
+          return state.fs.write(
+            newPath,
+            await PragmaService.processBeforeUpload(contents)
+          );
+        }
+
         return state.fs.write(newPath, contents);
       })
     );
@@ -171,6 +182,8 @@ export class RepoService implements ISyncService {
 
     const files = await state.fs.listFiles(state.env.locations.repoFolder);
 
+    const filesToPragma = ["settings.json", "keybindings.json"];
+
     await Promise.all(
       files.map(async file => {
         const contents = await state.fs.read(file);
@@ -179,6 +192,19 @@ export class RepoService implements ISyncService {
           relative(state.env.locations.repoFolder, file)
         );
         const currentContents = await state.fs.read(newPath);
+
+        if (filesToPragma.includes(basename(file))) {
+          const afterPragma = PragmaService.processBeforeWrite(
+            currentContents,
+            contents,
+            settings.hostname
+          );
+          if (currentContents !== afterPragma) {
+            return state.fs.write(newPath, afterPragma);
+          }
+          return;
+        }
+
         if (currentContents !== contents) {
           return state.fs.write(newPath, contents);
         }
