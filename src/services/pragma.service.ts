@@ -2,14 +2,6 @@ import { OperatingSystem } from "../models/os.model";
 import { state } from "../models/state.model";
 
 export class PragmaService {
-  /**
-   * Process @sync pragma statements before file is saved.
-   * Comment lines that don't match with the user OS or host value.
-   * @static
-   * @param {string} newContent a valid JSON string
-   * @returns {string}
-   * @memberof PragmaService
-   */
   public static processBeforeWrite(
     localContent: string,
     newContent: string,
@@ -32,19 +24,18 @@ export class PragmaService {
       currentLine = lines[index];
       if (this.pragmaRegex.test(currentLine)) {
         try {
-          // check OS pragma
           osMatch = currentLine.match(/os=(\w+)/);
           if (osMatch !== null) {
             osFromPragma = osMatch[1].toLowerCase();
 
-            if (!this.supportedOperatingSystems.includes(osFromPragma)) {
+            if (!this.supportedOS.includes(osFromPragma)) {
               continue;
             }
             if (this.osTypeFromString(osFromPragma) !== state.env.os) {
               shouldComment = true;
             }
           }
-          // check host pragma
+
           hostMatch = currentLine.match(/host=(\S+)/);
           if (hostMatch !== null) {
             hostFromPragma = hostMatch[1];
@@ -57,7 +48,6 @@ export class PragmaService {
             }
           }
 
-          // check env pragma
           envMatch = currentLine.match(/env=(\S+)/);
           if (envMatch !== null) {
             envFromPragma = envMatch[1];
@@ -74,7 +64,7 @@ export class PragmaService {
             shouldComment
           );
         } catch (e) {
-          console.error("Sync: Error processing pragmas ", e.message);
+          console.error("Syncing: Error processing pragmas ", e.message);
           continue;
         }
       } else if (this.ignoreRegex.test(currentLine)) {
@@ -85,34 +75,24 @@ export class PragmaService {
     }
 
     let result = parsedLines.join("\n");
-    const ignoredBlocks = this.getIgnoredBlocks(localContent); // get the settings that must prevail
+    const ignoredBlocks = this.getIgnoredBlocks(localContent);
     if (ignoredBlocks) {
-      result = result.replace(/{\s*\n/, `{\n${ignoredBlocks}\n\n\n`); // 3 lines breaks to separate from other settings
+      result = result.replace(/{\s*\n/, `{\n${ignoredBlocks}\n\n\n`);
     }
-    // check is a valid JSON
 
     try {
-      // remove comments and trailing comma
       const uncommented = this.removeAllComments(result).replace(
         /,\s*\}/g,
         " }"
       );
       JSON.parse(uncommented);
     } catch (e) {
-      console.error("Sync: Result content is not a valid JSON.", e.message);
+      console.error("Syncing: Result content is not a valid JSON.", e.message);
     }
 
     return result;
   }
 
-  /**
-   * Remove @sync-ignore settings before upload.
-   *
-   * @static
-   * @param {string} fileContent
-   * @returns {string}
-   * @memberof PragmaService
-   */
   public static async processBeforeUpload(
     fileContent: string
   ): Promise<string> {
@@ -135,7 +115,6 @@ export class PragmaService {
       if (this.ignoreRegex.test(currentLine)) {
         index = this.checkNextLines(lines, parsedLines, index, true);
       } else if (this.pragmaRegex.test(currentLine)) {
-        // alert not supported OS
         osMatch = currentLine.match(this.osRegex);
         if (osMatch !== null) {
           osFromPragma = osMatch[1] || osMatch[2] || osMatch[3];
@@ -204,29 +183,27 @@ export class PragmaService {
     return text.replace(/\s*(\/\/.+)|(\/\*.+\*\/)/g, "");
   }
 
-  private static readonly pragmaRegex: RegExp = /\/{2}[\s\t]*\@sync[\s\t]+(?:os=.+[\s\t]*)?(?:host=.+[\s\t]*)?(?:env=.+[\s\t]*)?/;
-  private static readonly ignoreRegex: RegExp = /\/{2}[\s\t]*\@sync-ignore/;
-  private static readonly hostRegex = /(?:host=(.+)os=)|(?:host=(.+)env=)|host=(.+)\n?/;
-  private static readonly osRegex = /(?:os=(.+)host=)|(?:os=(.+)env=)|os=(.+)\n?/;
-  private static readonly envRegex = /(?:env=(.+)host=)|(?:env=(.+)os=)|env=(.+)\n?/;
+  private static pragmaRegex: RegExp = /\/{2}[\s\t]*\@sync[\s\t]+(?:os=.+[\s\t]*)?(?:host=.+[\s\t]*)?(?:env=.+[\s\t]*)?/;
+  private static ignoreRegex: RegExp = /\/{2}[\s\t]*\@sync-ignore/;
+  private static hostRegex = /(?:host=(.+)os=)|(?:host=(.+)env=)|host=(.+)\n?/;
+  private static osRegex = /(?:os=(.+)host=)|(?:os=(.+)env=)|os=(.+)\n?/;
+  private static envRegex = /(?:env=(.+)host=)|(?:env=(.+)os=)|env=(.+)\n?/;
 
-  private static supportedOperatingSystems: string[] = Object.keys(
-    OperatingSystem
-  )
+  private static supportedOS = Object.keys(OperatingSystem)
     .filter(k => !/\d/.test(k))
     .map(k => k.toLowerCase());
 
   private static toggleComments(line: string, shouldComment: boolean) {
     const isCommented = line.trim().startsWith("//");
-    if (shouldComment) {
-      // Replace with RegEx to help match indent size
-      return !isCommented ? line.replace(/^(\s*)/, "$1// ") : line;
-    }
-    // Only remove if line is commented
-    return isCommented ? line.replace(/\/\/\s*/, "") : line;
+    return shouldComment
+      ? !isCommented
+        ? line.replace(/^(\s*)/, "$1// ")
+        : line
+      : isCommented
+      ? line.replace(/\/\/\s*/, "")
+      : line;
   }
 
-  // checks and advance index
   private static checkNextLines(
     lines: string[],
     parsedLines: string[],
@@ -236,12 +213,12 @@ export class PragmaService {
     checkTrailingComma: boolean = false
   ): number {
     let index = currentIndex;
-    let currentLine = lines[++index]; // check the next line for comments
+    let currentLine = lines[++index];
 
     if (checkTrailingComma && !currentLine.trim().endsWith(",")) {
       currentLine = `${currentLine.trimRight()},`;
     }
-    // nothing more to do, just add the line to the parsedLines array
+
     if (!shouldIgnore) {
       parsedLines.push(this.toggleComments(currentLine, shouldComment));
     }
@@ -258,7 +235,7 @@ export class PragmaService {
           (opensBrackets && currentLine.indexOf("]") !== -1)
         ) {
           if (checkTrailingComma && !currentLine.trim().endsWith(",")) {
-            currentLine = `${currentLine.trimRight()},`; // we add a coma to avoid parse error when we paste the ignored settings at the beginning of the file
+            currentLine = `${currentLine.trimRight()},`;
           }
           openedBlock = false;
         }
