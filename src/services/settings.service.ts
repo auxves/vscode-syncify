@@ -65,4 +65,14 @@ export class SettingsService {
       state.watcher.startWatching();
     }
   }
+
+  public async doSettingsExist(): Promise<boolean> {
+    const exists = state.fs.exists(
+      resolve(state.context.globalStoragePath, "settings.json")
+    );
+    if (!exists) {
+      this.setSettings(defaultSettings);
+    }
+    return exists;
+  }
 }
