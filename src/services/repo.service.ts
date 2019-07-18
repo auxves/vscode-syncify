@@ -1,6 +1,6 @@
 import { basename, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
-import { commands, extensions, window } from "vscode";
+import { commands, extensions, ProgressLocation, window } from "vscode";
 import { IProfile } from "../models/profile.model";
 import { ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
@@ -10,16 +10,14 @@ import { PragmaService } from "./pragma.service";
 export class RepoService implements ISyncService {
   private git: SimpleGit;
 
-  constructor() {
-    this.git = createSimpleGit(state.env.locations.repoFolder).silent(true);
-  }
-
   public async init() {
     const folderExists = await state.fs.exists(state.env.locations.repoFolder);
 
     if (!folderExists) {
       await state.fs.mkdir(state.env.locations.repoFolder);
     }
+
+    this.git = createSimpleGit(state.env.locations.repoFolder).silent(true);
 
     const isRepo = await this.git.checkIsRepo();
 
@@ -153,17 +151,23 @@ export class RepoService implements ISyncService {
 
     const profile = await this.getProfile();
 
+    await this.git.add(".");
+    await this.git.commit("Reset");
     await this.git.reset("hard");
 
     const branches = await this.git.branchLocal();
 
     if (branches.current !== profile.branch) {
-      await this.git.deleteLocalBranch(profile.branch);
-      await this.git.checkoutBranch(profile.branch, `origin/${profile.branch}`);
+      if (branches.all.includes(profile.branch)) {
+        await this.git.deleteLocalBranch(profile.branch);
+      }
+      await this.git.fetch();
+      await this.git.checkout(`origin/${profile.branch}`);
     }
 
     await this.git.pull("origin", profile.branch, {
-      "--force": null
+      "--force": null,
+      "--allow-unrelated-histories": null
     });
 
     const settings = await state.settings.getSettings();
@@ -181,8 +185,22 @@ export class RepoService implements ISyncService {
         extensionsFromFile
       );
 
-      await Promise.all(
-        toInstall.map(ext => state.extensions.installExtension(ext))
+      await window.withProgress(
+        {
+          location: ProgressLocation.Notification
+        },
+        async progress => {
+          const increment = 100 / toInstall.length;
+          return Promise.all(
+            toInstall.map(async ext => {
+              await state.extensions.installExtension(ext);
+              progress.report({
+                increment,
+                message: `Syncify: Installed ${ext}`
+              });
+            })
+          );
+        }
       );
 
       if (settings.removeExtensions) {
@@ -190,22 +208,38 @@ export class RepoService implements ISyncService {
           extensionsFromFile
         );
 
-        const needToReload = toDelete.some(
-          ext => extensions.getExtension(ext).isActive
-        );
-
-        await Promise.all(
-          toDelete.map(ext => state.extensions.uninstallExtension(ext))
-        );
-
-        if (needToReload) {
-          const yes = state.localize("btn(yes)");
-          const result = await window.showInformationMessage(
-            state.localize("info(download).needToReload"),
-            yes
+        if (toDelete.length) {
+          const needToReload = toDelete.some(
+            ext => extensions.getExtension(ext).isActive
           );
-          if (result === yes) {
-            commands.executeCommand("workbench.action.reloadWindow");
+
+          await window.withProgress(
+            {
+              location: ProgressLocation.Notification
+            },
+            async progress => {
+              const increment = 100 / toDelete.length;
+              return Promise.all(
+                toDelete.map(async ext => {
+                  await state.extensions.uninstallExtension(ext);
+                  progress.report({
+                    increment,
+                    message: `Syncify: Uninstalled ${ext}`
+                  });
+                })
+              );
+            }
+          );
+
+          if (needToReload) {
+            const yes = state.localize("btn(yes)");
+            const result = await window.showInformationMessage(
+              state.localize("info(download).needToReload"),
+              yes
+            );
+            if (result === yes) {
+              commands.executeCommand("workbench.action.reloadWindow");
+            }
           }
         }
       }
@@ -235,7 +269,7 @@ export class RepoService implements ISyncService {
   }
 
   public async reset(): Promise<void> {
-    window.showInformationMessage(state.localize("info(reset).resetComplete"));
+    // Add repo-specific reset logic
   }
 
   private async getProfile(): Promise<IProfile> {
@@ -288,7 +322,7 @@ export class RepoService implements ISyncService {
 
         if (filesToPragma.includes(basename(file))) {
           const afterPragma = PragmaService.processBeforeWrite(
-            currentContents,
+            currentContents || "{}",
             contents,
             settings.hostname
           );

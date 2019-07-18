@@ -4,6 +4,7 @@ import {
   mkdir,
   move,
   readFile,
+  remove,
   Stats,
   writeFile
 } from "fs-extra";
@@ -27,6 +28,10 @@ export class FileSystemService {
 
   public write(path: string, data: string): Promise<void> {
     return new Promise(res => writeFile(path, data, () => res()));
+  }
+
+  public delete(...paths: string[]): Promise<void[]> {
+    return Promise.all(paths.map(path => remove(path)));
   }
 
   public async listFiles(path: string): Promise<string[]> {

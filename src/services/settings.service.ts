@@ -57,12 +57,14 @@ export class SettingsService {
   public async resetSettings(): Promise<void> {
     state.watcher.stopWatching();
 
-    await this.setSettings(defaultSettings);
+    await state.fs.delete(state.context.globalStoragePath);
 
     await state.sync.reset();
 
     if (defaultSettings.watchSettings) {
       state.watcher.startWatching();
     }
+
+    window.showInformationMessage(state.localize("info(reset).resetComplete"));
   }
 }
