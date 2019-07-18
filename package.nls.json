@@ -26,8 +26,8 @@
   "setting(syncOnStartup).name": "Sync On Startup",
   "setting(hostname).name": "Hostname",
   "setting(hostname).placeholder": "Enter Hostname",
-  "setting(repo.url).name": "Repo URL [repo]",
-  "setting(repo.url).placeholder": "Enter Repo URL for use with the [repo] method",
-  "setting(file.path).name": "File Export Path [file]",
-  "setting(file.path).placeholder": "Enter File Export Path for use with the [file] method"
+  "setting(repo.url).name": "Repo URL",
+  "setting(repo.url).placeholder": "Enter Repo URL",
+  "setting(file.path).name": "File Export Path",
+  "setting(file.path).placeholder": "Enter File Export Path"
 }
