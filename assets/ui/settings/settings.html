@@ -33,6 +33,13 @@
         </h3>
         <form id="settings"></form>
         <p id="saveStatus"></p>
+        <button
+          class="btn btn-dark btn-lg"
+          id="edit"
+          onclick="vscode.postMessage('edit')"
+        >
+          <i class="fa fa-pen"></i>
+        </button>
       </div>
     </div>
     <script defer src="@PWD/ui/shared/vendor/lodash/lodash.min.js"></script>

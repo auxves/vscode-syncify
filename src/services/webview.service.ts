@@ -151,6 +151,10 @@ export class WebviewService {
     );
     settingsPanel.webview.html = content;
     settingsPanel.webview.onDidReceiveMessage(async message => {
+      if(message === "edit") {
+        state.settings.openSettingsFile();
+        return;
+      }
       this.receiveSettingChange(message, settings);
     });
     webview.webview = settingsPanel;
