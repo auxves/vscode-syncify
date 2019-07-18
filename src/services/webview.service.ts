@@ -4,78 +4,93 @@ import { resolve } from "path";
 import { URL } from "url";
 import * as vscode from "vscode";
 import changes from "../../assets/ui/release-notes.json";
-import { UISettingType } from "../models/setting-type.model";
 import { ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
-import { IWebviewSetting } from "../models/webview-setting.model";
-import { IWebview } from "../models/webview.model";
+import { UISettingType } from "../models/ui/setting-type.model";
+import { IWebviewSection } from "../models/ui/webview-section.model";
+import { IWebview } from "../models/ui/webview.model";
 import { GitHubOAuthService } from "./github.oauth.service";
 
 export class WebviewService {
-  private settingsMap: IWebviewSetting[] = [
+  private settingsMap: IWebviewSection[] = [
     {
-      name: state.localize("setting(method).name"),
-      placeholder: state.localize("setting(method).placeholder"),
-      correspondingSetting: "method",
-      type: UISettingType.Select,
-      options: [
+      name: "General",
+      settings: [
         {
-          name: "Repo",
-          value: "repo"
+          name: state.localize("setting(method).name"),
+          placeholder: state.localize("setting(method).placeholder"),
+          correspondingSetting: "method",
+          type: UISettingType.Select,
+          options: [
+            {
+              name: "Repo",
+              value: "repo"
+            },
+            {
+              name: "File",
+              value: "file"
+            }
+          ]
         },
         {
-          name: "File",
-          value: "file"
+          name: state.localize("setting(hostname).name"),
+          placeholder: state.localize("setting(hostname).placeholder"),
+          correspondingSetting: "hostname",
+          type: UISettingType.TextInput
+        },
+        {
+          name: state.localize("setting(ignoredItems).name"),
+          placeholder: state.localize("setting(ignoredItems).placeholder"),
+          correspondingSetting: "ignoredItems",
+          type: UISettingType.TextArea
+        },
+        {
+          name: state.localize("setting(autoUploadDelay).name"),
+          placeholder: state.localize("setting(autoUploadDelay).placeholder"),
+          correspondingSetting: "autoUploadDelay",
+          type: UISettingType.NumberInput
+        },
+        {
+          name: state.localize("setting(watchSettings).name"),
+          placeholder: "",
+          correspondingSetting: "watchSettings",
+          type: UISettingType.Checkbox
+        },
+        {
+          name: state.localize("setting(removeExtensions).name"),
+          placeholder: "",
+          correspondingSetting: "removeExtensions",
+          type: UISettingType.Checkbox
+        },
+        {
+          name: state.localize("setting(syncOnStartup).name"),
+          placeholder: "",
+          correspondingSetting: "syncOnStartup",
+          type: UISettingType.Checkbox
         }
       ]
     },
     {
-      name: state.localize("setting(hostname).name"),
-      placeholder: state.localize("setting(hostname).placeholder"),
-      correspondingSetting: "hostname",
-      type: UISettingType.TextInput
+      name: "Repo Method",
+      settings: [
+        {
+          name: state.localize("setting(repo.url).name"),
+          placeholder: state.localize("setting(repo.url).placeholder"),
+          correspondingSetting: "repo.url",
+          type: UISettingType.TextInput
+        }
+      ]
     },
     {
-      name: state.localize("setting(repo.url).name"),
-      placeholder: state.localize("setting(repo.url).placeholder"),
-      correspondingSetting: "repo.url",
-      type: UISettingType.TextInput
-    },
-    {
-      name: state.localize("setting(file.path).name"),
-      placeholder: state.localize("setting(file.path).placeholder"),
-      correspondingSetting: "file.path",
-      type: UISettingType.TextInput
-    },
-    {
-      name: state.localize("setting(ignoredItems).name"),
-      placeholder: state.localize("setting(ignoredItems).placeholder"),
-      correspondingSetting: "ignoredItems",
-      type: UISettingType.TextArea
-    },
-    {
-      name: state.localize("setting(autoUploadDelay).name"),
-      placeholder: state.localize("setting(autoUploadDelay).placeholder"),
-      correspondingSetting: "autoUploadDelay",
-      type: UISettingType.NumberInput
-    },
-    {
-      name: state.localize("setting(watchSettings).name"),
-      placeholder: "",
-      correspondingSetting: "watchSettings",
-      type: UISettingType.Checkbox
-    },
-    {
-      name: state.localize("setting(removeExtensions).name"),
-      placeholder: "",
-      correspondingSetting: "removeExtensions",
-      type: UISettingType.Checkbox
-    },
-    {
-      name: state.localize("setting(syncOnStartup).name"),
-      placeholder: "",
-      correspondingSetting: "syncOnStartup",
-      type: UISettingType.Checkbox
+      name: "File Method",
+      settings: [
+        {
+          name: state.localize("setting(file.path).name"),
+          placeholder: state.localize("setting(file.path).placeholder"),
+          correspondingSetting: "file.path",
+          type: UISettingType.TextInput
+        }
+      ]
     }
   ];
 
@@ -121,7 +136,9 @@ export class WebviewService {
       return {
         ...view,
         htmlContent: readFileSync(
-          `${state.context.extensionPath}/assets/ui/${view.name}/${view.htmlPath}`,
+          `${state.context.extensionPath}/assets/ui/${view.name}/${
+            view.htmlPath
+          }`,
           "utf-8"
         )
       };
@@ -151,7 +168,7 @@ export class WebviewService {
     );
     settingsPanel.webview.html = content;
     settingsPanel.webview.onDidReceiveMessage(async message => {
-      if(message === "edit") {
+      if (message === "edit") {
         state.settings.openSettingsFile();
         return;
       }

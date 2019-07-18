@@ -1,12 +1,14 @@
 // @ts-nocheck
 
 function appendHTML(parent, html) {
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   div.innerHTML = html;
+  const children = [...div.children];
   while (div.children.length > 0) {
     parent.appendChild(div.children[0]);
   }
   div.remove();
+  return children;
 }
 
 const vscode = acquireVsCodeApi();
@@ -94,44 +96,55 @@ const selectTemplate = `
   </select>
 </div>`;
 
+const sectionTemplate = `<div><h3 class="mx-auto mt-2 text-left">
+@NAME
+</h3><div>`;
+
 const parent = document.querySelector("#settings");
 const saveStatus = document.querySelector("#saveStatus");
 
-map.forEach(settingMap => {
-  let template;
-  switch (settingMap.type) {
-    case "textinput":
-      template = textInputTemplate;
-      break;
-    case "numberinput":
-      template = numberInputTemplate;
-      break;
-    case "checkbox":
-      template = checkboxTemplate;
-      break;
-    case "textarea":
-      template = textareaTemplate;
-      break;
-    case "select":
-      template = selectTemplate;
-      break;
-  }
-  const html = template
-    .replace(new RegExp("@name", "g"), settingMap.name)
-    .replace(new RegExp("@placeholder", "g"), settingMap.placeholder)
-    .replace(
-      new RegExp("@correspondingSetting", "g"),
-      settingMap.correspondingSetting
-    )
-    .replace(
-      new RegExp("@options"),
-      settingMap.options
-        ? settingMap.options.map(
-            option => `<option value="${option.value}">${option.name}</option>`
-          )
-        : ""
-    );
-  appendHTML(parent, html);
+map.forEach(section => {
+  const sectionParent = appendHTML(
+    parent,
+    sectionTemplate.replace(new RegExp("@NAME", "g"), section.name)
+  )[0];
+  section.settings.forEach(settingMap => {
+    let template;
+    switch (settingMap.type) {
+      case "textinput":
+        template = textInputTemplate;
+        break;
+      case "numberinput":
+        template = numberInputTemplate;
+        break;
+      case "checkbox":
+        template = checkboxTemplate;
+        break;
+      case "textarea":
+        template = textareaTemplate;
+        break;
+      case "select":
+        template = selectTemplate;
+        break;
+    }
+    const html = template
+      .replace(new RegExp("@name", "g"), settingMap.name)
+      .replace(new RegExp("@placeholder", "g"), settingMap.placeholder)
+      .replace(
+        new RegExp("@correspondingSetting", "g"),
+        settingMap.correspondingSetting
+      )
+      .replace(
+        new RegExp("@options"),
+        settingMap.options
+          ? settingMap.options.map(
+              option =>
+                `<option value="${option.value}">${option.name}</option>`
+            )
+          : ""
+      );
+    appendHTML(sectionParent, html);
+  });
 });
 
 $(document).ready(function() {
