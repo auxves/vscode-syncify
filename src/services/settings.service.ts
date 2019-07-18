@@ -42,6 +42,10 @@ export class SettingsService {
   }
 
   public async openSettings() {
+    state.webview.openSettingsPage(await this.getSettings());
+  }
+
+  public async openSettingsFile() {
     const filepath = resolve(state.context.globalStoragePath, "settings.json");
     await window.showTextDocument(
       await workspace.openTextDocument(filepath),

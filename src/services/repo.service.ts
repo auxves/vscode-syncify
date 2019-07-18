@@ -62,6 +62,7 @@ export class RepoService implements ISyncService {
   public async sync(): Promise<void> {
     const configured = await this.isConfigured();
     if (!configured) {
+      state.webview.openLandingPage();
       return;
     }
 
@@ -92,6 +93,7 @@ export class RepoService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
+      state.webview.openLandingPage();
       return;
     }
 
@@ -140,6 +142,7 @@ export class RepoService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
+      state.webview.openLandingPage();
       return;
     }
 

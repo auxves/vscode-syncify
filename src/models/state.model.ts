@@ -5,6 +5,7 @@ import { FileSystemService } from "../services/fs.service";
 import { LocalizationService } from "../services/localization.service";
 import { SettingsService } from "../services/settings.service";
 import { WatcherService } from "../services/watcher.service";
+import { WebviewService } from "../services/webview.service";
 import { ISyncService } from "./sync.model";
 
 export interface IExtensionState {
@@ -15,6 +16,7 @@ export interface IExtensionState {
   env?: EnvironmentService;
   watcher?: WatcherService;
   extensions?: ExtensionService;
+  webview?: WebviewService;
   localize: (key: string, ...args: string[]) => string;
 }
 

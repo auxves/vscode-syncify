@@ -1,4 +1,7 @@
 {
+  "btn(yes)": "Yes",
+  "btn(no)": "No",
+  "btn(ok)": "OK",
   "cmd(syncify.sync).name": "Syncify: Sync",
   "cmd(syncify.upload).name": "Syncify: Upload",
   "cmd(syncify.download).name": "Syncify: Download",
@@ -12,7 +15,19 @@
   "info(download).downloaded": "Syncify: Downloaded",
   "info(sync).syncing": "Syncify: Syncing",
   "info(reset).resetComplete": "Syncify: Settings have been reset",
-  "btn(yes)": "Yes",
-  "btn(no)": "No",
-  "btn(ok)": "OK"
+  "setting(method).name": "Sync Method",
+  "setting(method).placeholder": "Select Sync Method",
+  "setting(ignoredItems).name": "Ignored Items",
+  "setting(ignoredItems).placeholder": "Enter ignored items (one every line)",
+  "setting(autoUploadDelay).name": "Auto Upload Delay",
+  "setting(autoUploadDelay).placeholder": "Enter Auto Upload Delay",
+  "setting(watchSettings).name": "Watch Settings",
+  "setting(removeExtensions).name": "Remove Extensions",
+  "setting(syncOnStartup).name": "Sync On Startup",
+  "setting(hostname).name": "Hostname",
+  "setting(hostname).placeholder": "Enter Hostname",
+  "setting(repo.url).name": "Repo URL [repo]",
+  "setting(repo.url).placeholder": "Enter Repo URL for use with the [repo] method",
+  "setting(file.path).name": "File Export Path [file]",
+  "setting(file.path).placeholder": "Enter File Export Path for use with the [file] method"
 }
