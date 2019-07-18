@@ -15,6 +15,7 @@ export interface ISettings {
   autoUploadDelay: number;
   watchSettings: boolean;
   removeExtensions: boolean;
+  syncOnStartup: boolean;
 }
 
 export const defaultSettings: ISettings = {
@@ -39,5 +40,6 @@ export const defaultSettings: ISettings = {
   ],
   autoUploadDelay: 20,
   watchSettings: false,
-  removeExtensions: true
+  removeExtensions: true,
+  syncOnStartup: false
 };

@@ -29,6 +29,10 @@ export class InitService {
     }
 
     this.registerCommands();
+
+    if (settings.syncOnStartup) {
+      await commands.executeCommand("syncify.sync");
+    }
   }
 
   private static registerCommands() {
