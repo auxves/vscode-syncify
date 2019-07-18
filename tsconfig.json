@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "rootDir": "src"
+    "rootDirs": ["src", "assets"]
   },
   "exclude": ["node_modules", ".vscode-test"]
 }

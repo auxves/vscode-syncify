@@ -3,12 +3,12 @@ import { has, set } from "lodash";
 import { resolve } from "path";
 import { URL } from "url";
 import * as vscode from "vscode";
+import changes from "../../assets/ui/release-notes.json";
 import { UISettingType } from "../models/setting-type.model";
 import { ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
 import { IWebviewSetting } from "../models/webview-setting.model";
 import { IWebview } from "../models/webview.model";
-import changes from "../ui/release-notes.json";
 import { GitHubOAuthService } from "./github.oauth.service";
 
 export class WebviewService {
@@ -121,7 +121,7 @@ export class WebviewService {
       return {
         ...view,
         htmlContent: readFileSync(
-          `${state.context.extensionPath}/src/ui/${view.name}/${view.htmlPath}`,
+          `${state.context.extensionPath}/assets/ui/${view.name}/${view.htmlPath}`,
           "utf-8"
         )
       };
@@ -304,7 +304,7 @@ export class WebviewService {
       )
       .replace(
         new RegExp("@PWD", "g"),
-        vscode.Uri.file(resolve(state.context.extensionPath, "src"))
+        vscode.Uri.file(resolve(state.context.extensionPath, "assets"))
           .with({
             scheme: "vscode-resource"
           })
