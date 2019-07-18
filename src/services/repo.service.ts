@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import { relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, window } from "vscode";
 import { IProfile } from "../models/profile.model";
@@ -9,11 +9,18 @@ export class RepoService implements ISyncService {
   private git: SimpleGit;
 
   constructor() {
-    this.git = createSimpleGit(state.env.locations.userFolder).silent(true);
+    this.git = createSimpleGit(state.env.locations.repoFolder).silent(true);
   }
 
   public async init() {
+    const folderExists = await state.fs.exists(state.env.locations.repoFolder);
+
+    if (!folderExists) {
+      await state.fs.mkdir(state.env.locations.repoFolder);
+    }
+
     const isRepo = await this.git.checkIsRepo();
+
     if (!isRepo) {
       this.git.init();
     }
@@ -30,9 +37,9 @@ export class RepoService implements ISyncService {
       this.git.addRemote("origin", settings.repo.url);
     }
 
-    const gitignorePath = resolve(state.env.locations.userFolder, ".gitignore");
-    const exists = await state.fs.exists(gitignorePath);
-    if (!exists) {
+    const gitignorePath = resolve(state.env.locations.repoFolder, ".gitignore");
+    const gitignoreExists = await state.fs.exists(gitignorePath);
+    if (!gitignoreExists) {
       await state.fs.write(gitignorePath, settings.ignoredItems.join("\n"));
     } else {
       const contents = await state.fs.read(gitignorePath);
@@ -91,7 +98,7 @@ export class RepoService implements ISyncService {
       .map(ext => ext.id);
 
     await state.fs.write(
-      resolve(state.env.locations.userFolder, "extensions.json"),
+      resolve(state.env.locations.repoFolder, "extensions.json"),
       JSON.stringify(installedExtensions, null, 2)
     );
 
@@ -102,6 +109,19 @@ export class RepoService implements ISyncService {
     if (!branches.all.includes(profile.branch)) {
       await this.git.checkoutLocalBranch(profile.branch);
     }
+
+    const files = await state.fs.listFiles(state.env.locations.userFolder);
+
+    await Promise.all(
+      files.map(async file => {
+        const contents = await state.fs.read(file);
+        const newPath = resolve(
+          state.env.locations.repoFolder,
+          relative(state.env.locations.userFolder, file)
+        );
+        return state.fs.write(newPath, contents);
+      })
+    );
 
     await this.git.add(".");
 
@@ -149,10 +169,26 @@ export class RepoService implements ISyncService {
 
     const settings = await state.settings.getSettings();
 
+    const files = await state.fs.listFiles(state.env.locations.repoFolder);
+
+    await Promise.all(
+      files.map(async file => {
+        const contents = await state.fs.read(file);
+        const newPath = resolve(
+          state.env.locations.userFolder,
+          relative(state.env.locations.repoFolder, file)
+        );
+        const currentContents = await state.fs.read(newPath);
+        if (currentContents !== contents) {
+          return state.fs.write(newPath, contents);
+        }
+      })
+    );
+
     try {
       const extensionsFromFile = JSON.parse(
         await state.fs.read(
-          resolve(state.env.locations.userFolder, "extensions.json")
+          resolve(state.env.locations.repoFolder, "extensions.json")
         )
       );
 

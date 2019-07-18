@@ -10,7 +10,11 @@ export class WatcherService {
   });
 
   constructor(private ignoredItems: string[], private userFolder: string) {
-    extensions.onDidChange(this.uploadHandler);
+    extensions.onDidChange(() => {
+      if (this.watching && window.state.focused) {
+        this.upload();
+      }
+    });
   }
 
   public async startWatching() {
@@ -18,7 +22,12 @@ export class WatcherService {
 
     this.watching = true;
 
-    this.watcher.addListener("change", this.uploadHandler);
+    this.watcher.addListener("change", (path?: string) => {
+      if (this.watching && window.state.focused) {
+        this.upload();
+        console.log(path);
+      }
+    });
   }
 
   public stopWatching() {
@@ -27,12 +36,6 @@ export class WatcherService {
     }
     this.watching = false;
   }
-
-  private uploadHandler = () => {
-    if (this.watching && window.state.focused) {
-      this.upload();
-    }
-  };
 
   private async upload() {
     const settings = await state.settings.getSettings();

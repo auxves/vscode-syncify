@@ -50,8 +50,10 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
+    "@types/minimatch": "^3.0.3",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.12.21",
+    "@types/recursive-readdir": "^2.2.0",
     "ts-loader": "^6.0.4",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.11.1",
@@ -65,6 +67,8 @@
     "@types/lodash": "^4.14.136",
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.14",
+    "minimatch": "^3.0.4",
+    "recursive-readdir": "^2.2.2",
     "simple-git": "^1.121.0",
     "vscode-chokidar": "^2.1.7"
   }

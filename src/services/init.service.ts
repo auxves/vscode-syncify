@@ -18,7 +18,7 @@ export class InitService {
     state.sync = FactoryService.generate(settings.method);
 
     state.watcher = new WatcherService(
-      settings.ignoredItems.map(item => `**/${item}`),
+      settings.ignoredItems,
       state.env.locations.userFolder
     );
 

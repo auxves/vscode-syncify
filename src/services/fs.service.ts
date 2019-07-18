@@ -1,4 +1,16 @@
-import { exists, mkdir, readFile, writeFile } from "fs-extra";
+import {
+  copy,
+  exists,
+  mkdir,
+  move,
+  readFile,
+  Stats,
+  writeFile
+} from "fs-extra";
+import minimatch from "minimatch";
+import { sep } from "path";
+import recursiveRead from "recursive-readdir";
+import { state } from "../models/state.model";
 
 export class FileSystemService {
   public exists(path: string): Promise<boolean> {
@@ -15,5 +27,15 @@ export class FileSystemService {
 
   public write(path: string, data: string): Promise<void> {
     return new Promise(res => writeFile(path, data, () => res()));
+  }
+
+  public async listFiles(path: string): Promise<string[]> {
+    const settings = await state.settings.getSettings();
+
+    function matcher(file: string) {
+      return settings.ignoredItems.some(item => minimatch(file, item));
+    }
+
+    return recursiveRead(path, [matcher]);
   }
 }
