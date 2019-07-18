@@ -5,7 +5,13 @@
   "cmd(syncify.reset).name": "Syncify: Reset",
   "cmd(syncify.openSettings).name": "Syncify: Open Settings",
   "info(upload).initiating": "Syncify: Uploading in {0} seconds",
+  "info(upload).uploading": "Syncify: Uploading",
+  "info(upload).uploaded": "Syncify: Uploaded",
   "info(download).needToReload": "Syncify: Would you like to reload to finish the procedure?",
+  "info(download).downloading": "Syncify: Downloading",
+  "info(download).downloaded": "Syncify: Downloaded",
+  "info(sync).syncing": "Syncify: Syncing",
+  "info(reset).resetComplete": "Syncify: Settings have been reset",
   "btn(yes)": "Yes",
   "btn(no)": "No",
   "btn(ok)": "OK"
