@@ -58,6 +58,13 @@ export class RepoService implements ISyncService {
   }
 
   public async sync(): Promise<void> {
+    const lockfileExists = await state.lock.check();
+    if (lockfileExists) {
+      return;
+    }
+
+    await state.lock.lock();
+
     const configured = await this.isConfigured();
     if (!configured) {
       state.webview.openLandingPage();
@@ -85,6 +92,13 @@ export class RepoService implements ISyncService {
   }
 
   public async upload(): Promise<void> {
+    const lockfileExists = await state.lock.check();
+    if (lockfileExists) {
+      return;
+    }
+
+    await state.lock.lock();
+
     state.watcher.stopWatching();
 
     const configured = await this.isConfigured();
@@ -128,12 +142,21 @@ export class RepoService implements ISyncService {
 
     const settings = await state.settings.getSettings();
 
+    await state.lock.unlock();
+
     if (settings.watchSettings) {
-      state.watcher.startWatching();
+      await state.watcher.startWatching();
     }
   }
 
   public async download(): Promise<void> {
+    const lockfileExists = await state.lock.check();
+    if (lockfileExists) {
+      return;
+    }
+
+    await state.lock.lock();
+
     state.watcher.stopWatching();
 
     const configured = await this.isConfigured();
@@ -252,8 +275,10 @@ export class RepoService implements ISyncService {
       2000
     );
 
+    await state.lock.unlock();
+
     if (settings.watchSettings) {
-      state.watcher.startWatching();
+      await state.watcher.startWatching();
     }
   }
 

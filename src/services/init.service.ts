@@ -4,6 +4,7 @@ import { EnvironmentService } from "./environment.service";
 import { ExtensionService } from "./extension.service";
 import { FactoryService } from "./factory.service";
 import { FileSystemService } from "./fs.service";
+import { LockService } from "./lock.service";
 import { SettingsService } from "./settings.service";
 import { WatcherService } from "./watcher.service";
 import { WebviewService } from "./webview.service";
@@ -12,6 +13,7 @@ export class InitService {
   public static async init() {
     state.env = new EnvironmentService();
     state.fs = new FileSystemService();
+    state.lock = new LockService();
     state.settings = new SettingsService();
 
     const settings = await state.settings.getSettings();

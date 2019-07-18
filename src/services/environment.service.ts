@@ -5,7 +5,8 @@ import { state } from "../models/state.model";
 export class EnvironmentService {
   public locations = {
     userFolder: null,
-    repoFolder: null
+    repoFolder: null,
+    lockfile: null
   };
 
   public os: OperatingSystem;
@@ -28,6 +29,11 @@ export class EnvironmentService {
     this.locations.repoFolder = resolve(
       state.context.globalStoragePath,
       "repo"
+    );
+
+    this.locations.lockfile = resolve(
+      state.context.globalStoragePath,
+      "lockfile"
     );
   }
 }

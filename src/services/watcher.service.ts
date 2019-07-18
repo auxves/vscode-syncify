@@ -10,8 +10,9 @@ export class WatcherService {
   });
 
   constructor(private ignoredItems: string[], private userFolder: string) {
-    extensions.onDidChange(() => {
-      if (this.watching && window.state.focused) {
+    extensions.onDidChange(async () => {
+      const locked = await state.lock.check();
+      if (this.watching && window.state.focused && !locked) {
         this.upload();
       }
     });
@@ -22,10 +23,10 @@ export class WatcherService {
 
     this.watching = true;
 
-    this.watcher.addListener("change", (path?: string) => {
-      if (this.watching && window.state.focused) {
-        this.upload();
-        console.log(path);
+    this.watcher.addListener("change", async () => {
+      const locked = await state.lock.check();
+      if (this.watching && window.state.focused && !locked) {
+        await this.upload();
       }
     });
   }
@@ -42,9 +43,10 @@ export class WatcherService {
 
     window.setStatusBarMessage("").dispose();
     window.setStatusBarMessage(
-      state
-        .localize("info(upload).initiating")
-        .replace("{0}", settings.autoUploadDelay.toString()),
+      state.localize(
+        "info(upload).initiating",
+        settings.autoUploadDelay.toString()
+      ),
       5000
     );
 
