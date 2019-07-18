@@ -4,6 +4,6 @@ module.exports = {
   ...common,
   mode: "production",
   optimization: {
-    minimize: false
+    minimize: true
   }
 };
