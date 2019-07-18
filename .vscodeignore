@@ -8,3 +8,8 @@ src/**
 **/*.map
 **/*.ts
 node_modules
+.webpack
+scripts
+LICENSE.txt
+CHANGELOG.md
+*.log
