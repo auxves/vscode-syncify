@@ -3,7 +3,8 @@ import { state } from "../models/state.model";
 
 export class EnvironmentService {
   public locations = {
-    userFolder: null
+    userFolder: null,
+    repoFolder: null
   };
 
   constructor() {
@@ -17,5 +18,10 @@ export class EnvironmentService {
       const path = process.env.VSCODE_PORTABLE;
       this.locations.userFolder = resolve(path, "user-data/User").concat(slash);
     }
+
+    this.locations.repoFolder = resolve(
+      state.context.globalStoragePath,
+      "repo"
+    );
   }
 }

@@ -36,7 +36,8 @@ export const defaultSettings: ISettings = {
   ignoredItems: [
     "workspaceStorage",
     "globalStorage/state.vscdb*",
-    "globalStorage/arnohovhannisyan.syncify/settings.json"
+    "globalStorage/arnohovhannisyan.syncify",
+    ".git"
   ],
   autoUploadDelay: 20,
   watchSettings: false,
