@@ -8,3 +8,18 @@ before_script:
 script:
   - yarn lint
   - vsce package
+deploy:
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: "*.vsix"
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+  - provider: script
+    script: vsce publish -p $VS_TOKEN
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
