@@ -76,12 +76,16 @@ export class RepoService implements ISyncService {
 
     if (uploadDiff) {
       await this.upload();
+      return;
     }
 
     const downloadDiff = await this.git.diff([`origin/${profile.branch}`]);
     if (downloadDiff) {
       await this.download();
+      return;
     }
+
+    window.setStatusBarMessage(state.localize("info(sync).nothingToDo"), 2000);
   }
 
   public async upload(): Promise<void> {
@@ -97,6 +101,27 @@ export class RepoService implements ISyncService {
 
     window.setStatusBarMessage(state.localize("info(upload).uploading"), 2000);
 
+    const profile = await this.getProfile();
+
+    const settings = await state.settings.getSettings();
+
+    const branches = await this.git.branchLocal();
+
+    if (!branches.all.includes(profile.branch)) {
+      await this.git.checkoutLocalBranch(profile.branch);
+    }
+
+    await this.git.fetch();
+    const diff = await this.git.diff([`origin/${profile.branch}`]);
+
+    if (diff && !settings.forceUpload) {
+      window.setStatusBarMessage(
+        state.localize("info(upload).remoteChanges"),
+        2000
+      );
+      return;
+    }
+
     const installedExtensions = extensions.all
       .filter(ext => !ext.packageJSON.isBuiltin)
       .map(ext => ext.id);
@@ -106,15 +131,14 @@ export class RepoService implements ISyncService {
       JSON.stringify(installedExtensions, null, 2)
     );
 
-    const profile = await this.getProfile();
-
-    const branches = await this.git.branchLocal();
-
-    if (!branches.all.includes(profile.branch)) {
-      await this.git.checkoutLocalBranch(profile.branch);
-    }
-
     await this.copyFilesToRepo();
+
+    const currentChanges = await this.git.diff();
+
+    if (!currentChanges && !settings.forceUpload) {
+      window.setStatusBarMessage(state.localize("info(upload).upToDate"), 2000);
+      return;
+    }
 
     await this.git.add(".");
 
@@ -125,8 +149,6 @@ export class RepoService implements ISyncService {
     });
 
     window.setStatusBarMessage(state.localize("info(upload).uploaded"), 2000);
-
-    const settings = await state.settings.getSettings();
 
     if (settings.watchSettings) {
       await state.watcher.startWatching();
@@ -149,7 +171,20 @@ export class RepoService implements ISyncService {
       2000
     );
 
+    const settings = await state.settings.getSettings();
+
     const profile = await this.getProfile();
+
+    await this.git.fetch();
+    const diff = await this.git.diff([`origin/${profile.branch}`]);
+
+    if (!diff && !settings.forceDownload) {
+      window.setStatusBarMessage(
+        state.localize("info(download).upToDate"),
+        2000
+      );
+      return;
+    }
 
     await this.git.add(".");
     await this.git.commit("Reset");
@@ -169,8 +204,6 @@ export class RepoService implements ISyncService {
       "--force": null,
       "--allow-unrelated-histories": null
     });
-
-    const settings = await state.settings.getSettings();
 
     await this.copyFilesFromRepo(settings);
 

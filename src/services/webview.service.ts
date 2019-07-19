@@ -68,6 +68,18 @@ export class WebviewService {
           placeholder: "",
           correspondingSetting: "syncOnStartup",
           type: UISettingType.Checkbox
+        },
+        {
+          name: state.localize("setting(forceUpload).name"),
+          placeholder: "",
+          correspondingSetting: "forceUpload",
+          type: UISettingType.Checkbox
+        },
+        {
+          name: state.localize("setting(forceDownload).name"),
+          placeholder: "",
+          correspondingSetting: "forceDownload",
+          type: UISettingType.Checkbox
         }
       ]
     },
