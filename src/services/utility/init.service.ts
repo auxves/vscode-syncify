@@ -1,5 +1,6 @@
 import { commands } from "vscode";
-import { state } from "../models/state.model";
+import { state } from "../../models/state.model";
+import { CustomFileService } from "./custom-file.service";
 import { EnvironmentService } from "./environment.service";
 import { ExtensionService } from "./extension.service";
 import { FactoryService } from "./factory.service";
@@ -70,6 +71,14 @@ export class InitService {
       commands.registerCommand(
         "syncify.otherOptions",
         state.settings.showOtherOptions.bind(state.settings)
+      ),
+      commands.registerCommand(
+        "syncify.importCustomFile",
+        CustomFileService.import
+      ),
+      commands.registerCommand(
+        "syncify.registerCustomFile",
+        CustomFileService.register
       )
     );
   }

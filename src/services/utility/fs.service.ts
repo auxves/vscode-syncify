@@ -1,17 +1,7 @@
-import {
-  copy,
-  exists,
-  mkdir,
-  move,
-  readFile,
-  remove,
-  Stats,
-  writeFile
-} from "fs-extra";
+import { exists, mkdir, readFile, remove, writeFile } from "fs-extra";
 import minimatch from "minimatch";
-import { sep } from "path";
 import recursiveRead from "recursive-readdir";
-import { state } from "../models/state.model";
+import { state } from "../../models/state.model";
 
 export class FileSystemService {
   public exists(path: string): Promise<boolean> {

@@ -2,7 +2,7 @@ import express from "express";
 import { Server } from "http";
 import fetch from "node-fetch";
 import { URL, URLSearchParams } from "url";
-import { state } from "../models/state.model";
+import { state } from "../../models/state.model";
 import { LoggerService } from "./logger.service";
 
 export class GitHubOAuthService {
