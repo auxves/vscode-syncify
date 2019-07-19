@@ -8,6 +8,7 @@
   "engines": {
     "vscode": "^1.35.0"
   },
+  "logo": "./assets/logo.png",
   "homepage": "https://github.com/arnohovhannisyan/Syncify",
   "repository": {
     "type": "git",
