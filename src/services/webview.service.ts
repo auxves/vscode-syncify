@@ -3,7 +3,7 @@ import { has, set } from "lodash";
 import { resolve } from "path";
 import { URL } from "url";
 import * as vscode from "vscode";
-import changes from "../../assets/ui/release-notes.json";
+import changes from "../../assets/release-notes.json";
 import { ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
 import { UISettingType } from "../models/ui/setting-type.model";

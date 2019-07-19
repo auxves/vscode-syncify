@@ -13,3 +13,5 @@ scripts
 LICENSE.txt
 CHANGELOG.md
 *.log
+assets/settings.schema.json
+assets/release-notes.json

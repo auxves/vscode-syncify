@@ -4,3 +4,4 @@ node_modules
 scripts/start.sh
 .vscode-test
 .vsce
+*.log
