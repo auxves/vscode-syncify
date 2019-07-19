@@ -32,6 +32,12 @@
             },
             "type": "object"
         },
+        "forceDownload": {
+            "type": "boolean"
+        },
+        "forceUpload": {
+            "type": "boolean"
+        },
         "github": {
             "properties": {
                 "endpoint": {
