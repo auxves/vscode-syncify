@@ -1,6 +1,7 @@
 import { merge } from "lodash";
 import { resolve } from "path";
 import { ViewColumn, window, workspace } from "vscode";
+import schema from "../../assets/settings.schema.json";
 import { defaultSettings, ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
 
@@ -34,11 +35,18 @@ export class SettingsService {
     }
 
     const filepath = resolve(state.context.globalStoragePath, "settings.json");
-
-    state.fs.write(
-      filepath,
-      JSON.stringify(merge(defaultSettings, settings), null, 2)
+    const schemaPath = resolve(
+      state.context.globalStoragePath,
+      "settings.schema.json"
     );
+
+    await Promise.all([
+      state.fs.write(
+        filepath,
+        JSON.stringify(merge(defaultSettings, settings), null, 2)
+      ),
+      state.fs.write(schemaPath, JSON.stringify(schema, null, 2))
+    ]);
   }
 
   public async openSettings() {

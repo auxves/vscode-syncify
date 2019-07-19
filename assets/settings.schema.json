@@ -1,0 +1,92 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": {
+    },
+    "definitions": {
+        "IProfile": {
+            "properties": {
+                "branch": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SyncMethod": {
+            "enum": [
+                "file",
+                "repo"
+            ],
+            "type": "string"
+        }
+    },
+    "properties": {
+        "autoUploadDelay": {
+            "type": "number"
+        },
+        "file": {
+            "properties": {
+                "path": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "github": {
+            "properties": {
+                "endpoint": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "hostname": {
+            "type": "string"
+        },
+        "ignoredItems": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "method": {
+            "$ref": "#/definitions/SyncMethod"
+        },
+        "removeExtensions": {
+            "type": "boolean"
+        },
+        "repo": {
+            "properties": {
+                "currentProfile": {
+                    "type": "string"
+                },
+                "profiles": {
+                    "items": {
+                        "$ref": "#/definitions/IProfile"
+                    },
+                    "type": "array"
+                },
+                "url": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "syncOnStartup": {
+            "type": "boolean"
+        },
+        "watchSettings": {
+            "type": "boolean"
+        }
+    },
+    "type": "object"
+}
+

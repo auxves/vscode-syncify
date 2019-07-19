@@ -22,12 +22,14 @@ export interface ISettings {
   removeExtensions: boolean;
   syncOnStartup: boolean;
   hostname: string;
+  [key: string]: any;
 }
 
 export const defaultSettings: ISettings = {
+  $schema: "./settings.schema.json",
   method: SyncMethod.Repo,
   repo: {
-    url: null,
+    url: "",
     profiles: [
       {
         branch: "master",
@@ -37,12 +39,12 @@ export const defaultSettings: ISettings = {
     currentProfile: "main"
   },
   file: {
-    path: null
+    path: ""
   },
   github: {
-    token: null,
+    token: "",
     endpoint: "https://github.com",
-    user: null
+    user: ""
   },
   ignoredItems: [
     "**/workspaceStorage",
@@ -54,5 +56,5 @@ export const defaultSettings: ISettings = {
   watchSettings: false,
   removeExtensions: true,
   syncOnStartup: false,
-  hostname: null
+  hostname: ""
 };

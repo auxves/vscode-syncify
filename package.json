@@ -56,14 +56,16 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "webpack --config .webpack/production.js",
+    "vscode:prepublish": "yarn generate:schema && webpack --config .webpack/production.js",
     "compile": "webpack --config .webpack/development.js",
     "watch": "webpack --config .webpack/development.js --watch",
     "postinstall": "yarn vscode:types",
     "postuninstall": "yarn vscode:types",
     "lint": "tslint -c ./tslint.json -p .",
     "test": "yarn compile && node ./node_modules/vscode/bin/test",
-    "vscode:types": "node ./node_modules/vscode/bin/install"
+    "vscode:types": "node ./node_modules/vscode/bin/install",
+    "exec": "exec",
+    "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json"
   },
   "devDependencies": {
     "@types/express": "^4.17.0",
@@ -78,6 +80,7 @@
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.5.3",
+    "typescript-json-schema": "^0.38.3",
     "vscode": "^1.1.35",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6"
