@@ -13,6 +13,8 @@
   "info(download).needToReload": "Syncify: Would you like to reload to finish the procedure?",
   "info(download).downloading": "Syncify: Downloading",
   "info(download).downloaded": "Syncify: Downloaded",
+  "info(download).installed": "Syncify: Installed {0}",
+  "info(download).uninstalled": "Syncify: Uninstalled {0}",
   "info(sync).syncing": "Syncify: Syncing",
   "info(reset).resetComplete": "Syncify: Settings have been reset",
   "setting(method).name": "Sync Method",

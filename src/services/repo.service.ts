@@ -196,7 +196,7 @@ export class RepoService implements ISyncService {
               await state.extensions.installExtension(ext);
               progress.report({
                 increment,
-                message: `Syncify: Installed ${ext}`
+                message: state.localize("info(download).installed", ext)
               });
             })
           );
@@ -224,7 +224,7 @@ export class RepoService implements ISyncService {
                   await state.extensions.uninstallExtension(ext);
                   progress.report({
                     increment,
-                    message: `Syncify: Uninstalled ${ext}`
+                    message: state.localize("info(download).uninstalled", ext)
                   });
                 })
               );
