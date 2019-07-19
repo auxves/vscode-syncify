@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "engines": {
     "vscode": "^1.35.0"
   },
@@ -89,6 +89,7 @@
     "typescript-json-schema": "^0.38.3",
     "vscode": "^1.1.35",
     "webpack": "^4.36.1",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {

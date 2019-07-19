@@ -1,5 +1,6 @@
 import { readFileSync } from "fs-extra";
-import { has, set } from "lodash";
+import has from "lodash/has";
+import set from "lodash/set";
 import { resolve } from "path";
 import { URL } from "url";
 import * as vscode from "vscode";

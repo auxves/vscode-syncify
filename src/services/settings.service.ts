@@ -1,5 +1,4 @@
-import { merge } from "lodash";
-import { resolve } from "path";
+import merge from "lodash/merge";
 import { ViewColumn, window, workspace } from "vscode";
 import { defaultSettings, ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";

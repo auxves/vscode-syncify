@@ -2,8 +2,8 @@ const common = require("./common");
 
 module.exports = {
   ...common,
-  mode: "production",
+  mode: "development",
   optimization: {
-    minimize: false
+    minimize: true
   }
 };
