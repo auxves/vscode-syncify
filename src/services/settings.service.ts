@@ -2,6 +2,7 @@ import merge from "lodash/merge";
 import { ViewColumn, window, workspace } from "vscode";
 import { defaultSettings, ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
+import { InitService } from "./init.service";
 
 export class SettingsService {
   public async getSettings(): Promise<ISettings> {
@@ -40,6 +41,11 @@ export class SettingsService {
     );
   }
 
+  public async setPartialSettings(settings: Partial<ISettings>): Promise<void> {
+    const currentSettings = await this.getSettings();
+    await this.setSettings(merge(currentSettings, settings));
+  }
+
   public async openSettings() {
     state.webview.openSettingsPage(await this.getSettings());
   }
@@ -65,5 +71,47 @@ export class SettingsService {
     }
 
     window.showInformationMessage(state.localize("info(reset).resetComplete"));
+  }
+
+  public async showOtherOptions(): Promise<void> {
+    const options = [
+      {
+        name: state.localize("option(switchProfile).name"),
+        action: async () => {
+          const settings = await state.settings.getSettings();
+          const mappedProfiles = settings.repo.profiles.map(
+            prof => `${prof.name} [branch: ${prof.branch}]`
+          );
+          const selectedProfile = await window.showQuickPick(mappedProfiles);
+          if (selectedProfile) {
+            const newProfile = settings.repo.profiles.filter(
+              prof => `${prof.name} (${prof.branch})` === selectedProfile
+            )[0];
+            await state.settings.setPartialSettings({
+              repo: {
+                ...settings.repo,
+                currentProfile: newProfile.name
+              }
+            });
+            await window.showInformationMessage(
+              state.localize("info(repo).switchedProfile", newProfile.name)
+            );
+          }
+        }
+      },
+      {
+        name: state.localize("option(reinitialize).name"),
+        action: async () => {
+          await InitService.init();
+        }
+      }
+    ];
+
+    const selection = await window.showQuickPick(options.map(opt => opt.name));
+
+    if (selection) {
+      const selectedOption = options.filter(opt => opt.name === selection)[0];
+      await selectedOption.action();
+    }
   }
 }

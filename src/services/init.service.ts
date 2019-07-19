@@ -18,6 +18,10 @@ export class InitService {
 
     state.sync = FactoryService.generate(settings.method);
 
+    if (state.watcher) {
+      state.watcher.stopWatching();
+    }
+
     state.watcher = new WatcherService(
       settings.ignoredItems,
       state.env.locations.userFolder
@@ -28,6 +32,10 @@ export class InitService {
 
     if (settings.watchSettings) {
       state.watcher.startWatching();
+    }
+
+    if (state.context.subscriptions.length) {
+      state.context.subscriptions.forEach(disposable => disposable.dispose());
     }
 
     this.registerCommands();
@@ -58,6 +66,10 @@ export class InitService {
       commands.registerCommand(
         "syncify.openSettings",
         state.settings.openSettings.bind(state.settings)
+      ),
+      commands.registerCommand(
+        "syncify.otherOptions",
+        state.settings.showOtherOptions.bind(state.settings)
       )
     );
   }
