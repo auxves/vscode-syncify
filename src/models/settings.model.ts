@@ -22,6 +22,8 @@ export interface ISettings {
   removeExtensions: boolean;
   syncOnStartup: boolean;
   hostname: string;
+  forceUpload: boolean;
+  forceDownload: boolean;
 }
 
 export const defaultSettings: ISettings = {
@@ -54,5 +56,7 @@ export const defaultSettings: ISettings = {
   watchSettings: false,
   removeExtensions: true,
   syncOnStartup: false,
-  hostname: ""
+  hostname: "",
+  forceDownload: false,
+  forceUpload: false
 };
