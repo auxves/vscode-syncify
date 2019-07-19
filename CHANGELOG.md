@@ -1,9 +1,18 @@
-# Change Log
+# Changelog
 
-All notable changes to the "syncify" extension will be documented in this file.
+## v1.0.0
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- Add `forceUpload` and `forceDownload` options
 
-## [Unreleased]
+## v0.6.0
 
-- Initial release
+- Add `Other Options`
+
+## v0.5.0
+
+- Implement `File Method`
+
+## v0.4.0
+
+- Improve UX for Repo Creation page
+- Fix Repo Creation process
