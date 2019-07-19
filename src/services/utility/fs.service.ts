@@ -1,23 +1,23 @@
-import { exists, mkdir, readFile, remove, writeFile } from "fs-extra";
+import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
 import minimatch from "minimatch";
 import recursiveRead from "recursive-readdir";
 import { state } from "../../models/state.model";
 
 export class FileSystemService {
   public exists(path: string): Promise<boolean> {
-    return new Promise(res => exists(path, res));
+    return pathExists(path);
   }
 
   public mkdir(path: string): Promise<void> {
-    return new Promise(res => mkdir(path, () => res()));
+    return ensureDir(path);
   }
 
   public read(path: string): Promise<string> {
-    return new Promise(res => readFile(path, "utf-8", (_, data) => res(data)));
+    return readFile(path, "utf-8");
   }
 
   public write(path: string, data: string): Promise<void> {
-    return new Promise(res => writeFile(path, data, () => res()));
+    return writeFile(path, data);
   }
 
   public delete(...paths: string[]): Promise<void[]> {

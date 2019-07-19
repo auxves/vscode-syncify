@@ -1,4 +1,4 @@
-import { basename, relative, resolve } from "path";
+import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ProgressLocation, window } from "vscode";
 import { IProfile } from "../../models/profile.model";
@@ -132,15 +132,16 @@ export class RepoService implements ISyncService {
     );
 
     await this.copyFilesToRepo();
+    await this.cleanUpRepo();
 
-    const currentChanges = await this.git.diff();
+    await this.git.add(".");
+
+    const currentChanges = await this.git.diff([profile.branch]);
 
     if (!currentChanges && !settings.forceUpload) {
       window.setStatusBarMessage(state.localize("info(upload).upToDate"), 2000);
       return;
     }
-
-    await this.git.add(".");
 
     await this.git.commit(`Update [${new Date().toLocaleString()}]`);
 
@@ -322,10 +323,21 @@ export class RepoService implements ISyncService {
     await Promise.all(
       files.map(async file => {
         const contents = await state.fs.read(file);
-        const newPath = resolve(
-          state.env.locations.repoFolder,
-          relative(state.env.locations.userFolder, file)
+
+        const dir = dirname(
+          resolve(
+            state.env.locations.repoFolder,
+            relative(state.env.locations.userFolder, file)
+          )
         );
+
+        const dirExists = await state.fs.exists(dir);
+
+        if (!dirExists) {
+          await state.fs.mkdir(dir);
+        }
+
+        const newPath = resolve(dir, basename(file));
 
         if (filesToPragma.includes(basename(file))) {
           return state.fs.write(
@@ -347,15 +359,35 @@ export class RepoService implements ISyncService {
     await Promise.all(
       files.map(async file => {
         const contents = await state.fs.read(file);
-        const newPath = resolve(
-          state.env.locations.userFolder,
-          relative(state.env.locations.repoFolder, file)
-        );
-        const currentContents = await state.fs.read(newPath);
 
-        if (filesToPragma.includes(basename(file))) {
+        const dir = dirname(
+          resolve(
+            state.env.locations.userFolder,
+            relative(state.env.locations.repoFolder, file)
+          )
+        );
+
+        const dirExists = await state.fs.exists(dir);
+
+        if (!dirExists) {
+          await state.fs.mkdir(dir);
+        }
+
+        const filename = basename(file);
+
+        const newPath = resolve(dir, filename);
+
+        const currentContents = await (async () => {
+          const exists = await state.fs.exists(newPath);
+          if (exists) {
+            return state.fs.read(newPath);
+          }
+          return "{}";
+        })();
+
+        if (filesToPragma.includes(filename)) {
           const afterPragma = PragmaService.processBeforeWrite(
-            currentContents || "{}",
+            currentContents,
             contents,
             settings.hostname
           );
@@ -370,5 +402,21 @@ export class RepoService implements ISyncService {
         }
       })
     );
+  }
+
+  private async cleanUpRepo(): Promise<void> {
+    const [repoFiles, userFiles] = await Promise.all([
+      state.fs.listFiles(state.env.locations.repoFolder),
+      state.fs.listFiles(state.env.locations.userFolder)
+    ]);
+    const unneeded = repoFiles.filter(f => {
+      const correspondingFile = resolve(
+        state.env.locations.userFolder,
+        relative(state.env.locations.repoFolder, f)
+      );
+      return !userFiles.includes(correspondingFile);
+    });
+
+    await state.fs.delete(...unneeded);
   }
 }
