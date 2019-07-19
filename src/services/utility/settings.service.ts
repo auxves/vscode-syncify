@@ -1,7 +1,7 @@
 import merge from "lodash/merge";
 import { ViewColumn, window, workspace } from "vscode";
-import { defaultSettings, ISettings } from "../models/settings.model";
-import { state } from "../models/state.model";
+import { defaultSettings, ISettings } from "../../models/settings.model";
+import { state } from "../../models/state.model";
 import { InitService } from "./init.service";
 
 export class SettingsService {

@@ -1,9 +1,9 @@
 import { basename, relative, resolve } from "path";
 import { commands, extensions, ProgressLocation, window } from "vscode";
-import { ISettings } from "../models/settings.model";
-import { state } from "../models/state.model";
-import { ISyncService } from "../models/sync.model";
-import { PragmaService } from "./pragma.service";
+import { ISettings } from "../../models/settings.model";
+import { state } from "../../models/state.model";
+import { ISyncService } from "../../models/sync.model";
+import { PragmaService } from "../utility/pragma.service";
 
 export class FileService implements ISyncService {
   public async sync(): Promise<void> {

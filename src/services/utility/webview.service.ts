@@ -4,12 +4,12 @@ import set from "lodash/set";
 import { resolve } from "path";
 import { URL } from "url";
 import * as vscode from "vscode";
-import changes from "../../assets/release-notes.json";
-import { ISettings } from "../models/settings.model";
-import { state } from "../models/state.model";
-import { UISettingType } from "../models/ui/setting-type.model";
-import { IWebviewSection } from "../models/ui/webview-section.model";
-import { IWebview } from "../models/ui/webview.model";
+import changes from "../../../assets/release-notes.json";
+import { ISettings } from "../../models/settings.model";
+import { state } from "../../models/state.model";
+import { UISettingType } from "../../models/ui/setting-type.model";
+import { IWebviewSection } from "../../models/ui/webview-section.model";
+import { IWebview } from "../../models/ui/webview.model";
 import { GitHubOAuthService } from "./github.oauth.service";
 
 export class WebviewService {

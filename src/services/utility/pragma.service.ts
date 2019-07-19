@@ -1,5 +1,5 @@
-import { OperatingSystem } from "../models/os.model";
-import { state } from "../models/state.model";
+import { OperatingSystem } from "../../models/os.model";
+import { state } from "../../models/state.model";
 
 export class PragmaService {
   public static processBeforeWrite(

@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.35.0"
   },
@@ -57,6 +57,14 @@
       {
         "command": "syncify.otherOptions",
         "title": "%cmd(syncify.otherOptions).name%"
+      },
+      {
+        "command": "syncify.registerCustomFile",
+        "title": "%cmd(syncify.registerCustomFile).name%"
+      },
+      {
+        "command": "syncify.importCustomFile",
+        "title": "%cmd(syncify.importCustomFile).name%"
       }
     ],
     "jsonValidation": [
@@ -64,7 +72,15 @@
         "fileMatch": "arnohovhannisyan.syncify/settings.json",
         "url": "./assets/settings.schema.json"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "syncify.registerCustomFile",
+          "when": "!explorerResourceIsFolder"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn generate:schema && webpack --config .webpack/production.js",

@@ -1,12 +1,13 @@
 import { normalize, resolve } from "path";
-import { OperatingSystem } from "../models/os.model";
-import { state } from "../models/state.model";
+import { OperatingSystem } from "../../models/os.model";
+import { state } from "../../models/state.model";
 
 export class EnvironmentService {
   public locations = {
     userFolder: null,
     repoFolder: null,
-    settings: null
+    settings: null,
+    customFilesFolder: null
   };
 
   public os: OperatingSystem;
@@ -34,6 +35,11 @@ export class EnvironmentService {
     this.locations.settings = resolve(
       state.context.globalStoragePath,
       "settings.json"
+    );
+
+    this.locations.customFilesFolder = resolve(
+      this.locations.userFolder,
+      "customFiles"
     );
   }
 }
