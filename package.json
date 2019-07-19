@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "engines": {
     "vscode": "^1.35.0"
   },
@@ -52,6 +52,10 @@
       {
         "command": "syncify.openSettings",
         "title": "%cmd(syncify.openSettings).name%"
+      },
+      {
+        "command": "syncify.otherOptions",
+        "title": "%cmd(syncify.otherOptions).name%"
       }
     ],
     "jsonValidation": [
