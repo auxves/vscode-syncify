@@ -3,4 +3,8 @@ node_js:
   - "10"
 install: yarn
 cache: yarn
-script: yarn lint
+before_script:
+  - yarn global add vsce
+script:
+  - yarn lint
+  - vsce package
