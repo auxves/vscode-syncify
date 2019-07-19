@@ -287,7 +287,9 @@ export class WebviewService {
       }
     );
     repositoryCreationPanel.webview.onDidReceiveMessage(async message => {
-      repositoryCreationPanel.dispose();
+      if (message.close) {
+        return repositoryCreationPanel.dispose();
+      }
       const settings = await state.settings.getSettings();
       state.settings.setSettings({
         ...settings,
