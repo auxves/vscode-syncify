@@ -1,13 +1,12 @@
 import { merge } from "lodash";
 import { resolve } from "path";
 import { ViewColumn, window, workspace } from "vscode";
-import schema from "../../assets/settings.schema.json";
 import { defaultSettings, ISettings } from "../models/settings.model";
 import { state } from "../models/state.model";
 
 export class SettingsService {
   public async getSettings(): Promise<ISettings> {
-    const filepath = resolve(state.context.globalStoragePath, "settings.json");
+    const filepath = state.env.locations.settings;
     const exists = await state.fs.exists(filepath);
     if (!exists) {
       await this.setSettings(defaultSettings);
@@ -34,19 +33,12 @@ export class SettingsService {
       await state.fs.mkdir(state.context.globalStoragePath);
     }
 
-    const filepath = resolve(state.context.globalStoragePath, "settings.json");
-    const schemaPath = resolve(
-      state.context.globalStoragePath,
-      "settings.schema.json"
-    );
+    const filepath = state.env.locations.settings;
 
-    await Promise.all([
-      state.fs.write(
-        filepath,
-        JSON.stringify(merge(defaultSettings, settings), null, 2)
-      ),
-      state.fs.write(schemaPath, JSON.stringify(schema, null, 2))
-    ]);
+    await state.fs.write(
+      filepath,
+      JSON.stringify(merge(defaultSettings, settings), null, 2)
+    );
   }
 
   public async openSettings() {
@@ -54,7 +46,7 @@ export class SettingsService {
   }
 
   public async openSettingsFile() {
-    const filepath = resolve(state.context.globalStoragePath, "settings.json");
+    const filepath = state.env.locations.settings;
     await window.showTextDocument(
       await workspace.openTextDocument(filepath),
       ViewColumn.One,

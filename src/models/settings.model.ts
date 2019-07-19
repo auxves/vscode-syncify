@@ -22,11 +22,9 @@ export interface ISettings {
   removeExtensions: boolean;
   syncOnStartup: boolean;
   hostname: string;
-  [key: string]: any;
 }
 
 export const defaultSettings: ISettings = {
-  $schema: "./settings.schema.json",
   method: SyncMethod.Repo,
   repo: {
     url: "",

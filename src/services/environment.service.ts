@@ -6,7 +6,8 @@ export class EnvironmentService {
   public locations = {
     userFolder: null,
     repoFolder: null,
-    lockfile: null
+    lockfile: null,
+    settings: null
   };
 
   public os: OperatingSystem;
@@ -34,6 +35,11 @@ export class EnvironmentService {
     this.locations.lockfile = resolve(
       state.context.globalStoragePath,
       "lockfile"
+    );
+
+    this.locations.settings = resolve(
+      state.context.globalStoragePath,
+      "settings.json"
     );
   }
 }

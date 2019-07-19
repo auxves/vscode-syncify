@@ -53,6 +53,12 @@
         "command": "syncify.openSettings",
         "title": "%cmd(syncify.openSettings).name%"
       }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": "arnohovhannisyan.syncify/settings.json",
+        "url": "./assets/settings.schema.json"
+      }
     ]
   },
   "scripts": {
@@ -62,7 +68,6 @@
     "postinstall": "yarn vscode:types",
     "postuninstall": "yarn vscode:types",
     "lint": "tslint -c ./tslint.json -p .",
-    "test": "yarn compile && node ./node_modules/vscode/bin/test",
     "vscode:types": "node ./node_modules/vscode/bin/install",
     "exec": "exec",
     "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json"
