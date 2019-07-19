@@ -11,8 +11,7 @@ export class WatcherService {
 
   constructor(private ignoredItems: string[], private userFolder: string) {
     extensions.onDidChange(async () => {
-      const locked = await state.lock.check();
-      if (this.watching && window.state.focused && !locked) {
+      if (this.watching && window.state.focused) {
         this.upload();
       }
     });
@@ -24,8 +23,7 @@ export class WatcherService {
     this.watching = true;
 
     this.watcher.addListener("change", async () => {
-      const locked = await state.lock.check();
-      if (this.watching && window.state.focused && !locked) {
+      if (this.watching && window.state.focused) {
         await this.upload();
       }
     });

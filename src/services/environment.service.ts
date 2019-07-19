@@ -6,7 +6,6 @@ export class EnvironmentService {
   public locations = {
     userFolder: null,
     repoFolder: null,
-    lockfile: null,
     settings: null
   };
 
@@ -30,11 +29,6 @@ export class EnvironmentService {
     this.locations.repoFolder = resolve(
       state.context.globalStoragePath,
       "repo"
-    );
-
-    this.locations.lockfile = resolve(
-      state.context.globalStoragePath,
-      "lockfile"
     );
 
     this.locations.settings = resolve(
