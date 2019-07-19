@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "engines": {
     "vscode": "^1.35.0"
   },
@@ -76,6 +76,7 @@
   "devDependencies": {
     "@types/express": "^4.17.0",
     "@types/fs-extra": "^8.0.0",
+    "@types/lodash": "^4.14.136",
     "@types/minimatch": "^3.0.3",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.6.8",
@@ -92,7 +93,6 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.136",
     "express": "^4.17.1",
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.14",
