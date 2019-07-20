@@ -23,6 +23,7 @@
   "info(download).installed": "Syncify: Installed {0}",
   "info(download).uninstalled": "Syncify: Uninstalled {0}",
   "info(download).upToDate": "Syncify: Already up to date",
+  "info(download).noRemoteBranches": "Syncify: No Remote Branches",
   "info(sync).nothingToDo": "Syncify: Nothing To Do",
   "info(repo).switchedProfile": "Syncify: Switched to profile '{0}'",
   "info(reset).resetComplete": "Syncify: Settings have been reset",

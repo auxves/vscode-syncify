@@ -22,7 +22,7 @@ export class RepoService implements ISyncService {
     const isRepo = await this.git.checkIsRepo();
 
     if (!isRepo) {
-      this.git.init();
+      await this.git.init();
     }
 
     const remotes = await this.git.getRemotes(true);
@@ -79,10 +79,14 @@ export class RepoService implements ISyncService {
       return;
     }
 
-    const downloadDiff = await this.git.diff([`origin/${profile.branch}`]);
-    if (downloadDiff) {
-      await this.download();
-      return;
+    const remoteBranches = await this.git.branch(["-r"]);
+
+    if (remoteBranches.all.length) {
+      const downloadDiff = await this.git.diff([`origin/${profile.branch}`]);
+      if (downloadDiff) {
+        await this.download();
+        return;
+      }
     }
 
     window.setStatusBarMessage(state.localize("info(sync).nothingToDo"), 2000);
@@ -108,19 +112,13 @@ export class RepoService implements ISyncService {
     const branches = await this.git.branchLocal();
 
     if (!branches.all.includes(profile.branch)) {
-      await this.git.checkoutLocalBranch(profile.branch);
+      await this.git.checkout(["-b", profile.branch]);
+      await this.git.add(".");
+      await this.git.commit("Initial");
     }
 
-    await this.git.fetch();
-    const diff = await this.git.diff([`origin/${profile.branch}`]);
-
-    if (diff && !settings.forceUpload) {
-      window.setStatusBarMessage(
-        state.localize("info(upload).remoteChanges"),
-        2000
-      );
-      return;
-    }
+    await this.copyFilesToRepo();
+    await this.cleanUpRepo();
 
     const installedExtensions = extensions.all
       .filter(ext => !ext.packageJSON.isBuiltin)
@@ -130,9 +128,6 @@ export class RepoService implements ISyncService {
       resolve(state.env.locations.repoFolder, "extensions.json"),
       JSON.stringify(installedExtensions, null, 2)
     );
-
-    await this.copyFilesToRepo();
-    await this.cleanUpRepo();
 
     await this.git.add(".");
 
@@ -175,6 +170,16 @@ export class RepoService implements ISyncService {
     const settings = await state.settings.getSettings();
 
     const profile = await this.getProfile();
+
+    const remoteBranches = await this.git.branch(["-r"]);
+
+    if (!remoteBranches.all.length) {
+      window.setStatusBarMessage(
+        state.localize("info(download).noRemoteBranches"),
+        2000
+      );
+      return;
+    }
 
     await this.git.fetch();
     const diff = await this.git.diff([`origin/${profile.branch}`]);
@@ -352,7 +357,10 @@ export class RepoService implements ISyncService {
   }
 
   private async copyFilesFromRepo(settings: ISettings): Promise<void> {
-    const files = await state.fs.listFiles(state.env.locations.repoFolder);
+    const files = await state.fs.listFiles(
+      state.env.locations.repoFolder,
+      settings.ignoredItems.filter(i => !i.includes("arnohovhannisyan.syncify"))
+    );
 
     const filesToPragma = ["settings.json", "keybindings.json"];
 

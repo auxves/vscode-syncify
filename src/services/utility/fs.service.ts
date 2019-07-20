@@ -1,5 +1,5 @@
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
-import minimatch from "minimatch";
+import micromatch from "micromatch";
 import recursiveRead from "recursive-readdir";
 import { state } from "../../models/state.model";
 
@@ -24,11 +24,15 @@ export class FileSystemService {
     return Promise.all(paths.map(path => remove(path)));
   }
 
-  public async listFiles(path: string): Promise<string[]> {
+  public async listFiles(
+    path: string,
+    ignoredItems?: string[]
+  ): Promise<string[]> {
     const settings = await state.settings.getSettings();
+    const ignored = ignoredItems || settings.ignoredItems;
 
     function matcher(file: string) {
-      return settings.ignoredItems.some(item => minimatch(file, item));
+      return micromatch.contains(file, ignored);
     }
 
     return recursiveRead(path, [matcher]);
