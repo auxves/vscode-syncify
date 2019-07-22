@@ -35,8 +35,7 @@ it("should register a provided file", async () => {
     fsPath: resolve(pathToSource, "test.json")
   };
 
-  const cfs = CustomFileService;
-  await cfs.register(uri as Uri);
+  await CustomFileService.register(uri as Uri);
 
   const exists = await fs.exists(resolve(pathToRegistered, "test.json"));
   expect(exists).toBeTruthy();
