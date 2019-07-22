@@ -1,6 +1,7 @@
 export const window = {
   setStatusBarMessage: () => null,
-  withProgress: () => null
+  withProgress: () => null,
+  showInformationMessage: () => null
 };
 
 export const extensions = {
