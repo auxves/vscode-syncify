@@ -39,6 +39,8 @@ export class SettingsService {
       filepath,
       JSON.stringify(merge(defaultSettings, settings), null, 2)
     );
+
+    await InitService.init();
   }
 
   public async setPartialSettings(settings: Partial<ISettings>): Promise<void> {
@@ -73,45 +75,46 @@ export class SettingsService {
     window.showInformationMessage(state.localize("info(reset).resetComplete"));
   }
 
-  public async showOtherOptions(): Promise<void> {
+  public async showOtherOptions(name?: string): Promise<void> {
     const options = [
       {
         name: state.localize("option(switchProfile).name"),
-        action: async () => {
-          const settings = await state.settings.getSettings();
-          const mappedProfiles = settings.repo.profiles.map(
-            prof => `${prof.name} [branch: ${prof.branch}]`
-          );
-          const selectedProfile = await window.showQuickPick(mappedProfiles);
-          if (selectedProfile) {
-            const newProfile = settings.repo.profiles.filter(
-              prof => `${prof.name} (${prof.branch})` === selectedProfile
-            )[0];
-            await state.settings.setPartialSettings({
-              repo: {
-                ...settings.repo,
-                currentProfile: newProfile.name
-              }
-            });
-            await window.showInformationMessage(
-              state.localize("info(repo).switchedProfile", newProfile.name)
-            );
-          }
-        }
+        action: this.switchProfile
       },
       {
         name: state.localize("option(reinitialize).name"),
-        action: async () => {
-          await InitService.init();
-        }
+        action: InitService.init
       }
     ];
 
-    const selection = await window.showQuickPick(options.map(opt => opt.name));
+    const selection =
+      name || (await window.showQuickPick(options.map(opt => opt.name)));
 
     if (selection) {
       const selectedOption = options.filter(opt => opt.name === selection)[0];
       await selectedOption.action();
+    }
+  }
+
+  private async switchProfile(): Promise<void> {
+    const settings = await state.settings.getSettings();
+    const mappedProfiles = settings.repo.profiles.map(
+      prof => `${prof.name} [branch: ${prof.branch}]`
+    );
+    const selectedProfile = await window.showQuickPick(mappedProfiles);
+    if (selectedProfile) {
+      const newProfile = settings.repo.profiles.filter(
+        prof => `${prof.name} (${prof.branch})` === selectedProfile
+      )[0];
+      await state.settings.setPartialSettings({
+        repo: {
+          ...settings.repo,
+          currentProfile: newProfile.name
+        }
+      });
+      await window.showInformationMessage(
+        state.localize("info(repo).switchedProfile", newProfile.name)
+      );
     }
   }
 }

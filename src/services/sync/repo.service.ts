@@ -105,46 +105,51 @@ export class RepoService implements ISyncService {
 
     window.setStatusBarMessage(state.localize("info(upload).uploading"), 2000);
 
-    const profile = await this.getProfile();
-
     const settings = await state.settings.getSettings();
 
-    const branches = await this.git.branchLocal();
+    await (async () => {
+      const profile = await this.getProfile();
 
-    if (!branches.all.includes(profile.branch)) {
-      await this.git.checkout(["-b", profile.branch]);
+      const branches = await this.git.branchLocal();
+
+      if (!branches.all.includes(profile.branch)) {
+        await this.git.checkout(["-b", profile.branch]);
+        await this.git.add(".");
+        await this.git.commit("Initial");
+      }
+
+      await this.copyFilesToRepo();
+      await this.cleanUpRepo();
+
+      const installedExtensions = extensions.all
+        .filter(ext => !ext.packageJSON.isBuiltin)
+        .map(ext => ext.id);
+
+      await state.fs.write(
+        resolve(state.env.locations.repoFolder, "extensions.json"),
+        JSON.stringify(installedExtensions, null, 2)
+      );
+
       await this.git.add(".");
-      await this.git.commit("Initial");
-    }
 
-    await this.copyFilesToRepo();
-    await this.cleanUpRepo();
+      const currentChanges = await this.git.diff([profile.branch]);
 
-    const installedExtensions = extensions.all
-      .filter(ext => !ext.packageJSON.isBuiltin)
-      .map(ext => ext.id);
+      if (!currentChanges && !settings.forceUpload) {
+        window.setStatusBarMessage(
+          state.localize("info(upload).upToDate"),
+          2000
+        );
+        return;
+      }
 
-    await state.fs.write(
-      resolve(state.env.locations.repoFolder, "extensions.json"),
-      JSON.stringify(installedExtensions, null, 2)
-    );
+      await this.git.commit(`Update [${new Date().toLocaleString()}]`);
 
-    await this.git.add(".");
+      await this.git.push("origin", profile.branch, {
+        "--force": null
+      });
 
-    const currentChanges = await this.git.diff([profile.branch]);
-
-    if (!currentChanges && !settings.forceUpload) {
-      window.setStatusBarMessage(state.localize("info(upload).upToDate"), 2000);
-      return;
-    }
-
-    await this.git.commit(`Update [${new Date().toLocaleString()}]`);
-
-    await this.git.push("origin", profile.branch, {
-      "--force": null
-    });
-
-    window.setStatusBarMessage(state.localize("info(upload).uploaded"), 2000);
+      window.setStatusBarMessage(state.localize("info(upload).uploaded"), 2000);
+    })();
 
     if (settings.watchSettings) {
       await state.watcher.startWatching();
@@ -169,127 +174,129 @@ export class RepoService implements ISyncService {
 
     const settings = await state.settings.getSettings();
 
-    const profile = await this.getProfile();
+    await (async () => {
+      const profile = await this.getProfile();
 
-    const remoteBranches = await this.git.branch(["-r"]);
+      const remoteBranches = await this.git.branch(["-r"]);
 
-    if (!remoteBranches.all.length) {
-      window.setStatusBarMessage(
-        state.localize("info(download).noRemoteBranches"),
-        2000
-      );
-      return;
-    }
-
-    await this.git.fetch();
-    const diff = await this.git.diff([`origin/${profile.branch}`]);
-
-    if (!diff && !settings.forceDownload) {
-      window.setStatusBarMessage(
-        state.localize("info(download).upToDate"),
-        2000
-      );
-      return;
-    }
-
-    await this.git.add(".");
-    await this.git.commit("Reset");
-    await this.git.reset("hard");
-
-    const branches = await this.git.branchLocal();
-
-    if (branches.current !== profile.branch) {
-      if (branches.all.includes(profile.branch)) {
-        await this.git.deleteLocalBranch(profile.branch);
+      if (!remoteBranches.all.length) {
+        window.setStatusBarMessage(
+          state.localize("info(download).noRemoteBranches"),
+          2000
+        );
+        return;
       }
+
       await this.git.fetch();
-      await this.git.checkout(`origin/${profile.branch}`);
-    }
+      const diff = await this.git.diff([`origin/${profile.branch}`]);
 
-    await this.git.pull("origin", profile.branch, {
-      "--force": null,
-      "--allow-unrelated-histories": null
-    });
+      if (!diff && !settings.forceDownload) {
+        window.setStatusBarMessage(
+          state.localize("info(download).upToDate"),
+          2000
+        );
+        return;
+      }
 
-    await this.copyFilesFromRepo(settings);
+      await this.git.add(".");
+      await this.git.commit("Reset");
+      await this.git.reset("hard");
 
-    try {
-      const extensionsFromFile = JSON.parse(
-        await state.fs.read(
-          resolve(state.env.locations.repoFolder, "extensions.json")
-        )
-      );
+      const branches = await this.git.branchLocal();
 
-      const toInstall = state.extensions.getMissingExtensions(
-        extensionsFromFile
-      );
-
-      await window.withProgress(
-        {
-          location: ProgressLocation.Notification
-        },
-        async progress => {
-          const increment = 100 / toInstall.length;
-          return Promise.all(
-            toInstall.map(async ext => {
-              await state.extensions.installExtension(ext);
-              progress.report({
-                increment,
-                message: state.localize("info(download).installed", ext)
-              });
-            })
-          );
+      if (branches.current !== profile.branch) {
+        if (branches.all.includes(profile.branch)) {
+          await this.git.deleteLocalBranch(profile.branch);
         }
-      );
+        await this.git.fetch();
+        await this.git.checkout(`origin/${profile.branch}`);
+      }
 
-      if (settings.removeExtensions) {
-        const toDelete = state.extensions.getUnneededExtensions(
+      await this.git.pull("origin", profile.branch, {
+        "--force": null,
+        "--allow-unrelated-histories": null
+      });
+
+      await this.copyFilesFromRepo(settings);
+
+      try {
+        const extensionsFromFile = JSON.parse(
+          await state.fs.read(
+            resolve(state.env.locations.repoFolder, "extensions.json")
+          )
+        );
+
+        const toInstall = state.extensions.getMissingExtensions(
           extensionsFromFile
         );
 
-        if (toDelete.length) {
-          const needToReload = toDelete.some(
-            ext => extensions.getExtension(ext).isActive
-          );
-
-          await window.withProgress(
-            {
-              location: ProgressLocation.Notification
-            },
-            async progress => {
-              const increment = 100 / toDelete.length;
-              return Promise.all(
-                toDelete.map(async ext => {
-                  await state.extensions.uninstallExtension(ext);
-                  progress.report({
-                    increment,
-                    message: state.localize("info(download).uninstalled", ext)
-                  });
-                })
-              );
-            }
-          );
-
-          if (needToReload) {
-            const yes = state.localize("btn(yes)");
-            const result = await window.showInformationMessage(
-              state.localize("info(download).needToReload"),
-              yes
+        await window.withProgress(
+          {
+            location: ProgressLocation.Notification
+          },
+          async progress => {
+            const increment = 100 / toInstall.length;
+            return Promise.all(
+              toInstall.map(async ext => {
+                await state.extensions.installExtension(ext);
+                progress.report({
+                  increment,
+                  message: state.localize("info(download).installed", ext)
+                });
+              })
             );
-            if (result === yes) {
-              commands.executeCommand("workbench.action.reloadWindow");
+          }
+        );
+
+        if (settings.removeExtensions) {
+          const toDelete = state.extensions.getUnneededExtensions(
+            extensionsFromFile
+          );
+
+          if (toDelete.length) {
+            const needToReload = toDelete.some(
+              ext => extensions.getExtension(ext).isActive
+            );
+
+            await window.withProgress(
+              {
+                location: ProgressLocation.Notification
+              },
+              async progress => {
+                const increment = 100 / toDelete.length;
+                return Promise.all(
+                  toDelete.map(async ext => {
+                    await state.extensions.uninstallExtension(ext);
+                    progress.report({
+                      increment,
+                      message: state.localize("info(download).uninstalled", ext)
+                    });
+                  })
+                );
+              }
+            );
+
+            if (needToReload) {
+              const yes = state.localize("btn(yes)");
+              const result = await window.showInformationMessage(
+                state.localize("info(download).needToReload"),
+                yes
+              );
+              if (result === yes) {
+                commands.executeCommand("workbench.action.reloadWindow");
+              }
             }
           }
         }
+      } catch (err) {
+        throw err;
       }
-    } catch (err) {
-      throw err;
-    }
 
-    window.setStatusBarMessage(
-      state.localize("info(download).downloaded"),
-      2000
-    );
+      window.setStatusBarMessage(
+        state.localize("info(download).downloaded"),
+        2000
+      );
+    })();
 
     if (settings.watchSettings) {
       await state.watcher.startWatching();
