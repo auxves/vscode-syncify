@@ -1,4 +1,5 @@
 {
+  "action(upload).cancel": "Cancel Upload",
   "btn(yes)": "Yes",
   "btn(no)": "No",
   "btn(ok)": "OK",

@@ -37,10 +37,18 @@ export class WatcherService {
   }
 
   private async upload() {
+    const cmds = await commands.getCommands();
+    const alreadyInitiated = cmds.some(cmd => cmd === "syncify.cancelUpload");
+
+    if (alreadyInitiated) {
+      return;
+    }
+
     const settings = await state.settings.getSettings();
 
-    window.setStatusBarMessage("").dispose();
-    window.setStatusBarMessage(
+    let shouldUpload = true;
+
+    const message = window.setStatusBarMessage(
       state.localize(
         "info(upload).initiating",
         settings.autoUploadDelay.toString()
@@ -48,8 +56,28 @@ export class WatcherService {
       5000
     );
 
+    const btn = window.createStatusBarItem(1);
+
+    const disposable = commands.registerCommand("syncify.cancelUpload", () => {
+      shouldUpload = false;
+      disposable.dispose();
+      btn.dispose();
+      message.dispose();
+    });
+
+    state.context.subscriptions.push(disposable);
+
+    btn.command = "syncify.cancelUpload";
+    btn.text = `$(x) ${state.localize("action(upload).cancel")}`;
+    btn.show();
+
     await UtilityService.sleep(settings.autoUploadDelay * 1000);
 
-    commands.executeCommand("syncify.upload");
+    disposable.dispose();
+    btn.dispose();
+
+    if (shouldUpload) {
+      commands.executeCommand("syncify.upload");
+    }
   }
 }
