@@ -62,9 +62,17 @@ export class FileService implements ISyncService {
     await this.copyFilesFromPath(settings);
 
     try {
-      const extensionsFromFile = JSON.parse(
-        await state.fs.read(resolve(settings.file.path, "extensions.json"))
-      );
+      const extensionsFromFile = await (async () => {
+        const extensionsExist = await state.fs.exists(
+          resolve(settings.file.path, "extensions.json")
+        );
+        if (!extensionsExist) {
+          return [];
+        }
+        return JSON.parse(
+          await state.fs.read(resolve(settings.file.path, "extensions.json"))
+        );
+      })();
 
       const toInstall = state.extensions.getMissingExtensions(
         extensionsFromFile
@@ -198,11 +206,17 @@ export class FileService implements ISyncService {
           state.env.locations.userFolder,
           relative(settings.file.path, file)
         );
-        const currentContents = await state.fs.read(newPath);
+        const currentContents = await (async () => {
+          const exists = await state.fs.exists(newPath);
+          if (exists) {
+            return state.fs.read(newPath);
+          }
+          return "{}";
+        })();
 
         if (filesToPragma.includes(basename(file))) {
           const afterPragma = PragmaService.processBeforeWrite(
-            currentContents || "{}",
+            currentContents,
             contents,
             settings.hostname
           );

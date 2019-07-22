@@ -20,7 +20,7 @@ export const state = {
         currentProfile: "main"
       },
       file: {
-        path: ""
+        path: "/tmp/jest/file.service.test.ts/export"
       },
       github: {
         token: "",
@@ -47,8 +47,8 @@ export const state = {
   },
   env: {
     locations: {
-      repoFolder: "/tmp/jest/repo.service.test.ts/repo",
-      userFolder: "/tmp/jest/repo.service.test.ts/user"
+      repoFolder: "",
+      userFolder: ""
     }
   },
   fs: (() => {

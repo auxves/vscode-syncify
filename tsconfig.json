@@ -9,5 +9,6 @@
     "sourceMap": true,
     "rootDirs": ["src", "assets"]
   },
-  "exclude": ["node_modules", ".vscode-test"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "src/**/*.test.ts", "**/__mocks__/*.ts"]
 }
