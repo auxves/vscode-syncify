@@ -51,7 +51,7 @@ export class PragmaService {
           envMatch = currentLine.match(/env=(\S+)/);
           if (envMatch !== null) {
             envFromPragma = envMatch[1];
-            if (process.env[envFromPragma.toUpperCase()] === undefined) {
+            if (!process.env[envFromPragma.toUpperCase()]) {
               shouldComment = true;
             }
           }
