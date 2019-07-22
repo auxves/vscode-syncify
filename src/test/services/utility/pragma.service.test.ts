@@ -2,7 +2,7 @@ import { PragmaService } from "../../../services/utility/pragma.service";
 
 jest.mock("../../../services/utility/localization.service.ts");
 
-test("should properly process before uploading", async () => {
+it("should properly process before uploading", async () => {
   const initial = `{
     // @sync host=jest
     // "abc": "xyz"
@@ -14,7 +14,7 @@ test("should properly process before uploading", async () => {
   expect(await PragmaService.processBeforeUpload(initial)).toBe(expected);
 });
 
-test("should properly process before writing", () => {
+it("should properly process before writing", () => {
   const initial = `{
     // @sync host=jest
     "abc": "xyz"

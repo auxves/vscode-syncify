@@ -7,6 +7,6 @@ export const extensions = {
   all: [{ id: "arnohovhannisyan.syncify", packageJSON: { isBuiltin: false } }]
 };
 
-export const ProgressLocation = {
-  Notification: null
-};
+export enum ProgressLocation {
+  Notification = null
+}

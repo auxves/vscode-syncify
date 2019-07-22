@@ -5,10 +5,10 @@ import { FactoryService } from "../../../services/utility/factory.service";
 
 jest.mock("../../../services/utility/localization.service.ts");
 
-test("should create repo service", () => {
+it("should create repo service", () => {
   expect(FactoryService.generate(SyncMethod.Repo)).toBeInstanceOf(RepoService);
 });
 
-test("should create file service", () => {
+it("should create file service", () => {
   expect(FactoryService.generate(SyncMethod.File)).toBeInstanceOf(FileService);
 });

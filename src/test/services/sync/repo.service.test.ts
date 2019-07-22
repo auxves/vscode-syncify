@@ -30,7 +30,7 @@ afterEach(() => {
   return remove(cleanupPath);
 });
 
-test("should upload without errors", async () => {
+it("should upload without errors", async () => {
   const userData = {
     "test.key": true
   };
@@ -44,7 +44,7 @@ test("should upload without errors", async () => {
   expect(uploadedData).toBe(expected);
 });
 
-test("should download without errors", async () => {
+it("should download without errors", async () => {
   const userData = {
     "test.key": true
   };
@@ -81,7 +81,7 @@ test("should download without errors", async () => {
   expect(downloadedData).toBe(expected);
 });
 
-test("should download when syncing if remote has newer changes", async () => {
+it("should download when syncing if remote has newer changes", async () => {
   const userData = {
     "test.key": true
   };
@@ -118,7 +118,7 @@ test("should download when syncing if remote has newer changes", async () => {
   expect(syncedData).toBe(expected);
 });
 
-test("should not upload if remote has newer changes", async () => {
+it("should not upload if remote has newer changes", async () => {
   const userData = {
     "test.key": true
   };
