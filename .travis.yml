@@ -17,7 +17,7 @@ deploy:
       branch: master
       tags: true
   - provider: script
-    script: vsce publish -p $VS_TOKEN
+    script: yarn vsce publish -p $VS_TOKEN
     skip_cleanup: true
     on:
       branch: master
