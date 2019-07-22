@@ -112,6 +112,7 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.5.3",
     "typescript-json-schema": "^0.38.3",
+    "vsce": "^1.65.0",
     "vscode": "^1.1.35",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6"
@@ -124,7 +125,6 @@
     "node-fetch": "^2.6.0",
     "recursive-readdir": "^2.2.2",
     "simple-git": "^1.121.0",
-    "vsce": "^1.65.0",
     "vscode-chokidar": "^2.1.7"
   },
   "jest": {
