@@ -3,11 +3,10 @@ node_js:
   - "10"
 install: yarn
 cache: yarn
-before_script:
-  - yarn global add vsce
 script:
   - yarn lint
-  - vsce package
+  - yarn test
+  - yarn vsce package
 deploy:
   - provider: releases
     api_key: $GITHUB_TOKEN
