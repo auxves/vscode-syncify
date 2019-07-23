@@ -2,7 +2,7 @@ import { OperatingSystem } from "../../models/os.model";
 import { state } from "../../models/state.model";
 
 export class PragmaService {
-  public static processBeforeWrite(
+  public static processIncoming(
     localContent: string,
     newContent: string,
     hostName: string
@@ -93,9 +93,7 @@ export class PragmaService {
     return result;
   }
 
-  public static async processBeforeUpload(
-    fileContent: string
-  ): Promise<string> {
+  public static processOutgoing(fileContent: string): string {
     const lines = fileContent.split("\n");
     let osMatch: RegExpMatchArray;
     let osFromPragma: string;

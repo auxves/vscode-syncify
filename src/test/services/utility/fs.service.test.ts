@@ -18,11 +18,20 @@ afterEach(() => {
   return remove(cleanupPath);
 });
 
-it("should only list files that aren't ignored", async () => {
+it("should not list ignored files", async () => {
   const filepath = resolve(testFolder, "file");
   await fs.write(filepath, "test");
 
   const files = await fs.listFiles(testFolder, ["**/file"]);
 
   expect(files.includes(filepath)).toBeFalsy();
+});
+
+it("should list files that aren't ignored", async () => {
+  const filepath = resolve(testFolder, "file");
+  await fs.write(filepath, "test");
+
+  const files = await fs.listFiles(testFolder, ["**/fole"]);
+
+  expect(files.includes(filepath)).toBeTruthy();
 });

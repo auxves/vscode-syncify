@@ -145,17 +145,15 @@ export class WebviewService {
   ];
 
   constructor() {
-    this.webviews = this.webviews.map(view => {
-      return {
-        ...view,
-        htmlContent: readFileSync(
-          `${state.context.extensionPath}/assets/ui/${view.name}/${
-            view.htmlPath
-          }`,
-          "utf-8"
-        )
-      };
-    });
+    this.webviews = this.webviews.map(view => ({
+      ...view,
+      htmlContent: readFileSync(
+        `${state.context.extensionPath}/assets/ui/${view.name}/${
+          view.htmlPath
+        }`,
+        "utf-8"
+      )
+    }));
   }
 
   public openSettingsPage(settings: ISettings): vscode.WebviewPanel {

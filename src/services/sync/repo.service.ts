@@ -354,7 +354,7 @@ export class RepoService implements ISyncService {
         if (filesToPragma.includes(basename(file))) {
           return state.fs.write(
             newPath,
-            await PragmaService.processBeforeUpload(contents)
+            PragmaService.processOutgoing(contents)
           );
         }
 
@@ -401,7 +401,7 @@ export class RepoService implements ISyncService {
         })();
 
         if (filesToPragma.includes(filename)) {
-          const afterPragma = PragmaService.processBeforeWrite(
+          const afterPragma = PragmaService.processIncoming(
             currentContents,
             contents,
             settings.hostname
