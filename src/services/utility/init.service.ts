@@ -1,13 +1,13 @@
+import { state } from "models/state.model";
+import { CustomFileService } from "services/utility/custom-file.service";
+import { EnvironmentService } from "services/utility/environment.service";
+import { ExtensionService } from "services/utility/extension.service";
+import { FactoryService } from "services/utility/factory.service";
+import { FileSystemService } from "services/utility/fs.service";
+import { SettingsService } from "services/utility/settings.service";
+import { WatcherService } from "services/utility/watcher.service";
+import { WebviewService } from "services/utility/webview.service";
 import { commands } from "vscode";
-import { state } from "../../models/state.model";
-import { CustomFileService } from "./custom-file.service";
-import { EnvironmentService } from "./environment.service";
-import { ExtensionService } from "./extension.service";
-import { FactoryService } from "./factory.service";
-import { FileSystemService } from "./fs.service";
-import { SettingsService } from "./settings.service";
-import { WatcherService } from "./watcher.service";
-import { WebviewService } from "./webview.service";
 
 export class InitService {
   public static async init() {

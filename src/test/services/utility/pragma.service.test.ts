@@ -1,9 +1,9 @@
-import { OperatingSystem } from "../../../models/os.model";
-import { state } from "../../../models/state.model";
-import { PragmaService } from "../../../services/utility/pragma.service";
+import { OperatingSystem } from "models/os.model";
+import { state } from "models/state.model";
+import { PragmaService } from "services/utility/pragma.service";
 
-jest.mock("../../../services/utility/localization.service.ts");
-jest.mock("../../../models/state.model.ts");
+jest.mock("services/utility/localization.service.ts");
+jest.mock("models/state.model.ts");
 
 it("should properly process before uploading", () => {
   const initial = `{

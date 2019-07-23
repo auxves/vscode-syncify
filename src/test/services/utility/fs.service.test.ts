@@ -1,9 +1,9 @@
 import { ensureDir, remove } from "fs-extra";
 import { resolve } from "path";
-import { FileSystemService } from "../../../services/utility/fs.service";
+import { FileSystemService } from "services/utility/fs.service";
 
-jest.mock("../../../services/utility/localization.service.ts");
-jest.mock("../../../models/state.model.ts");
+jest.mock("services/utility/localization.service.ts");
+jest.mock("models/state.model.ts");
 
 const fs = new FileSystemService();
 

@@ -7,8 +7,12 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "rootDirs": ["src", "assets"]
+    "rootDirs": ["src", "assets"],
+    "baseUrl": "src",
+    "paths": {
+      "assets/*": ["../assets/*"]
+    }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "src/**/*.test.ts", "**/__mocks__/*.ts"]
+  "exclude": ["node_modules", "**/__mocks__/*.ts"]
 }

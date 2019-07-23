@@ -1,11 +1,11 @@
+import { IProfile } from "models/profile.model";
+import { ISettings } from "models/settings.model";
+import { state } from "models/state.model";
+import { ISyncService } from "models/sync.model";
 import { basename, dirname, relative, resolve } from "path";
+import { PragmaService } from "services/utility/pragma.service";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ProgressLocation, window } from "vscode";
-import { IProfile } from "../../models/profile.model";
-import { ISettings } from "../../models/settings.model";
-import { state } from "../../models/state.model";
-import { ISyncService } from "../../models/sync.model";
-import { PragmaService } from "../utility/pragma.service";
 
 export class RepoService implements ISyncService {
   private git: SimpleGit;

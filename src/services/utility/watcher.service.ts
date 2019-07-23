@@ -1,7 +1,7 @@
+import { state } from "models/state.model";
+import { UtilityService } from "services/utility/utility.service";
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
-import { state } from "../../models/state.model";
-import { UtilityService } from "./utility.service";
 
 export class WatcherService {
   private watching = false;

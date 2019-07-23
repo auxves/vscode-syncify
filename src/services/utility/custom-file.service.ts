@@ -1,6 +1,6 @@
+import { state } from "models/state.model";
 import { basename, resolve } from "path";
 import { Uri, window, workspace } from "vscode";
-import { state } from "../../models/state.model";
 
 export class CustomFileService {
   public static async import(): Promise<void> {

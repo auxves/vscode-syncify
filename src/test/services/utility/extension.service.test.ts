@@ -1,6 +1,6 @@
 import _isEqual from "lodash/isEqual";
+import { ExtensionService } from "services/utility/extension.service";
 import { extensions } from "vscode";
-import { ExtensionService } from "../../../services/utility/extension.service";
 
 const extensionService = new ExtensionService();
 

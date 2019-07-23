@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "fs-extra";
+import { ILanguagePack } from "models/language-pack.model";
 import { resolve } from "path";
 import { extensions } from "vscode";
-import { ILanguagePack } from "../../models/language-pack.model";
 
 export class LocalizationService {
   private bundle = this.resolveLanguagePack();

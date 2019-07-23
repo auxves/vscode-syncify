@@ -1,7 +1,7 @@
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
 import micromatch from "micromatch";
+import { state } from "models/state.model";
 import recursiveRead from "recursive-readdir";
-import { state } from "../../models/state.model";
 
 export class FileSystemService {
   public exists(path: string): Promise<boolean> {

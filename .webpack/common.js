@@ -1,4 +1,5 @@
 const { resolve } = require("path");
+const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 
 module.exports = {
   stats: {
@@ -13,7 +14,8 @@ module.exports = {
     devtoolModuleFilenameTemplate: "file:///[absolute-resource-path]"
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: [".ts", ".js"],
+    plugins: [new TsConfigPathsPlugin()]
   },
   module: {
     rules: [

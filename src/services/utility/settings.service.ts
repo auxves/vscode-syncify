@@ -1,8 +1,8 @@
 import merge from "lodash/merge";
+import { defaultSettings, ISettings } from "models/settings.model";
+import { state } from "models/state.model";
+import { InitService } from "services/utility/init.service";
 import { ViewColumn, window, workspace } from "vscode";
-import { defaultSettings, ISettings } from "../../models/settings.model";
-import { state } from "../../models/state.model";
-import { InitService } from "./init.service";
 
 export class SettingsService {
   public async getSettings(): Promise<ISettings> {

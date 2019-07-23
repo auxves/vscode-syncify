@@ -1,6 +1,6 @@
+import { OperatingSystem } from "models/os.model";
+import { state } from "models/state.model";
 import { normalize, resolve } from "path";
-import { OperatingSystem } from "../../models/os.model";
-import { state } from "../../models/state.model";
 
 export class EnvironmentService {
   public locations = {

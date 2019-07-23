@@ -1,12 +1,12 @@
+import { ISyncService } from "models/sync.model";
+import { EnvironmentService } from "services/utility/environment.service";
+import { ExtensionService } from "services/utility/extension.service";
+import { FileSystemService } from "services/utility/fs.service";
+import { LocalizationService } from "services/utility/localization.service";
+import { SettingsService } from "services/utility/settings.service";
+import { WatcherService } from "services/utility/watcher.service";
+import { WebviewService } from "services/utility/webview.service";
 import { ExtensionContext } from "vscode";
-import { EnvironmentService } from "../services/utility/environment.service";
-import { ExtensionService } from "../services/utility/extension.service";
-import { FileSystemService } from "../services/utility/fs.service";
-import { LocalizationService } from "../services/utility/localization.service";
-import { SettingsService } from "../services/utility/settings.service";
-import { WatcherService } from "../services/utility/watcher.service";
-import { WebviewService } from "../services/utility/webview.service";
-import { ISyncService } from "./sync.model";
 
 export interface IExtensionState {
   context?: ExtensionContext;

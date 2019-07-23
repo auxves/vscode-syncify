@@ -1,6 +1,6 @@
-import { SyncMethod } from "../../models/sync-method.model";
-import { FileService } from "../sync/file.service";
-import { RepoService } from "../sync/repo.service";
+import { SyncMethod } from "models/sync-method.model";
+import { FileService } from "services/sync/file.service";
+import { RepoService } from "services/sync/repo.service";
 
 export class FactoryService {
   public static generate(syncMethod: SyncMethod) {
