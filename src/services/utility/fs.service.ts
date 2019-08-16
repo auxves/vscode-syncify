@@ -1,7 +1,6 @@
 import { state } from "@/models";
+import glob from "fast-glob";
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
-import micromatch from "micromatch";
-import recursiveRead from "recursive-readdir";
 
 export class FileSystemService {
   public exists(path: string): Promise<boolean> {
@@ -29,12 +28,11 @@ export class FileSystemService {
     ignoredItems?: string[]
   ): Promise<string[]> {
     const settings = await state.settings.getSettings();
-    const ignored = ignoredItems || settings.ignoredItems;
 
-    function matcher(file: string) {
-      return micromatch.contains(file, ignored);
-    }
-
-    return recursiveRead(path, [matcher]);
+    return glob(`${path}/**/*`, {
+      dot: true,
+      ignore: ignoredItems || settings.ignoredItems,
+      absolute: true
+    });
   }
 }
