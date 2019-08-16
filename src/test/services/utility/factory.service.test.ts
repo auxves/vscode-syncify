@@ -1,9 +1,7 @@
-import { SyncMethod } from "models/sync-method.model";
-import { FileService } from "services/sync/file.service";
-import { RepoService } from "services/sync/repo.service";
-import { FactoryService } from "services/utility/factory.service";
+import { SyncMethod } from "@/models";
+import { FactoryService, FileService, RepoService } from "@/services";
 
-jest.mock("services/utility/localization.service.ts");
+jest.mock("@/services/utility/localization.service.ts");
 
 it("should create repo service", () => {
   expect(FactoryService.generate(SyncMethod.Repo)).toBeInstanceOf(RepoService);

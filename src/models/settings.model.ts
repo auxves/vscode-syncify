@@ -1,5 +1,4 @@
-import { IProfile } from "models/profile.model";
-import { SyncMethod } from "models/sync-method.model";
+import { IProfile, SyncMethod } from "@/models";
 
 export interface ISettings {
   method: SyncMethod;

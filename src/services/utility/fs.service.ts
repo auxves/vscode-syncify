@@ -1,6 +1,6 @@
+import { state } from "@/models";
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
 import micromatch from "micromatch";
-import { state } from "models/state.model";
 import recursiveRead from "recursive-readdir";
 
 export class FileSystemService {

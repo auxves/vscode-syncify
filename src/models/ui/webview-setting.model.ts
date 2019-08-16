@@ -1,4 +1,4 @@
-import { UISettingType } from "models/ui/setting-type.model";
+import { UISettingType } from "@/models";
 
 export interface IWebviewSetting {
   name: string;

@@ -1,8 +1,6 @@
+import { ExtensionService } from "@/services";
 import _isEqual from "lodash/isEqual";
-import { ExtensionService } from "services/utility/extension.service";
 import { extensions } from "vscode";
-
-const extensionService = new ExtensionService();
 
 function isEqual(arr1: any[], arr2: any[]): boolean {
   return _isEqual([...arr1].sort(), [...arr2].sort());
@@ -22,7 +20,7 @@ function setExtensions(exts: string[]): void {
 it("should properly get missing extensions", () => {
   setExtensions(["publisher1.extension1"]);
 
-  const missing = extensionService.getMissingExtensions([
+  const missing = ExtensionService.getMissingExtensions([
     "publisher1.extension1",
     "publisher2.extension2",
     "publisher3.extension3"
@@ -40,7 +38,7 @@ it("should properly get unneeded extensions", () => {
     "publisher3.extension3"
   ]);
 
-  const unneeded = extensionService.getUnneededExtensions([
+  const unneeded = ExtensionService.getUnneededExtensions([
     "publisher1.extension1"
   ]);
 

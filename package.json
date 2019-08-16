@@ -132,9 +132,7 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "services/(.*)": "<rootDir>/src/services/$1",
-      "models/(.*)": "<rootDir>/src/models/$1",
-      "assets/(.*)": "<rootDir>/assets/$1"
+      "^@/(.*)": "<rootDir>/src/$1"
     }
   }
 }

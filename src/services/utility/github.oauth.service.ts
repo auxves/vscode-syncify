@@ -1,8 +1,8 @@
+import { state } from "@/models";
+import { LoggerService } from "@/services";
 import express from "express";
 import { Server } from "http";
-import { state } from "models/state.model";
 import fetch from "node-fetch";
-import { LoggerService } from "services/utility/logger.service";
 import { URL, URLSearchParams } from "url";
 
 export class GitHubOAuthService {

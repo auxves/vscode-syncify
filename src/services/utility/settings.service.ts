@@ -1,7 +1,6 @@
+import { defaultSettings, ISettings, state } from "@/models";
+import { InitService, localize } from "@/services";
 import merge from "lodash/merge";
-import { defaultSettings, ISettings } from "models/settings.model";
-import { state } from "models/state.model";
-import { InitService } from "services/utility/init.service";
 import { ViewColumn, window, workspace } from "vscode";
 
 export class SettingsService {
@@ -72,17 +71,17 @@ export class SettingsService {
       state.watcher.startWatching();
     }
 
-    window.showInformationMessage(state.localize("info(reset).resetComplete"));
+    window.showInformationMessage(localize("info(reset).resetComplete"));
   }
 
   public async showOtherOptions(name?: string): Promise<void> {
     const options = [
       {
-        name: state.localize("option(switchProfile).name"),
+        name: localize("option(switchProfile).name"),
         action: this.switchProfile
       },
       {
-        name: state.localize("option(reinitialize).name"),
+        name: localize("option(reinitialize).name"),
         action: InitService.init
       }
     ];
@@ -113,7 +112,7 @@ export class SettingsService {
         }
       });
       await window.showInformationMessage(
-        state.localize("info(repo).switchedProfile", newProfile.name)
+        localize("info(repo).switchedProfile", newProfile.name)
       );
     }
   }

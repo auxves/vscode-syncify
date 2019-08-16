@@ -1,7 +1,6 @@
 /* Originally from shanalikhan/code-settings-sync */
 
-import { OperatingSystem } from "models/os.model";
-import { state } from "models/state.model";
+import { OperatingSystem, state } from "@/models";
 
 export class PragmaService {
   public static processIncoming(

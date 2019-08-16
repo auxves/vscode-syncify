@@ -1,5 +1,4 @@
-import { OperatingSystem } from "models/os.model";
-import { state } from "models/state.model";
+import { OperatingSystem, state } from "@/models";
 import { normalize, resolve } from "path";
 
 export class EnvironmentService {

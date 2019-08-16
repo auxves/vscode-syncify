@@ -1,14 +1,13 @@
+import { state } from "@/models";
+import { FileSystemService, RepoService } from "@/services";
 import { ensureDir, remove } from "fs-extra";
-import { state } from "models/state.model";
 import { resolve } from "path";
-import { RepoService } from "services/sync/repo.service";
-import { FileSystemService } from "services/utility/fs.service";
 import createSimpleGit from "simple-git/promise";
 
 const fs = new FileSystemService();
 
-jest.mock("services/utility/localization.service.ts");
-jest.mock("models/state.model.ts");
+jest.mock("@/services/utility/localization.service.ts");
+jest.mock("@/models/state.model.ts");
 
 const cleanupPath = "/tmp/jest/repo.service.test.ts";
 const pathToRemote = `${cleanupPath}/remote`;

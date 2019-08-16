@@ -1,5 +1,5 @@
-import { state } from "models/state.model";
-import { InitService } from "services/utility/init.service";
+import { state } from "@/models";
+import { InitService } from "@/services";
 import { ExtensionContext } from "vscode";
 
 export async function activate(context: ExtensionContext) {

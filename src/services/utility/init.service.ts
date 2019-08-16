@@ -1,12 +1,14 @@
-import { state } from "models/state.model";
-import { CustomFileService } from "services/utility/custom-file.service";
-import { EnvironmentService } from "services/utility/environment.service";
-import { ExtensionService } from "services/utility/extension.service";
-import { FactoryService } from "services/utility/factory.service";
-import { FileSystemService } from "services/utility/fs.service";
-import { SettingsService } from "services/utility/settings.service";
-import { WatcherService } from "services/utility/watcher.service";
-import { WebviewService } from "services/utility/webview.service";
+import { state } from "@/models";
+import {
+  CustomFileService,
+  EnvironmentService,
+  ExtensionService,
+  FactoryService,
+  FileSystemService,
+  SettingsService,
+  WatcherService,
+  WebviewService
+} from "@/services";
 import { commands } from "vscode";
 
 export class InitService {

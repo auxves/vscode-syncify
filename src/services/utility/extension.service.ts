@@ -1,18 +1,24 @@
 import { commands, extensions } from "vscode";
 
 export class ExtensionService {
-  public async installExtension(id: string): Promise<void> {
+  public static async installExtension(id: string): Promise<void> {
     return commands.executeCommand("workbench.extensions.installExtension", id);
   }
 
-  public async uninstallExtension(id: string): Promise<void> {
+  public static async uninstallExtension(id: string): Promise<void> {
     return commands.executeCommand(
       "workbench.extensions.uninstallExtension",
       id
     );
   }
 
-  public getMissingExtensions(downloadedExtensions: string[]): string[] {
+  public static getExtensions(): string[] {
+    return extensions.all
+      .filter(ext => !ext.packageJSON.isBuiltin)
+      .map(ext => ext.id);
+  }
+
+  public static getMissingExtensions(downloadedExtensions: string[]): string[] {
     const installedExtensions = extensions.all
       .filter(ext => !ext.packageJSON.isBuiltin)
       .map(ext => ext.id);
@@ -21,7 +27,9 @@ export class ExtensionService {
     );
   }
 
-  public getUnneededExtensions(downloadedExtensions: string[]): string[] {
+  public static getUnneededExtensions(
+    downloadedExtensions: string[]
+  ): string[] {
     const installedExtensions = extensions.all
       .filter(ext => !ext.packageJSON.isBuiltin)
       .map(ext => ext.id);

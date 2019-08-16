@@ -1,13 +1,10 @@
+import { defaultSettings, ISettings, state } from "@/models";
+import { FileSystemService, InitService, SettingsService } from "@/services";
 import { ensureDir, remove } from "fs-extra";
-import { defaultSettings, ISettings } from "models/settings.model";
-import { state } from "models/state.model";
 import { resolve } from "path";
-import { FileSystemService } from "services/utility/fs.service";
-import { InitService } from "services/utility/init.service";
-import { SettingsService } from "services/utility/settings.service";
 
-jest.mock("services/utility/localization.service.ts");
-jest.mock("models/state.model.ts");
+jest.mock("@/services/utility/localization.service.ts");
+jest.mock("@/models/state.model.ts");
 
 const cleanupPath = "/tmp/jest/settings.service.test.ts";
 const testFolder = `${cleanupPath}/test`;

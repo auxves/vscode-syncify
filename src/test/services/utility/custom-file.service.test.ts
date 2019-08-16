@@ -1,12 +1,11 @@
+import { state } from "@/models";
+import { CustomFileService, FileSystemService } from "@/services";
 import { ensureDir, remove } from "fs-extra";
-import { state } from "models/state.model";
 import { resolve } from "path";
-import { CustomFileService } from "services/utility/custom-file.service";
-import { FileSystemService } from "services/utility/fs.service";
 import { Uri } from "vscode";
 
-jest.mock("services/utility/localization.service.ts");
-jest.mock("models/state.model.ts");
+jest.mock("@/services/utility/localization.service.ts");
+jest.mock("@/models/state.model.ts");
 
 const fs = new FileSystemService();
 

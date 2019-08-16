@@ -10,9 +10,9 @@
     "rootDirs": ["src", "assets"],
     "baseUrl": "src",
     "paths": {
-      "assets/*": ["../assets/*"]
+      "@/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "**/__mocks__/*.ts"]
+  "exclude": ["node_modules", "**/__mocks__/**/*.ts"]
 }

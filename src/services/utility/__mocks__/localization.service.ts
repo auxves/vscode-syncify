@@ -1,5 +1,1 @@
-export class LocalizationService {
-  public localize(key: string, ...args: string[]): string {
-    return key;
-  }
-}
+export const localize = (key: string) => key;

@@ -1,5 +1,5 @@
+import { ILanguagePack } from "@/models";
 import { existsSync, readFileSync } from "fs-extra";
-import { ILanguagePack } from "models/language-pack.model";
 import { resolve } from "path";
 import { extensions } from "vscode";
 
@@ -16,7 +16,9 @@ export class LocalizationService {
     try {
       this.options = {
         ...this.options,
-        ...JSON.parse(process.env.VSCODE_NLS_CONFIG || "{}")
+        ...JSON.parse(
+          process.env.VSCODE_NLS_CONFIG || JSON.stringify({ locale: "en" })
+        )
       };
     } catch (err) {
       throw err;
@@ -82,3 +84,9 @@ export class LocalizationService {
     return format.replace("{0}", "");
   }
 }
+
+type Localize = (key: string, ...args: string[]) => string;
+
+export const localize: Localize = LocalizationService.prototype.localize.bind(
+  new LocalizationService()
+);

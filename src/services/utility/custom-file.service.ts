@@ -1,4 +1,5 @@
-import { state } from "models/state.model";
+import { state } from "@/models";
+import { localize } from "@/services";
 import { basename, resolve } from "path";
 import { Uri, window, workspace } from "vscode";
 
@@ -21,9 +22,7 @@ export class CustomFileService {
     );
 
     if (!allFiles.length) {
-      await window.showInformationMessage(
-        state.localize("info(customSync).noFiles")
-      );
+      await window.showInformationMessage(localize("info(customSync).noFiles"));
       return;
     }
 
@@ -35,9 +34,7 @@ export class CustomFileService {
       const result = await window.showQuickPick(
         workspace.workspaceFolders.map(f => f.name),
         {
-          placeHolder: state.localize(
-            "prompt(customFile).import.folderPlaceholder"
-          )
+          placeHolder: localize("prompt(customFile).import.folderPlaceholder")
         }
       );
 
@@ -52,7 +49,7 @@ export class CustomFileService {
     const filename = await window.showQuickPick(
       allFiles.map(f => basename(f)),
       {
-        placeHolder: state.localize("prompt(customFile).import.filePlaceholder")
+        placeHolder: localize("prompt(customFile).import.filePlaceholder")
       }
     );
 
@@ -77,7 +74,7 @@ export class CustomFileService {
     const filepath = uri
       ? uri.fsPath
       : await window.showInputBox({
-          prompt: state.localize("prompt(customFile).register.filePlaceholder")
+          prompt: localize("prompt(customFile).register.filePlaceholder")
         });
 
     if (!filepath) {
@@ -89,7 +86,7 @@ export class CustomFileService {
     const newPath = resolve(state.env.locations.customFilesFolder, filename);
     await state.fs.write(newPath, contents);
     await window.showInformationMessage(
-      state.localize("info(customFile).registered", filename)
+      localize("info(customFile).registered", filename)
     );
   }
 }

@@ -1,9 +1,6 @@
-import { IProfile } from "models/profile.model";
-import { ISettings } from "models/settings.model";
-import { state } from "models/state.model";
-import { ISyncService } from "models/sync.model";
+import { IProfile, ISettings, ISyncService, state } from "@/models";
+import { ExtensionService, localize, PragmaService } from "@/services";
 import { basename, dirname, relative, resolve } from "path";
-import { PragmaService } from "services/utility/pragma.service";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ProgressLocation, window } from "vscode";
 
@@ -89,7 +86,7 @@ export class RepoService implements ISyncService {
       }
     }
 
-    window.setStatusBarMessage(state.localize("info(sync).nothingToDo"), 2000);
+    window.setStatusBarMessage(localize("info(sync).nothingToDo"), 2000);
   }
 
   public async upload(): Promise<void> {
@@ -103,7 +100,7 @@ export class RepoService implements ISyncService {
 
     await this.init();
 
-    window.setStatusBarMessage(state.localize("info(upload).uploading"), 2000);
+    window.setStatusBarMessage(localize("info(upload).uploading"), 2000);
 
     const settings = await state.settings.getSettings();
 
@@ -121,9 +118,7 @@ export class RepoService implements ISyncService {
       await this.copyFilesToRepo();
       await this.cleanUpRepo();
 
-      const installedExtensions = extensions.all
-        .filter(ext => !ext.packageJSON.isBuiltin)
-        .map(ext => ext.id);
+      const installedExtensions = ExtensionService.getExtensions();
 
       await state.fs.write(
         resolve(state.env.locations.repoFolder, "extensions.json"),
@@ -135,10 +130,7 @@ export class RepoService implements ISyncService {
       const currentChanges = await this.git.diff([profile.branch]);
 
       if (!currentChanges && !settings.forceUpload) {
-        window.setStatusBarMessage(
-          state.localize("info(upload).upToDate"),
-          2000
-        );
+        window.setStatusBarMessage(localize("info(upload).upToDate"), 2000);
         return;
       }
 
@@ -148,7 +140,7 @@ export class RepoService implements ISyncService {
         "--force": null
       });
 
-      window.setStatusBarMessage(state.localize("info(upload).uploaded"), 2000);
+      window.setStatusBarMessage(localize("info(upload).uploaded"), 2000);
     })();
 
     if (settings.watchSettings) {
@@ -167,10 +159,7 @@ export class RepoService implements ISyncService {
 
     await this.init();
 
-    window.setStatusBarMessage(
-      state.localize("info(download).downloading"),
-      2000
-    );
+    window.setStatusBarMessage(localize("info(download).downloading"), 2000);
 
     const settings = await state.settings.getSettings();
 
@@ -181,7 +170,7 @@ export class RepoService implements ISyncService {
 
       if (!remoteBranches.all.length) {
         window.setStatusBarMessage(
-          state.localize("info(download).noRemoteBranches"),
+          localize("info(download).noRemoteBranches"),
           2000
         );
         return;
@@ -191,10 +180,7 @@ export class RepoService implements ISyncService {
       const diff = await this.git.diff([`origin/${profile.branch}`]);
 
       if (!diff && !settings.forceDownload) {
-        window.setStatusBarMessage(
-          state.localize("info(download).upToDate"),
-          2000
-        );
+        window.setStatusBarMessage(localize("info(download).upToDate"), 2000);
         return;
       }
 
@@ -226,7 +212,7 @@ export class RepoService implements ISyncService {
           )
         );
 
-        const toInstall = state.extensions.getMissingExtensions(
+        const toInstall = ExtensionService.getMissingExtensions(
           extensionsFromFile
         );
 
@@ -238,10 +224,10 @@ export class RepoService implements ISyncService {
             const increment = 100 / toInstall.length;
             return Promise.all(
               toInstall.map(async ext => {
-                await state.extensions.installExtension(ext);
+                await ExtensionService.installExtension(ext);
                 progress.report({
                   increment,
-                  message: state.localize("info(download).installed", ext)
+                  message: localize("info(download).installed", ext)
                 });
               })
             );
@@ -249,7 +235,7 @@ export class RepoService implements ISyncService {
         );
 
         if (settings.removeExtensions) {
-          const toDelete = state.extensions.getUnneededExtensions(
+          const toDelete = ExtensionService.getUnneededExtensions(
             extensionsFromFile
           );
 
@@ -266,10 +252,10 @@ export class RepoService implements ISyncService {
                 const increment = 100 / toDelete.length;
                 return Promise.all(
                   toDelete.map(async ext => {
-                    await state.extensions.uninstallExtension(ext);
+                    await ExtensionService.uninstallExtension(ext);
                     progress.report({
                       increment,
-                      message: state.localize("info(download).uninstalled", ext)
+                      message: localize("info(download).uninstalled", ext)
                     });
                   })
                 );
@@ -277,9 +263,9 @@ export class RepoService implements ISyncService {
             );
 
             if (needToReload) {
-              const yes = state.localize("btn(yes)");
+              const yes = localize("btn(yes)");
               const result = await window.showInformationMessage(
-                state.localize("info(download).needToReload"),
+                localize("info(download).needToReload"),
                 yes
               );
               if (result === yes) {
@@ -292,10 +278,7 @@ export class RepoService implements ISyncService {
         throw err;
       }
 
-      window.setStatusBarMessage(
-        state.localize("info(download).downloaded"),
-        2000
-      );
+      window.setStatusBarMessage(localize("info(download).downloaded"), 2000);
     })();
 
     if (settings.watchSettings) {

@@ -1,5 +1,5 @@
-import { state } from "models/state.model";
-import { UtilityService } from "services/utility/utility.service";
+import { state } from "@/models";
+import { localize, UtilityService } from "@/services";
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
 
@@ -49,10 +49,7 @@ export class WatcherService {
     let shouldUpload = true;
 
     const message = window.setStatusBarMessage(
-      state.localize(
-        "info(upload).initiating",
-        settings.autoUploadDelay.toString()
-      ),
+      localize("info(upload).initiating", settings.autoUploadDelay.toString()),
       5000
     );
 
@@ -68,7 +65,7 @@ export class WatcherService {
     state.context.subscriptions.push(disposable);
 
     btn.command = "syncify.cancelUpload";
-    btn.text = `$(x) ${state.localize("action(upload).cancel")}`;
+    btn.text = `$(x) ${localize("action(upload).cancel")}`;
     btn.show();
 
     await UtilityService.sleep(settings.autoUploadDelay * 1000);

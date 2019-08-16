@@ -1,4 +1,4 @@
-import { LocalizationService } from "services/utility/localization.service";
+import { LocalizationService } from "@/services";
 
 function locale(lang: string): (key: string, ...args: string[]) => string {
   process.env.VSCODE_NLS_CONFIG = JSON.stringify({ locale: lang });
