@@ -22,7 +22,9 @@ export class CustomFileService {
     );
 
     if (!allFiles.length) {
-      await window.showInformationMessage(localize("info(customSync).noFiles"));
+      await window.showInformationMessage(
+        localize("(info) customSync.noFiles")
+      );
       return;
     }
 
@@ -34,7 +36,7 @@ export class CustomFileService {
       const result = await window.showQuickPick(
         workspace.workspaceFolders.map(f => f.name),
         {
-          placeHolder: localize("prompt(customFile).import.folderPlaceholder")
+          placeHolder: localize("(prompt) customFile.import.folderPlaceholder")
         }
       );
 
@@ -49,7 +51,7 @@ export class CustomFileService {
     const filename = await window.showQuickPick(
       allFiles.map(f => basename(f)),
       {
-        placeHolder: localize("prompt(customFile).import.filePlaceholder")
+        placeHolder: localize("(prompt) customFile.import.filePlaceholder")
       }
     );
 
@@ -74,7 +76,7 @@ export class CustomFileService {
     const filepath = uri
       ? uri.fsPath
       : await window.showInputBox({
-          prompt: localize("prompt(customFile).register.filePlaceholder")
+          prompt: localize("(prompt) customFile.register.filePlaceholder")
         });
 
     if (!filepath) {
@@ -86,7 +88,7 @@ export class CustomFileService {
     const newPath = resolve(state.env.locations.customFilesFolder, filename);
     await state.fs.write(newPath, contents);
     await window.showInformationMessage(
-      localize("info(customFile).registered", filename)
+      localize("(info) customFile.registered", filename)
     );
   }
 }

@@ -49,7 +49,7 @@ export class WatcherService {
     let shouldUpload = true;
 
     const message = window.setStatusBarMessage(
-      localize("info(upload).initiating", settings.autoUploadDelay.toString()),
+      localize("(info) upload.initiating", settings.autoUploadDelay.toString()),
       5000
     );
 
@@ -65,7 +65,7 @@ export class WatcherService {
     state.context.subscriptions.push(disposable);
 
     btn.command = "syncify.cancelUpload";
-    btn.text = `$(x) ${localize("action(upload).cancel")}`;
+    btn.text = `$(x) ${localize("(action) upload.cancel")}`;
     btn.show();
 
     await UtilityService.sleep(settings.autoUploadDelay * 1000);

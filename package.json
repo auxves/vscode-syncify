@@ -36,35 +36,35 @@
     "commands": [
       {
         "command": "syncify.sync",
-        "title": "%cmd(syncify.sync).name%"
+        "title": "%(command) syncify.sync%"
       },
       {
         "command": "syncify.upload",
-        "title": "%cmd(syncify.upload).name%"
+        "title": "%(command) syncify.upload%"
       },
       {
         "command": "syncify.download",
-        "title": "%cmd(syncify.download).name%"
+        "title": "%(command) syncify.download%"
       },
       {
         "command": "syncify.reset",
-        "title": "%cmd(syncify.reset).name%"
+        "title": "%(command) syncify.reset%"
       },
       {
         "command": "syncify.openSettings",
-        "title": "%cmd(syncify.openSettings).name%"
+        "title": "%(command) syncify.openSettings%"
       },
       {
         "command": "syncify.otherOptions",
-        "title": "%cmd(syncify.otherOptions).name%"
+        "title": "%(command) syncify.otherOptions%"
       },
       {
         "command": "syncify.registerCustomFile",
-        "title": "%cmd(syncify.registerCustomFile).name%"
+        "title": "%(command) syncify.registerCustomFile%"
       },
       {
         "command": "syncify.importCustomFile",
-        "title": "%cmd(syncify.importCustomFile).name%"
+        "title": "%(command) syncify.importCustomFile%"
       }
     ],
     "jsonValidation": [

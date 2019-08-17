@@ -20,8 +20,8 @@ export class WebviewService {
       name: "General",
       settings: [
         {
-          name: localize("setting(method).name"),
-          placeholder: localize("setting(method).placeholder"),
+          name: localize("(setting) method.name"),
+          placeholder: localize("(setting) method.placeholder"),
           correspondingSetting: "method",
           type: UISettingType.Select,
           options: [
@@ -36,49 +36,49 @@ export class WebviewService {
           ]
         },
         {
-          name: localize("setting(hostname).name"),
-          placeholder: localize("setting(hostname).placeholder"),
+          name: localize("(setting) hostname.name"),
+          placeholder: localize("(setting) hostname.placeholder"),
           correspondingSetting: "hostname",
           type: UISettingType.TextInput
         },
         {
-          name: localize("setting(ignoredItems).name"),
-          placeholder: localize("setting(ignoredItems).placeholder"),
+          name: localize("(setting) ignoredItems.name"),
+          placeholder: localize("(setting) ignoredItems.placeholder"),
           correspondingSetting: "ignoredItems",
           type: UISettingType.TextArea
         },
         {
-          name: localize("setting(autoUploadDelay).name"),
-          placeholder: localize("setting(autoUploadDelay).placeholder"),
+          name: localize("(setting) autoUploadDelay.name"),
+          placeholder: localize("(setting) autoUploadDelay.placeholder"),
           correspondingSetting: "autoUploadDelay",
           type: UISettingType.NumberInput
         },
         {
-          name: localize("setting(watchSettings).name"),
+          name: localize("(setting) watchSettings.name"),
           placeholder: "",
           correspondingSetting: "watchSettings",
           type: UISettingType.Checkbox
         },
         {
-          name: localize("setting(removeExtensions).name"),
+          name: localize("(setting) removeExtensions.name"),
           placeholder: "",
           correspondingSetting: "removeExtensions",
           type: UISettingType.Checkbox
         },
         {
-          name: localize("setting(syncOnStartup).name"),
+          name: localize("(setting) syncOnStartup.name"),
           placeholder: "",
           correspondingSetting: "syncOnStartup",
           type: UISettingType.Checkbox
         },
         {
-          name: localize("setting(forceUpload).name"),
+          name: localize("(setting) forceUpload.name"),
           placeholder: "",
           correspondingSetting: "forceUpload",
           type: UISettingType.Checkbox
         },
         {
-          name: localize("setting(forceDownload).name"),
+          name: localize("(setting) forceDownload.name"),
           placeholder: "",
           correspondingSetting: "forceDownload",
           type: UISettingType.Checkbox
@@ -89,8 +89,8 @@ export class WebviewService {
       name: "Repo Method",
       settings: [
         {
-          name: localize("setting(repo.url).name"),
-          placeholder: localize("setting(repo.url).placeholder"),
+          name: localize("(setting) repo.url.name"),
+          placeholder: localize("(setting) repo.url.placeholder"),
           correspondingSetting: "repo.url",
           type: UISettingType.TextInput
         }
@@ -100,8 +100,8 @@ export class WebviewService {
       name: "File Method",
       settings: [
         {
-          name: localize("setting(file.path).name"),
-          placeholder: localize("setting(file.path).placeholder"),
+          name: localize("(setting) file.path.name"),
+          placeholder: localize("(setting) file.path.placeholder"),
           correspondingSetting: "file.path",
           type: UISettingType.TextInput
         }

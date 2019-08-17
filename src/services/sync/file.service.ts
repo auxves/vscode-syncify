@@ -21,7 +21,7 @@ export class FileService implements ISyncService {
 
     const settings = await state.settings.getSettings();
 
-    window.setStatusBarMessage(localize("info(upload).uploading"), 2000);
+    window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
     const installedExtensions = extensions.all
       .filter(ext => !ext.packageJSON.isBuiltin)
@@ -34,7 +34,7 @@ export class FileService implements ISyncService {
 
     await this.copyFilesToPath(settings);
 
-    window.setStatusBarMessage(localize("info(upload).uploaded"), 2000);
+    window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
 
     if (settings.watchSettings) {
       await state.watcher.startWatching();
@@ -50,7 +50,7 @@ export class FileService implements ISyncService {
       return;
     }
 
-    window.setStatusBarMessage(localize("info(download).downloading"), 2000);
+    window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
 
     const settings = await state.settings.getSettings();
 
@@ -84,7 +84,7 @@ export class FileService implements ISyncService {
               await ExtensionService.installExtension(ext);
               progress.report({
                 increment,
-                message: localize("info(download).installed", ext)
+                message: localize("(info) download.installed", ext)
               });
             })
           );
@@ -112,7 +112,7 @@ export class FileService implements ISyncService {
                   await ExtensionService.uninstallExtension(ext);
                   progress.report({
                     increment,
-                    message: localize("info(download).uninstalled", ext)
+                    message: localize("(info) download.uninstalled", ext)
                   });
                 })
               );
@@ -120,9 +120,9 @@ export class FileService implements ISyncService {
           );
 
           if (needToReload) {
-            const yes = localize("btn(yes)");
+            const yes = localize("(btn) yes");
             const result = await window.showInformationMessage(
-              localize("info(download).needToReload"),
+              localize("(info) download.needToReload"),
               yes
             );
             if (result === yes) {
@@ -135,7 +135,7 @@ export class FileService implements ISyncService {
       throw err;
     }
 
-    window.setStatusBarMessage(localize("info(download).downloaded"), 2000);
+    window.setStatusBarMessage(localize("(info) download.downloaded"), 2000);
 
     if (settings.watchSettings) {
       await state.watcher.startWatching();

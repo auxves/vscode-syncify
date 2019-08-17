@@ -71,17 +71,17 @@ export class SettingsService {
       state.watcher.startWatching();
     }
 
-    window.showInformationMessage(localize("info(reset).resetComplete"));
+    window.showInformationMessage(localize("(info) reset.resetComplete"));
   }
 
   public async showOtherOptions(name?: string): Promise<void> {
     const options = [
       {
-        name: localize("option(switchProfile).name"),
+        name: localize("(option) switchProfile.name"),
         action: this.switchProfile
       },
       {
-        name: localize("option(reinitialize).name"),
+        name: localize("(option) reinitialize.name"),
         action: InitService.init
       }
     ];
@@ -112,7 +112,7 @@ export class SettingsService {
         }
       });
       await window.showInformationMessage(
-        localize("info(repo).switchedProfile", newProfile.name)
+        localize("(info) repo.switchedProfile", newProfile.name)
       );
     }
   }

@@ -86,7 +86,7 @@ export class RepoService implements ISyncService {
       }
     }
 
-    window.setStatusBarMessage(localize("info(sync).nothingToDo"), 2000);
+    window.setStatusBarMessage(localize("(info) sync.nothingToDo"), 2000);
   }
 
   public async upload(): Promise<void> {
@@ -100,7 +100,7 @@ export class RepoService implements ISyncService {
 
     await this.init();
 
-    window.setStatusBarMessage(localize("info(upload).uploading"), 2000);
+    window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
     const settings = await state.settings.getSettings();
 
@@ -130,7 +130,7 @@ export class RepoService implements ISyncService {
       const currentChanges = await this.git.diff([profile.branch]);
 
       if (!currentChanges && !settings.forceUpload) {
-        window.setStatusBarMessage(localize("info(upload).upToDate"), 2000);
+        window.setStatusBarMessage(localize("(info) upload.upToDate"), 2000);
         return;
       }
 
@@ -140,7 +140,7 @@ export class RepoService implements ISyncService {
         "--force": null
       });
 
-      window.setStatusBarMessage(localize("info(upload).uploaded"), 2000);
+      window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
     })();
 
     if (settings.watchSettings) {
@@ -159,7 +159,7 @@ export class RepoService implements ISyncService {
 
     await this.init();
 
-    window.setStatusBarMessage(localize("info(download).downloading"), 2000);
+    window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
 
     const settings = await state.settings.getSettings();
 
@@ -170,7 +170,7 @@ export class RepoService implements ISyncService {
 
       if (!remoteBranches.all.length) {
         window.setStatusBarMessage(
-          localize("info(download).noRemoteBranches"),
+          localize("(info) download.noRemoteBranches"),
           2000
         );
         return;
@@ -180,7 +180,7 @@ export class RepoService implements ISyncService {
       const diff = await this.git.diff([`origin/${profile.branch}`]);
 
       if (!diff && !settings.forceDownload) {
-        window.setStatusBarMessage(localize("info(download).upToDate"), 2000);
+        window.setStatusBarMessage(localize("(info) download.upToDate"), 2000);
         return;
       }
 
@@ -227,7 +227,7 @@ export class RepoService implements ISyncService {
                 await ExtensionService.installExtension(ext);
                 progress.report({
                   increment,
-                  message: localize("info(download).installed", ext)
+                  message: localize("(info) download.installed", ext)
                 });
               })
             );
@@ -255,7 +255,7 @@ export class RepoService implements ISyncService {
                     await ExtensionService.uninstallExtension(ext);
                     progress.report({
                       increment,
-                      message: localize("info(download).uninstalled", ext)
+                      message: localize("(info) download.uninstalled", ext)
                     });
                   })
                 );
@@ -263,9 +263,9 @@ export class RepoService implements ISyncService {
             );
 
             if (needToReload) {
-              const yes = localize("btn(yes)");
+              const yes = localize("(btn) yes");
               const result = await window.showInformationMessage(
-                localize("info(download).needToReload"),
+                localize("(info) download.needToReload"),
                 yes
               );
               if (result === yes) {
@@ -278,7 +278,7 @@ export class RepoService implements ISyncService {
         throw err;
       }
 
-      window.setStatusBarMessage(localize("info(download).downloaded"), 2000);
+      window.setStatusBarMessage(localize("(info) download.downloaded"), 2000);
     })();
 
     if (settings.watchSettings) {
