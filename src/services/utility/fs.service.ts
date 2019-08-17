@@ -11,12 +11,13 @@ export class FileSystemService {
     return ensureDir(path);
   }
 
-  public read(path: string): Promise<string> {
-    return readFile(path, "utf-8");
-  }
-
-  public readBuffer(path: string): Promise<Buffer> {
-    return readFile(path);
+  public read(path: string, encoding: string): Promise<Buffer>;
+  public read(path: string): Promise<string>;
+  public read(
+    path: string,
+    encoding: string = "utf-8"
+  ): Promise<string | Buffer> {
+    return readFile(path, encoding);
   }
 
   public write(path: string, data: any): Promise<void> {

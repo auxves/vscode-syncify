@@ -58,7 +58,7 @@ export class CustomFileService {
     }
 
     const filepath = resolve(state.env.locations.customFilesFolder, filename);
-    const contents = await state.fs.readBuffer(filepath);
+    const contents = await state.fs.read(filepath, null);
     await state.fs.write(resolve(folder, filename), contents);
   }
 
@@ -82,7 +82,7 @@ export class CustomFileService {
     }
 
     const filename = basename(filepath);
-    const contents = await state.fs.readBuffer(filepath);
+    const contents = await state.fs.read(filepath, null);
     const newPath = resolve(state.env.locations.customFilesFolder, filename);
     await state.fs.write(newPath, contents);
     await window.showInformationMessage(
