@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.0
+
+- Read custom files as `Buffer` to work with binaries
+
 ## v1.0.0
 
 - Add `forceUpload` and `forceDownload` options
