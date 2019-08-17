@@ -15,7 +15,11 @@ export class FileSystemService {
     return readFile(path, "utf-8");
   }
 
-  public write(path: string, data: string): Promise<void> {
+  public readBuffer(path: string): Promise<Buffer> {
+    return readFile(path);
+  }
+
+  public write(path: string, data: any): Promise<void> {
     return writeFile(path, data);
   }
 
