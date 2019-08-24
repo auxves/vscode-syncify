@@ -20,7 +20,7 @@
   "(info) download.noRemoteBranches": "Syncify: Nein Remote-Niederlassungen",
   "(info) download.uninstalled": "Syncify: Deinstalliert {0}",
   "(info) download.upToDate": "Syncify: Bereits auf dem neuesten Stand",
-  "(info) repo.switchedProfile": "Syncify: Wechselte zu Profil '{0}'",
+  "(info) repo.switchedProfile": "Syncify: Switched-Profil '{0}'",
   "(info) reset.resetComplete": "Syncify: Einstellungen wurden zurückgesetzt",
   "(info) sync.nothingToDo": "Syncify: Nichts Zu Tun",
   "(info) upload.initiating": "Syncify: Hochladen in {0} Sekunden",

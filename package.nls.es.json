@@ -13,6 +13,8 @@
   "(command) syncify.upload": "Syncify: Subir",
   "(info) customFile.registered": "Syncify: Registrado '{0}'.",
   "(info) customSync.noFiles": "Syncify: No Hay Archivos Disponibles",
+  "(info) download.downloaded": "Syncify: Descargar",
+  "(info) download.downloading": "Syncify: Descargar",
   "(info) download.installed": "Syncify: Instalado {0}",
   "(info) download.needToReload": "Syncify: ¿te gustaría volver a cargar para finalizar el procedimiento?",
   "(info) download.noRemoteBranches": "Syncify: No Hay Sucursales Remotas",
