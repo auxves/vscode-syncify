@@ -2,7 +2,19 @@
   "basePath": ".",
   "srcFile": "package.nls.json",
   "filenameTemplate": "package.nls.*.json",
-  "languages": ["zh", "fr", "de", "it", "es", "ja", "ko", "ru", "hu", "pt"],
+  "languages": [
+    "zh",
+    "fr",
+    "de",
+    "it",
+    "es",
+    "ja",
+    "ko",
+    "ru",
+    "hu",
+    "pt",
+    "bg"
+  ],
   "languageMap": {
     "zh": "zh-cn",
     "pt": "pt-br"
