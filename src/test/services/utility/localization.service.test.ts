@@ -27,7 +27,7 @@ it("should localize russian", () => {
   expect(installed.result).toBe(installed.expected);
 
   const uninstalled = {
-    expected: "Syncify: Удалить 10",
+    expected: "Syncify: Удалено 10",
     result: locale("ru")("(info) download.uninstalled", "10")
   };
   expect(uninstalled.result).toBe(uninstalled.expected);
