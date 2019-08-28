@@ -1,5 +1,5 @@
-import { state } from "@/models";
-import { localize } from "@/services";
+import { EnvironmentService, localize } from "@/services";
+import { FS } from "@/services/utility/fs.service";
 import { basename, resolve } from "path";
 import { Uri, window, workspace } from "vscode";
 
@@ -9,17 +9,13 @@ export class CustomFileService {
       return;
     }
 
-    const folderExists = await state.fs.exists(
-      state.env.locations.customFilesFolder
-    );
+    const folderExists = await FS.exists(EnvironmentService.customFilesFolder);
 
     if (!folderExists) {
-      await state.fs.mkdir(state.env.locations.customFilesFolder);
+      await FS.mkdir(EnvironmentService.customFilesFolder);
     }
 
-    const allFiles = await state.fs.listFiles(
-      state.env.locations.customFilesFolder
-    );
+    const allFiles = await FS.listFiles(EnvironmentService.customFilesFolder);
 
     if (!allFiles.length) {
       await window.showInformationMessage(
@@ -59,18 +55,16 @@ export class CustomFileService {
       return;
     }
 
-    const filepath = resolve(state.env.locations.customFilesFolder, filename);
-    const contents = await state.fs.read(filepath, null);
-    await state.fs.write(resolve(folder, filename), contents);
+    const filepath = resolve(EnvironmentService.customFilesFolder, filename);
+    const contents = await FS.read(filepath, null);
+    await FS.write(resolve(folder, filename), contents);
   }
 
   public static async register(uri: Uri) {
-    const folderExists = await state.fs.exists(
-      state.env.locations.customFilesFolder
-    );
+    const folderExists = await FS.exists(EnvironmentService.customFilesFolder);
 
     if (!folderExists) {
-      await state.fs.mkdir(state.env.locations.customFilesFolder);
+      await FS.mkdir(EnvironmentService.customFilesFolder);
     }
 
     const filepath = uri
@@ -84,9 +78,9 @@ export class CustomFileService {
     }
 
     const filename = basename(filepath);
-    const contents = await state.fs.read(filepath, null);
-    const newPath = resolve(state.env.locations.customFilesFolder, filename);
-    await state.fs.write(newPath, contents);
+    const contents = await FS.read(filepath, null);
+    const newPath = resolve(EnvironmentService.customFilesFolder, filename);
+    await FS.write(newPath, contents);
     await window.showInformationMessage(
       localize("(info) customFile.registered", filename)
     );

@@ -1,25 +1,62 @@
-import { state } from "@/models";
-import { FileSystemService, RepoService } from "@/services";
+import { SyncMethod } from "@/models";
+import {
+  EnvironmentService,
+  FS,
+  RepoService,
+  SettingsService
+} from "@/services";
 import { ensureDir, remove } from "fs-extra";
+import { tmpdir } from "os";
 import { resolve } from "path";
 import createSimpleGit from "simple-git/promise";
 
-const fs = new FileSystemService();
-
 jest.mock("@/services/utility/localization.service.ts");
+jest.mock("@/services/utility/webview.service.ts");
 jest.mock("@/models/state.model.ts");
 
-const cleanupPath = "/tmp/jest/repo.service.test.ts";
+const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/repo.service");
 const pathToRemote = `${cleanupPath}/remote`;
 const pathToRepo = `${cleanupPath}/repo`;
 const pathToTmpRepo = `${cleanupPath}/tmpRepo`;
 const pathToUser = `${cleanupPath}/user`;
 
-state.env.locations = {
-  ...state.env.locations,
-  repoFolder: pathToRepo,
-  userFolder: pathToUser
-};
+jest.spyOn(EnvironmentService, "userFolder", "get").mockReturnValue(pathToUser);
+jest.spyOn(EnvironmentService, "repoFolder", "get").mockReturnValue(pathToRepo);
+
+SettingsService.getSettings = jest.fn(async () => ({
+  method: SyncMethod.Repo,
+  repo: {
+    url: pathToRemote,
+    profiles: [
+      {
+        branch: "master",
+        name: "main"
+      }
+    ],
+    currentProfile: "main"
+  },
+  file: {
+    path: ""
+  },
+  github: {
+    token: "",
+    endpoint: "https://github.com",
+    user: ""
+  },
+  ignoredItems: [
+    "**/workspaceStorage",
+    "**/globalStorage/state.vscdb*",
+    "**/globalStorage/arnohovhannisyan.syncify",
+    "**/.git"
+  ],
+  autoUploadDelay: 20,
+  watchSettings: false,
+  removeExtensions: true,
+  syncOnStartup: false,
+  hostname: "jest",
+  forceDownload: false,
+  forceUpload: false
+}));
 
 beforeEach(async () => {
   await Promise.all([
@@ -42,12 +79,12 @@ describe("upload", () => {
       "test.key": true
     };
     const expected = JSON.stringify(userData, null, 2);
-    await fs.write(resolve(pathToUser, "settings.json"), expected);
+    await FS.write(resolve(pathToUser, "settings.json"), expected);
 
     const repoService = new RepoService();
     await repoService.upload();
 
-    const uploadedData = await fs.read(resolve(pathToRepo, "settings.json"));
+    const uploadedData = await FS.read(resolve(pathToRepo, "settings.json"));
     expect(uploadedData).toBe(expected);
   });
 
@@ -55,7 +92,7 @@ describe("upload", () => {
     const userData = {
       "test.key": true
     };
-    await fs.write(
+    await FS.write(
       resolve(pathToUser, "settings.json"),
       JSON.stringify(userData, null, 2)
     );
@@ -76,7 +113,7 @@ describe("upload", () => {
     await git.addRemote("origin", pathToRemote);
     await git.pull("origin", "master", { "--force": null });
 
-    await fs.write(resolve(pathToTmpRepo, "settings.json"), expected);
+    await FS.write(resolve(pathToTmpRepo, "settings.json"), expected);
 
     await git.add(".");
     await git.commit("Testing");
@@ -86,7 +123,7 @@ describe("upload", () => {
 
     await git.pull("origin", "master", { "--force": null });
 
-    const syncedData = await fs.read(resolve(pathToTmpRepo, "settings.json"));
+    const syncedData = await FS.read(resolve(pathToTmpRepo, "settings.json"));
     expect(syncedData).toBe(expected);
   });
 
@@ -99,15 +136,15 @@ describe("upload", () => {
       2
     );
 
-    await fs.write(resolve(pathToUser, "settings.json"), expected);
+    await FS.write(resolve(pathToUser, "settings.json"), expected);
 
     const repoService = new RepoService();
     await repoService.upload();
 
-    const exists = await fs.exists(resolve(pathToRepo, "workspaceStorage"));
+    const exists = await FS.exists(resolve(pathToRepo, "workspaceStorage"));
     expect(exists).toBeFalsy();
 
-    const settingsData = await fs.read(resolve(pathToUser, "settings.json"));
+    const settingsData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(settingsData).toBe(expected);
   });
 });
@@ -117,7 +154,7 @@ describe("download", () => {
     const userData = {
       "test.key": true
     };
-    await fs.write(
+    await FS.write(
       resolve(pathToUser, "settings.json"),
       JSON.stringify(userData, null, 2)
     );
@@ -138,7 +175,7 @@ describe("download", () => {
     await git.addRemote("origin", pathToRemote);
     await git.pull("origin", "master", { "--force": null });
 
-    await fs.write(resolve(pathToTmpRepo, "settings.json"), expected);
+    await FS.write(resolve(pathToTmpRepo, "settings.json"), expected);
 
     await git.add(".");
     await git.commit("Testing");
@@ -146,7 +183,7 @@ describe("download", () => {
 
     await repoService.download();
 
-    const downloadedData = await fs.read(resolve(pathToUser, "settings.json"));
+    const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(downloadedData).toBe(expected);
   });
 
@@ -157,12 +194,12 @@ describe("download", () => {
 
     const expected = JSON.stringify(userData, null, 2);
 
-    await fs.write(resolve(pathToUser, "settings.json"), expected);
+    await FS.write(resolve(pathToUser, "settings.json"), expected);
 
     const repoService = new RepoService();
     await repoService.download();
 
-    const currentData = await fs.read(resolve(pathToUser, "settings.json"));
+    const currentData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(currentData).toBe(expected);
   });
 });
@@ -172,7 +209,7 @@ describe("sync", () => {
     const userData = {
       "test.key": true
     };
-    await fs.write(
+    await FS.write(
       resolve(pathToUser, "settings.json"),
       JSON.stringify(userData, null, 2)
     );
@@ -193,7 +230,7 @@ describe("sync", () => {
     await git.addRemote("origin", pathToRemote);
     await git.pull("origin", "master", { "--force": null });
 
-    await fs.write(resolve(pathToTmpRepo, "settings.json"), expected);
+    await FS.write(resolve(pathToTmpRepo, "settings.json"), expected);
 
     await git.add(".");
     await git.commit("Testing");
@@ -201,7 +238,7 @@ describe("sync", () => {
 
     await repoService.sync();
 
-    const syncedData = await fs.read(resolve(pathToUser, "settings.json"));
+    const syncedData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(syncedData).toBe(expected);
   });
 });
@@ -219,7 +256,7 @@ describe("init", () => {
     expect(remotes[0].name).toBe("origin");
     expect(remotes[0].refs.push).toBe(pathToRemote);
 
-    const gitignoreExists = await fs.exists(resolve(pathToRepo, ".gitignore"));
+    const gitignoreExists = await FS.exists(resolve(pathToRepo, ".gitignore"));
     expect(gitignoreExists).toBeTruthy();
   });
 });

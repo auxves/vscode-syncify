@@ -1,38 +1,38 @@
-import { state } from "@/models";
+import { SettingsService } from "@/services/utility/settings.service";
 import glob from "fast-glob";
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
 
-export class FileSystemService {
-  public exists(path: string): Promise<boolean> {
+export class FS {
+  public static exists(path: string): Promise<boolean> {
     return pathExists(path);
   }
 
-  public mkdir(path: string): Promise<void> {
+  public static mkdir(path: string): Promise<void> {
     return ensureDir(path);
   }
 
-  public read(path: string, encoding: string): Promise<Buffer>;
-  public read(path: string): Promise<string>;
-  public read(
+  public static read(path: string, encoding: string): Promise<Buffer>;
+  public static read(path: string): Promise<string>;
+  public static read(
     path: string,
     encoding: string = "utf-8"
   ): Promise<string | Buffer> {
     return readFile(path, encoding);
   }
 
-  public write(path: string, data: any): Promise<void> {
+  public static write(path: string, data: any): Promise<void> {
     return writeFile(path, data);
   }
 
-  public delete(...paths: string[]): Promise<void[]> {
+  public static delete(...paths: string[]): Promise<void[]> {
     return Promise.all(paths.map(path => remove(path)));
   }
 
-  public async listFiles(
+  public static async listFiles(
     path: string,
     ignoredItems?: string[]
   ): Promise<string[]> {
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     return glob(`${path}/**/*`, {
       dot: true,

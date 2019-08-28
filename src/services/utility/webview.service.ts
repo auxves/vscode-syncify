@@ -6,7 +6,7 @@ import {
   state,
   UISettingType
 } from "@/models";
-import { GitHubOAuthService, localize } from "@/services";
+import { GitHubOAuthService, localize, SettingsService } from "@/services";
 import { readFileSync } from "fs-extra";
 import has from "lodash/has";
 import set from "lodash/set";
@@ -15,7 +15,177 @@ import { URL } from "url";
 import * as vscode from "vscode";
 
 export class WebviewService {
-  private settingsMap: IWebviewSection[] = [
+  public static openSettingsPage(settings: ISettings): vscode.WebviewPanel {
+    const webview = this.webviews[1];
+    const content: string = this.generateContent({
+      settings,
+      content: webview.htmlContent,
+      items: webview.replaceables
+    });
+    if (webview.webview) {
+      webview.webview.webview.html = content;
+      webview.webview.reveal();
+      return webview.webview;
+    }
+    const settingsPanel = vscode.window.createWebviewPanel(
+      "syncifySettings",
+      "Syncify Settings",
+      vscode.ViewColumn.One,
+      {
+        retainContextWhenHidden: true,
+        enableScripts: true
+      }
+    );
+    settingsPanel.webview.html = content;
+    settingsPanel.webview.onDidReceiveMessage(async message => {
+      if (message === "edit") {
+        SettingsService.openSettingsFile();
+        return;
+      }
+      this.receiveSettingChange(message, settings);
+    });
+    webview.webview = settingsPanel;
+    settingsPanel.onDidDispose(() => (webview.webview = null));
+    return settingsPanel;
+  }
+
+  public static updateSettingsPage(settings: ISettings) {
+    const webview = this.webviews[1];
+    if (webview.webview) {
+      webview.webview.webview.html = this.generateContent({
+        settings,
+        content: webview.htmlContent,
+        items: webview.replaceables
+      });
+    }
+  }
+
+  public static receiveSettingChange(
+    message: {
+      command: string;
+      text: string;
+    },
+    settings: ISettings
+  ) {
+    let value: any = message.text;
+    if (message.text === "true" || message.text === "false") {
+      value = message.text === "true";
+    }
+    if (has(settings, message.command)) {
+      set(settings, message.command, value);
+      SettingsService.setSettings(settings);
+    }
+  }
+
+  public static openLandingPage() {
+    const webview = this.webviews[0];
+    const releaseNotes = {
+      ...changes,
+      currentVersion: vscode.extensions.getExtension("arnohovhannisyan.syncify")
+        .packageJSON.version
+    };
+    const content: string = this.generateContent({
+      releaseNotes,
+      content: webview.htmlContent,
+      items: webview.replaceables
+    });
+    if (webview.webview) {
+      webview.webview.webview.html = content;
+      webview.webview.reveal();
+      return webview;
+    }
+    const landingPanel = vscode.window.createWebviewPanel(
+      "landingPage",
+      "Welcome to Syncify",
+      vscode.ViewColumn.One,
+      {
+        retainContextWhenHidden: true,
+        enableScripts: true
+      }
+    );
+    landingPanel.webview.onDidReceiveMessage(async message => {
+      const settings = await SettingsService.getSettings();
+      switch (message.command) {
+        case "loginWithGitHub":
+          new GitHubOAuthService(54321).startServer();
+          vscode.env.openExternal(
+            vscode.Uri.parse(
+              `https://${
+                new URL(settings.github.endpoint).hostname
+              }/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832&redirect_uri=http://localhost:54321/callback`
+            )
+          );
+          break;
+        case "editConfiguration":
+          this.openSettingsPage(settings);
+          break;
+      }
+    });
+    landingPanel.webview.html = content;
+    webview.webview = landingPanel;
+    landingPanel.onDidDispose(() => (webview.webview = null));
+    return landingPanel;
+  }
+
+  public static async openRepositoryCreationPage(
+    token: string,
+    user: string,
+    host: URL
+  ) {
+    const webview = this.webviews[2];
+    const content: string = this.generateContent({
+      github: {
+        token,
+        user,
+        host
+      },
+      content: webview.htmlContent,
+      items: webview.replaceables
+    });
+    if (webview.webview) {
+      webview.webview.webview.html = content;
+      webview.webview.reveal();
+      return webview;
+    }
+    const repositoryCreationPanel = vscode.window.createWebviewPanel(
+      "repositoryCreation",
+      "Repository Creation",
+      vscode.ViewColumn.One,
+      {
+        retainContextWhenHidden: true,
+        enableScripts: true
+      }
+    );
+    repositoryCreationPanel.webview.onDidReceiveMessage(async message => {
+      if (message.close) {
+        return repositoryCreationPanel.dispose();
+      }
+      const settings = await SettingsService.getSettings();
+      SettingsService.setSettings({
+        ...settings,
+        repo: {
+          ...settings.repo,
+          url: message
+        }
+      });
+    });
+    repositoryCreationPanel.webview.html = content;
+    webview.webview = repositoryCreationPanel;
+    repositoryCreationPanel.onDidDispose(() => (webview.webview = null));
+    return repositoryCreationPanel;
+  }
+
+  public static fetchHTMLContent() {
+    this.webviews = this.webviews.map(view => ({
+      ...view,
+      htmlContent: readFileSync(
+        `${state.context.extensionPath}/assets/ui/${view.name}/${view.htmlPath}`,
+        "utf-8"
+      )
+    }));
+  }
+
+  private static settingsMap: IWebviewSection[] = [
     {
       name: "General",
       settings: [
@@ -109,7 +279,7 @@ export class WebviewService {
     }
   ];
 
-  private webviews: IWebview[] = [
+  private static webviews: IWebview[] = [
     {
       name: "landing-page",
       htmlPath: "landing-page.html",
@@ -130,7 +300,7 @@ export class WebviewService {
         },
         {
           find: "@MAP",
-          replace: this.settingsMap
+          replace: WebviewService.settingsMap
         }
       ]
     },
@@ -146,179 +316,7 @@ export class WebviewService {
     }
   ];
 
-  constructor() {
-    this.webviews = this.webviews.map(view => ({
-      ...view,
-      htmlContent: readFileSync(
-        `${state.context.extensionPath}/assets/ui/${view.name}/${
-          view.htmlPath
-        }`,
-        "utf-8"
-      )
-    }));
-  }
-
-  public openSettingsPage(settings: ISettings): vscode.WebviewPanel {
-    const webview = this.webviews[1];
-    const content: string = this.generateContent({
-      settings,
-      content: webview.htmlContent,
-      items: webview.replaceables
-    });
-    if (webview.webview) {
-      webview.webview.webview.html = content;
-      webview.webview.reveal();
-      return webview.webview;
-    }
-    const settingsPanel = vscode.window.createWebviewPanel(
-      "syncifySettings",
-      "Syncify Settings",
-      vscode.ViewColumn.One,
-      {
-        retainContextWhenHidden: true,
-        enableScripts: true
-      }
-    );
-    settingsPanel.webview.html = content;
-    settingsPanel.webview.onDidReceiveMessage(async message => {
-      if (message === "edit") {
-        state.settings.openSettingsFile();
-        return;
-      }
-      this.receiveSettingChange(message, settings);
-    });
-    webview.webview = settingsPanel;
-    settingsPanel.onDidDispose(() => (webview.webview = null));
-    return settingsPanel;
-  }
-
-  public updateSettingsPage(settings: ISettings) {
-    const webview = this.webviews[1];
-    if (webview.webview) {
-      webview.webview.webview.html = this.generateContent({
-        settings,
-        content: webview.htmlContent,
-        items: webview.replaceables
-      });
-    }
-  }
-
-  public receiveSettingChange(
-    message: {
-      command: string;
-      text: string;
-    },
-    settings: ISettings
-  ) {
-    let value: any = message.text;
-    if (message.text === "true" || message.text === "false") {
-      value = message.text === "true";
-    }
-    if (has(settings, message.command)) {
-      set(settings, message.command, value);
-      state.settings.setSettings(settings);
-    }
-  }
-
-  public openLandingPage() {
-    const webview = this.webviews[0];
-    const releaseNotes = {
-      ...changes,
-      currentVersion: vscode.extensions.getExtension("arnohovhannisyan.syncify")
-        .packageJSON.version
-    };
-    const content: string = this.generateContent({
-      releaseNotes,
-      content: webview.htmlContent,
-      items: webview.replaceables
-    });
-    if (webview.webview) {
-      webview.webview.webview.html = content;
-      webview.webview.reveal();
-      return webview;
-    }
-    const landingPanel = vscode.window.createWebviewPanel(
-      "landingPage",
-      "Welcome to Syncify",
-      vscode.ViewColumn.One,
-      {
-        retainContextWhenHidden: true,
-        enableScripts: true
-      }
-    );
-    landingPanel.webview.onDidReceiveMessage(async message => {
-      const settings = await state.settings.getSettings();
-      switch (message.command) {
-        case "loginWithGitHub":
-          new GitHubOAuthService(54321).startServer();
-          vscode.env.openExternal(
-            vscode.Uri.parse(
-              `https://${
-                new URL(settings.github.endpoint).hostname
-              }/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832&redirect_uri=http://localhost:54321/callback`
-            )
-          );
-          break;
-        case "editConfiguration":
-          this.openSettingsPage(settings);
-          break;
-      }
-    });
-    landingPanel.webview.html = content;
-    webview.webview = landingPanel;
-    landingPanel.onDidDispose(() => (webview.webview = null));
-    return landingPanel;
-  }
-
-  public async openRepositoryCreationPage(
-    token: string,
-    user: string,
-    host: URL
-  ) {
-    const webview = this.webviews[2];
-    const content: string = this.generateContent({
-      github: {
-        token,
-        user,
-        host
-      },
-      content: webview.htmlContent,
-      items: webview.replaceables
-    });
-    if (webview.webview) {
-      webview.webview.webview.html = content;
-      webview.webview.reveal();
-      return webview;
-    }
-    const repositoryCreationPanel = vscode.window.createWebviewPanel(
-      "repositoryCreation",
-      "Repository Creation",
-      vscode.ViewColumn.One,
-      {
-        retainContextWhenHidden: true,
-        enableScripts: true
-      }
-    );
-    repositoryCreationPanel.webview.onDidReceiveMessage(async message => {
-      if (message.close) {
-        return repositoryCreationPanel.dispose();
-      }
-      const settings = await state.settings.getSettings();
-      state.settings.setSettings({
-        ...settings,
-        repo: {
-          ...settings.repo,
-          url: message
-        }
-      });
-    });
-    repositoryCreationPanel.webview.html = content;
-    webview.webview = repositoryCreationPanel;
-    repositoryCreationPanel.onDidDispose(() => (webview.webview = null));
-    return repositoryCreationPanel;
-  }
-
-  private generateContent(options: any) {
+  private static generateContent(options: any) {
     const toReplace: object[] = [];
     options.items.forEach(option => {
       if (typeof option.replace === "string") {

@@ -1,5 +1,6 @@
 import { state } from "@/models";
 import { localize, UtilityService } from "@/services";
+import { SettingsService } from "@/services/utility/settings.service";
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
 
@@ -44,7 +45,7 @@ export class WatcherService {
       return;
     }
 
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     let shouldUpload = true;
 

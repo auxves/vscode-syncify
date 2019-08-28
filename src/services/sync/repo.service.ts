@@ -1,5 +1,13 @@
 import { IProfile, ISettings, ISyncService, state } from "@/models";
-import { ExtensionService, localize, PragmaService } from "@/services";
+import {
+  EnvironmentService,
+  ExtensionService,
+  localize,
+  PragmaService,
+  SettingsService,
+  WebviewService
+} from "@/services";
+import { FS } from "@/services/utility/fs.service";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ProgressLocation, window } from "vscode";
@@ -8,13 +16,13 @@ export class RepoService implements ISyncService {
   private git: SimpleGit;
 
   public async init() {
-    const folderExists = await state.fs.exists(state.env.locations.repoFolder);
+    const folderExists = await FS.exists(EnvironmentService.repoFolder);
 
     if (!folderExists) {
-      await state.fs.mkdir(state.env.locations.repoFolder);
+      await FS.mkdir(EnvironmentService.repoFolder);
     }
 
-    this.git = createSimpleGit(state.env.locations.repoFolder).silent(true);
+    this.git = createSimpleGit(EnvironmentService.repoFolder).silent(true);
 
     const isRepo = await this.git.checkIsRepo();
 
@@ -25,7 +33,7 @@ export class RepoService implements ISyncService {
     const remotes = await this.git.getRemotes(true);
     const origin = remotes.filter(remote => remote.name === "origin")[0];
 
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     if (!origin) {
       this.git.addRemote("origin", settings.repo.url);
@@ -34,12 +42,12 @@ export class RepoService implements ISyncService {
       this.git.addRemote("origin", settings.repo.url);
     }
 
-    const gitignorePath = resolve(state.env.locations.repoFolder, ".gitignore");
-    const gitignoreExists = await state.fs.exists(gitignorePath);
+    const gitignorePath = resolve(EnvironmentService.repoFolder, ".gitignore");
+    const gitignoreExists = await FS.exists(gitignorePath);
     if (!gitignoreExists) {
-      await state.fs.write(gitignorePath, settings.ignoredItems.join("\n"));
+      await FS.write(gitignorePath, settings.ignoredItems.join("\n"));
     } else {
-      const contents = await state.fs.read(gitignorePath);
+      const contents = await FS.read(gitignorePath);
       const lines = contents.split("\n");
       let hasChanged = false;
       settings.ignoredItems.forEach(val => {
@@ -49,7 +57,7 @@ export class RepoService implements ISyncService {
         }
       });
       if (hasChanged) {
-        await state.fs.write(gitignorePath, lines.join("\n"));
+        await FS.write(gitignorePath, lines.join("\n"));
       }
     }
   }
@@ -57,7 +65,7 @@ export class RepoService implements ISyncService {
   public async sync(): Promise<void> {
     const configured = await this.isConfigured();
     if (!configured) {
-      state.webview.openLandingPage();
+      WebviewService.openLandingPage();
       return;
     }
 
@@ -94,7 +102,7 @@ export class RepoService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
-      state.webview.openLandingPage();
+      WebviewService.openLandingPage();
       return;
     }
 
@@ -102,7 +110,7 @@ export class RepoService implements ISyncService {
 
     window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     await (async () => {
       const profile = await this.getProfile();
@@ -120,8 +128,8 @@ export class RepoService implements ISyncService {
 
       const installedExtensions = ExtensionService.getExtensions();
 
-      await state.fs.write(
-        resolve(state.env.locations.repoFolder, "extensions.json"),
+      await FS.write(
+        resolve(EnvironmentService.repoFolder, "extensions.json"),
         JSON.stringify(installedExtensions, null, 2)
       );
 
@@ -153,7 +161,7 @@ export class RepoService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
-      state.webview.openLandingPage();
+      WebviewService.openLandingPage();
       return;
     }
 
@@ -161,10 +169,12 @@ export class RepoService implements ISyncService {
 
     window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
 
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     await (async () => {
       const profile = await this.getProfile();
+
+      await this.git.fetch();
 
       const remoteBranches = await this.git.branch(["-r"]);
 
@@ -176,7 +186,6 @@ export class RepoService implements ISyncService {
         return;
       }
 
-      await this.git.fetch();
       const diff = await this.git.diff([`origin/${profile.branch}`]);
 
       if (!diff && !settings.forceDownload) {
@@ -207,8 +216,8 @@ export class RepoService implements ISyncService {
 
       try {
         const extensionsFromFile = JSON.parse(
-          await state.fs.read(
-            resolve(state.env.locations.repoFolder, "extensions.json")
+          await FS.read(
+            resolve(EnvironmentService.repoFolder, "extensions.json")
           )
         );
 
@@ -287,7 +296,7 @@ export class RepoService implements ISyncService {
   }
 
   public async isConfigured(): Promise<boolean> {
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
     return (
       !!settings.repo.url &&
       !!settings.repo.currentProfile &&
@@ -302,7 +311,7 @@ export class RepoService implements ISyncService {
   }
 
   private async getProfile(): Promise<IProfile> {
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
     const currentProfile = settings.repo.profiles.filter(
       profile => profile.name === settings.repo.currentProfile
     )[0];
@@ -311,44 +320,41 @@ export class RepoService implements ISyncService {
   }
 
   private async copyFilesToRepo(): Promise<void> {
-    const files = await state.fs.listFiles(state.env.locations.userFolder);
+    const files = await FS.listFiles(EnvironmentService.userFolder);
 
     const filesToPragma = ["settings.json", "keybindings.json"];
 
     await Promise.all(
       files.map(async file => {
-        const contents = await state.fs.read(file);
+        const contents = await FS.read(file);
 
         const dir = dirname(
           resolve(
-            state.env.locations.repoFolder,
-            relative(state.env.locations.userFolder, file)
+            EnvironmentService.repoFolder,
+            relative(EnvironmentService.userFolder, file)
           )
         );
 
-        const dirExists = await state.fs.exists(dir);
+        const dirExists = await FS.exists(dir);
 
         if (!dirExists) {
-          await state.fs.mkdir(dir);
+          await FS.mkdir(dir);
         }
 
         const newPath = resolve(dir, basename(file));
 
         if (filesToPragma.includes(basename(file))) {
-          return state.fs.write(
-            newPath,
-            PragmaService.processOutgoing(contents)
-          );
+          return FS.write(newPath, PragmaService.processOutgoing(contents));
         }
 
-        return state.fs.write(newPath, contents);
+        return FS.write(newPath, contents);
       })
     );
   }
 
   private async copyFilesFromRepo(settings: ISettings): Promise<void> {
-    const files = await state.fs.listFiles(
-      state.env.locations.repoFolder,
+    const files = await FS.listFiles(
+      EnvironmentService.repoFolder,
       settings.ignoredItems.filter(i => !i.includes("arnohovhannisyan.syncify"))
     );
 
@@ -356,19 +362,19 @@ export class RepoService implements ISyncService {
 
     await Promise.all(
       files.map(async file => {
-        const contents = await state.fs.read(file);
+        const contents = await FS.read(file);
 
         const dir = dirname(
           resolve(
-            state.env.locations.userFolder,
-            relative(state.env.locations.repoFolder, file)
+            EnvironmentService.userFolder,
+            relative(EnvironmentService.repoFolder, file)
           )
         );
 
-        const dirExists = await state.fs.exists(dir);
+        const dirExists = await FS.exists(dir);
 
         if (!dirExists) {
-          await state.fs.mkdir(dir);
+          await FS.mkdir(dir);
         }
 
         const filename = basename(file);
@@ -376,9 +382,9 @@ export class RepoService implements ISyncService {
         const newPath = resolve(dir, filename);
 
         const currentContents = await (async () => {
-          const exists = await state.fs.exists(newPath);
+          const exists = await FS.exists(newPath);
           if (exists) {
-            return state.fs.read(newPath);
+            return FS.read(newPath);
           }
           return "{}";
         })();
@@ -390,13 +396,13 @@ export class RepoService implements ISyncService {
             settings.hostname
           );
           if (currentContents !== afterPragma) {
-            return state.fs.write(newPath, afterPragma);
+            return FS.write(newPath, afterPragma);
           }
           return;
         }
 
         if (currentContents !== contents) {
-          return state.fs.write(newPath, contents);
+          return FS.write(newPath, contents);
         }
       })
     );
@@ -404,17 +410,17 @@ export class RepoService implements ISyncService {
 
   private async cleanUpRepo(): Promise<void> {
     const [repoFiles, userFiles] = await Promise.all([
-      state.fs.listFiles(state.env.locations.repoFolder),
-      state.fs.listFiles(state.env.locations.userFolder)
+      FS.listFiles(EnvironmentService.repoFolder),
+      FS.listFiles(EnvironmentService.userFolder)
     ]);
     const unneeded = repoFiles.filter(f => {
       const correspondingFile = resolve(
-        state.env.locations.userFolder,
-        relative(state.env.locations.repoFolder, f)
+        EnvironmentService.userFolder,
+        relative(EnvironmentService.repoFolder, f)
       );
       return !userFiles.includes(correspondingFile);
     });
 
-    await state.fs.delete(...unneeded);
+    await FS.delete(...unneeded);
   }
 }

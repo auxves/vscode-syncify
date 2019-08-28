@@ -7,10 +7,23 @@ export const window = {
 };
 
 export const extensions = {
-  all: [{ id: "arnohovhannisyan.syncify", packageJSON: { isBuiltin: false } }],
+  all: [
+    {
+      id: "arnohovhannisyan.syncify",
+      packageJSON: { isBuiltin: false }
+    }
+  ],
   getExtension: () => ({
-    extensionPath: resolve(".")
-  })
+    extensionPath: resolve("."),
+    packageJSON: {
+      version: ""
+    }
+  }),
+  onDidChange: () => null
+};
+
+export const commands = {
+  registerCommand: () => null
 };
 
 export enum ProgressLocation {

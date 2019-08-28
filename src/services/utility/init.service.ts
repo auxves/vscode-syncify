@@ -2,22 +2,15 @@ import { state } from "@/models";
 import {
   CustomFileService,
   EnvironmentService,
-  ExtensionService,
   FactoryService,
-  FileSystemService,
   SettingsService,
-  WatcherService,
-  WebviewService
+  WatcherService
 } from "@/services";
 import { commands } from "vscode";
 
 export class InitService {
   public static async init() {
-    state.env = new EnvironmentService();
-    state.fs = new FileSystemService();
-    state.settings = new SettingsService();
-
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     state.sync = FactoryService.generate(settings.method);
 
@@ -27,11 +20,8 @@ export class InitService {
 
     state.watcher = new WatcherService(
       settings.ignoredItems,
-      state.env.locations.userFolder
+      EnvironmentService.userFolder
     );
-
-    state.extensions = new ExtensionService();
-    state.webview = new WebviewService();
 
     if (settings.watchSettings) {
       state.watcher.startWatching();
@@ -64,15 +54,15 @@ export class InitService {
       ),
       commands.registerCommand(
         "syncify.reset",
-        state.settings.resetSettings.bind(state.settings)
+        SettingsService.resetSettings.bind(SettingsService)
       ),
       commands.registerCommand(
         "syncify.openSettings",
-        state.settings.openSettings.bind(state.settings)
+        SettingsService.openSettings.bind(SettingsService)
       ),
       commands.registerCommand(
         "syncify.otherOptions",
-        state.settings.showOtherOptions.bind(state.settings)
+        SettingsService.showOtherOptions.bind(SettingsService)
       ),
       commands.registerCommand(
         "syncify.importCustomFile",

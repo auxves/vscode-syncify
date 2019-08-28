@@ -2,43 +2,27 @@ import { OperatingSystem, state } from "@/models";
 import { normalize, resolve } from "path";
 
 export class EnvironmentService {
-  public locations = {
-    userFolder: null,
-    repoFolder: null,
-    settings: null,
-    customFilesFolder: null
-  };
-
-  public os: OperatingSystem;
-
-  constructor() {
-    this.os = process.platform as OperatingSystem;
-
+  public static get userFolder() {
     const slash = normalize("/");
 
-    if (!process.env.VSCODE_PORTABLE) {
-      const path = resolve(state.context.globalStoragePath, "../../..").concat(
-        slash
-      );
-      this.locations.userFolder = resolve(path, "User").concat(slash);
-    } else {
-      const path = process.env.VSCODE_PORTABLE;
-      this.locations.userFolder = resolve(path, "user-data/User").concat(slash);
-    }
+    const path = process.env.VSCODE_PORTABLE
+      ? resolve(process.env.VSCODE_PORTABLE, "user-data")
+      : resolve(state.context.globalStoragePath, "../../..");
 
-    this.locations.repoFolder = resolve(
-      state.context.globalStoragePath,
-      "repo"
-    );
-
-    this.locations.settings = resolve(
-      state.context.globalStoragePath,
-      "settings.json"
-    );
-
-    this.locations.customFilesFolder = resolve(
-      this.locations.userFolder,
-      "customFiles"
-    );
+    return resolve(path, "User").concat(slash);
   }
+
+  public static get repoFolder() {
+    return resolve(state.context.globalStoragePath, "repo");
+  }
+
+  public static get settings() {
+    return resolve(state.context.globalStoragePath, "settings.json");
+  }
+
+  public static get customFilesFolder() {
+    return resolve(this.userFolder, "customFiles");
+  }
+
+  public static os = process.platform as OperatingSystem;
 }

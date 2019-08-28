@@ -1,5 +1,13 @@
 import { ISettings, ISyncService, state } from "@/models";
-import { ExtensionService, localize, PragmaService } from "@/services";
+import {
+  EnvironmentService,
+  ExtensionService,
+  localize,
+  PragmaService,
+  SettingsService,
+  WebviewService
+} from "@/services";
+import { FS } from "@/services/utility/fs.service";
 import { basename, relative, resolve } from "path";
 import { commands, extensions, ProgressLocation, window } from "vscode";
 
@@ -15,11 +23,11 @@ export class FileService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
-      state.webview.openLandingPage();
+      WebviewService.openLandingPage();
       return;
     }
 
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
@@ -27,7 +35,7 @@ export class FileService implements ISyncService {
       .filter(ext => !ext.packageJSON.isBuiltin)
       .map(ext => ext.id);
 
-    await state.fs.write(
+    await FS.write(
       resolve(settings.file.path, "extensions.json"),
       JSON.stringify(installedExtensions, null, 2)
     );
@@ -46,26 +54,26 @@ export class FileService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
-      state.webview.openLandingPage();
+      WebviewService.openLandingPage();
       return;
     }
 
     window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
 
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     await this.copyFilesFromPath(settings);
 
     try {
       const extensionsFromFile = await (async () => {
-        const extensionsExist = await state.fs.exists(
+        const extensionsExist = await FS.exists(
           resolve(settings.file.path, "extensions.json")
         );
         if (!extensionsExist) {
           return [];
         }
         return JSON.parse(
-          await state.fs.read(resolve(settings.file.path, "extensions.json"))
+          await FS.read(resolve(settings.file.path, "extensions.json"))
         );
       })();
 
@@ -143,15 +151,15 @@ export class FileService implements ISyncService {
   }
 
   public async isConfigured(): Promise<boolean> {
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
 
     if (!settings.file.path) {
       return false;
     }
 
-    const folderExists = await state.fs.exists(settings.file.path);
+    const folderExists = await FS.exists(settings.file.path);
     if (!folderExists) {
-      await state.fs.mkdir(settings.file.path);
+      await FS.mkdir(settings.file.path);
     }
 
     return true;
@@ -162,46 +170,43 @@ export class FileService implements ISyncService {
   }
 
   private async copyFilesToPath(settings: ISettings): Promise<void> {
-    const files = await state.fs.listFiles(state.env.locations.userFolder);
+    const files = await FS.listFiles(EnvironmentService.userFolder);
 
     const filesToPragma = ["settings.json", "keybindings.json"];
 
     await Promise.all(
       files.map(async file => {
-        const contents = await state.fs.read(file);
+        const contents = await FS.read(file);
         const newPath = resolve(
           settings.file.path,
-          relative(state.env.locations.userFolder, file)
+          relative(EnvironmentService.userFolder, file)
         );
 
         if (filesToPragma.includes(basename(file))) {
-          return state.fs.write(
-            newPath,
-            PragmaService.processOutgoing(contents)
-          );
+          return FS.write(newPath, PragmaService.processOutgoing(contents));
         }
 
-        return state.fs.write(newPath, contents);
+        return FS.write(newPath, contents);
       })
     );
   }
 
   private async copyFilesFromPath(settings: ISettings): Promise<void> {
-    const files = await state.fs.listFiles(settings.file.path);
+    const files = await FS.listFiles(settings.file.path);
 
     const filesToPragma = ["settings.json", "keybindings.json"];
 
     await Promise.all(
       files.map(async file => {
-        const contents = await state.fs.read(file);
+        const contents = await FS.read(file);
         const newPath = resolve(
-          state.env.locations.userFolder,
+          EnvironmentService.userFolder,
           relative(settings.file.path, file)
         );
         const currentContents = await (async () => {
-          const exists = await state.fs.exists(newPath);
+          const exists = await FS.exists(newPath);
           if (exists) {
-            return state.fs.read(newPath);
+            return FS.read(newPath);
           }
           return "{}";
         })();
@@ -213,13 +218,13 @@ export class FileService implements ISyncService {
             settings.hostname
           );
           if (currentContents !== afterPragma) {
-            return state.fs.write(newPath, afterPragma);
+            return FS.write(newPath, afterPragma);
           }
           return;
         }
 
         if (currentContents !== contents) {
-          return state.fs.write(newPath, contents);
+          return FS.write(newPath, contents);
         }
       })
     );

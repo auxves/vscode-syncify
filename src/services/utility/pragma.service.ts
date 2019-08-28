@@ -1,6 +1,7 @@
 /* Originally from shanalikhan/code-settings-sync */
 
 import { OperatingSystem, state } from "@/models";
+import { EnvironmentService } from "@/services/utility/environment.service";
 
 export class PragmaService {
   public static processIncoming(
@@ -23,7 +24,7 @@ export class PragmaService {
             if (!this.supportedOS.includes(osFromPragma)) {
               continue;
             }
-            if (this.osFromString(osFromPragma) !== state.env.os) {
+            if (this.osFromString(osFromPragma) !== EnvironmentService.os) {
               shouldComment = true;
             }
           }

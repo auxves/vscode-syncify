@@ -1,5 +1,4 @@
-import { state } from "@/models";
-import { LoggerService } from "@/services";
+import { LoggerService, SettingsService, WebviewService } from "@/services";
 import express from "express";
 import { Server } from "http";
 import fetch from "node-fetch";
@@ -15,7 +14,7 @@ export class GitHubOAuthService {
   }
 
   public async startServer() {
-    const settings = await state.settings.getSettings();
+    const settings = await SettingsService.getSettings();
     const host = new URL(settings.github.endpoint);
 
     this.server = this.app.listen(this.port);
@@ -56,7 +55,7 @@ export class GitHubOAuthService {
 
         this.saveCredentials(token, user);
 
-        state.webview.openRepositoryCreationPage(token, user, host);
+        WebviewService.openRepositoryCreationPage(token, user, host);
       } catch (err) {
         const error = new Error(err);
         LoggerService.logException(error, null, true);
@@ -87,8 +86,8 @@ export class GitHubOAuthService {
   }
 
   public async saveCredentials(token: string, user: string) {
-    const settings = await state.settings.getSettings();
-    state.settings.setSettings({
+    const settings = await SettingsService.getSettings();
+    SettingsService.setSettings({
       ...settings,
       github: {
         ...settings.github,
