@@ -1,5 +1,5 @@
-import { OperatingSystem, state } from "@/models";
-import { EnvironmentService, PragmaService } from "@/services";
+import { OperatingSystem } from "@/models";
+import { Environment, PragmaService } from "@/services";
 
 jest.mock("@/services/utility/localization.service.ts");
 jest.mock("@/models/state.model.ts");
@@ -50,7 +50,7 @@ describe("host", () => {
 describe("os", () => {
   Object.keys(OperatingSystem).forEach(key => {
     it(`should work on 'OperatingSystem.${key}'`, () => {
-      EnvironmentService.os = OperatingSystem[key];
+      Environment.os = OperatingSystem[key];
 
       const initial = `{
         // @sync os=${key.toLowerCase()}

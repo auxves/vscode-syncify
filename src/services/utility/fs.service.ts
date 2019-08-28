@@ -1,4 +1,4 @@
-import { SettingsService } from "@/services/utility/settings.service";
+import { Settings } from "@/services";
 import glob from "fast-glob";
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
 
@@ -32,7 +32,7 @@ export class FS {
     path: string,
     ignoredItems?: string[]
   ): Promise<string[]> {
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     return glob(`${path}/**/*`, {
       dot: true,

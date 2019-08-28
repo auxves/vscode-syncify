@@ -6,7 +6,12 @@ import {
   state,
   UISettingType
 } from "@/models";
-import { GitHubOAuthService, localize, SettingsService } from "@/services";
+import {
+  Environment,
+  GitHubOAuthService,
+  localize,
+  Settings
+} from "@/services";
 import { readFileSync } from "fs-extra";
 import has from "lodash/has";
 import set from "lodash/set";
@@ -39,7 +44,7 @@ export class WebviewService {
     settingsPanel.webview.html = content;
     settingsPanel.webview.onDidReceiveMessage(async message => {
       if (message === "edit") {
-        SettingsService.openSettingsFile();
+        Settings.openSettingsFile();
         return;
       }
       this.receiveSettingChange(message, settings);
@@ -73,7 +78,7 @@ export class WebviewService {
     }
     if (has(settings, message.command)) {
       set(settings, message.command, value);
-      SettingsService.setSettings(settings);
+      Settings.set(settings);
     }
   }
 
@@ -81,8 +86,7 @@ export class WebviewService {
     const webview = this.webviews[0];
     const releaseNotes = {
       ...changes,
-      currentVersion: vscode.extensions.getExtension("arnohovhannisyan.syncify")
-        .packageJSON.version
+      currentVersion: Environment.pkg.version
     };
     const content: string = this.generateContent({
       releaseNotes,
@@ -104,7 +108,7 @@ export class WebviewService {
       }
     );
     landingPanel.webview.onDidReceiveMessage(async message => {
-      const settings = await SettingsService.getSettings();
+      const settings = await Settings.get();
       switch (message.command) {
         case "loginWithGitHub":
           new GitHubOAuthService(54321).startServer();
@@ -160,8 +164,8 @@ export class WebviewService {
       if (message.close) {
         return repositoryCreationPanel.dispose();
       }
-      const settings = await SettingsService.getSettings();
-      SettingsService.setSettings({
+      const settings = await Settings.get();
+      Settings.set({
         ...settings,
         repo: {
           ...settings.repo,

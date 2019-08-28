@@ -1,6 +1,7 @@
 export * from "@/models/ui/setting-type.model";
 export * from "@/models/sync-method.model";
 export * from "@/models/language-pack.model";
+export * from "@/models/vscode-command.model";
 export * from "@/models/os.model";
 export * from "@/models/profile.model";
 export * from "@/models/settings.model";

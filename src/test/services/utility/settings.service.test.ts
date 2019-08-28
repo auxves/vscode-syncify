@@ -1,10 +1,5 @@
 import { defaultSettings, ISettings } from "@/models";
-import {
-  EnvironmentService,
-  FS,
-  InitService,
-  SettingsService
-} from "@/services";
+import { Environment, FS, InitService, Settings } from "@/services";
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
@@ -16,18 +11,14 @@ const cleanupPath = resolve(tmpdir(), "syncify-jest/utility/settings.service");
 const testFolder = `${cleanupPath}/test`;
 
 jest
-  .spyOn(EnvironmentService, "settings", "get")
+  .spyOn(Environment, "settings", "get")
   .mockReturnValue(resolve(testFolder, "settings.json"));
 
 InitService.init = jest.fn();
 
-beforeEach(async () => {
-  return Promise.all([ensureDir(testFolder)]);
-});
+beforeEach(() => Promise.all([ensureDir(testFolder)]));
 
-afterEach(() => {
-  return remove(cleanupPath);
-});
+afterEach(() => remove(cleanupPath));
 
 it("should set settings", async () => {
   const newSettings: ISettings = {
@@ -35,11 +26,9 @@ it("should set settings", async () => {
     watchSettings: true
   };
 
-  await SettingsService.setSettings(newSettings);
+  await Settings.set(newSettings);
 
-  const fetched: ISettings = JSON.parse(
-    await FS.read(EnvironmentService.settings)
-  );
+  const fetched: ISettings = JSON.parse(await FS.read(Environment.settings));
 
   expect(fetched.watchSettings).toBeTruthy();
 });
@@ -50,9 +39,9 @@ it("should get settings", async () => {
     watchSettings: true
   };
 
-  await FS.write(EnvironmentService.settings, JSON.stringify(newSettings));
+  await FS.write(Environment.settings, JSON.stringify(newSettings));
 
-  const fetched = await SettingsService.getSettings();
+  const fetched = await Settings.get();
 
   expect(fetched.watchSettings).toBeTruthy();
 });

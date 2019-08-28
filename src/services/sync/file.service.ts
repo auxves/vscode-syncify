@@ -1,13 +1,13 @@
 import { ISettings, ISyncService, state } from "@/models";
 import {
-  EnvironmentService,
+  Environment,
   ExtensionService,
+  FS,
   localize,
   PragmaService,
-  SettingsService,
+  Settings,
   WebviewService
 } from "@/services";
-import { FS } from "@/services/utility/fs.service";
 import { basename, relative, resolve } from "path";
 import { commands, extensions, ProgressLocation, window } from "vscode";
 
@@ -27,7 +27,7 @@ export class FileService implements ISyncService {
       return;
     }
 
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
@@ -60,7 +60,7 @@ export class FileService implements ISyncService {
 
     window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
 
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     await this.copyFilesFromPath(settings);
 
@@ -151,7 +151,7 @@ export class FileService implements ISyncService {
   }
 
   public async isConfigured(): Promise<boolean> {
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     if (!settings.file.path) {
       return false;
@@ -170,7 +170,7 @@ export class FileService implements ISyncService {
   }
 
   private async copyFilesToPath(settings: ISettings): Promise<void> {
-    const files = await FS.listFiles(EnvironmentService.userFolder);
+    const files = await FS.listFiles(Environment.userFolder);
 
     const filesToPragma = ["settings.json", "keybindings.json"];
 
@@ -179,7 +179,7 @@ export class FileService implements ISyncService {
         const contents = await FS.read(file);
         const newPath = resolve(
           settings.file.path,
-          relative(EnvironmentService.userFolder, file)
+          relative(Environment.userFolder, file)
         );
 
         if (filesToPragma.includes(basename(file))) {
@@ -200,7 +200,7 @@ export class FileService implements ISyncService {
       files.map(async file => {
         const contents = await FS.read(file);
         const newPath = resolve(
-          EnvironmentService.userFolder,
+          Environment.userFolder,
           relative(settings.file.path, file)
         );
         const currentContents = await (async () => {

@@ -1,16 +1,15 @@
 import { state } from "@/models";
-import { localize, UtilityService } from "@/services";
-import { SettingsService } from "@/services/utility/settings.service";
+import { Environment, localize, Settings, UtilityService } from "@/services";
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
 
 export class WatcherService {
   private watching = false;
-  private watcher = watch(this.userFolder, {
+  private watcher = watch(Environment.userFolder, {
     ignored: this.ignoredItems
   });
 
-  constructor(private ignoredItems: string[], private userFolder: string) {
+  constructor(private ignoredItems: string[]) {
     extensions.onDidChange(async () => {
       if (this.watching && window.state.focused) {
         this.upload();
@@ -45,7 +44,7 @@ export class WatcherService {
       return;
     }
 
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     let shouldUpload = true;
 

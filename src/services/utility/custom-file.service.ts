@@ -1,26 +1,23 @@
-import { EnvironmentService, localize } from "@/services";
-import { FS } from "@/services/utility/fs.service";
+import { Environment, FS, localize } from "@/services";
 import { basename, resolve } from "path";
 import { Uri, window, workspace } from "vscode";
 
-export class CustomFileService {
+export class CustomFiles {
   public static async import(): Promise<void> {
     if (!workspace.workspaceFolders.length) {
       return;
     }
 
-    const folderExists = await FS.exists(EnvironmentService.customFilesFolder);
+    const folderExists = await FS.exists(Environment.customFilesFolder);
 
     if (!folderExists) {
-      await FS.mkdir(EnvironmentService.customFilesFolder);
+      await FS.mkdir(Environment.customFilesFolder);
     }
 
-    const allFiles = await FS.listFiles(EnvironmentService.customFilesFolder);
+    const allFiles = await FS.listFiles(Environment.customFilesFolder);
 
     if (!allFiles.length) {
-      await window.showInformationMessage(
-        localize("(info) customSync.noFiles")
-      );
+      await window.showInformationMessage(localize("(info) customSync.noFiles"));
       return;
     }
 
@@ -29,42 +26,35 @@ export class CustomFileService {
         return workspace.workspaceFolders[0].uri.fsPath;
       }
 
-      const result = await window.showQuickPick(
-        workspace.workspaceFolders.map(f => f.name),
-        {
-          placeHolder: localize("(prompt) customFile.import.folderPlaceholder")
-        }
-      );
+      const result = await window.showQuickPick(workspace.workspaceFolders.map(f => f.name), {
+        placeHolder: localize("(prompt) customFile.import.folderPlaceholder")
+      });
 
-      return workspace.workspaceFolders.filter(f => f.name === result)[0].uri
-        .fsPath;
+      return workspace.workspaceFolders.filter(f => f.name === result)[0].uri.fsPath;
     })();
 
     if (!folder) {
       return;
     }
 
-    const filename = await window.showQuickPick(
-      allFiles.map(f => basename(f)),
-      {
-        placeHolder: localize("(prompt) customFile.import.filePlaceholder")
-      }
-    );
+    const filename = await window.showQuickPick(allFiles.map(f => basename(f)), {
+      placeHolder: localize("(prompt) customFile.import.filePlaceholder")
+    });
 
     if (!filename) {
       return;
     }
 
-    const filepath = resolve(EnvironmentService.customFilesFolder, filename);
+    const filepath = resolve(Environment.customFilesFolder, filename);
     const contents = await FS.read(filepath, null);
     await FS.write(resolve(folder, filename), contents);
   }
 
   public static async register(uri: Uri) {
-    const folderExists = await FS.exists(EnvironmentService.customFilesFolder);
+    const folderExists = await FS.exists(Environment.customFilesFolder);
 
     if (!folderExists) {
-      await FS.mkdir(EnvironmentService.customFilesFolder);
+      await FS.mkdir(Environment.customFilesFolder);
     }
 
     const filepath = uri
@@ -79,10 +69,8 @@ export class CustomFileService {
 
     const filename = basename(filepath);
     const contents = await FS.read(filepath, null);
-    const newPath = resolve(EnvironmentService.customFilesFolder, filename);
+    const newPath = resolve(Environment.customFilesFolder, filename);
     await FS.write(newPath, contents);
-    await window.showInformationMessage(
-      localize("(info) customFile.registered", filename)
-    );
+    await window.showInformationMessage(localize("(info) customFile.registered", filename));
   }
 }

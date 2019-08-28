@@ -1,4 +1,5 @@
 import { ILanguagePack } from "@/models";
+import { Environment } from "@/services";
 import { existsSync, readFileSync } from "fs-extra";
 import { resolve } from "path";
 import { extensions } from "vscode";
@@ -40,7 +41,7 @@ export class LocalizationService {
     const languageFormat = "package.nls{0}.json";
     const defaultLanguage = languageFormat.replace("{0}", "");
 
-    const rootPath = extensions.getExtension("arnohovhannisyan.syncify")
+    const rootPath = extensions.getExtension(Environment.extensionId)
       .extensionPath;
 
     const resolvedLanguage = this.recurseCandidates(

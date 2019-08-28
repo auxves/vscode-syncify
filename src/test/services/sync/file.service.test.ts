@@ -1,10 +1,5 @@
-import { SyncMethod } from "@/models";
-import {
-  EnvironmentService,
-  FileService,
-  FS,
-  SettingsService
-} from "@/services";
+import { defaultSettings, SyncMethod } from "@/models";
+import { Environment, FileService, FS, Settings } from "@/services";
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
@@ -16,52 +11,20 @@ const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/file.service");
 const pathToExport = `${cleanupPath}/export`;
 const pathToUser = `${cleanupPath}/user`;
 
-jest.spyOn(EnvironmentService, "userFolder", "get").mockReturnValue(pathToUser);
+jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 
-SettingsService.getSettings = jest.fn(() =>
-  Promise.resolve({
-    method: SyncMethod.Repo,
-    repo: {
-      url: "",
-      profiles: [
-        {
-          branch: "master",
-          name: "main"
-        }
-      ],
-      currentProfile: "main"
-    },
-    file: {
-      path: pathToExport
-    },
-    github: {
-      token: "",
-      endpoint: "https://github.com",
-      user: ""
-    },
-    ignoredItems: [
-      "**/workspaceStorage",
-      "**/globalStorage/state.vscdb*",
-      "**/globalStorage/arnohovhannisyan.syncify",
-      "**/.git"
-    ],
-    autoUploadDelay: 20,
-    watchSettings: false,
-    removeExtensions: true,
-    syncOnStartup: false,
-    hostname: "jest",
-    forceDownload: false,
-    forceUpload: false
-  })
-);
+Settings.get = jest.fn(async () => ({
+  ...defaultSettings,
+  method: SyncMethod.File,
+  file: {
+    path: pathToExport
+  },
+  hostname: "jest"
+}));
 
-beforeEach(async () => {
-  return Promise.all([ensureDir(pathToExport), ensureDir(pathToUser)]);
-});
+beforeEach(() => Promise.all([ensureDir(pathToExport), ensureDir(pathToUser)]));
 
-afterEach(() => {
-  return remove(cleanupPath);
-});
+afterEach(() => remove(cleanupPath));
 
 describe("upload", () => {
   it("should upload", async () => {

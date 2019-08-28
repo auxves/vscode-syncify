@@ -1,16 +1,15 @@
-import { state } from "@/models";
+import { IVSCodeCommand, state } from "@/models";
 import {
-  CustomFileService,
-  EnvironmentService,
+  CustomFiles,
   FactoryService,
-  SettingsService,
+  Settings,
   WatcherService
 } from "@/services";
-import { commands } from "vscode";
+import { commands, Uri } from "vscode";
 
 export class InitService {
   public static async init() {
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     state.sync = FactoryService.generate(settings.method);
 
@@ -18,18 +17,13 @@ export class InitService {
       state.watcher.stopWatching();
     }
 
-    state.watcher = new WatcherService(
-      settings.ignoredItems,
-      EnvironmentService.userFolder
-    );
+    state.watcher = new WatcherService(settings.ignoredItems);
 
     if (settings.watchSettings) {
       state.watcher.startWatching();
     }
 
-    if (state.context.subscriptions.length) {
-      state.context.subscriptions.forEach(disposable => disposable.dispose());
-    }
+    state.context.subscriptions.forEach(disposable => disposable.dispose());
 
     this.registerCommands();
 
@@ -39,38 +33,20 @@ export class InitService {
   }
 
   private static registerCommands() {
+    const cmds: IVSCodeCommand = {
+      "syncify.sync": () => state.sync.sync(),
+      "syncify.upload": () => state.sync.upload(),
+      "syncify.download": () => state.sync.download(),
+      "syncify.reset": () => Settings.reset(),
+      "syncify.openSettings": () => Settings.openSettings(),
+      "syncify.otherOptions": () => Settings.showOtherOptions(),
+      "syncify.importCustomFile": () => CustomFiles.import(),
+      "syncify.registerCustomFile": (uri?: Uri) => CustomFiles.register(uri)
+    };
+
     state.context.subscriptions.push(
-      commands.registerCommand(
-        "syncify.sync",
-        state.sync.sync.bind(state.sync)
-      ),
-      commands.registerCommand(
-        "syncify.upload",
-        state.sync.upload.bind(state.sync)
-      ),
-      commands.registerCommand(
-        "syncify.download",
-        state.sync.download.bind(state.sync)
-      ),
-      commands.registerCommand(
-        "syncify.reset",
-        SettingsService.resetSettings.bind(SettingsService)
-      ),
-      commands.registerCommand(
-        "syncify.openSettings",
-        SettingsService.openSettings.bind(SettingsService)
-      ),
-      commands.registerCommand(
-        "syncify.otherOptions",
-        SettingsService.showOtherOptions.bind(SettingsService)
-      ),
-      commands.registerCommand(
-        "syncify.importCustomFile",
-        CustomFileService.import
-      ),
-      commands.registerCommand(
-        "syncify.registerCustomFile",
-        CustomFileService.register
+      ...Object.entries(cmds).map(([name, fn]) =>
+        commands.registerCommand(name, fn)
       )
     );
   }

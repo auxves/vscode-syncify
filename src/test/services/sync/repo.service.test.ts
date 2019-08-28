@@ -1,17 +1,12 @@
-import { SyncMethod } from "@/models";
-import {
-  EnvironmentService,
-  FS,
-  RepoService,
-  SettingsService
-} from "@/services";
+import { defaultSettings, SyncMethod } from "@/models";
+import { Environment, FS, RepoService, Settings } from "@/services";
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import createSimpleGit from "simple-git/promise";
 
 jest.mock("@/services/utility/localization.service.ts");
-jest.mock("@/services/utility/webview.service.ts");
+jest.mock("@/services/utility/localization.service.ts");
 jest.mock("@/models/state.model.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/repo.service");
@@ -20,10 +15,11 @@ const pathToRepo = `${cleanupPath}/repo`;
 const pathToTmpRepo = `${cleanupPath}/tmpRepo`;
 const pathToUser = `${cleanupPath}/user`;
 
-jest.spyOn(EnvironmentService, "userFolder", "get").mockReturnValue(pathToUser);
-jest.spyOn(EnvironmentService, "repoFolder", "get").mockReturnValue(pathToRepo);
+jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
+jest.spyOn(Environment, "repoFolder", "get").mockReturnValue(pathToRepo);
 
-SettingsService.getSettings = jest.fn(async () => ({
+Settings.get = jest.fn(async () => ({
+  ...defaultSettings,
   method: SyncMethod.Repo,
   repo: {
     url: pathToRemote,
@@ -35,27 +31,7 @@ SettingsService.getSettings = jest.fn(async () => ({
     ],
     currentProfile: "main"
   },
-  file: {
-    path: ""
-  },
-  github: {
-    token: "",
-    endpoint: "https://github.com",
-    user: ""
-  },
-  ignoredItems: [
-    "**/workspaceStorage",
-    "**/globalStorage/state.vscdb*",
-    "**/globalStorage/arnohovhannisyan.syncify",
-    "**/.git"
-  ],
-  autoUploadDelay: 20,
-  watchSettings: false,
-  removeExtensions: true,
-  syncOnStartup: false,
-  hostname: "jest",
-  forceDownload: false,
-  forceUpload: false
+  hostname: "jest"
 }));
 
 beforeEach(async () => {
@@ -69,9 +45,7 @@ beforeEach(async () => {
   return git.init(true);
 });
 
-afterEach(() => {
-  return remove(cleanupPath);
-});
+afterEach(() => remove(cleanupPath));
 
 describe("upload", () => {
   it("should upload", async () => {

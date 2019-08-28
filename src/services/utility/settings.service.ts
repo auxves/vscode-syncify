@@ -1,20 +1,20 @@
 import { defaultSettings, ISettings, state } from "@/models";
 import {
-  EnvironmentService,
+  Environment,
+  FS,
   InitService,
   localize,
   WebviewService
 } from "@/services";
-import { FS } from "@/services/utility/fs.service";
 import merge from "lodash/merge";
 import { ViewColumn, window, workspace } from "vscode";
 
-export class SettingsService {
-  public static async getSettings(): Promise<ISettings> {
-    const filepath = EnvironmentService.settings;
+export class Settings {
+  public static async get(): Promise<ISettings> {
+    const filepath = Environment.settings;
     const exists = await FS.exists(filepath);
     if (!exists) {
-      await this.setSettings(defaultSettings);
+      await this.set(defaultSettings);
       return defaultSettings;
     }
 
@@ -23,7 +23,7 @@ export class SettingsService {
       const newSettings: ISettings = merge(defaultSettings, settings);
 
       if (JSON.stringify(newSettings) !== JSON.stringify(settings)) {
-        await this.setSettings(settings);
+        await this.set(settings);
       }
 
       return newSettings;
@@ -32,13 +32,13 @@ export class SettingsService {
     }
   }
 
-  public static async setSettings(settings: ISettings): Promise<void> {
+  public static async set(settings: ISettings): Promise<void> {
     const exists = await FS.exists(state.context.globalStoragePath);
     if (!exists) {
       await FS.mkdir(state.context.globalStoragePath);
     }
 
-    const filepath = EnvironmentService.settings;
+    const filepath = Environment.settings;
 
     await FS.write(
       filepath,
@@ -48,19 +48,17 @@ export class SettingsService {
     await InitService.init();
   }
 
-  public static async setPartialSettings(
-    settings: Partial<ISettings>
-  ): Promise<void> {
-    const currentSettings = await this.getSettings();
-    await this.setSettings(merge(currentSettings, settings));
+  public static async setPartial(settings: Partial<ISettings>): Promise<void> {
+    const currentSettings = await this.get();
+    await this.set(merge(currentSettings, settings));
   }
 
   public static async openSettings() {
-    WebviewService.openSettingsPage(await this.getSettings());
+    WebviewService.openSettingsPage(await this.get());
   }
 
   public static async openSettingsFile() {
-    const filepath = EnvironmentService.settings;
+    const filepath = Environment.settings;
     await window.showTextDocument(
       await workspace.openTextDocument(filepath),
       ViewColumn.One,
@@ -68,7 +66,7 @@ export class SettingsService {
     );
   }
 
-  public static async resetSettings(): Promise<void> {
+  public static async reset(): Promise<void> {
     state.watcher.stopWatching();
 
     await FS.delete(state.context.globalStoragePath);
@@ -104,7 +102,7 @@ export class SettingsService {
   }
 
   private static async switchProfile(): Promise<void> {
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
     const mappedProfiles = settings.repo.profiles.map(
       prof => `${prof.name} [branch: ${prof.branch}]`
     );
@@ -113,7 +111,7 @@ export class SettingsService {
       const newProfile = settings.repo.profiles.filter(
         prof => `${prof.name} (${prof.branch})` === selectedProfile
       )[0];
-      await SettingsService.setPartialSettings({
+      await Settings.setPartial({
         repo: {
           ...settings.repo,
           currentProfile: newProfile.name

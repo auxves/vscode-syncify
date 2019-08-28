@@ -1,7 +1,8 @@
+import pkg from "@/../package.json";
 import { OperatingSystem, state } from "@/models";
 import { normalize, resolve } from "path";
 
-export class EnvironmentService {
+export class Environment {
   public static get userFolder() {
     const slash = normalize("/");
 
@@ -25,4 +26,7 @@ export class EnvironmentService {
   }
 
   public static os = process.platform as OperatingSystem;
+
+  public static extensionId = `${pkg.publisher}.${pkg.name}`;
+  public static pkg = pkg;
 }

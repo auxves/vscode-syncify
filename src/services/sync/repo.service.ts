@@ -1,13 +1,13 @@
 import { IProfile, ISettings, ISyncService, state } from "@/models";
 import {
-  EnvironmentService,
+  Environment,
   ExtensionService,
+  FS,
   localize,
   PragmaService,
-  SettingsService,
+  Settings,
   WebviewService
 } from "@/services";
-import { FS } from "@/services/utility/fs.service";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ProgressLocation, window } from "vscode";
@@ -16,13 +16,13 @@ export class RepoService implements ISyncService {
   private git: SimpleGit;
 
   public async init() {
-    const folderExists = await FS.exists(EnvironmentService.repoFolder);
+    const folderExists = await FS.exists(Environment.repoFolder);
 
     if (!folderExists) {
-      await FS.mkdir(EnvironmentService.repoFolder);
+      await FS.mkdir(Environment.repoFolder);
     }
 
-    this.git = createSimpleGit(EnvironmentService.repoFolder).silent(true);
+    this.git = createSimpleGit(Environment.repoFolder).silent(true);
 
     const isRepo = await this.git.checkIsRepo();
 
@@ -33,7 +33,7 @@ export class RepoService implements ISyncService {
     const remotes = await this.git.getRemotes(true);
     const origin = remotes.filter(remote => remote.name === "origin")[0];
 
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     if (!origin) {
       this.git.addRemote("origin", settings.repo.url);
@@ -42,7 +42,7 @@ export class RepoService implements ISyncService {
       this.git.addRemote("origin", settings.repo.url);
     }
 
-    const gitignorePath = resolve(EnvironmentService.repoFolder, ".gitignore");
+    const gitignorePath = resolve(Environment.repoFolder, ".gitignore");
     const gitignoreExists = await FS.exists(gitignorePath);
     if (!gitignoreExists) {
       await FS.write(gitignorePath, settings.ignoredItems.join("\n"));
@@ -110,7 +110,7 @@ export class RepoService implements ISyncService {
 
     window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     await (async () => {
       const profile = await this.getProfile();
@@ -129,7 +129,7 @@ export class RepoService implements ISyncService {
       const installedExtensions = ExtensionService.getExtensions();
 
       await FS.write(
-        resolve(EnvironmentService.repoFolder, "extensions.json"),
+        resolve(Environment.repoFolder, "extensions.json"),
         JSON.stringify(installedExtensions, null, 2)
       );
 
@@ -169,7 +169,7 @@ export class RepoService implements ISyncService {
 
     window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
 
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
 
     await (async () => {
       const profile = await this.getProfile();
@@ -216,9 +216,7 @@ export class RepoService implements ISyncService {
 
       try {
         const extensionsFromFile = JSON.parse(
-          await FS.read(
-            resolve(EnvironmentService.repoFolder, "extensions.json")
-          )
+          await FS.read(resolve(Environment.repoFolder, "extensions.json"))
         );
 
         const toInstall = ExtensionService.getMissingExtensions(
@@ -296,7 +294,7 @@ export class RepoService implements ISyncService {
   }
 
   public async isConfigured(): Promise<boolean> {
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
     return (
       !!settings.repo.url &&
       !!settings.repo.currentProfile &&
@@ -311,7 +309,7 @@ export class RepoService implements ISyncService {
   }
 
   private async getProfile(): Promise<IProfile> {
-    const settings = await SettingsService.getSettings();
+    const settings = await Settings.get();
     const currentProfile = settings.repo.profiles.filter(
       profile => profile.name === settings.repo.currentProfile
     )[0];
@@ -320,7 +318,7 @@ export class RepoService implements ISyncService {
   }
 
   private async copyFilesToRepo(): Promise<void> {
-    const files = await FS.listFiles(EnvironmentService.userFolder);
+    const files = await FS.listFiles(Environment.userFolder);
 
     const filesToPragma = ["settings.json", "keybindings.json"];
 
@@ -330,8 +328,8 @@ export class RepoService implements ISyncService {
 
         const dir = dirname(
           resolve(
-            EnvironmentService.repoFolder,
-            relative(EnvironmentService.userFolder, file)
+            Environment.repoFolder,
+            relative(Environment.userFolder, file)
           )
         );
 
@@ -354,8 +352,8 @@ export class RepoService implements ISyncService {
 
   private async copyFilesFromRepo(settings: ISettings): Promise<void> {
     const files = await FS.listFiles(
-      EnvironmentService.repoFolder,
-      settings.ignoredItems.filter(i => !i.includes("arnohovhannisyan.syncify"))
+      Environment.repoFolder,
+      settings.ignoredItems.filter(i => !i.includes(Environment.extensionId))
     );
 
     const filesToPragma = ["settings.json", "keybindings.json"];
@@ -366,8 +364,8 @@ export class RepoService implements ISyncService {
 
         const dir = dirname(
           resolve(
-            EnvironmentService.userFolder,
-            relative(EnvironmentService.repoFolder, file)
+            Environment.userFolder,
+            relative(Environment.repoFolder, file)
           )
         );
 
@@ -410,13 +408,13 @@ export class RepoService implements ISyncService {
 
   private async cleanUpRepo(): Promise<void> {
     const [repoFiles, userFiles] = await Promise.all([
-      FS.listFiles(EnvironmentService.repoFolder),
-      FS.listFiles(EnvironmentService.userFolder)
+      FS.listFiles(Environment.repoFolder),
+      FS.listFiles(Environment.userFolder)
     ]);
     const unneeded = repoFiles.filter(f => {
       const correspondingFile = resolve(
-        EnvironmentService.userFolder,
-        relative(EnvironmentService.repoFolder, f)
+        Environment.userFolder,
+        relative(Environment.repoFolder, f)
       );
       return !userFiles.includes(correspondingFile);
     });

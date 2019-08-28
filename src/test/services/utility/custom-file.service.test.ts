@@ -1,4 +1,4 @@
-import { CustomFileService, EnvironmentService, FS } from "@/services";
+import { CustomFiles, Environment, FS } from "@/services";
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
@@ -14,17 +14,13 @@ const cleanupPath = resolve(
 const pathToSource = `${cleanupPath}/source`;
 const pathToRegistered = `${cleanupPath}/registered`;
 
-Object.defineProperty(EnvironmentService, "customFilesFolder", {
+Object.defineProperty(Environment, "customFilesFolder", {
   get: () => pathToRegistered
 });
 
-beforeEach(async () => {
-  return Promise.all([ensureDir(pathToSource)]);
-});
+beforeEach(async () => Promise.all([ensureDir(pathToSource)]));
 
-afterEach(() => {
-  return remove(cleanupPath);
-});
+afterEach(() => remove(cleanupPath));
 
 it("should register a provided file", async () => {
   const data = JSON.stringify({ test: true }, null, 2);
@@ -34,7 +30,7 @@ it("should register a provided file", async () => {
     fsPath: resolve(pathToSource, "test.json")
   };
 
-  await CustomFileService.register(uri as Uri);
+  await CustomFiles.register(uri as Uri);
 
   const exists = await FS.exists(resolve(pathToRegistered, "test.json"));
   expect(exists).toBeTruthy();
