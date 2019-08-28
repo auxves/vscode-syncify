@@ -12,7 +12,6 @@
     "semicolon": false,
     "no-console": false,
     "object-literal-sort-keys": false,
-    "no-increment-decrement": false,
-    "no-unused-variable": true
+    "no-increment-decrement": false
   }
 }

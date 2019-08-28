@@ -1,6 +1,6 @@
 /* Originally from shanalikhan/code-settings-sync */
 
-import { OperatingSystem, state } from "@/models";
+import { OperatingSystem } from "@/models";
 import { Environment } from "@/services";
 
 export class PragmaService {
