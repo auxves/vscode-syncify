@@ -12,7 +12,7 @@
     "rootDirs": ["src", "assets"],
     "baseUrl": "src",
     "paths": {
-      "@/*": ["./*"]
+      "~/*": ["./*"]
     }
   },
   "include": ["src/**/index.ts", "src/**/*.ts"],

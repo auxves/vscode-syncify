@@ -1,5 +1,5 @@
-import { SyncMethod } from "@/models/sync-method.model";
-import { FileService, RepoService } from "@/services";
+import { SyncMethod } from "~/models/sync-method.model";
+import { FileService, RepoService } from "~/services";
 
 export class FactoryService {
   public static generate(syncMethod: SyncMethod) {

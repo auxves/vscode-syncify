@@ -1,7 +1,7 @@
-import { state } from "@/models";
-import { Environment, localize, Settings, UtilityService } from "@/services";
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
+import { state } from "~/models";
+import { Environment, localize, Settings, UtilityService } from "~/services";
 
 export class WatcherService {
   private watching = false;

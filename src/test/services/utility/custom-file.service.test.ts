@@ -1,11 +1,11 @@
-import { CustomFiles, Environment, FS } from "@/services";
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import { Uri } from "vscode";
+import { CustomFiles, Environment, FS } from "~/services";
 
-jest.mock("@/services/utility/localization.service.ts");
-jest.mock("@/models/state.model.ts");
+jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(
   tmpdir(),

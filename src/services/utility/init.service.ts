@@ -1,11 +1,11 @@
-import { IVSCodeCommand, state } from "@/models";
+import { commands, Uri } from "vscode";
+import { IVSCodeCommand, state } from "~/models";
 import {
   CustomFiles,
   FactoryService,
   Settings,
   WatcherService
-} from "@/services";
-import { commands, Uri } from "vscode";
+} from "~/services";
 
 export class InitService {
   public static async init() {

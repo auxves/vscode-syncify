@@ -1,6 +1,6 @@
-import { Settings } from "@/services";
 import glob from "fast-glob";
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
+import { Settings } from "~/services";
 
 export class FS {
   public static exists(path: string): Promise<boolean> {

@@ -1,6 +1,6 @@
-import { ExtensionService } from "@/services";
 import _isEqual from "lodash/isEqual";
 import { extensions } from "vscode";
+import { ExtensionService } from "~/services";
 
 function isEqual(arr1: any[], arr2: any[]): boolean {
   return _isEqual([...arr1].sort(), [...arr2].sort());

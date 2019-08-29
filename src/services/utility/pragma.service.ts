@@ -1,7 +1,7 @@
 /* Originally from shanalikhan/code-settings-sync */
 
-import { OperatingSystem } from "@/models";
-import { Environment } from "@/services";
+import { OperatingSystem } from "~/models";
+import { Environment } from "~/services";
 
 export class PragmaService {
   public static processIncoming(

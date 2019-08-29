@@ -1,6 +1,6 @@
-import pkg from "@/../package.json";
-import { OperatingSystem, state } from "@/models";
 import { normalize, resolve } from "path";
+import pkg from "~/../package.json";
+import { OperatingSystem, state } from "~/models";
 
 export class Environment {
   public static get userFolder() {

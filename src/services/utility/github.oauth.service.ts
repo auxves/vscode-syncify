@@ -1,8 +1,8 @@
-import { LoggerService, Settings, WebviewService } from "@/services";
 import express from "express";
 import { Server } from "http";
 import fetch from "node-fetch";
 import { URL, URLSearchParams } from "url";
+import { LoggerService, Settings, WebviewService } from "~/services";
 
 export class GitHubOAuthService {
   public app: express.Express;

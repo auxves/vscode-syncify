@@ -1,13 +1,13 @@
-import { defaultSettings, SyncMethod } from "@/models";
-import { Environment, FS, RepoService, Settings } from "@/services";
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import createSimpleGit from "simple-git/promise";
+import { defaultSettings, SyncMethod } from "~/models";
+import { Environment, FS, RepoService, Settings } from "~/services";
 
-jest.mock("@/services/utility/localization.service.ts");
-jest.mock("@/services/utility/localization.service.ts");
-jest.mock("@/models/state.model.ts");
+jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/repo.service");
 const pathToRemote = `${cleanupPath}/remote`;

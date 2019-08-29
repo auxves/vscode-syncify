@@ -1,4 +1,6 @@
-import { ISettings, ISyncService, state } from "@/models";
+import { basename, relative, resolve } from "path";
+import { commands, extensions, ProgressLocation, window } from "vscode";
+import { ISettings, ISyncService, state } from "~/models";
 import {
   Environment,
   ExtensionService,
@@ -7,9 +9,7 @@ import {
   PragmaService,
   Settings,
   WebviewService
-} from "@/services";
-import { basename, relative, resolve } from "path";
-import { commands, extensions, ProgressLocation, window } from "vscode";
+} from "~/services";
 
 export class FileService implements ISyncService {
   public async sync(): Promise<void> {

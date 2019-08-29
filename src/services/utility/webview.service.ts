@@ -1,23 +1,23 @@
-import changes from "@/../assets/release-notes.json";
-import {
-  ISettings,
-  IWebview,
-  IWebviewSection,
-  state,
-  UISettingType
-} from "@/models";
-import {
-  Environment,
-  GitHubOAuthService,
-  localize,
-  Settings
-} from "@/services";
 import { readFileSync } from "fs-extra";
 import has from "lodash/has";
 import set from "lodash/set";
 import { resolve } from "path";
 import { URL } from "url";
 import * as vscode from "vscode";
+import changes from "~/../assets/release-notes.json";
+import {
+  ISettings,
+  IWebview,
+  IWebviewSection,
+  state,
+  UISettingType
+} from "~/models";
+import {
+  Environment,
+  GitHubOAuthService,
+  localize,
+  Settings
+} from "~/services";
 
 export class WebviewService {
   public static openSettingsPage(settings: ISettings): vscode.WebviewPanel {

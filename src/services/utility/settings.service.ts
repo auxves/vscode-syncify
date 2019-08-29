@@ -1,13 +1,13 @@
-import { defaultSettings, ISettings, state } from "@/models";
+import merge from "lodash/merge";
+import { ViewColumn, window, workspace } from "vscode";
+import { defaultSettings, ISettings, state } from "~/models";
 import {
   Environment,
   FS,
   InitService,
   localize,
   WebviewService
-} from "@/services";
-import merge from "lodash/merge";
-import { ViewColumn, window, workspace } from "vscode";
+} from "~/services";
 
 export class Settings {
   public static async get(): Promise<ISettings> {

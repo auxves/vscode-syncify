@@ -1,10 +1,10 @@
-import { FS, Settings } from "@/services";
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
+import { FS, Settings } from "~/services";
 
-jest.mock("@/services/utility/localization.service.ts");
-jest.mock("@/models/state.model.ts");
+jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/utility/fs.service");
 const testFolder = `${cleanupPath}/test`;

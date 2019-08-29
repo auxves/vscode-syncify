@@ -1,8 +1,8 @@
-import { ILanguagePack } from "@/models";
-import { Environment } from "@/services";
 import { existsSync, readFileSync } from "fs-extra";
 import { resolve } from "path";
 import { extensions } from "vscode";
+import { ILanguagePack } from "~/models";
+import { Environment } from "~/services";
 
 export class LocalizationService {
   private bundle = this.resolveLanguagePack();

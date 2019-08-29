@@ -1,4 +1,7 @@
-import { IProfile, ISettings, ISyncService, state } from "@/models";
+import { basename, dirname, relative, resolve } from "path";
+import createSimpleGit, { SimpleGit } from "simple-git/promise";
+import { commands, extensions, ProgressLocation, window } from "vscode";
+import { IProfile, ISettings, ISyncService, state } from "~/models";
 import {
   Environment,
   ExtensionService,
@@ -7,10 +10,7 @@ import {
   PragmaService,
   Settings,
   WebviewService
-} from "@/services";
-import { basename, dirname, relative, resolve } from "path";
-import createSimpleGit, { SimpleGit } from "simple-git/promise";
-import { commands, extensions, ProgressLocation, window } from "vscode";
+} from "~/services";
 
 export class RepoService implements ISyncService {
   private git: SimpleGit;

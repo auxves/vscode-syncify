@@ -1,4 +1,4 @@
-import { IWebviewSetting } from "@/models";
+import { IWebviewSetting } from "~/models";
 
 export interface IWebviewSection {
   name: string;

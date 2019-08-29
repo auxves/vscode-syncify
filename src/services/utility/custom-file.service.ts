@@ -1,6 +1,6 @@
-import { Environment, FS, localize } from "@/services";
 import { basename, resolve } from "path";
 import { Uri, window, workspace } from "vscode";
+import { Environment, FS, localize } from "~/services";
 
 export class CustomFiles {
   public static async import(): Promise<void> {
@@ -17,7 +17,9 @@ export class CustomFiles {
     const allFiles = await FS.listFiles(Environment.customFilesFolder);
 
     if (!allFiles.length) {
-      await window.showInformationMessage(localize("(info) customSync.noFiles"));
+      await window.showInformationMessage(
+        localize("(info) customSync.noFiles")
+      );
       return;
     }
 
@@ -26,20 +28,27 @@ export class CustomFiles {
         return workspace.workspaceFolders[0].uri.fsPath;
       }
 
-      const result = await window.showQuickPick(workspace.workspaceFolders.map(f => f.name), {
-        placeHolder: localize("(prompt) customFile.import.folderPlaceholder")
-      });
+      const result = await window.showQuickPick(
+        workspace.workspaceFolders.map(f => f.name),
+        {
+          placeHolder: localize("(prompt) customFile.import.folderPlaceholder")
+        }
+      );
 
-      return workspace.workspaceFolders.filter(f => f.name === result)[0].uri.fsPath;
+      return workspace.workspaceFolders.filter(f => f.name === result)[0].uri
+        .fsPath;
     })();
 
     if (!folder) {
       return;
     }
 
-    const filename = await window.showQuickPick(allFiles.map(f => basename(f)), {
-      placeHolder: localize("(prompt) customFile.import.filePlaceholder")
-    });
+    const filename = await window.showQuickPick(
+      allFiles.map(f => basename(f)),
+      {
+        placeHolder: localize("(prompt) customFile.import.filePlaceholder")
+      }
+    );
 
     if (!filename) {
       return;
@@ -71,6 +80,8 @@ export class CustomFiles {
     const contents = await FS.read(filepath, null);
     const newPath = resolve(Environment.customFilesFolder, filename);
     await FS.write(newPath, contents);
-    await window.showInformationMessage(localize("(info) customFile.registered", filename));
+    await window.showInformationMessage(
+      localize("(info) customFile.registered", filename)
+    );
   }
 }
