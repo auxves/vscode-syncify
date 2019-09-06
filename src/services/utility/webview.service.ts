@@ -12,12 +12,7 @@ import {
   state,
   UISettingType
 } from "~/models";
-import {
-  Environment,
-  GitHubOAuthService,
-  localize,
-  Settings
-} from "~/services";
+import { Environment, localize, OAuthService, Settings } from "~/services";
 
 export class WebviewService {
   public static openSettingsPage(settings: ISettings): vscode.WebviewPanel {
@@ -111,12 +106,12 @@ export class WebviewService {
       const settings = await Settings.get();
       switch (message.command) {
         case "loginWithGitHub":
-          new GitHubOAuthService(54321).startServer();
+          OAuthService.listen(54321);
+
+          const host = new URL(settings.github.endpoint).hostname;
           vscode.env.openExternal(
             vscode.Uri.parse(
-              `https://${
-                new URL(settings.github.endpoint).hostname
-              }/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832&redirect_uri=http://localhost:54321/callback`
+              `https://${host}/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832&redirect_uri=http://localhost:54321/callback`
             )
           );
           break;
