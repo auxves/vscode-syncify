@@ -11,6 +11,8 @@
   "(command) syncify.reset": "Syncify: Reset",
   "(command) syncify.sync": "Syncify: Fordította",
   "(command) syncify.upload": "Syncify: Feltöltés",
+  "(error) checkConsole": "Syncify: Kérjük, ellenőrizze a Fejlesztő Konzol egyedi hiba (Súgó -> Kapcsoló Fejlesztő Eszközök).",
+  "(error) invalidEnterpriseURL": "Syncify: Érvénytelen GitHub Enterprise URL-t.",
   "(info) customFile.registered": "Syncify: Regisztrált '{0}'.",
   "(info) customSync.noFiles": "Syncify: Nem Elérhető Fájlokat",
   "(info) download.downloaded": "Syncify: Letölthető",

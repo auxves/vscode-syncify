@@ -11,6 +11,8 @@
   "(command) syncify.reset": "Syncify: Reset",
   "(command) syncify.sync": "Syncify: Sincronización",
   "(command) syncify.upload": "Syncify: Subir",
+  "(error) checkConsole": "Syncify: por Favor, compruebe que el Desarrollador de la Consola de error específico (Ayuda -> Activar Herramientas de Desarrollador).",
+  "(error) invalidEnterpriseURL": "Syncify: no Válido GitHub Enterprise URL.",
   "(info) customFile.registered": "Syncify: Registrado '{0}'.",
   "(info) customSync.noFiles": "Syncify: No Hay Archivos Disponibles",
   "(info) download.downloaded": "Syncify: Descargar",

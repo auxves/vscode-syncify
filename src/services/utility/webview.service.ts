@@ -96,7 +96,7 @@ export class WebviewService {
     if (webview.webview) {
       webview.webview.webview.html = content;
       webview.webview.reveal();
-      return webview;
+      return webview.webview;
     }
     const landingPanel = vscode.window.createWebviewPanel(
       "landingPage",
@@ -149,7 +149,7 @@ export class WebviewService {
     if (webview.webview) {
       webview.webview.webview.html = content;
       webview.webview.reveal();
-      return webview;
+      return webview.webview;
     }
     const repositoryCreationPanel = vscode.window.createWebviewPanel(
       "repositoryCreation",

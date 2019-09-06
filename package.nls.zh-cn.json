@@ -11,6 +11,8 @@
   "(command) syncify.reset": "Syncify：重新设",
   "(command) syncify.sync": "Syncify：同",
   "(command) syncify.upload": "Syncify：上",
+  "(error) checkConsole": "Syncify：请检查开发商控制台用于特定的错误(帮助->切换开发工具)。",
+  "(error) invalidEnterpriseURL": "Syncify：无效的审查企业的网址。",
   "(info) customFile.registered": "Syncify：登记'{0}'.",
   "(info) customSync.noFiles": "Syncify：没有可用文",
   "(info) download.downloaded": "Syncify：下载",

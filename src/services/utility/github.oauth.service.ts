@@ -1,8 +1,8 @@
+import axios from "axios";
 import express from "express";
 import { Server } from "http";
-import fetch from "node-fetch";
 import { URL, URLSearchParams } from "url";
-import { LoggerService, Settings, WebviewService } from "~/services";
+import { localize, LoggerService, Settings, WebviewService } from "~/services";
 
 export class GitHubOAuthService {
   public app: express.Express;
@@ -20,9 +20,7 @@ export class GitHubOAuthService {
     this.server = this.app.listen(this.port);
     this.app.get("/callback", async (req, res) => {
       try {
-        const response = await this.getToken(req.param("code"), host);
-        const text = await response.text();
-        const params = new URLSearchParams(text);
+        const token = await this.getToken(req.param("code"), host);
 
         res.send(`
         <!doctype html>
@@ -48,9 +46,9 @@ export class GitHubOAuthService {
           </body>
         </html>
         `);
+
         this.server.close();
 
-        const token = params.get("access_token");
         const user = await this.getUser(token, host);
 
         this.saveCredentials(token, user);
@@ -63,26 +61,31 @@ export class GitHubOAuthService {
     });
   }
 
-  public getToken(code: string, host: URL) {
+  public async getToken(code: string, host: URL) {
     const params = new URLSearchParams();
     params.append("client_id", "0b56a3589b5582d11832");
     params.append("client_secret", "3ac123310971a75f0a26e979ce0030467fc32682");
     params.append("code", code);
 
-    const promise = fetch(`https://${host.hostname}/login/oauth/access_token`, {
-      method: "POST",
-      body: params
-    });
+    try {
+      const response = await axios.get(
+        `https://${host.hostname}/login/oauth/access_token`,
+        {
+          method: "POST",
+          data: params
+        }
+      );
 
-    promise.catch(err => {
+      return new URLSearchParams(response.data).get("access_token");
+    } catch (err) {
       LoggerService.logException(
         err,
-        "Syncify: Invalid GitHub Enterprise URL.",
+        host.hostname === "github.com"
+          ? localize("(error) checkConsole")
+          : localize("(error) invalidEnterpriseURL"),
         true
       );
-    });
-
-    return promise;
+    }
   }
 
   public async saveCredentials(token: string, user: string) {
@@ -98,21 +101,21 @@ export class GitHubOAuthService {
   }
 
   public async getUser(token: string, host: URL) {
-    const promise = fetch(`https://api.${host.hostname}/user`, {
-      method: "GET",
-      headers: { Authorization: `token ${token}` }
-    });
+    try {
+      const response = await axios.get(`https://api.${host.hostname}/user`, {
+        method: "GET",
+        headers: { Authorization: `token ${token}` }
+      });
 
-    promise.catch(err => {
+      return response.data.login;
+    } catch (err) {
       LoggerService.logException(
         err,
-        "Sync: Invalid GitHub Enterprise URL.",
+        host.hostname === "github.com"
+          ? localize("(error) checkConsole")
+          : localize("(error) invalidEnterpriseURL"),
         true
       );
-    });
-
-    const res = await promise;
-    const json = await res.json();
-    return json.login;
+    }
   }
 }

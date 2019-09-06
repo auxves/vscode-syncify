@@ -11,6 +11,8 @@
   "(command) syncify.reset": "Syncify:",
   "(command) syncify.sync": "Syncify:동기",
   "(command) syncify.upload": "Syncify:로 업로",
+  "(error) checkConsole": "Syncify:을 확인하시기 바랍 개발자가 콘솔에 대한 특정 오류(도움말->전환 개발자 도구).",
+  "(error) invalidEnterpriseURL": "Syncify:잘못된 GitHub Enterprise URL.",
   "(info) customFile.registered": "Syncify:등록'{0}'.",
   "(info) customSync.noFiles": "Syncify:없이 사용할 수 있는 파",
   "(info) download.downloaded": "Syncify:다운로",

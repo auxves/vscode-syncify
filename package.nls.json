@@ -11,6 +11,8 @@
   "(command) syncify.otherOptions": "Syncify: Other Options",
   "(command) syncify.registerCustomFile": "Syncify: Register Custom File",
   "(command) syncify.importCustomFile": "Syncify: Import Custom File",
+  "(error) checkConsole": "Syncify: Please check the Developer Console for specific error (Help -> Toggle Developer Tools).",
+  "(error) invalidEnterpriseURL": "Syncify: Invalid GitHub Enterprise URL.",
   "(info) customFile.registered": "Syncify: Registered '{0}'.",
   "(info) customSync.noFiles": "Syncify: No Files Available",
   "(info) upload.initiating": "Syncify: Uploading in {0} seconds",

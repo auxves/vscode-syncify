@@ -11,6 +11,8 @@
   "(command) syncify.reset": "Syncify: Отменя",
   "(command) syncify.sync": "Syncify: Синхронизиране На",
   "(command) syncify.upload": "Syncify: Изтегли",
+  "(error) checkConsole": "Syncify: моля, проверете разработчик конзола за определен толеранс (помощ -> инструменти за разработчици превключвател).",
+  "(error) invalidEnterpriseURL": "Syncify: неправилен URL адрес на GitHub на предприятието.",
   "(info) customFile.registered": "Syncify: Регистриран '{0}'.",
   "(info) customSync.noFiles": "Syncify: Няма Файлове",
   "(info) download.downloaded": "Syncify: Изтегли",

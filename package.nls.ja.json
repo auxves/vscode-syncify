@@ -11,6 +11,8 @@
   "(command) syncify.reset": "Syncifyリセッ",
   "(command) syncify.sync": "Syncify:Syn",
   "(command) syncify.upload": "Syncify:アップロー",
+  "(error) checkConsole": "Syncifyくださいチェックの開発コンソールのための特定のエラー(Help->切り替えボタンをクリックしてDeveloper Tools).",
+  "(error) invalidEnterpriseURL": "Syncify:無効GitHub企業URL",
   "(info) customFile.registered": "Syncify登録'{0}'.",
   "(info) customSync.noFiles": "Syncifyなファイルをご用",
   "(info) download.downloaded": "Syncify:ダウンロー",
