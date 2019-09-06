@@ -8,6 +8,8 @@ export class LocalizationService {
   private bundle = this.resolveLanguagePack();
   private options: { locale: string };
 
+  constructor(private locale?: string) {}
+
   public localize(key: string, ...args: string[]): string {
     const message = this.bundle[key] || key;
     return this.format(message, args);
@@ -21,6 +23,10 @@ export class LocalizationService {
           process.env.VSCODE_NLS_CONFIG || JSON.stringify({ locale: "en" })
         )
       };
+
+      if (this.locale) {
+        this.options.locale = this.locale;
+      }
     } catch (err) {
       throw err;
     }

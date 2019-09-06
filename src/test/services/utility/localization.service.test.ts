@@ -1,8 +1,8 @@
 import { LocalizationService } from "~/services";
 
 function locale(lang: string): (key: string, ...args: string[]) => string {
-  process.env.VSCODE_NLS_CONFIG = JSON.stringify({ locale: lang });
-  return LocalizationService.prototype.localize.bind(new LocalizationService());
+  return (key: string, ...args: string[]) =>
+    new LocalizationService(lang).localize(key, ...args);
 }
 
 it("should localize english", () => {
