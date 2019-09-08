@@ -24,3 +24,4 @@ deploy:
     on:
       branch: master
       tags: true
+      condition: $TRAVIS_NODE_VERSION = 10
