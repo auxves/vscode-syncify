@@ -294,13 +294,14 @@ export class RepoService implements ISyncService {
   }
 
   public async isConfigured(): Promise<boolean> {
-    const settings = await Settings.get();
+    const {
+      repo: { url, currentProfile, profiles }
+    } = await Settings.get();
+
     return (
-      !!settings.repo.url &&
-      !!settings.repo.currentProfile &&
-      settings.repo.profiles.filter(
-        profile => profile.name === settings.repo.currentProfile
-      ).length === 1
+      !!url &&
+      !!currentProfile &&
+      !!profiles.filter(({ name }) => name === currentProfile).length
     );
   }
 
@@ -309,12 +310,13 @@ export class RepoService implements ISyncService {
   }
 
   private async getProfile(): Promise<IProfile> {
-    const settings = await Settings.get();
-    const currentProfile = settings.repo.profiles.filter(
-      profile => profile.name === settings.repo.currentProfile
-    )[0];
+    const {
+      repo: { profiles, currentProfile }
+    } = await Settings.get();
 
-    return currentProfile ? currentProfile : settings.repo.profiles[0];
+    const profile = profiles.filter(({ name }) => name === currentProfile)[0];
+
+    return profile || profiles[0];
   }
 
   private async copyFilesToRepo(): Promise<void> {
@@ -411,6 +413,7 @@ export class RepoService implements ISyncService {
       FS.listFiles(Environment.repoFolder),
       FS.listFiles(Environment.userFolder)
     ]);
+
     const unneeded = repoFiles.filter(f => {
       const correspondingFile = resolve(
         Environment.userFolder,
