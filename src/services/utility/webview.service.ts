@@ -321,7 +321,7 @@ export class WebviewService {
       if (typeof option.replace === "string") {
         toReplace.push({
           ...option,
-          replace: JSON.stringify(options[option.replace])
+          replace: escape(JSON.stringify(options[option.replace]))
         });
       } else {
         toReplace.push({

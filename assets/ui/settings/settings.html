@@ -6,7 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src vscode-resource: data:; script-src vscode-resource: 'unsafe-inline'; style-src vscode-resource: 'unsafe-inline'; font-src vscode-resource:;"
+    />
     <link
       rel="stylesheet"
       href="@PWD/ui/shared/vendor/bootstrap/css/bootstrap.min.css"
@@ -53,8 +56,8 @@
     <script defer src="@PWD/ui/shared/fonts.js"></script>
     <font-injector></font-injector>
     <script defer>
-      const data = JSON.parse(`@DATA`);
-      const map = JSON.parse(`@MAP`);
+      const data = JSON.parse(unescape(`@DATA`));
+      const map = JSON.parse(unescape(`@MAP`));
     </script>
     <script defer src="@PWD/ui/settings/settings.js"></script>
   </body>
