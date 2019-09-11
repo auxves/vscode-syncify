@@ -1,3 +1,4 @@
+import isEqual from "lodash/isEqual";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ProgressLocation, window } from "vscode";
@@ -48,16 +49,15 @@ export class RepoService implements ISyncService {
       await FS.write(gitignorePath, settings.ignoredItems.join("\n"));
     } else {
       const contents = await FS.read(gitignorePath);
+
       const lines = contents.split("\n");
-      let hasChanged = false;
-      settings.ignoredItems.forEach(val => {
-        if (!lines.includes(val)) {
-          lines.push(val);
-          hasChanged = true;
-        }
-      });
-      if (hasChanged) {
-        await FS.write(gitignorePath, lines.join("\n"));
+      const newLines = [
+        ...lines,
+        ...settings.ignoredItems.filter(val => !lines.includes(val))
+      ];
+
+      if (!isEqual(lines, newLines)) {
+        await FS.write(gitignorePath, newLines.join("\n"));
       }
     }
   }
