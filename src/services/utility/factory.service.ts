@@ -1,4 +1,4 @@
-import { SyncMethod } from "~/models/sync-method.model";
+import { SyncMethod } from "~/models";
 import { FileService, RepoService } from "~/services";
 
 export class FactoryService {
