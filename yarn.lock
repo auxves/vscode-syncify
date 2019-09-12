@@ -5562,10 +5562,10 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-translocalizer@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/translocalizer/-/translocalizer-2.0.1.tgz#94cb70a21f1c28ad1bf7b0a850804077c2f01b0c"
-  integrity sha512-M8+AIYsYqS6umfv7KErFZYvFChG//1+v73PW1uQZcq3tY2uUVge/RDRkhEZRS6HpFAxKpICl1rV7B1g69tz8Dg==
+translocalizer@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/translocalizer/-/translocalizer-2.1.0.tgz#7906ae5cd2ca8ff0062e71725162123bbbb47418"
+  integrity sha512-FL4rHW+9CB60IHm1Cwpibn1t6kKZpdHIIYUY7B5OuAK2v2Nt5SPeOuutAGfAYsPfYs7pO3Xjf5eq8VAifEJFZQ==
   dependencies:
     axios "^0.19.0"
     commander "^3.0.1"
