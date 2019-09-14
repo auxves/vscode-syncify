@@ -7,7 +7,7 @@ import { Environment, FS, Initializer, Settings } from "~/services";
 jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/utility/settings.service");
+const cleanupPath = resolve(tmpdir(), "syncify-jest/services/settings.service");
 const testFolder = `${cleanupPath}/test`;
 
 jest

@@ -8,7 +8,7 @@ import { Environment, FS, Settings } from "~/services";
 jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/file.service");
+const cleanupPath = resolve(tmpdir(), "syncify-jest/methods/file.method");
 const pathToExport = `${cleanupPath}/export`;
 const pathToUser = `${cleanupPath}/user`;
 

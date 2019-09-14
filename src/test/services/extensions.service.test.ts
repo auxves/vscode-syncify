@@ -1,10 +1,5 @@
-import _isEqual from "lodash/isEqual";
 import { extensions } from "vscode";
 import { Extensions } from "~/services";
-
-function isEqual(arr1: any[], arr2: any[]): boolean {
-  return _isEqual([...arr1].sort(), [...arr2].sort());
-}
 
 function setExtensions(exts: string[]): void {
   extensions.all = exts.map(ext => ({
@@ -28,7 +23,7 @@ it("should properly get missing extensions", () => {
 
   const expected = ["publisher2.extension2", "publisher3.extension3"];
 
-  expect(isEqual(missing, expected)).toBeTruthy();
+  expect(missing).toStrictEqual(expected);
 });
 
 it("should properly get unneeded extensions", () => {
@@ -42,5 +37,5 @@ it("should properly get unneeded extensions", () => {
 
   const expected = ["publisher2.extension2", "publisher3.extension3"];
 
-  expect(isEqual(unneeded, expected)).toBeTruthy();
+  expect(unneeded).toStrictEqual(expected);
 });

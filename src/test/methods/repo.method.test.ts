@@ -10,7 +10,7 @@ jest.mock("~/services/localization.service.ts");
 jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/repo.service");
+const cleanupPath = resolve(tmpdir(), "syncify-jest/methods/repo.method");
 const pathToRemote = `${cleanupPath}/remote`;
 const pathToRepo = `${cleanupPath}/repo`;
 const pathToTmpRepo = `${cleanupPath}/tmpRepo`;
