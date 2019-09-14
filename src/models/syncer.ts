@@ -1,4 +1,4 @@
-export enum SyncMethod {
+export enum Syncer {
   Repo = "repo",
   File = "file"
 }

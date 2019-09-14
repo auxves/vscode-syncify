@@ -12,7 +12,7 @@
             },
             "type": "object"
         },
-        "SyncMethod": {
+        "Syncer": {
             "enum": [
                 "file",
                 "repo"
@@ -61,9 +61,6 @@
             },
             "type": "array"
         },
-        "method": {
-            "$ref": "#/definitions/SyncMethod"
-        },
         "removeExtensions": {
             "type": "boolean"
         },
@@ -86,6 +83,9 @@
         },
         "syncOnStartup": {
             "type": "boolean"
+        },
+        "syncer": {
+            "$ref": "#/definitions/Syncer"
         },
         "watchSettings": {
             "type": "boolean"

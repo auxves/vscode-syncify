@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "Introduzca Nombre De Host",
   "(setting) ignoredItems.name": "Omite Los Elementos De",
   "(setting) ignoredItems.placeholder": "Entrar en ignorado elementos (uno en cada línea)",
-  "(setting) method.name": "Método De Sincronización",
-  "(setting) method.placeholder": "Seleccione El Método De Sincronización",
   "(setting) removeExtensions.name": "Quitar Las Extensiones De",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Introduzca Repo URL",
   "(setting) syncOnStartup.name": "Sincronización En El Inicio",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "Seleccione Syncer",
   "(setting) watchSettings.name": "Ajustes Del Reloj"
 }

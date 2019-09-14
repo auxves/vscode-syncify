@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "Въведете Името На Хоста",
   "(setting) ignoredItems.name": "Аргументи, Които Се Пренебрегват Елементи",
   "(setting) ignoredItems.placeholder": "Въведете черният елементи (по един във всяка линия)",
-  "(setting) method.name": "Метод За Синхронизация",
-  "(setting) method.placeholder": "Изберете Метод За Синхронизация",
   "(setting) removeExtensions.name": "Изтриване На Разширения",
   "(setting) repo.url.name": "РЕПО URL-адрес",
   "(setting) repo.url.placeholder": "Въведете РЕПО URL-адрес",
   "(setting) syncOnStartup.name": "Синхронизация При Стартиране",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "Изберете Syncer",
   "(setting) watchSettings.name": "За Да Гледате Настройки"
 }

@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "입력한 호스트",
   "(setting) ignoredItems.name": "항목은 무시",
   "(setting) ignoredItems.placeholder": "입력 항목을 무시(하나의 모든 라인)",
-  "(setting) method.name": "동기화 방",
-  "(setting) method.placeholder": "동기화 방법 선",
   "(setting) removeExtensions.name": "제 확",
   "(setting) repo.url.name": "Repo UR",
   "(setting) repo.url.placeholder": "입력 Repo UR",
   "(setting) syncOnStartup.name": "시작시 동기",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "선택 Syncer",
   "(setting) watchSettings.name": "보 설"
 }

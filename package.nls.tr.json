@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "Makine Adını Girin ",
   "(setting) ignoredItems.name": "Göz Ardı Öğeleri",
   "(setting) ignoredItems.placeholder": "(Her bir satır)girin göz ardı öğeleri ",
-  "(setting) method.name": "Eşitleme Yöntemi",
-  "(setting) method.placeholder": "Eşitleme Yöntemini Seçin",
   "(setting) removeExtensions.name": "Uzantıları Kaldırmak ",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Repo URL girin ",
   "(setting) syncOnStartup.name": "Başlangıç Sync ",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "Seçin Syncer",
   "(setting) watchSettings.name": "Saat Ayarları"
 }

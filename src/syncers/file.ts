@@ -1,6 +1,6 @@
 import { basename, relative, resolve } from "path";
 import { commands, extensions, window } from "vscode";
-import { ISettings, ISyncMethod, state } from "~/models";
+import { ISettings, ISyncer, state } from "~/models";
 import {
   Environment,
   Extensions,
@@ -11,10 +11,10 @@ import {
   Webview
 } from "~/services";
 
-export class FileMethod implements ISyncMethod {
+export class FileSyncer implements ISyncer {
   public async sync(): Promise<void> {
     window.showInformationMessage(
-      "Syncify: Sync is not available for [File] method yet"
+      "Syncify: Sync is not available for File Syncer yet"
     );
   }
 

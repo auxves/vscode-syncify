@@ -6,7 +6,7 @@ export class Initializer {
   public static async init() {
     const settings = await Settings.get();
 
-    state.sync = Factory.generate(settings.method);
+    state.sync = Factory.generate(settings.syncer);
 
     if (state.watcher) {
       state.watcher.stopWatching();

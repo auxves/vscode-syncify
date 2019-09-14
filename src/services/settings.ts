@@ -78,11 +78,11 @@ export class Settings {
     const options = [
       {
         name: localize("(option) switchProfile.name"),
-        action: this.switchProfile
+        action: () => this.switchProfile()
       },
       {
         name: localize("(option) reinitialize.name"),
-        action: Initializer.init
+        action: () => Initializer.init()
       }
     ];
 

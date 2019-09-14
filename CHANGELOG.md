@@ -14,7 +14,7 @@
 
 ## v0.5.0
 
-- Implement `File Method`
+- Implement `File Syncer`
 
 ## v0.4.0
 

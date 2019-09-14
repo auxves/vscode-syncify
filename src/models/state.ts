@@ -1,10 +1,10 @@
 import { ExtensionContext } from "vscode";
-import { ISyncMethod } from "~/models";
+import { ISyncer } from "~/models";
 import { Watcher } from "~/services";
 
 export interface IExtensionState {
   context?: ExtensionContext;
-  sync?: ISyncMethod;
+  sync?: ISyncer;
   watcher?: Watcher;
 }
 

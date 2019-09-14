@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "ホスト名を入",
   "(setting) ignoredItems.name": "無視項",
   "(setting) ignoredItems.placeholder": "入力項目は無視されます（一毎線)",
-  "(setting) method.name": "同期方",
-  "(setting) method.placeholder": "選択同期方",
   "(setting) removeExtensions.name": "削除の拡張",
   "(setting) repo.url.name": "レポUR",
   "(setting) repo.url.placeholder": "入レポUR",
   "(setting) syncOnStartup.name": "同期起動時",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "選択Syncer",
   "(setting) watchSettings.name": "ウォッチの設"
 }

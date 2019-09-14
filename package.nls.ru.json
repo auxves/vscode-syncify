@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "Введите Имя Хоста",
   "(setting) ignoredItems.name": "Игнорируемые Элементы",
   "(setting) ignoredItems.placeholder": "Введите игнорируемых элементов (по одному в каждой строчке)",
-  "(setting) method.name": "Метод Синхронизации",
-  "(setting) method.placeholder": "Выберите Метод Синхронизации",
   "(setting) removeExtensions.name": "Удаление Расширений",
   "(setting) repo.url.name": "РЕПО URL-адрес",
   "(setting) repo.url.placeholder": "Введите РЕПО URL-адрес",
   "(setting) syncOnStartup.name": "Синхронизация При Запуске",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "Выберите Syncer",
   "(setting) watchSettings.name": "Смотреть Настройки"
 }

@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "输入主机",
   "(setting) ignoredItems.name": "被忽略的项",
   "(setting) ignoredItems.placeholder": "该被忽略的项目(每一线)",
-  "(setting) method.name": "同步的方",
-  "(setting) method.placeholder": "选择同步方",
   "(setting) removeExtensions.name": "删除扩",
   "(setting) repo.url.name": "Repo UR",
   "(setting) repo.url.placeholder": "该仓库UR",
   "(setting) syncOnStartup.name": "在启动同",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "选择Syncer",
   "(setting) watchSettings.name": "观看设"
 }

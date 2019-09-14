@@ -2,7 +2,7 @@ import isEqual from "lodash/isEqual";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, window } from "vscode";
-import { IProfile, ISettings, ISyncMethod, state } from "~/models";
+import { IProfile, ISettings, ISyncer, state } from "~/models";
 import {
   Environment,
   Extensions,
@@ -13,7 +13,7 @@ import {
   Webview
 } from "~/services";
 
-export class RepoMethod implements ISyncMethod {
+export class RepoSyncer implements ISyncer {
   private git: SimpleGit;
 
   public async init() {

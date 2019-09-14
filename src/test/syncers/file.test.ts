@@ -1,14 +1,14 @@
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
-import { FileMethod } from "~/methods";
-import { defaultSettings, SyncMethod } from "~/models";
+import { defaultSettings, Syncer } from "~/models";
 import { Environment, FS, Settings } from "~/services";
+import { FileSyncer } from "~/syncers";
 
-jest.mock("~/services/localization.service.ts");
-jest.mock("~/models/state.model.ts");
+jest.mock("~/services/localization.ts");
+jest.mock("~/models/state.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/methods/file.method");
+const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/file");
 const pathToExport = `${cleanupPath}/export`;
 const pathToUser = `${cleanupPath}/user`;
 
@@ -16,7 +16,7 @@ jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 
 Settings.get = jest.fn(async () => ({
   ...defaultSettings,
-  method: SyncMethod.File,
+  syncer: Syncer.File,
   file: {
     path: pathToExport
   },
@@ -35,7 +35,7 @@ describe("upload", () => {
     const expected = JSON.stringify(userData, null, 2);
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const fileService = new FileMethod();
+    const fileService = new FileSyncer();
     await fileService.upload();
 
     const uploadedData = await FS.read(resolve(pathToExport, "settings.json"));
@@ -55,7 +55,7 @@ describe("download", () => {
 
     await FS.write(resolve(pathToExport, "settings.json"), expected);
 
-    const fileService = new FileMethod();
+    const fileService = new FileSyncer();
     await fileService.download();
 
     const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));

@@ -1,8 +1,8 @@
 import { OperatingSystem } from "~/models";
 import { Environment, Pragma } from "~/services";
 
-jest.mock("~/services/localization.service.ts");
-jest.mock("~/models/state.model.ts");
+jest.mock("~/services/localization.ts");
+jest.mock("~/models/state.ts");
 
 it("should properly process before uploading", () => {
   const initial = `{

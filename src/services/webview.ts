@@ -189,9 +189,9 @@ export class Webview {
       name: "General",
       settings: [
         {
-          name: localize("(setting) method.name"),
-          placeholder: localize("(setting) method.placeholder"),
-          correspondingSetting: "method",
+          name: localize("(setting) syncer.name"),
+          placeholder: localize("(setting) syncer.placeholder"),
+          correspondingSetting: "syncer",
           type: UISettingType.Select,
           options: [
             {
@@ -255,7 +255,7 @@ export class Webview {
       ]
     },
     {
-      name: "Repo Method",
+      name: "Repo Syncer",
       settings: [
         {
           name: localize("(setting) repo.url.name"),
@@ -266,7 +266,7 @@ export class Webview {
       ]
     },
     {
-      name: "File Method",
+      name: "File Syncer",
       settings: [
         {
           name: localize("(setting) file.path.name"),

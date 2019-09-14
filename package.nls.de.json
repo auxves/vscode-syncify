@@ -45,11 +45,11 @@
   "(setting) hostname.placeholder": "Hostname Eingeben",
   "(setting) ignoredItems.name": "Ignoriert Elemente",
   "(setting) ignoredItems.placeholder": "Geben Sie ignoriert Gegenständen (jede Zeile)",
-  "(setting) method.name": "Sync-Methode",
-  "(setting) method.placeholder": "Wählen Sie Sync-Methode",
   "(setting) removeExtensions.name": "Entfernen Von Erweiterungen",
   "(setting) repo.url.name": "Repo-URL",
   "(setting) repo.url.placeholder": "Geben Sie die Repo-URL",
   "(setting) syncOnStartup.name": "Sync On Startup",
+  "(setting) syncer.name": "Syncer",
+  "(setting) syncer.placeholder": "Wählen Sie Syncer",
   "(setting) watchSettings.name": "Uhr-Einstellungen"
 }

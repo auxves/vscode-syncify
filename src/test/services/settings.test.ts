@@ -4,10 +4,10 @@ import { resolve } from "path";
 import { defaultSettings, ISettings } from "~/models";
 import { Environment, FS, Initializer, Settings } from "~/services";
 
-jest.mock("~/services/localization.service.ts");
-jest.mock("~/models/state.model.ts");
+jest.mock("~/services/localization.ts");
+jest.mock("~/models/state.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/services/settings.service");
+const cleanupPath = resolve(tmpdir(), "syncify-jest/services/settings");
 const testFolder = `${cleanupPath}/test`;
 
 jest
