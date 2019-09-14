@@ -44,12 +44,12 @@ export class Watcher {
       return;
     }
 
-    const settings = await Settings.get();
+    const { autoUploadDelay: delay } = await Settings.get();
 
     let shouldUpload = true;
 
     const message = window.setStatusBarMessage(
-      localize("(info) upload.initiating", settings.autoUploadDelay.toString()),
+      localize("(info) upload.initiating", delay.toString()),
       5000
     );
 
@@ -68,7 +68,7 @@ export class Watcher {
     btn.text = `$(x) ${localize("(action) upload.cancel")}`;
     btn.show();
 
-    await Utilities.sleep(settings.autoUploadDelay * 1000);
+    await Utilities.sleep(delay * 1000);
 
     disposable.dispose();
     btn.dispose();

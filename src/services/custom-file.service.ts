@@ -55,7 +55,7 @@ export class CustomFiles {
     }
 
     const filepath = resolve(Environment.customFilesFolder, filename);
-    const contents = await FS.read(filepath, null);
+    const contents = await FS.readBuffer(filepath);
     await FS.write(resolve(folder, filename), contents);
   }
 
@@ -77,7 +77,7 @@ export class CustomFiles {
     }
 
     const filename = basename(filepath);
-    const contents = await FS.read(filepath, null);
+    const contents = await FS.readBuffer(filepath);
     const newPath = resolve(Environment.customFilesFolder, filename);
     await FS.write(newPath, contents);
     await window.showInformationMessage(

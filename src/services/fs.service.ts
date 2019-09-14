@@ -11,13 +11,12 @@ export class FS {
     return ensureDir(path);
   }
 
-  public static read(path: string, encoding: string): Promise<Buffer>;
-  public static read(path: string): Promise<string>;
-  public static read(
-    path: string,
-    encoding: string = "utf-8"
-  ): Promise<string | Buffer> {
-    return readFile(path, encoding);
+  public static read(path: string): Promise<string> {
+    return readFile(path, "utf-8");
+  }
+
+  public static readBuffer(path: string): Promise<Buffer> {
+    return readFile(path);
   }
 
   public static write(path: string, data: any): Promise<void> {
