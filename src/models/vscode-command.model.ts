@@ -1,3 +1,3 @@
-export interface IVSCodeCommand {
+export interface IVSCodeCommands {
   [name: string]: () => Promise<void>;
 }

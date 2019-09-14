@@ -1,7 +1,7 @@
 import { OperatingSystem } from "~/models";
-import { Environment, PragmaService } from "~/services";
+import { Environment, Pragma } from "~/services";
 
-jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
 it("should properly process before uploading", () => {
@@ -13,7 +13,7 @@ it("should properly process before uploading", () => {
     // @sync host=jest
     "abc": "xyz"
   }`;
-  expect(PragmaService.processOutgoing(initial)).toBe(expected);
+  expect(Pragma.processOutgoing(initial)).toBe(expected);
 });
 
 describe("host", () => {
@@ -29,7 +29,7 @@ describe("host", () => {
       }`
     };
 
-    expect(PragmaService.processIncoming("{}", valid.initial, "test")).toBe(
+    expect(Pragma.processIncoming("{}", valid.initial, "test")).toBe(
       valid.expected
     );
 
@@ -41,7 +41,7 @@ describe("host", () => {
       }`
     };
 
-    expect(PragmaService.processIncoming("{}", invalid.initial, "jest")).toBe(
+    expect(Pragma.processIncoming("{}", invalid.initial, "jest")).toBe(
       invalid.expected
     );
   });
@@ -62,7 +62,7 @@ describe("os", () => {
         "abc": "xyz"
       }`;
 
-      expect(PragmaService.processIncoming("{}", initial, null)).toBe(expected);
+      expect(Pragma.processIncoming("{}", initial, null)).toBe(expected);
     });
   });
 });
@@ -82,7 +82,7 @@ describe("env", () => {
       }`
     };
 
-    expect(PragmaService.processIncoming("{}", valid.initial, null)).toBe(
+    expect(Pragma.processIncoming("{}", valid.initial, null)).toBe(
       valid.expected
     );
 
@@ -97,7 +97,7 @@ describe("env", () => {
       }`
     };
 
-    expect(PragmaService.processIncoming("{}", invalid.initial, null)).toBe(
+    expect(Pragma.processIncoming("{}", invalid.initial, null)).toBe(
       invalid.expected
     );
   });

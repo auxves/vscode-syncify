@@ -1,9 +1,9 @@
 import axios from "axios";
 import express from "express";
 import { URL, URLSearchParams } from "url";
-import { localize, LoggerService, Settings, WebviewService } from "~/services";
+import { localize, Logger, Settings, Webview } from "~/services";
 
-export class OAuthService {
+export class OAuth {
   public static async listen(port: number) {
     const settings = await Settings.get();
     const host = new URL(settings.github.endpoint);
@@ -50,10 +50,9 @@ export class OAuthService {
 
         this.saveCredentials(token, user);
 
-        WebviewService.openRepositoryCreationPage(token, user, host);
+        Webview.openRepositoryCreationPage(token, user, host);
       } catch (err) {
-        const error = new Error(err);
-        LoggerService.logException(error, null, true);
+        Logger.error(err, null, true);
       }
     });
   }
@@ -67,7 +66,7 @@ export class OAuthService {
 
       return response.data.login;
     } catch (err) {
-      LoggerService.logException(
+      Logger.error(
         err,
         host.hostname === "github.com"
           ? localize("(error) checkConsole")
@@ -106,7 +105,7 @@ export class OAuthService {
 
       return new URLSearchParams(response.data).get("access_token");
     } catch (err) {
-      LoggerService.logException(
+      Logger.error(
         err,
         host.hostname === "github.com"
           ? localize("(error) checkConsole")

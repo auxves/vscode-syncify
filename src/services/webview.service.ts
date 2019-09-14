@@ -12,9 +12,9 @@ import {
   state,
   UISettingType
 } from "~/models";
-import { Environment, localize, OAuthService, Settings } from "~/services";
+import { Environment, localize, OAuth, Settings } from "~/services";
 
-export class WebviewService {
+export class Webview {
   public static openSettingsPage(settings: ISettings): vscode.WebviewPanel {
     const webview = this.webviews[1];
     const content: string = this.generateContent({
@@ -106,7 +106,7 @@ export class WebviewService {
       const settings = await Settings.get();
       switch (message.command) {
         case "loginWithGitHub":
-          OAuthService.listen(54321);
+          OAuth.listen(54321);
 
           const host = new URL(settings.github.endpoint).hostname;
           vscode.env.openExternal(
@@ -299,7 +299,7 @@ export class WebviewService {
         },
         {
           find: "@MAP",
-          replace: WebviewService.settingsMap
+          replace: Webview.settingsMap
         }
       ]
     },

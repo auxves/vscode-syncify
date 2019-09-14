@@ -1,10 +1,11 @@
 import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
+import { FileMethod } from "~/methods";
 import { defaultSettings, SyncMethod } from "~/models";
-import { Environment, FileService, FS, Settings } from "~/services";
+import { Environment, FS, Settings } from "~/services";
 
-jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/file.service");
@@ -34,7 +35,7 @@ describe("upload", () => {
     const expected = JSON.stringify(userData, null, 2);
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const fileService = new FileService();
+    const fileService = new FileMethod();
     await fileService.upload();
 
     const uploadedData = await FS.read(resolve(pathToExport, "settings.json"));
@@ -54,7 +55,7 @@ describe("download", () => {
 
     await FS.write(resolve(pathToExport, "settings.json"), expected);
 
-    const fileService = new FileService();
+    const fileService = new FileMethod();
     await fileService.download();
 
     const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));

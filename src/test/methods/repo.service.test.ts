@@ -2,11 +2,12 @@ import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import createSimpleGit from "simple-git/promise";
+import { RepoMethod } from "~/methods";
 import { defaultSettings, SyncMethod } from "~/models";
-import { Environment, FS, RepoService, Settings } from "~/services";
+import { Environment, FS, Settings } from "~/services";
 
-jest.mock("~/services/utility/localization.service.ts");
-jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/services/localization.service.ts");
+jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/sync/repo.service");
@@ -55,7 +56,7 @@ describe("upload", () => {
     const expected = JSON.stringify(userData, null, 2);
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const repoService = new RepoService();
+    const repoService = new RepoMethod();
     await repoService.upload();
 
     const uploadedData = await FS.read(resolve(pathToRepo, "settings.json"));
@@ -71,7 +72,7 @@ describe("upload", () => {
       JSON.stringify(userData, null, 2)
     );
 
-    const repoService = new RepoService();
+    const repoService = new RepoMethod();
     await repoService.upload();
 
     const expected = JSON.stringify(
@@ -112,7 +113,7 @@ describe("upload", () => {
 
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const repoService = new RepoService();
+    const repoService = new RepoMethod();
     await repoService.upload();
 
     const exists = await FS.exists(resolve(pathToRepo, "workspaceStorage"));
@@ -133,7 +134,7 @@ describe("download", () => {
       JSON.stringify(userData, null, 2)
     );
 
-    const repoService = new RepoService();
+    const repoService = new RepoMethod();
     await repoService.upload();
 
     const expected = JSON.stringify(
@@ -170,7 +171,7 @@ describe("download", () => {
 
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const repoService = new RepoService();
+    const repoService = new RepoMethod();
     await repoService.download();
 
     const currentData = await FS.read(resolve(pathToUser, "settings.json"));
@@ -188,7 +189,7 @@ describe("sync", () => {
       JSON.stringify(userData, null, 2)
     );
 
-    const repoService = new RepoService();
+    const repoService = new RepoMethod();
     await repoService.upload();
 
     const expected = JSON.stringify(
@@ -219,7 +220,7 @@ describe("sync", () => {
 
 describe("init", () => {
   it("should initialize", async () => {
-    const repoService = new RepoService();
+    const repoService = new RepoMethod();
     await repoService.init();
 
     const git = createSimpleGit(pathToRepo);

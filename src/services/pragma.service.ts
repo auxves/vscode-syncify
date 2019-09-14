@@ -1,9 +1,9 @@
 /* Originally from shanalikhan/code-settings-sync */
 
 import { OperatingSystem } from "~/models";
-import { Environment } from "~/services";
+import { Environment, Logger } from "~/services";
 
-export class PragmaService {
+export class Pragma {
   public static processIncoming(
     localContent: string,
     newContent: string,
@@ -57,8 +57,8 @@ export class PragmaService {
             false,
             shouldComment
           );
-        } catch (e) {
-          console.error("Syncify: Error processing pragmas ", e.message);
+        } catch (err) {
+          Logger.error(err, "Syncify: Error processing pragmas", true);
           continue;
         }
       } else if (this.ignoreRegex.test(lines[index])) {
@@ -82,8 +82,8 @@ export class PragmaService {
         " }"
       );
       JSON.parse(uncommented);
-    } catch (e) {
-      console.error("Syncify: Result content is not a valid JSON.", e.message);
+    } catch (err) {
+      Logger.error(err, "Syncify: Result content is not a valid JSON.", true);
     }
 
     return result;

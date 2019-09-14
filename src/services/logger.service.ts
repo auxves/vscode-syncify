@@ -1,13 +1,13 @@
 import { window } from "vscode";
 
-export class LoggerService {
-  public static logException(
+export class Logger {
+  public static error(
     error: any,
     message: string,
     showMessageBox: boolean
   ): void {
     if (error) {
-      console.error(error);
+      console.error(new Error(error));
     }
 
     if (showMessageBox) {

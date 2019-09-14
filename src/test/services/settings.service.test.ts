@@ -2,9 +2,9 @@ import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import { defaultSettings, ISettings } from "~/models";
-import { Environment, FS, InitService, Settings } from "~/services";
+import { Environment, FS, Initializer, Settings } from "~/services";
 
-jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/utility/settings.service");
@@ -14,7 +14,7 @@ jest
   .spyOn(Environment, "settings", "get")
   .mockReturnValue(resolve(testFolder, "settings.json"));
 
-InitService.init = jest.fn();
+Initializer.init = jest.fn();
 
 beforeEach(() => Promise.all([ensureDir(testFolder)]));
 

@@ -3,7 +3,7 @@ import { tmpdir } from "os";
 import { resolve } from "path";
 import { FS, Settings } from "~/services";
 
-jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/utility/fs.service");

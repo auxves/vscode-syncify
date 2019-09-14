@@ -4,7 +4,7 @@ import { resolve } from "path";
 import { Uri } from "vscode";
 import { CustomFiles, Environment, FS } from "~/services";
 
-jest.mock("~/services/utility/localization.service.ts");
+jest.mock("~/services/localization.service.ts");
 jest.mock("~/models/state.model.ts");
 
 const cleanupPath = resolve(

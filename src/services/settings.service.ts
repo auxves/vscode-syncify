@@ -1,13 +1,7 @@
 import merge from "lodash/merge";
 import { ViewColumn, window, workspace } from "vscode";
 import { defaultSettings, ISettings, state } from "~/models";
-import {
-  Environment,
-  FS,
-  InitService,
-  localize,
-  WebviewService
-} from "~/services";
+import { Environment, FS, Initializer, localize, Webview } from "~/services";
 
 export class Settings {
   public static async get(): Promise<ISettings> {
@@ -45,7 +39,7 @@ export class Settings {
       JSON.stringify(merge(defaultSettings, settings), null, 2)
     );
 
-    await InitService.init();
+    await Initializer.init();
   }
 
   public static async setPartial(settings: Partial<ISettings>): Promise<void> {
@@ -54,7 +48,7 @@ export class Settings {
   }
 
   public static async openSettings() {
-    WebviewService.openSettingsPage(await this.get());
+    Webview.openSettingsPage(await this.get());
   }
 
   public static async openSettingsFile() {
@@ -88,7 +82,7 @@ export class Settings {
       },
       {
         name: localize("(option) reinitialize.name"),
-        action: InitService.init
+        action: Initializer.init
       }
     ];
 

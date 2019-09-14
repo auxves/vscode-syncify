@@ -1,4 +1,4 @@
-export interface ISyncService {
+export interface ISyncMethod {
   sync(): Promise<void>;
   upload(): Promise<void>;
   download(): Promise<void>;

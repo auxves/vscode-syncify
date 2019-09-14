@@ -1,19 +1,19 @@
 import isEqual from "lodash/isEqual";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
-import { commands, extensions, ProgressLocation, window } from "vscode";
-import { IProfile, ISettings, ISyncService, state } from "~/models";
+import { commands, extensions, window } from "vscode";
+import { IProfile, ISettings, ISyncMethod, state } from "~/models";
 import {
   Environment,
-  ExtensionService,
+  Extensions,
   FS,
   localize,
-  PragmaService,
+  Pragma,
   Settings,
-  WebviewService
+  Webview
 } from "~/services";
 
-export class RepoService implements ISyncService {
+export class RepoMethod implements ISyncMethod {
   private git: SimpleGit;
 
   public async init() {
@@ -65,7 +65,7 @@ export class RepoService implements ISyncService {
   public async sync(): Promise<void> {
     const configured = await this.isConfigured();
     if (!configured) {
-      WebviewService.openLandingPage();
+      Webview.openLandingPage();
       return;
     }
 
@@ -102,7 +102,7 @@ export class RepoService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
-      WebviewService.openLandingPage();
+      Webview.openLandingPage();
       return;
     }
 
@@ -126,7 +126,7 @@ export class RepoService implements ISyncService {
       await this.copyFilesToRepo();
       await this.cleanUpRepo();
 
-      const installedExtensions = ExtensionService.getExtensions();
+      const installedExtensions = Extensions.get();
 
       await FS.write(
         resolve(Environment.repoFolder, "extensions.json"),
@@ -161,7 +161,7 @@ export class RepoService implements ISyncService {
 
     const configured = await this.isConfigured();
     if (!configured) {
-      WebviewService.openLandingPage();
+      Webview.openLandingPage();
       return;
     }
 
@@ -219,55 +219,17 @@ export class RepoService implements ISyncService {
           await FS.read(resolve(Environment.repoFolder, "extensions.json"))
         );
 
-        const toInstall = ExtensionService.getMissingExtensions(
-          extensionsFromFile
-        );
-
-        await window.withProgress(
-          {
-            location: ProgressLocation.Notification
-          },
-          async progress => {
-            const increment = 100 / toInstall.length;
-            return Promise.all(
-              toInstall.map(async ext => {
-                await ExtensionService.installExtension(ext);
-                progress.report({
-                  increment,
-                  message: localize("(info) download.installed", ext)
-                });
-              })
-            );
-          }
-        );
+        await Extensions.install(...Extensions.getMissing(extensionsFromFile));
 
         if (settings.removeExtensions) {
-          const toDelete = ExtensionService.getUnneededExtensions(
-            extensionsFromFile
-          );
+          const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
           if (toDelete.length) {
             const needToReload = toDelete.some(
               ext => extensions.getExtension(ext).isActive
             );
 
-            await window.withProgress(
-              {
-                location: ProgressLocation.Notification
-              },
-              async progress => {
-                const increment = 100 / toDelete.length;
-                return Promise.all(
-                  toDelete.map(async ext => {
-                    await ExtensionService.uninstallExtension(ext);
-                    progress.report({
-                      increment,
-                      message: localize("(info) download.uninstalled", ext)
-                    });
-                  })
-                );
-              }
-            );
+            await Extensions.uninstall(...toDelete);
 
             if (needToReload) {
               const yes = localize("(btn) yes");
@@ -344,7 +306,7 @@ export class RepoService implements ISyncService {
         const newPath = resolve(dir, basename(file));
 
         if (filesToPragma.includes(basename(file))) {
-          return FS.write(newPath, PragmaService.processOutgoing(contents));
+          return FS.write(newPath, Pragma.processOutgoing(contents));
         }
 
         return FS.write(newPath, contents);
@@ -390,7 +352,7 @@ export class RepoService implements ISyncService {
         })();
 
         if (filesToPragma.includes(filename)) {
-          const afterPragma = PragmaService.processIncoming(
+          const afterPragma = Pragma.processIncoming(
             currentContents,
             contents,
             settings.hostname

@@ -4,7 +4,7 @@ import { extensions } from "vscode";
 import { ILanguagePack } from "~/models";
 import { Environment } from "~/services";
 
-export class LocalizationService {
+export class Localization {
   private bundle = this.resolveLanguagePack();
   private options: { locale: string };
 
@@ -94,6 +94,6 @@ export class LocalizationService {
 
 type Localize = (key: string, ...args: string[]) => string;
 
-export const localize: Localize = LocalizationService.prototype.localize.bind(
-  new LocalizationService()
+export const localize: Localize = Localization.prototype.localize.bind(
+  new Localization()
 );

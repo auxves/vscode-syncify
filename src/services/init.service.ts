@@ -1,23 +1,18 @@
 import { commands, Uri } from "vscode";
-import { IVSCodeCommand, state } from "~/models";
-import {
-  CustomFiles,
-  FactoryService,
-  Settings,
-  WatcherService
-} from "~/services";
+import { IVSCodeCommands, state } from "~/models";
+import { CustomFiles, Factory, Settings, Watcher } from "~/services";
 
-export class InitService {
+export class Initializer {
   public static async init() {
     const settings = await Settings.get();
 
-    state.sync = FactoryService.generate(settings.method);
+    state.sync = Factory.generate(settings.method);
 
     if (state.watcher) {
       state.watcher.stopWatching();
     }
 
-    state.watcher = new WatcherService(settings.ignoredItems);
+    state.watcher = new Watcher(settings.ignoredItems);
 
     if (settings.watchSettings) {
       state.watcher.startWatching();
@@ -33,7 +28,7 @@ export class InitService {
   }
 
   private static registerCommands() {
-    const cmds: IVSCodeCommand = {
+    const cmds: IVSCodeCommands = {
       "syncify.sync": () => state.sync.sync(),
       "syncify.upload": () => state.sync.upload(),
       "syncify.download": () => state.sync.download(),

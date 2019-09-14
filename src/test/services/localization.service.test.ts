@@ -1,8 +1,8 @@
-import { LocalizationService } from "~/services";
+import { Localization } from "~/services";
 
 function locale(lang: string): (key: string, ...args: string[]) => string {
   return (key: string, ...args: string[]) =>
-    new LocalizationService(lang).localize(key, ...args);
+    new Localization(lang).localize(key, ...args);
 }
 
 it("should localize english", () => {

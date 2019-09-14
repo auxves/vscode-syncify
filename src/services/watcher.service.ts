@@ -1,9 +1,9 @@
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
 import { state } from "~/models";
-import { Environment, localize, Settings, UtilityService } from "~/services";
+import { Environment, localize, Settings, Utilities } from "~/services";
 
-export class WatcherService {
+export class Watcher {
   private watching = false;
   private watcher = watch(Environment.userFolder, {
     ignored: this.ignoredItems
@@ -68,7 +68,7 @@ export class WatcherService {
     btn.text = `$(x) ${localize("(action) upload.cancel")}`;
     btn.show();
 
-    await UtilityService.sleep(settings.autoUploadDelay * 1000);
+    await Utilities.sleep(settings.autoUploadDelay * 1000);
 
     disposable.dispose();
     btn.dispose();
