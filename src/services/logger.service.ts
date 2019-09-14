@@ -2,17 +2,24 @@ import { window } from "vscode";
 
 export class Logger {
   public static error(
-    error: any,
+    error: Error,
     message: string,
-    showMessageBox: boolean
+    showNotification: boolean
   ): void {
     if (error) {
-      console.error(new Error(error));
+      console.error(error);
     }
 
-    if (showMessageBox) {
+    if (showNotification) {
       window.showErrorMessage(message);
-      window.setStatusBarMessage("").dispose();
+    } else {
+      window.setStatusBarMessage(message, 5000);
+    }
+  }
+
+  public static info(message: string, showNotification: boolean): void {
+    if (showNotification) {
+      window.showInformationMessage(message);
     } else {
       window.setStatusBarMessage(message, 5000);
     }

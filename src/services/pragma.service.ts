@@ -1,7 +1,7 @@
 /* Originally from shanalikhan/code-settings-sync */
 
 import { OperatingSystem } from "~/models";
-import { Environment, Logger } from "~/services";
+import { Environment, localize, Logger } from "~/services";
 
 export class Pragma {
   public static processIncoming(
@@ -58,7 +58,7 @@ export class Pragma {
             shouldComment
           );
         } catch (err) {
-          Logger.error(err, "Syncify: Error processing pragmas", true);
+          Logger.error(err, localize("(error) checkConsole"), true);
           continue;
         }
       } else if (this.ignoreRegex.test(lines[index])) {
@@ -83,7 +83,7 @@ export class Pragma {
       );
       JSON.parse(uncommented);
     } catch (err) {
-      Logger.error(err, "Syncify: Result content is not a valid JSON.", true);
+      Logger.error(err, localize("(error) checkConsole"), true);
     }
 
     return result;

@@ -5,21 +5,22 @@ import { localize, Logger, Settings, Webview } from "~/services";
 
 export class OAuth {
   public static async listen(port: number) {
-    const settings = await Settings.get();
-    const host = new URL(settings.github.endpoint);
+    try {
+      const settings = await Settings.get();
+      const host = new URL(settings.github.endpoint);
 
-    const app = express().use(
-      express.json(),
-      express.urlencoded({ extended: false })
-    );
+      const app = express().use(
+        express.json(),
+        express.urlencoded({ extended: false })
+      );
 
-    const server = app.listen(port);
+      const server = app.listen(port);
 
-    app.get("/callback", async (req, res) => {
-      try {
-        const token = await this.getToken(req.param("code"), host);
+      app.get("/callback", async (req, res) => {
+        try {
+          const token = await this.getToken(req.param("code"), host);
 
-        res.send(`
+          res.send(`
         <!doctype html>
         <html lang="en">
           <head>
@@ -44,17 +45,20 @@ export class OAuth {
         </html>
         `);
 
-        server.close();
+          server.close();
 
-        const user = await this.getUser(token, host);
+          const user = await this.getUser(token, host);
 
-        this.saveCredentials(token, user);
+          this.saveCredentials(token, user);
 
-        Webview.openRepositoryCreationPage(token, user, host);
-      } catch (err) {
-        Logger.error(err, null, true);
-      }
-    });
+          Webview.openRepositoryCreationPage(token, user, host);
+        } catch (err) {
+          Logger.error(err, localize("(error) checkConsole"), true);
+        }
+      });
+    } catch (err) {
+      Logger.error(err, localize("(error) checkConsole"), true);
+    }
   }
 
   private static async getUser(token: string, host: URL) {
