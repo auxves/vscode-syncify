@@ -91,17 +91,16 @@ export class OAuth {
   }
 
   private static async getToken(code: string, host: URL) {
-    const params = new URLSearchParams();
-    params.append("client_id", "0b56a3589b5582d11832");
-    params.append("client_secret", "3ac123310971a75f0a26e979ce0030467fc32682");
-    params.append("code", code);
-
     try {
       const response = await axios.get(
         `https://${host.hostname}/login/oauth/access_token`,
         {
           method: "POST",
-          data: params
+          data: {
+            code,
+            client_id: "0b56a3589b5582d11832",
+            client_secret: "3ac123310971a75f0a26e979ce0030467fc32682"
+          }
         }
       );
 
