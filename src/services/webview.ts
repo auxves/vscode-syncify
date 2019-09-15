@@ -1,4 +1,4 @@
-import { readFileSync } from "fs-extra";
+import { readFile, readFileSync } from "fs-extra";
 import has from "lodash/has";
 import set from "lodash/set";
 import { resolve } from "path";
@@ -15,8 +15,15 @@ import {
 import { Environment, localize, OAuth, Settings } from "~/services";
 
 export class Webview {
-  public static openSettingsPage(settings: ISettings): vscode.WebviewPanel {
+  public static async openSettingsPage(
+    settings: ISettings
+  ): Promise<vscode.WebviewPanel> {
     const webview = this.webviews[1];
+
+    if (!webview.htmlContent) {
+      webview.htmlContent = await this.fetchHTML(webview);
+    }
+
     const content: string = this.generateContent({
       settings,
       content: webview.htmlContent,
@@ -77,8 +84,13 @@ export class Webview {
     }
   }
 
-  public static openLandingPage() {
+  public static async openLandingPage() {
     const webview = this.webviews[0];
+
+    if (!webview.htmlContent) {
+      webview.htmlContent = await this.fetchHTML(webview);
+    }
+
     const releaseNotes = {
       ...changes,
       currentVersion: Environment.pkg.version
@@ -116,7 +128,7 @@ export class Webview {
           );
           break;
         case "editConfiguration":
-          this.openSettingsPage(settings);
+          await this.openSettingsPage(settings);
           break;
       }
     });
@@ -132,6 +144,11 @@ export class Webview {
     host: URL
   ) {
     const webview = this.webviews[2];
+
+    if (!webview.htmlContent) {
+      webview.htmlContent = await this.fetchHTML(webview);
+    }
+
     const content: string = this.generateContent({
       github: {
         token,
@@ -169,16 +186,6 @@ export class Webview {
     webview.webview = repositoryCreationPanel;
     repositoryCreationPanel.onDidDispose(() => (webview.webview = null));
     return repositoryCreationPanel;
-  }
-
-  public static fetchHTMLContent() {
-    this.webviews = this.webviews.map(view => ({
-      ...view,
-      htmlContent: readFileSync(
-        `${state.context.extensionPath}/assets/ui/${view.name}/${view.htmlPath}`,
-        "utf-8"
-      )
-    }));
   }
 
   private static settingsMap: IWebviewSection[] = [
@@ -311,6 +318,13 @@ export class Webview {
       ]
     }
   ];
+
+  private static async fetchHTML(view: IWebview) {
+    return readFile(
+      `${state.context.extensionPath}/assets/ui/${view.name}/${view.htmlPath}`,
+      "utf-8"
+    );
+  }
 
   private static generateContent(options: any) {
     const toReplace: object[] = [];
