@@ -18,8 +18,8 @@ export class OAuth {
 
       app.get("/callback", async (req, res) => {
         try {
-          const token = await this.getToken(req.param("code"), host);
-          const user = await this.getUser(token, host);
+          const token = await OAuth.getToken(req.param("code"), host);
+          const user = await OAuth.getUser(token, host);
 
           res.send(`
           <!doctype html>
@@ -48,7 +48,7 @@ export class OAuth {
 
           server.close();
 
-          this.saveCredentials(token, user);
+          OAuth.saveCredentials(token, user);
 
           Webview.openRepositoryCreationPage(token, user, host);
         } catch (err) {

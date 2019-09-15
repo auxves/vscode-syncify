@@ -55,20 +55,11 @@ export class Extensions {
   }
 
   public static getMissing(downloadedExtensions: string[]): string[] {
-    const installedExtensions = extensions.all
-      .filter(ext => !ext.packageJSON.isBuiltin)
-      .map(ext => ext.id);
-    return downloadedExtensions.filter(
-      ext => !installedExtensions.includes(ext)
-    );
+    const installed = Extensions.get();
+    return downloadedExtensions.filter(ext => !installed.includes(ext));
   }
 
   public static getUnneeded(downloadedExtensions: string[]): string[] {
-    const installedExtensions = extensions.all
-      .filter(ext => !ext.packageJSON.isBuiltin)
-      .map(ext => ext.id);
-    return installedExtensions.filter(
-      ext => !downloadedExtensions.includes(ext)
-    );
+    return Extensions.get().filter(ext => !downloadedExtensions.includes(ext));
   }
 }

@@ -18,9 +18,9 @@ export class Initializer {
       state.watcher.startWatching();
     }
 
-    state.context.subscriptions.forEach(disposable => disposable.dispose());
+    state.context.subscriptions.forEach(d => d.dispose());
 
-    this.registerCommands();
+    Initializer.registerCommands();
 
     if (settings.syncOnStartup) {
       await commands.executeCommand("syncify.sync");

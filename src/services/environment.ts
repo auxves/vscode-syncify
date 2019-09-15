@@ -22,7 +22,7 @@ export class Environment {
   }
 
   public static get customFilesFolder() {
-    return resolve(this.userFolder, "customFiles");
+    return resolve(Environment.userFolder, "customFiles");
   }
 
   public static os = process.platform as OperatingSystem;

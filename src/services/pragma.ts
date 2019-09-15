@@ -1,7 +1,7 @@
 /* Originally from shanalikhan/code-settings-sync */
 
 import { OperatingSystem } from "~/models";
-import { Environment, localize, Logger } from "~/services";
+import { Environment, Logger } from "~/services";
 
 export class Pragma {
   public static processIncoming(
@@ -15,16 +15,16 @@ export class Pragma {
     for (let index = 0; index < lines.length; index++) {
       let shouldComment = false;
 
-      if (this.pragmaRegex.test(lines[index])) {
+      if (Pragma.pragmaRegex.test(lines[index])) {
         try {
           const osMatch = lines[index].match(/os=(\w+)/);
           if (osMatch) {
             const osFromPragma = osMatch[1].toLowerCase();
 
-            if (!this.supportedOS.includes(osFromPragma)) {
+            if (!Pragma.supportedOS.includes(osFromPragma)) {
               continue;
             }
-            if (this.osFromString(osFromPragma) !== Environment.os) {
+            if (Pragma.osFromString(osFromPragma) !== Environment.os) {
               shouldComment = true;
             }
           }
@@ -50,7 +50,7 @@ export class Pragma {
 
           parsedLines.push(lines[index]);
 
-          index = this.checkNextLines(
+          index = Pragma.checkNextLines(
             lines,
             parsedLines,
             index,
@@ -61,8 +61,8 @@ export class Pragma {
           Logger.error(err, null, true);
           continue;
         }
-      } else if (this.ignoreRegex.test(lines[index])) {
-        index = this.checkNextLines(lines, parsedLines, index, true, false);
+      } else if (Pragma.ignoreRegex.test(lines[index])) {
+        index = Pragma.checkNextLines(lines, parsedLines, index, true, false);
       } else {
         parsedLines.push(lines[index]);
       }
@@ -70,14 +70,14 @@ export class Pragma {
 
     let result = parsedLines.join("\n");
 
-    const ignoredBlocks = this.getIgnoredBlocks(localContent);
+    const ignoredBlocks = Pragma.getIgnoredBlocks(localContent);
 
     if (ignoredBlocks) {
       result = result.replace(/{\s*\n/, `{\n${ignoredBlocks}\n\n\n`);
     }
 
     try {
-      const uncommented = this.removeAllComments(result).replace(
+      const uncommented = Pragma.removeAllComments(result).replace(
         /,\s*\}/g,
         " }"
       );
@@ -95,10 +95,10 @@ export class Pragma {
     const parsedLines: string[] = [];
 
     for (let index = 0; index < lines.length; index++) {
-      if (this.ignoreRegex.test(lines[index])) {
-        index = this.checkNextLines(lines, parsedLines, index, true);
-      } else if (this.pragmaRegex.test(lines[index])) {
-        const osMatch = lines[index].match(this.osRegex);
+      if (Pragma.ignoreRegex.test(lines[index])) {
+        index = Pragma.checkNextLines(lines, parsedLines, index, true);
+      } else if (Pragma.pragmaRegex.test(lines[index])) {
+        const osMatch = lines[index].match(Pragma.osRegex);
         if (osMatch) {
           const osFromPragma = osMatch[1] || osMatch[2] || osMatch[3];
 
@@ -110,7 +110,7 @@ export class Pragma {
           }
         }
 
-        const hostMatch = lines[index].match(this.hostRegex);
+        const hostMatch = lines[index].match(Pragma.hostRegex);
         if (hostMatch) {
           const hostFromPragma = hostMatch[1] || hostMatch[2] || hostMatch[3];
           if (hostFromPragma && /\s/.test(hostFromPragma)) {
@@ -121,7 +121,7 @@ export class Pragma {
           }
         }
 
-        const envMatch = lines[index].match(this.envRegex);
+        const envMatch = lines[index].match(Pragma.envRegex);
         if (envMatch) {
           const envFromPragma = envMatch[1] || envMatch[2] || envMatch[3];
           if (envFromPragma && /\s/.test(envFromPragma)) {
@@ -133,7 +133,7 @@ export class Pragma {
         }
 
         parsedLines.push(lines[index]);
-        index = this.checkNextLines(lines, parsedLines, index, false, false);
+        index = Pragma.checkNextLines(lines, parsedLines, index, false, false);
       } else {
         parsedLines.push(lines[index]);
       }
@@ -157,9 +157,9 @@ export class Pragma {
     let currentLine = "";
     for (let index = 0; index < lines.length; index++) {
       currentLine = lines[index];
-      if (this.ignoreRegex.test(currentLine)) {
+      if (Pragma.ignoreRegex.test(currentLine)) {
         ignoredLines.push(currentLine);
-        index = this.checkNextLines(
+        index = Pragma.checkNextLines(
           lines,
           ignoredLines,
           index,
@@ -203,7 +203,7 @@ export class Pragma {
     }
 
     if (!shouldIgnore) {
-      parsedLines.push(this.toggleComments(currentLine, shouldComment));
+      parsedLines.push(Pragma.toggleComments(currentLine, shouldComment));
     }
 
     const opensCurlyBraces = /{/.test(currentLine);
@@ -223,7 +223,7 @@ export class Pragma {
           openedBlock = false;
         }
         if (!shouldIgnore) {
-          parsedLines.push(this.toggleComments(currentLine, shouldComment));
+          parsedLines.push(Pragma.toggleComments(currentLine, shouldComment));
         }
       }
     }

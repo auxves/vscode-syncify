@@ -11,12 +11,11 @@ const cleanupPath = resolve(tmpdir(), "syncify-jest/services/custom-file");
 const pathToSource = `${cleanupPath}/source`;
 const pathToRegistered = `${cleanupPath}/registered`;
 
-Object.defineProperty(Environment, "customFilesFolder", {
-  get: () => pathToRegistered
-});
+jest
+  .spyOn(Environment, "customFilesFolder", "get")
+  .mockReturnValue(pathToRegistered);
 
-beforeEach(async () => Promise.all([ensureDir(pathToSource)]));
-
+beforeEach(() => ensureDir(pathToSource));
 afterEach(() => remove(cleanupPath));
 
 it("should register a provided file", async () => {
