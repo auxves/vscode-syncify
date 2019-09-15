@@ -35,8 +35,8 @@ describe("upload", () => {
     const expected = JSON.stringify(userData, null, 2);
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const fileService = new FileSyncer();
-    await fileService.upload();
+    const fileSyncer = new FileSyncer();
+    await fileSyncer.upload();
 
     const uploadedData = await FS.read(resolve(pathToExport, "settings.json"));
     expect(uploadedData).toBe(expected);
@@ -55,8 +55,8 @@ describe("download", () => {
 
     await FS.write(resolve(pathToExport, "settings.json"), expected);
 
-    const fileService = new FileSyncer();
-    await fileService.download();
+    const fileSyncer = new FileSyncer();
+    await fileSyncer.download();
 
     const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(downloadedData).toBe(expected);

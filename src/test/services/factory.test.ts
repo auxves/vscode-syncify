@@ -4,10 +4,10 @@ import { FileSyncer, RepoSyncer } from "~/syncers";
 
 jest.mock("~/services/localization.ts");
 
-it("should create repo service", () => {
+it("should create repo syncer", () => {
   expect(Factory.generate(Syncer.Repo)).toBeInstanceOf(RepoSyncer);
 });
 
-it("should create file service", () => {
+it("should create file syncer", () => {
   expect(Factory.generate(Syncer.File)).toBeInstanceOf(FileSyncer);
 });

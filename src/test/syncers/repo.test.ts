@@ -55,8 +55,8 @@ describe("upload", () => {
     const expected = JSON.stringify(userData, null, 2);
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const repoService = new RepoSyncer();
-    await repoService.upload();
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.upload();
 
     const uploadedData = await FS.read(resolve(pathToRepo, "settings.json"));
     expect(uploadedData).toBe(expected);
@@ -71,8 +71,8 @@ describe("upload", () => {
       JSON.stringify(userData, null, 2)
     );
 
-    const repoService = new RepoSyncer();
-    await repoService.upload();
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.upload();
 
     const expected = JSON.stringify(
       {
@@ -93,7 +93,7 @@ describe("upload", () => {
     await git.commit("Testing");
     await git.push("origin", "master", { "--force": null });
 
-    await repoService.upload();
+    await repoSyncer.upload();
 
     await git.pull("origin", "master", { "--force": null });
 
@@ -112,8 +112,8 @@ describe("upload", () => {
 
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const repoService = new RepoSyncer();
-    await repoService.upload();
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.upload();
 
     const exists = await FS.exists(resolve(pathToRepo, "workspaceStorage"));
     expect(exists).toBeFalsy();
@@ -133,8 +133,8 @@ describe("download", () => {
       JSON.stringify(userData, null, 2)
     );
 
-    const repoService = new RepoSyncer();
-    await repoService.upload();
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.upload();
 
     const expected = JSON.stringify(
       {
@@ -155,7 +155,7 @@ describe("download", () => {
     await git.commit("Testing");
     await git.push("origin", "master", { "--force": null });
 
-    await repoService.download();
+    await repoSyncer.download();
 
     const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(downloadedData).toBe(expected);
@@ -170,8 +170,8 @@ describe("download", () => {
 
     await FS.write(resolve(pathToUser, "settings.json"), expected);
 
-    const repoService = new RepoSyncer();
-    await repoService.download();
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.download();
 
     const currentData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(currentData).toBe(expected);
@@ -188,8 +188,8 @@ describe("sync", () => {
       JSON.stringify(userData, null, 2)
     );
 
-    const repoService = new RepoSyncer();
-    await repoService.upload();
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.upload();
 
     const expected = JSON.stringify(
       {
@@ -210,7 +210,7 @@ describe("sync", () => {
     await git.commit("Testing");
     await git.push("origin", "master", { "--force": null });
 
-    await repoService.sync();
+    await repoSyncer.sync();
 
     const syncedData = await FS.read(resolve(pathToUser, "settings.json"));
     expect(syncedData).toBe(expected);
@@ -219,8 +219,8 @@ describe("sync", () => {
 
 describe("init", () => {
   it("should initialize", async () => {
-    const repoService = new RepoSyncer();
-    await repoService.init();
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.init();
 
     const git = createSimpleGit(pathToRepo);
     const isRepo = await git.checkIsRepo();
