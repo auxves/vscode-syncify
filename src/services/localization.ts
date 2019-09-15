@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "fs-extra";
 import { resolve } from "path";
 import { extensions } from "vscode";
 import { ILanguagePack } from "~/models";
-import { Environment } from "~/services";
+import { Environment, Logger } from "~/services";
 
 export class Localization {
   private bundle = this.resolveLanguagePack();
@@ -28,7 +28,8 @@ export class Localization {
         this.options.locale = this.locale;
       }
     } catch (err) {
-      throw err;
+      Logger.error(err, null, true);
+      return;
     }
   }
 
@@ -71,7 +72,8 @@ export class Localization {
 
       return { ...defaultLanguageBundle, ...resolvedLanguageBundle };
     } catch (err) {
-      throw err;
+      Logger.error(err, null, true);
+      return;
     }
   }
 

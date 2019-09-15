@@ -58,7 +58,7 @@ export class Pragma {
             shouldComment
           );
         } catch (err) {
-          Logger.error(err, localize("(error) checkConsole"), true);
+          Logger.error(err, null, true);
           continue;
         }
       } else if (this.ignoreRegex.test(lines[index])) {
@@ -83,7 +83,8 @@ export class Pragma {
       );
       JSON.parse(uncommented);
     } catch (err) {
-      Logger.error(err, localize("(error) checkConsole"), true);
+      Logger.error(err, null, true);
+      return;
     }
 
     return result;

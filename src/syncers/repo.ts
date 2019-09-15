@@ -8,6 +8,7 @@ import {
   Extensions,
   FS,
   localize,
+  Logger,
   Pragma,
   Settings,
   Webview
@@ -246,7 +247,8 @@ export class RepoSyncer implements ISyncer {
           }
         }
       } catch (err) {
-        throw err;
+        Logger.error(err, null, true);
+        return;
       }
 
       window.setStatusBarMessage(localize("(info) download.downloaded"), 2000);

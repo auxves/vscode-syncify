@@ -1,4 +1,5 @@
 import { window } from "vscode";
+import { localize } from "~/services";
 
 export class Logger {
   public static error(
@@ -11,9 +12,12 @@ export class Logger {
     }
 
     if (showNotification) {
-      window.showErrorMessage(message);
+      window.showErrorMessage(message || localize("(error) checkConsole"));
     } else {
-      window.setStatusBarMessage(message, 5000);
+      window.setStatusBarMessage(
+        message || localize("(error) checkConsole"),
+        5000
+      );
     }
   }
 

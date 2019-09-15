@@ -159,11 +159,8 @@ export class Webview {
       if (message.close) {
         return repositoryCreationPanel.dispose();
       }
-      const settings = await Settings.get();
       Settings.set({
-        ...settings,
         repo: {
-          ...settings.repo,
           url: message
         }
       });

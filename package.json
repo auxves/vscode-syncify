@@ -113,6 +113,7 @@
     "translocalizer": "^3.0.0",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.1.0",
+    "ts-toolbelt": "^3.10.0",
     "tslint": "^5.20.0",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",

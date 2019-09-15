@@ -1,7 +1,14 @@
 import merge from "lodash/merge";
 import { ViewColumn, window, workspace } from "vscode";
-import { defaultSettings, ISettings, state } from "~/models";
-import { Environment, FS, Initializer, localize, Webview } from "~/services";
+import { defaultSettings, ISettings, PartialSettings, state } from "~/models";
+import {
+  Environment,
+  FS,
+  Initializer,
+  localize,
+  Logger,
+  Webview
+} from "~/services";
 
 export class Settings {
   public static async get(): Promise<ISettings> {
@@ -22,29 +29,25 @@ export class Settings {
 
       return newSettings;
     } catch (err) {
-      throw new Error(err);
+      Logger.error(err, null, true);
+      return;
     }
   }
 
-  public static async set(settings: ISettings): Promise<void> {
+  public static async set(settings: PartialSettings): Promise<void> {
     const exists = await FS.exists(state.context.globalStoragePath);
     if (!exists) {
       await FS.mkdir(state.context.globalStoragePath);
     }
 
-    const filepath = Environment.settings;
+    const currentSettings = await this.get();
 
     await FS.write(
-      filepath,
-      JSON.stringify(merge(defaultSettings, settings), null, 2)
+      Environment.settings,
+      JSON.stringify(merge(currentSettings, settings), null, 2)
     );
 
     await Initializer.init();
-  }
-
-  public static async setPartial(settings: Partial<ISettings>): Promise<void> {
-    const currentSettings = await this.get();
-    await this.set(merge(currentSettings, settings));
   }
 
   public static async openSettings() {
@@ -91,9 +94,8 @@ export class Settings {
       prof => `${prof.name} [branch: ${prof.branch}]` === selectedProfile
     )[0];
 
-    await Settings.setPartial({
+    await Settings.set({
       repo: {
-        ...repo,
         currentProfile: (newProfile || repo.profiles[0]).name
       }
     });

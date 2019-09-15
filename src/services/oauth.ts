@@ -52,11 +52,13 @@ export class OAuth {
 
           Webview.openRepositoryCreationPage(token, user, host);
         } catch (err) {
-          Logger.error(err, localize("(error) checkConsole"), true);
+          Logger.error(err, null, true);
+          return;
         }
       });
     } catch (err) {
-      Logger.error(err, localize("(error) checkConsole"), true);
+      Logger.error(err, null, true);
+      return;
     }
   }
 
@@ -72,7 +74,7 @@ export class OAuth {
       Logger.error(
         err,
         host.hostname === "github.com"
-          ? localize("(error) checkConsole")
+          ? null
           : localize("(error) invalidEnterpriseURL"),
         true
       );
@@ -80,11 +82,8 @@ export class OAuth {
   }
 
   private static async saveCredentials(token: string, user: string) {
-    const settings = await Settings.get();
     Settings.set({
-      ...settings,
       github: {
-        ...settings.github,
         token,
         user
       }
@@ -111,7 +110,7 @@ export class OAuth {
       Logger.error(
         err,
         host.hostname === "github.com"
-          ? localize("(error) checkConsole")
+          ? null
           : localize("(error) invalidEnterpriseURL"),
         true
       );
