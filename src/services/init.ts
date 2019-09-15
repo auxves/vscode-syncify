@@ -35,7 +35,7 @@ export class Initializer {
       "syncify.reset": () => Settings.reset(),
       "syncify.openSettings": () => Settings.openSettings(),
       "syncify.otherOptions": () => Settings.showOtherOptions(),
-      "syncify.importCustomFile": () => CustomFiles.import(),
+      "syncify.importCustomFile": (uri?: Uri) => CustomFiles.import(uri),
       "syncify.registerCustomFile": (uri?: Uri) => CustomFiles.register(uri)
     };
 

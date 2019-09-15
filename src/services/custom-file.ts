@@ -3,7 +3,7 @@ import { Uri, window, workspace } from "vscode";
 import { Environment, FS, localize } from "~/services";
 
 export class CustomFiles {
-  public static async import(): Promise<void> {
+  public static async import(uri?: Uri): Promise<void> {
     if (!workspace.workspaceFolders.length) {
       return;
     }
@@ -24,6 +24,10 @@ export class CustomFiles {
     }
 
     const folder = await (async () => {
+      if (uri) {
+        return uri.fsPath;
+      }
+
       if (workspace.workspaceFolders.length === 1) {
         return workspace.workspaceFolders[0].uri.fsPath;
       }
