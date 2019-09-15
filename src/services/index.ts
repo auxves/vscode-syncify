@@ -1,6 +1,6 @@
 export * from "~/services/environment";
 export * from "~/services/localization";
-export * from "~/services/custom-file";
+export * from "~/services/customFiles";
 export * from "~/services/extensions";
 export * from "~/services/factory";
 export * from "~/services/fs";

@@ -58,6 +58,12 @@ export class Settings {
   }
 
   public static async reset(): Promise<void> {
+    const userIsSure = await Utilities.confirm("reset");
+
+    if (!userIsSure) {
+      return;
+    }
+
     state.watcher.stopWatching();
 
     await FS.delete(state.context.globalStoragePath);

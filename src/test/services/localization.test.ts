@@ -19,21 +19,7 @@ it("should localize english", () => {
   expect(uninstalled.result).toBe(uninstalled.expected);
 });
 
-it("should localize russian", () => {
-  const installed = {
-    expected: "Syncify: Установлен 5",
-    result: locale("ru")("(info) download.installed", "5")
-  };
-  expect(installed.result).toBe(installed.expected);
-
-  const uninstalled = {
-    expected: "Syncify: Удалено 10",
-    result: locale("ru")("(info) download.uninstalled", "10")
-  };
-  expect(uninstalled.result).toBe(uninstalled.expected);
-});
-
-it("should localize italian", () => {
+it("should localize another language", () => {
   const installed = {
     expected: "Syncify: Installato 5",
     result: locale("it")("(info) download.installed", "5")
@@ -47,16 +33,9 @@ it("should localize italian", () => {
   expect(uninstalled.result).toBe(uninstalled.expected);
 });
 
-it("should localize portuguese", () => {
-  const installed = {
-    expected: "Syncify: Instalado 5",
-    result: locale("pt-br")("(info) download.installed", "5")
-  };
-  expect(installed.result).toBe(installed.expected);
+it("should return key for invalid key", () => {
+  expect(locale("en")(null)).toBe(null);
 
-  const uninstalled = {
-    expected: "Syncify: Desinstalado 10",
-    result: locale("pt-br")("(info) download.uninstalled", "10")
-  };
-  expect(uninstalled.result).toBe(uninstalled.expected);
+  const rand = Math.random().toString();
+  expect(locale("en")(rand)).toBe(rand);
 });

@@ -65,7 +65,7 @@ export class Watcher {
     state.context.subscriptions.push(disposable);
 
     btn.command = "syncify.cancelUpload";
-    btn.text = `$(x) ${localize("(action) upload.cancel")}`;
+    btn.text = `$(x) ${localize("(command) syncify.cancelUpload")}`;
     btn.show();
 
     await Utilities.sleep(delay * 1000);

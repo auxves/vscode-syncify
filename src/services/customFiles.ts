@@ -18,7 +18,7 @@ export class CustomFiles {
 
     if (!allFiles.length) {
       await window.showInformationMessage(
-        localize("(info) customFile.noFiles")
+        localize("(info) customFiles.noFilesAvailable")
       );
       return;
     }
@@ -85,7 +85,7 @@ export class CustomFiles {
     const newPath = resolve(Environment.customFilesFolder, filename);
     await FS.write(newPath, contents);
     await window.showInformationMessage(
-      localize("(info) customFile.registered", filename)
+      localize("(info) customFiles.registered", filename)
     );
   }
 }
