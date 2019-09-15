@@ -163,15 +163,19 @@ export class FileSyncer implements ISyncer {
     await Promise.all(
       files.map(async file => {
         const contents = await FS.read(file);
+
         const newPath = resolve(
           Environment.userFolder,
           relative(settings.file.path, file)
         );
+
         const currentContents = await (async () => {
           const exists = await FS.exists(newPath);
+
           if (exists) {
             return FS.read(newPath);
           }
+
           return "{}";
         })();
 
@@ -181,9 +185,11 @@ export class FileSyncer implements ISyncer {
             contents,
             settings.hostname
           );
+
           if (currentContents !== afterPragma) {
             return FS.write(newPath, afterPragma);
           }
+
           return;
         }
 
