@@ -110,6 +110,7 @@
     "@types/node": "^12.7.5",
     "awesome-typescript-loader": "^5.2.1",
     "jest": "^24.9.0",
+    "jest-raw-loader": "^1.0.1",
     "raw-loader": "^3.1.0",
     "translocalizer": "^3.0.0",
     "ts-jest": "^24.1.0",
@@ -140,6 +141,9 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^~/(.*)": "<rootDir>/src/$1"
+    },
+    "transform": {
+      "\\.html$": "jest-raw-loader"
     }
   }
 }
