@@ -37,12 +37,12 @@ export class Webview {
       }
     );
     settingsPanel.webview.html = content;
-    settingsPanel.webview.onDidReceiveMessage(async message => {
+    settingsPanel.webview.onDidReceiveMessage(message => {
       if (message === "edit") {
-        Settings.openSettingsFile();
-        return;
+        return Settings.openSettingsFile();
       }
-      this.receiveSettingChange(message, settings);
+
+      this.receiveSettingChange(message);
     });
     webview.webview = settingsPanel;
     settingsPanel.onDidDispose(() => (webview.webview = null));
@@ -60,17 +60,17 @@ export class Webview {
     }
   }
 
-  public static receiveSettingChange(
-    message: {
-      command: string;
-      text: string;
-    },
-    settings: ISettings
-  ) {
+  public static async receiveSettingChange(message: {
+    command: string;
+    text: string;
+  }) {
     let value: any = message.text;
     if (message.text === "true" || message.text === "false") {
       value = message.text === "true";
     }
+
+    const settings = await Settings.get();
+
     if (has(settings, message.command)) {
       set(settings, message.command, value);
       Settings.set(settings);

@@ -1,33 +1,27 @@
-import merge from "lodash/merge";
-import { ViewColumn, window, workspace } from "vscode";
+import { commands, ViewColumn, window, workspace } from "vscode";
 import { defaultSettings, ISettings, PartialSettings, state } from "~/models";
 import {
   Environment,
   FS,
-  Initializer,
   localize,
   Logger,
+  Utilities,
   Webview
 } from "~/services";
 
 export class Settings {
   public static async get(): Promise<ISettings> {
-    const filepath = Environment.settings;
-    const exists = await FS.exists(filepath);
+    const exists = await FS.exists(Environment.settings);
+
     if (!exists) {
-      await this.set(defaultSettings);
       return defaultSettings;
     }
 
     try {
-      const settings = JSON.parse(await FS.read(filepath));
-      const newSettings: ISettings = merge(defaultSettings, settings);
+      const contents = await FS.read(Environment.settings);
+      const settings = JSON.parse(contents);
 
-      if (JSON.stringify(newSettings) !== JSON.stringify(settings)) {
-        await this.set(settings);
-      }
-
-      return newSettings;
+      return Utilities.merge(defaultSettings, settings);
     } catch (err) {
       Logger.error(err, null, true);
       return;
@@ -44,10 +38,10 @@ export class Settings {
 
     await FS.write(
       Environment.settings,
-      JSON.stringify(merge(currentSettings, settings), null, 2)
+      JSON.stringify(Utilities.merge(currentSettings, settings), null, 2)
     );
 
-    await Initializer.init();
+    await commands.executeCommand("syncify.reinitialize");
   }
 
   public static async openSettings() {
