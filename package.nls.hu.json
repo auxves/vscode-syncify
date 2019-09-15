@@ -14,7 +14,7 @@
   "(error) checkConsole": "Syncify: Kérjük, ellenőrizze a Fejlesztő Konzol egyedi hiba (Súgó -> Kapcsoló Fejlesztő Eszközök).",
   "(error) invalidEnterpriseURL": "Syncify: Érvénytelen GitHub Enterprise URL-t.",
   "(info) customFile.registered": "Syncify: Regisztrált '{0}'.",
-  "(info) customSync.noFiles": "Syncify: Nem Elérhető Fájlokat",
+  "(info) customFile.noFiles": "Syncify: Nem Elérhető Fájlokat",
   "(info) download.downloaded": "Syncify: Letölthető",
   "(info) download.downloading": "Syncify: Letöltése",
   "(info) download.installed": "Syncify: Telepítve {0}",

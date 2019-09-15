@@ -14,7 +14,7 @@
   "(error) checkConsole": "Syncify：请检查开发商控制台用于特定的错误(帮助->切换开发工具)。",
   "(error) invalidEnterpriseURL": "Syncify：无效的审查企业的网址。",
   "(info) customFile.registered": "Syncify：登记'{0}'.",
-  "(info) customSync.noFiles": "Syncify：没有可用文",
+  "(info) customFile.noFiles": "Syncify：没有可用文",
   "(info) download.downloaded": "Syncify：下载",
   "(info) download.downloading": "Syncify：下",
   "(info) download.installed": "Syncify：安装{0}",

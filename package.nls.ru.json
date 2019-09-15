@@ -14,7 +14,7 @@
   "(error) checkConsole": "Syncify: пожалуйста, проверьте консоль разработчика для конкретного погрешность (справка -> инструменты разработчика тумблер).",
   "(error) invalidEnterpriseURL": "Syncify: неверный URL-адрес на GitHub предприятия.",
   "(info) customFile.registered": "Syncify: Зарегистрирован '{0}'.",
-  "(info) customSync.noFiles": "Syncify: Нет Файлов",
+  "(info) customFile.noFiles": "Syncify: Нет Файлов",
   "(info) download.downloaded": "Syncify: Загрузить",
   "(info) download.downloading": "Syncify: Загрузка",
   "(info) download.installed": "Syncify: Установлен {0}",

@@ -18,7 +18,7 @@ export class CustomFiles {
 
     if (!allFiles.length) {
       await window.showInformationMessage(
-        localize("(info) customSync.noFiles")
+        localize("(info) customFile.noFiles")
       );
       return;
     }

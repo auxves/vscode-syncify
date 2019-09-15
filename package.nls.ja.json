@@ -14,7 +14,7 @@
   "(error) checkConsole": "Syncifyくださいチェックの開発コンソールのための特定のエラー(Help->切り替えボタンをクリックしてDeveloper Tools).",
   "(error) invalidEnterpriseURL": "Syncify:無効GitHub企業URL",
   "(info) customFile.registered": "Syncify登録'{0}'.",
-  "(info) customSync.noFiles": "Syncifyなファイルをご用",
+  "(info) customFile.noFiles": "Syncifyなファイルをご用",
   "(info) download.downloaded": "Syncify:ダウンロー",
   "(info) download.downloading": "Syncify:ダウンロー",
   "(info) download.installed": "Syncify:設置{0}",

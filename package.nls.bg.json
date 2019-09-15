@@ -14,7 +14,7 @@
   "(error) checkConsole": "Syncify: моля, проверете разработчик конзола за определен толеранс (помощ -> инструменти за разработчици превключвател).",
   "(error) invalidEnterpriseURL": "Syncify: неправилен URL адрес на GitHub на предприятието.",
   "(info) customFile.registered": "Syncify: Регистриран '{0}'.",
-  "(info) customSync.noFiles": "Syncify: Няма Файлове",
+  "(info) customFile.noFiles": "Syncify: Няма Файлове",
   "(info) download.downloaded": "Syncify: Изтегли",
   "(info) download.downloading": "Syncify: Изтегляне",
   "(info) download.installed": "Syncify: Има {0}",

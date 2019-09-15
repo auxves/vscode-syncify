@@ -14,7 +14,7 @@
   "(error) checkConsole": "Syncify: Geçiş Geliştirici Araçları > (Yardım) belirli bir hata için Geliştirici Konsolu kontrol edin.",
   "(error) invalidEnterpriseURL": "Syncify: Geçersiz GitHub Enterprise URL.",
   "(info) customFile.registered": "{0} Syncify: Kayıtlı.",
-  "(info) customSync.noFiles": "Syncify: Dosya Kullanılabilir",
+  "(info) customFile.noFiles": "Syncify: Dosya Kullanılabilir",
   "(info) download.downloaded": "Syncify: İndirilen",
   "(info) download.downloading": "Syncify: İndirme",
   "(info) download.installed": "Syncify: Yüklü {0}",

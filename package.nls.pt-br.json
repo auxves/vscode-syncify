@@ -14,7 +14,7 @@
   "(error) checkConsole": "Syncify: por Favor, verifique o Console do Desenvolvedor para o erro específico (Ajuda -> Alternância de Ferramentas do Desenvolvedor).",
   "(error) invalidEnterpriseURL": "Syncify: Inválido GitHub Enterprise URL.",
   "(info) customFile.registered": "Syncify: Registrado '{0}'.",
-  "(info) customSync.noFiles": "Syncify: Não Há Arquivos Disponíveis",
+  "(info) customFile.noFiles": "Syncify: Não Há Arquivos Disponíveis",
   "(info) download.downloaded": "Syncify: Baixada",
   "(info) download.downloading": "Syncify: Baixar",
   "(info) download.installed": "Syncify: Instalado {0}",
