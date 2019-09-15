@@ -34,7 +34,7 @@ export class Settings {
       await FS.mkdir(state.context.globalStoragePath);
     }
 
-    const currentSettings = await this.get();
+    const currentSettings = await Settings.get();
 
     await FS.write(
       Environment.settings,
@@ -45,7 +45,7 @@ export class Settings {
   }
 
   public static async openSettings() {
-    await Webview.openSettingsPage(await this.get());
+    await Webview.openSettingsPage(await Settings.get());
   }
 
   public static async openSettingsFile() {

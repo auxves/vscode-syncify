@@ -10,7 +10,7 @@ src/**
 node_modules
 .webpack
 scripts
-LICENSE.txt
-CHANGELOG.md
 *.log
 assets/release-notes.json
+assets/ui/**/*.html
+translocalizer.json

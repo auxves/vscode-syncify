@@ -2,8 +2,7 @@ import { WebviewPanel } from "vscode";
 
 export interface IWebview {
   name: string;
-  htmlPath: string;
-  htmlContent?: string;
+  html: string;
   webview?: WebviewPanel;
   replaceables: object[];
 }

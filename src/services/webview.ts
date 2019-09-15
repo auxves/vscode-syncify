@@ -1,10 +1,8 @@
-import { readFile, readFileSync } from "fs-extra";
 import has from "lodash/has";
 import set from "lodash/set";
 import { resolve } from "path";
 import { URL } from "url";
-import * as vscode from "vscode";
-import changes from "~/../assets/release-notes.json";
+import { env, Uri, ViewColumn, WebviewPanel, window } from "vscode";
 import {
   ISettings,
   IWebview,
@@ -14,54 +12,61 @@ import {
 } from "~/models";
 import { Environment, localize, OAuth, Settings } from "~/services";
 
+import LandingPage from "~/../assets/ui/landing-page/landing-page.html";
+import RepositoryCreationPage from "~/../assets/ui/repository-creation/repository-creation.html";
+import SettingsPage from "~/../assets/ui/settings/settings.html";
+
+import changes from "~/../assets/release-notes.json";
+
 export class Webview {
   public static async openSettingsPage(
     settings: ISettings
-  ): Promise<vscode.WebviewPanel> {
-    const webview = this.webviews[1];
+  ): Promise<WebviewPanel> {
+    const webview = Webview.webviews[1];
 
-    if (!webview.htmlContent) {
-      webview.htmlContent = await this.fetchHTML(webview);
-    }
-
-    const content: string = this.generateContent({
+    const content: string = Webview.generateContent({
       settings,
-      content: webview.htmlContent,
+      content: webview.html,
       items: webview.replaceables
     });
+
     if (webview.webview) {
       webview.webview.webview.html = content;
       webview.webview.reveal();
       return webview.webview;
     }
-    const settingsPanel = vscode.window.createWebviewPanel(
+
+    const settingsPanel = window.createWebviewPanel(
       "syncifySettings",
       "Syncify Settings",
-      vscode.ViewColumn.One,
+      ViewColumn.One,
       {
         retainContextWhenHidden: true,
         enableScripts: true
       }
     );
+
     settingsPanel.webview.html = content;
     settingsPanel.webview.onDidReceiveMessage(message => {
       if (message === "edit") {
         return Settings.openSettingsFile();
       }
 
-      this.receiveSettingChange(message);
+      Webview.receiveSettingChange(message);
     });
+
     webview.webview = settingsPanel;
     settingsPanel.onDidDispose(() => (webview.webview = null));
     return settingsPanel;
   }
 
   public static updateSettingsPage(settings: ISettings) {
-    const webview = this.webviews[1];
+    const webview = Webview.webviews[1];
+
     if (webview.webview) {
-      webview.webview.webview.html = this.generateContent({
+      webview.webview.webview.html = Webview.generateContent({
         settings,
-        content: webview.htmlContent,
+        content: webview.html,
         items: webview.replaceables
       });
     }
@@ -85,35 +90,35 @@ export class Webview {
   }
 
   public static async openLandingPage() {
-    const webview = this.webviews[0];
-
-    if (!webview.htmlContent) {
-      webview.htmlContent = await this.fetchHTML(webview);
-    }
+    const webview = Webview.webviews[0];
 
     const releaseNotes = {
       ...changes,
       currentVersion: Environment.pkg.version
     };
-    const content: string = this.generateContent({
+
+    const content: string = Webview.generateContent({
       releaseNotes,
-      content: webview.htmlContent,
+      content: webview.html,
       items: webview.replaceables
     });
+
     if (webview.webview) {
       webview.webview.webview.html = content;
       webview.webview.reveal();
       return webview.webview;
     }
-    const landingPanel = vscode.window.createWebviewPanel(
+
+    const landingPanel = window.createWebviewPanel(
       "landingPage",
       "Welcome to Syncify",
-      vscode.ViewColumn.One,
+      ViewColumn.One,
       {
         retainContextWhenHidden: true,
         enableScripts: true
       }
     );
+
     landingPanel.webview.onDidReceiveMessage(async message => {
       const settings = await Settings.get();
       switch (message.command) {
@@ -121,17 +126,18 @@ export class Webview {
           OAuth.listen(54321);
 
           const host = new URL(settings.github.endpoint).hostname;
-          vscode.env.openExternal(
-            vscode.Uri.parse(
+          env.openExternal(
+            Uri.parse(
               `https://${host}/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832&redirect_uri=http://localhost:54321/callback`
             )
           );
           break;
         case "editConfiguration":
-          await this.openSettingsPage(settings);
+          await Webview.openSettingsPage(settings);
           break;
       }
     });
+
     landingPanel.webview.html = content;
     webview.webview = landingPanel;
     landingPanel.onDidDispose(() => (webview.webview = null));
@@ -143,35 +149,34 @@ export class Webview {
     user: string,
     host: URL
   ) {
-    const webview = this.webviews[2];
+    const webview = Webview.webviews[2];
 
-    if (!webview.htmlContent) {
-      webview.htmlContent = await this.fetchHTML(webview);
-    }
-
-    const content: string = this.generateContent({
+    const content: string = Webview.generateContent({
       github: {
         token,
         user,
         host
       },
-      content: webview.htmlContent,
+      content: webview.html,
       items: webview.replaceables
     });
+
     if (webview.webview) {
       webview.webview.webview.html = content;
       webview.webview.reveal();
       return webview.webview;
     }
-    const repositoryCreationPanel = vscode.window.createWebviewPanel(
+
+    const repositoryCreationPanel = window.createWebviewPanel(
       "repositoryCreation",
       "Repository Creation",
-      vscode.ViewColumn.One,
+      ViewColumn.One,
       {
         retainContextWhenHidden: true,
         enableScripts: true
       }
     );
+
     repositoryCreationPanel.webview.onDidReceiveMessage(async message => {
       if (message.close) {
         return repositoryCreationPanel.dispose();
@@ -182,6 +187,7 @@ export class Webview {
         }
       });
     });
+
     repositoryCreationPanel.webview.html = content;
     webview.webview = repositoryCreationPanel;
     repositoryCreationPanel.onDidDispose(() => (webview.webview = null));
@@ -285,7 +291,7 @@ export class Webview {
   private static webviews: IWebview[] = [
     {
       name: "landing-page",
-      htmlPath: "landing-page.html",
+      html: LandingPage,
       replaceables: [
         {
           find: "@RELEASE_NOTES",
@@ -295,7 +301,7 @@ export class Webview {
     },
     {
       name: "settings",
-      htmlPath: "settings.html",
+      html: SettingsPage,
       replaceables: [
         {
           find: "@DATA",
@@ -309,7 +315,7 @@ export class Webview {
     },
     {
       name: "repository-creation",
-      htmlPath: "repository-creation.html",
+      html: RepositoryCreationPage,
       replaceables: [
         {
           find: "@GITHUB",
@@ -318,13 +324,6 @@ export class Webview {
       ]
     }
   ];
-
-  private static async fetchHTML(view: IWebview) {
-    return readFile(
-      `${state.context.extensionPath}/assets/ui/${view.name}/${view.htmlPath}`,
-      "utf-8"
-    );
-  }
 
   private static generateContent(options: any) {
     const toReplace: object[] = [];
@@ -347,8 +346,8 @@ export class Webview {
         options.content
       )
       .replace(
-        new RegExp("@PWD", "g"),
-        vscode.Uri.file(resolve(state.context.extensionPath, "assets"))
+        /@PWD/g,
+        Uri.file(resolve(state.context.extensionPath, "assets"))
           .with({
             scheme: "vscode-resource"
           })
