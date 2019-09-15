@@ -32,9 +32,7 @@ export class FileSyncer implements ISyncer {
 
     window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
-    const installedExtensions = extensions.all
-      .filter(ext => !ext.packageJSON.isBuiltin)
-      .map(ext => ext.id);
+    const installedExtensions = Extensions.get();
 
     await FS.write(
       resolve(settings.file.path, "extensions.json"),
