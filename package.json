@@ -4,18 +4,18 @@
   "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
-  "version": "1.9.2",
+  "version": "1.9.2-1",
   "engines": {
     "vscode": "^1.35.0"
   },
   "icon": "assets/logo.png",
-  "homepage": "https://github.com/arnohovhannisyan/Syncify",
+  "homepage": "https://github.com/arnohovhannisyan/vscode-syncify",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arnohovhannisyan/Syncify"
+    "url": "https://github.com/arnohovhannisyan/vscode-syncify"
   },
   "bugs": {
-    "url": "https://github.com/arnohovhannisyan/Syncify/issues",
+    "url": "https://github.com/arnohovhannisyan/vscode-syncify/issues",
     "email": "arnohovhannisyan0@gmail.com"
   },
   "extensionKind": "ui",
@@ -26,7 +26,8 @@
     "sync",
     "vscode-sync",
     "settings-sync",
-    "syncify"
+    "syncify",
+    "vscode-syncify"
   ],
   "activationEvents": [
     "*"

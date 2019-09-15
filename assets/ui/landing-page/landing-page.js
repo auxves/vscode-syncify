@@ -28,11 +28,7 @@ releaseNotes.changes.forEach(change => {
     .replace(
       new RegExp("@EXTRA", "g"),
       change.author && change.pullRequest
-        ? `(Thanks to <a href='https://github.com/${change.author}'>@${
-            change.author
-          }</a> for PR <a href='https://github.com/arnohovhannisyan/syncify/pull/${
-            change.pullRequest
-          }'>#${change.pullRequest}</a>)`
+        ? `(Thanks to <a href='https://github.com/${change.author}'>@${change.author}</a> for PR <a href='https://github.com/arnohovhannisyan/vscode-syncify/pull/${change.pullRequest}'>#${change.pullRequest}</a>)`
         : ""
     );
   appendHTML(notesElement, html);
