@@ -117,7 +117,9 @@ export class RepoSyncer implements ISyncer {
 
       const branches = await this.git.branchLocal();
 
-      if (!branches.all.includes(profile.branch)) {
+      const branchIsNew = !branches.all.includes(profile.branch);
+
+      if (branchIsNew) {
         await this.git.checkout(["-b", profile.branch]);
         await this.git.add(".");
         await this.git.commit("Initial");
@@ -137,7 +139,7 @@ export class RepoSyncer implements ISyncer {
 
       const currentChanges = await this.git.diff([profile.branch]);
 
-      if (!currentChanges && !settings.forceUpload) {
+      if (!currentChanges && !settings.forceUpload && !branchIsNew) {
         window.setStatusBarMessage(localize("(info) upload.upToDate"), 2000);
         return;
       }
@@ -201,7 +203,7 @@ export class RepoSyncer implements ISyncer {
 
       if (branches.current !== profile.branch) {
         if (branches.all.includes(profile.branch)) {
-          await this.git.deleteLocalBranch(profile.branch);
+          await this.git.branch(["-D", profile.branch]);
         }
         await this.git.fetch();
         await this.git.checkout(`origin/${profile.branch}`);
