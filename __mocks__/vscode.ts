@@ -23,7 +23,8 @@ export const extensions = {
 };
 
 export const commands = {
-  registerCommand: () => null
+  registerCommand: () => null,
+  executeCommand: () => null
 };
 
 export enum ProgressLocation {

@@ -42,3 +42,7 @@ it("should get settings", async () => {
 
   expect(fetched.watchSettings).toBeTruthy();
 });
+
+it("should get settings w/o side effects", async () => {
+  expect(await Settings.get()).toStrictEqual(defaultSettings);
+});
