@@ -24,6 +24,7 @@ export class Pragma {
             if (!Pragma.supportedOS.includes(osFromPragma)) {
               continue;
             }
+
             if (Pragma.osFromString(osFromPragma) !== Environment.os) {
               shouldComment = true;
             }
@@ -232,8 +233,10 @@ export class Pragma {
   }
 
   private static osFromString(osName: string): OperatingSystem {
-    const capitalized: string =
-      osName[0].toUpperCase() + osName.substr(1).toLowerCase();
-    return OperatingSystem[capitalized];
+    return {
+      windows: OperatingSystem.Windows,
+      linux: OperatingSystem.Linux,
+      mac: OperatingSystem.Mac
+    }[osName];
   }
 }
