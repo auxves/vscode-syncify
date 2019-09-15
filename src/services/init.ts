@@ -34,9 +34,10 @@ export class Initializer {
       "syncify.download": () => state.sync.download(),
       "syncify.reset": () => Settings.reset(),
       "syncify.openSettings": () => Settings.openSettings(),
-      "syncify.otherOptions": () => Settings.showOtherOptions(),
+      "syncify.reinitialize": () => Initializer.init(),
       "syncify.importCustomFile": (uri?: Uri) => CustomFiles.import(uri),
-      "syncify.registerCustomFile": (uri?: Uri) => CustomFiles.register(uri)
+      "syncify.registerCustomFile": (uri?: Uri) => CustomFiles.register(uri),
+      "syncify.switchProfile": () => Settings.switchProfile()
     };
 
     state.context.subscriptions.push(
