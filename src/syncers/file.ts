@@ -179,9 +179,9 @@ export class FileSyncer implements ISyncer {
 
         if (filesToPragma.includes(basename(file))) {
           const afterPragma = Pragma.processIncoming(
-            currentContents,
+            settings.hostname,
             contents,
-            settings.hostname
+            currentContents
           );
 
           if (currentContents !== afterPragma) {

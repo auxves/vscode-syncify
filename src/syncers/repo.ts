@@ -357,10 +357,11 @@ export class RepoSyncer implements ISyncer {
 
         if (filesToPragma.includes(filename)) {
           const afterPragma = Pragma.processIncoming(
-            currentContents,
+            settings.hostname,
             contents,
-            settings.hostname
+            currentContents
           );
+
           if (currentContents !== afterPragma) {
             return FS.write(newPath, afterPragma);
           }

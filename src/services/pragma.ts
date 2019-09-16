@@ -5,9 +5,9 @@ import { Environment, Logger } from "~/services";
 
 export class Pragma {
   public static processIncoming(
-    localContent: string,
+    hostname: string,
     newContent: string,
-    hostname: string
+    localContent?: string
   ): string {
     const parsedLines: string[] = [];
     const lines = newContent.split("\n");
@@ -71,7 +71,7 @@ export class Pragma {
 
     let result = parsedLines.join("\n");
 
-    const ignoredBlocks = Pragma.getIgnoredBlocks(localContent);
+    const ignoredBlocks = Pragma.getIgnoredBlocks(localContent || "{}");
 
     if (ignoredBlocks) {
       result = result.replace(/{\s*\n/, `{\n${ignoredBlocks}\n\n\n`);

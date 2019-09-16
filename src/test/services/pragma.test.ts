@@ -9,11 +9,73 @@ it("should properly process before uploading", () => {
     // @sync host=jest
     // "abc": "xyz"
   }`;
+
   const expected = `{
     // @sync host=jest
     "abc": "xyz"
   }`;
+
   expect(Pragma.processOutgoing(initial)).toBe(expected);
+});
+
+it("should properly ignore", () => {
+  const initial = `{
+    // @sync-ignore
+    "abc": "xyz",
+    // @sync-ignore
+    "abc2": "xyz2",
+    "xyz": "abc"
+  }`;
+
+  const expected = `{
+    "xyz": "abc"
+  }`;
+
+  expect(Pragma.processOutgoing(initial)).toBe(expected);
+
+  const initial2 = `{
+    "xyz": "def"
+  }`;
+
+  const expected2 = `{
+    // @sync-ignore
+    "abc": "xyz",
+    // @sync-ignore
+    "abc2": "xyz2",
+
+
+    "xyz": "def"
+  }`;
+
+  console.log(Pragma.processIncoming(null, initial2, initial));
+
+  expect(Pragma.processIncoming(null, initial2, initial)).toBe(expected2);
+});
+
+it("should properly handle brackets", () => {
+  const initial = `{
+    // @sync host=jest
+    // "abc": "{xyz}"
+  }`;
+
+  const expected = `{
+    // @sync host=jest
+    "abc": "{xyz}"
+  }`;
+
+  expect(Pragma.processOutgoing(initial)).toBe(expected);
+
+  const initial2 = `{
+    // @sync host=jest
+    "abc": "[xyz]"
+  }`;
+
+  const expected2 = `{
+    // @sync host=jest
+    // "abc": "[xyz]"
+  }`;
+
+  expect(Pragma.processIncoming("test", initial2, initial2)).toBe(expected2);
 });
 
 describe("host", () => {
@@ -29,9 +91,7 @@ describe("host", () => {
       }`
     };
 
-    expect(Pragma.processIncoming("{}", valid.initial, "test")).toBe(
-      valid.expected
-    );
+    expect(Pragma.processIncoming("test", valid.initial)).toBe(valid.expected);
 
     const invalid = {
       initial: valid.initial,
@@ -41,7 +101,7 @@ describe("host", () => {
       }`
     };
 
-    expect(Pragma.processIncoming("{}", invalid.initial, "jest")).toBe(
+    expect(Pragma.processIncoming("jest", invalid.initial)).toBe(
       invalid.expected
     );
   });
@@ -62,7 +122,7 @@ describe("os", () => {
         "abc": "xyz"
       }`;
 
-      expect(Pragma.processIncoming("{}", initial, null)).toBe(expected);
+      expect(Pragma.processIncoming(null, initial)).toBe(expected);
     });
   });
 });
@@ -82,9 +142,7 @@ describe("env", () => {
       }`
     };
 
-    expect(Pragma.processIncoming("{}", valid.initial, null)).toBe(
-      valid.expected
-    );
+    expect(Pragma.processIncoming(null, valid.initial)).toBe(valid.expected);
 
     const invalid = {
       initial: `{
@@ -97,7 +155,7 @@ describe("env", () => {
       }`
     };
 
-    expect(Pragma.processIncoming("{}", invalid.initial, null)).toBe(
+    expect(Pragma.processIncoming(null, invalid.initial)).toBe(
       invalid.expected
     );
   });
