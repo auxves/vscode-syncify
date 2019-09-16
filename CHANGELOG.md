@@ -1,5 +1,40 @@
 # Changelog
 
+## v1.13.0
+
+- Ask user if they are sure they want to reset
+
+## v1.12.1
+
+- Minor bugfixes
+
+## v1.12.0
+
+- Minor improvements
+
+## v1.11.0
+
+- Fix profiles
+- Refactor `Switch Profile` and `Reinitialize` items in `Other Options` to separate commands to allow keyboard shortcut binding
+
+## v1.10.0
+
+- Let the user import custom files to a specific folder
+
+## 1.9.2
+
+- Minor bugfixes
+
+## 1.9.1
+
+- Add Content Security Policy to Webviews for security
+- Minor bugfixes
+
+## v1.9.0
+
+- Add Turkish localizations
+- Minor improvements
+
 ## v1.8.0
 
 - Read custom files as `Buffer` to work with binaries
