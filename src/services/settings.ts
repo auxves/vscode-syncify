@@ -14,6 +14,11 @@ export class Settings {
     const exists = await FS.exists(Environment.settings);
 
     if (!exists) {
+      await FS.mkdir(state.context.globalStoragePath);
+      await FS.write(
+        Environment.settings,
+        JSON.stringify(defaultSettings, null, 2)
+      );
       return defaultSettings;
     }
 

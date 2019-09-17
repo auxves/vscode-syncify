@@ -12,7 +12,7 @@ import {
 } from "~/models";
 import { Environment, localize, OAuth, Settings } from "~/services";
 
-import LandingPage from "~/../assets/ui/landing-page/landing-page.html";
+import LandingPage from "~/../assets/ui/landing/landing.html";
 import RepositoryCreationPage from "~/../assets/ui/repository-creation/repository-creation.html";
 import SettingsPage from "~/../assets/ui/settings/settings.html";
 
@@ -73,18 +73,13 @@ export class Webview {
   }
 
   public static async receiveSettingChange(message: {
-    command: string;
-    text: string;
+    setting: string;
+    value: string;
   }) {
-    let value: any = message.text;
-    if (message.text === "true" || message.text === "false") {
-      value = message.text === "true";
-    }
-
     const settings = await Settings.get();
 
-    if (has(settings, message.command)) {
-      set(settings, message.command, value);
+    if (has(settings, message.setting)) {
+      set(settings, message.setting, message.value);
       Settings.set(settings);
     }
   }
@@ -92,13 +87,8 @@ export class Webview {
   public static async openLandingPage() {
     const webview = Webview.webviews[0];
 
-    const releaseNotes = {
-      ...changes,
-      currentVersion: Environment.pkg.version
-    };
-
     const content: string = Webview.generateContent({
-      releaseNotes,
+      changes,
       content: webview.html,
       items: webview.replaceables
     });
@@ -290,36 +280,37 @@ export class Webview {
 
   private static webviews: IWebview[] = [
     {
-      name: "landing-page",
       html: LandingPage,
       replaceables: [
         {
-          find: "@RELEASE_NOTES",
-          replace: "releaseNotes"
+          find: "@CHANGES",
+          replace: "=changes"
+        },
+        {
+          find: "@VERSION",
+          replace: Environment.pkg.version
         }
       ]
     },
     {
-      name: "settings",
       html: SettingsPage,
       replaceables: [
         {
-          find: "@DATA",
-          replace: "settings"
+          find: "@SETTINGS",
+          replace: "=settings"
         },
         {
-          find: "@MAP",
+          find: "@SECTIONS",
           replace: Webview.settingsMap
         }
       ]
     },
     {
-      name: "repository-creation",
       html: RepositoryCreationPage,
       replaceables: [
         {
           find: "@GITHUB",
-          replace: "github"
+          replace: "=github"
         }
       ]
     }
@@ -328,10 +319,13 @@ export class Webview {
   private static generateContent(options: any) {
     const toReplace: object[] = [];
     options.items.forEach(option => {
-      if (typeof option.replace === "string") {
+      if (
+        typeof option.replace === "string" &&
+        option.replace.startsWith("=")
+      ) {
         toReplace.push({
           ...option,
-          replace: escape(JSON.stringify(options[option.replace]))
+          replace: escape(JSON.stringify(options[option.replace.slice(1)]))
         });
       } else {
         toReplace.push({
