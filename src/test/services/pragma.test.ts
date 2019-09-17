@@ -47,8 +47,6 @@ it("should properly ignore", () => {
     "xyz": "def"
   }`;
 
-  console.log(Pragma.processIncoming(null, initial2, initial));
-
   expect(Pragma.processIncoming(null, initial2, initial)).toBe(expected2);
 });
 
