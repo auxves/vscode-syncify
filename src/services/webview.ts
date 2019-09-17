@@ -111,7 +111,7 @@ export class Webview {
 
     landingPanel.webview.onDidReceiveMessage(async message => {
       const settings = await Settings.get();
-      switch (message.command) {
+      switch (message) {
         case "loginWithGitHub":
           OAuth.listen(54321);
 
@@ -330,7 +330,7 @@ export class Webview {
       } else {
         toReplace.push({
           find: option.find,
-          replace: JSON.stringify(option.replace)
+          replace: escape(JSON.stringify(option.replace))
         });
       }
     });
@@ -341,7 +341,7 @@ export class Webview {
       )
       .replace(
         /@PWD/g,
-        Uri.file(resolve(state.context.extensionPath, "assets"))
+        Uri.file(resolve(state.context.extensionPath, "assets/ui"))
           .with({
             scheme: "vscode-resource"
           })

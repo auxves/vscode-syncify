@@ -1,19 +1,17 @@
-{
-  "changes": [
-    {
-      "details": "Pragma Support",
-      "type": "NEW",
-      "color": "success"
-    },
-    {
-      "details": "Fix Repository Creation",
-      "type": "FIX",
-      "color": "danger"
-    },
-    {
-      "details": "GUI for Settings and Setup",
-      "type": "NEW",
-      "color": "success"
-    }
-  ]
-}
+[
+  {
+    "details": "Pragma Support",
+    "type": "NEW",
+    "color": "success"
+  },
+  {
+    "details": "Fix Repository Creation",
+    "type": "FIX",
+    "color": "danger"
+  },
+  {
+    "details": "GUI for Settings and Setup",
+    "type": "NEW",
+    "color": "success"
+  }
+]
