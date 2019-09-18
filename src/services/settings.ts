@@ -81,32 +81,4 @@ export class Settings {
 
     window.showInformationMessage(localize("(info) reset.resetComplete"));
   }
-
-  public static async switchProfile(): Promise<void> {
-    const { repo } = await Settings.get();
-
-    const mappedProfiles = repo.profiles.map(
-      prof => `${prof.name} [branch: ${prof.branch}]`
-    );
-
-    const selectedProfile = await window.showQuickPick(mappedProfiles);
-
-    if (!selectedProfile) {
-      return;
-    }
-
-    const newProfile = repo.profiles.filter(
-      prof => `${prof.name} [branch: ${prof.branch}]` === selectedProfile
-    )[0];
-
-    await Settings.set({
-      repo: {
-        currentProfile: (newProfile || repo.profiles[0]).name
-      }
-    });
-
-    await window.showInformationMessage(
-      localize("(info) repo.switchedProfile", newProfile.name)
-    );
-  }
 }

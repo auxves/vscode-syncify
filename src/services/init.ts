@@ -1,6 +1,7 @@
 import { commands, Uri } from "vscode";
 import { IVSCodeCommands, state } from "~/models";
 import { CustomFiles, Factory, Settings, Watcher } from "~/services";
+import { Profile } from "~/services/profile";
 
 export class Initializer {
   public static async init() {
@@ -37,7 +38,7 @@ export class Initializer {
       "syncify.reinitialize": () => Initializer.init(),
       "syncify.importCustomFile": (uri?: Uri) => CustomFiles.import(uri),
       "syncify.registerCustomFile": (uri?: Uri) => CustomFiles.register(uri),
-      "syncify.switchProfile": () => Settings.switchProfile()
+      "syncify.switchProfile": () => Profile.switch()
     };
 
     state.context.subscriptions.push(
