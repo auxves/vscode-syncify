@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.14.0
+
+- Updated UI system
+
 ## v1.13.0
 
 - Ask user if they are sure they want to reset

@@ -1,16 +1,6 @@
 [
   {
-    "details": "Pragma Support",
-    "type": "NEW",
-    "color": "success"
-  },
-  {
-    "details": "Fix Repository Creation",
-    "type": "FIX",
-    "color": "danger"
-  },
-  {
-    "details": "GUI for Settings and Setup",
+    "details": "Updated UI System",
     "type": "NEW",
     "color": "success"
   }
