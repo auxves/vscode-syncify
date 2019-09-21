@@ -11,3 +11,4 @@ export * from "~/models/partial-settings";
 export * from "~/models/ui/webview-section";
 export * from "~/models/ui/webview-setting";
 export * from "~/models/ui/webview";
+export * from "~/models/ui/selectOption";

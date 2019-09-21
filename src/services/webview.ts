@@ -141,7 +141,7 @@ export class Webview {
   ) {
     const webview = Webview.webviews[2];
 
-    const content: string = Webview.generateContent({
+    const content = Webview.generateContent({
       github: {
         token,
         user,
@@ -224,31 +224,26 @@ export class Webview {
         },
         {
           name: localize("(setting) watchSettings.name"),
-          placeholder: "",
           correspondingSetting: "watchSettings",
           type: UISettingType.Checkbox
         },
         {
           name: localize("(setting) removeExtensions.name"),
-          placeholder: "",
           correspondingSetting: "removeExtensions",
           type: UISettingType.Checkbox
         },
         {
           name: localize("(setting) syncOnStartup.name"),
-          placeholder: "",
           correspondingSetting: "syncOnStartup",
           type: UISettingType.Checkbox
         },
         {
           name: localize("(setting) forceUpload.name"),
-          placeholder: "",
           correspondingSetting: "forceUpload",
           type: UISettingType.Checkbox
         },
         {
           name: localize("(setting) forceDownload.name"),
-          placeholder: "",
           correspondingSetting: "forceDownload",
           type: UISettingType.Checkbox
         }
@@ -316,7 +311,7 @@ export class Webview {
     }
   ];
 
-  private static generateContent(options: any) {
+  private static generateContent(options: any): string {
     const toReplace: object[] = [];
     options.items.forEach(option => {
       if (
