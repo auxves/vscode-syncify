@@ -10,13 +10,30 @@
 
 Visit the [Quick Start Guide][link:quickstart] to get started.
 
-## Maintainers
+## Advantages over [Settings Sync][link:settings-sync]
 
-- [arnohovhannisyan](https://github.com/arnohovhannisyan) - Original Author
+- No annoying popups
+- Multiple profiles with support for hot-switching (currently only supported on `Git` method)
+- Simpler settings with intellisense
+- Multiple sync methods
+  - `Git` — sync using a git repository
+  - `File` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc...)
+- `Sync` command that automatically uploads or downloads if there are changes locally or remotely (only supported on `Git` method)
+- More intuitive custom file registration and importing
+- Notification for extension installation/uninstallation progress
+- Status bar button to cancel auto-upload
+- Powerful file exclusion powered by [micromatch][link:micromatch]
 
-<!-- Documentation References -->
+## Special Thanks
 
+- [shanalikhan][link:shanalikhan] - This extension was inspired by [Settings Sync][link:settings-sync]
+
+<!-- Link References -->
+
+[link:shanalikhan]: https://github.com/shanalikhan
 [link:quickstart]: https://github.com/arnohovhannisyan/vscode-syncify/wiki/Quick-Start
+[link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
+[link:micromatch]: https://github.com/micromatch/micromatch
 
 <!-- Badge References -->
 
