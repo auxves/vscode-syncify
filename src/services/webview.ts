@@ -4,6 +4,7 @@ import { resolve } from "path";
 import { URL } from "url";
 import { env, Uri, ViewColumn, WebviewPanel, window } from "vscode";
 import {
+  IGenerationOptions,
   ISettings,
   IWebview,
   IWebviewSection,
@@ -25,7 +26,8 @@ export class Webview {
     const webview = Webview.webviews[1];
 
     const content: string = Webview.generateContent({
-      settings,
+      settings: JSON.stringify(settings),
+      sections: JSON.stringify(Webview.sections),
       content: webview.html,
       items: webview.replaceables
     });
@@ -65,7 +67,7 @@ export class Webview {
 
     if (webview.webview) {
       webview.webview.webview.html = Webview.generateContent({
-        settings,
+        settings: JSON.stringify(settings),
         content: webview.html,
         items: webview.replaceables
       });
@@ -88,7 +90,8 @@ export class Webview {
     const webview = Webview.webviews[0];
 
     const content: string = Webview.generateContent({
-      changes,
+      changes: JSON.stringify(changes),
+      version: Environment.pkg.version,
       content: webview.html,
       items: webview.replaceables
     });
@@ -142,11 +145,11 @@ export class Webview {
     const webview = Webview.webviews[2];
 
     const content = Webview.generateContent({
-      github: {
+      github: JSON.stringify({
         token,
         user,
         host
-      },
+      }),
       content: webview.html,
       items: webview.replaceables
     });
@@ -184,7 +187,7 @@ export class Webview {
     return repositoryCreationPanel;
   }
 
-  private static settingsMap: IWebviewSection[] = [
+  private static sections: IWebviewSection[] = [
     {
       name: "General",
       settings: [
@@ -276,62 +279,27 @@ export class Webview {
   private static webviews: IWebview[] = [
     {
       html: LandingPage,
-      replaceables: [
-        {
-          find: "@CHANGES",
-          replace: "=changes"
-        },
-        {
-          find: "@VERSION",
-          replace: Environment.pkg.version
-        }
-      ]
+      replaceables: [["@CHANGES", "changes"], ["@VERSION", "version"]]
     },
     {
       html: SettingsPage,
-      replaceables: [
-        {
-          find: "@SETTINGS",
-          replace: "=settings"
-        },
-        {
-          find: "@SECTIONS",
-          replace: Webview.settingsMap
-        }
-      ]
+      replaceables: [["@SETTINGS", "settings"], ["@SECTIONS", "sections"]]
     },
     {
       html: RepositoryCreationPage,
-      replaceables: [
-        {
-          find: "@GITHUB",
-          replace: "=github"
-        }
-      ]
+      replaceables: [["@GITHUB", "github"]]
     }
   ];
 
-  private static generateContent(options: any): string {
-    const toReplace: object[] = [];
-    options.items.forEach(option => {
-      if (
-        typeof option.replace === "string" &&
-        option.replace.startsWith("=")
-      ) {
-        toReplace.push({
-          ...option,
-          replace: escape(JSON.stringify(options[option.replace.slice(1)]))
-        });
-      } else {
-        toReplace.push({
-          find: option.find,
-          replace: escape(JSON.stringify(option.replace))
-        });
-      }
-    });
+  private static generateContent(options: IGenerationOptions): string {
+    const toReplace = options.items.map<[string, string]>(([find, replace]) => [
+      find,
+      escape(options[replace])
+    ]);
+
     return toReplace
       .reduce(
-        (acc, cur: any) => acc.replace(new RegExp(cur.find, "g"), cur.replace),
+        (acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
         options.content
       )
       .replace(
