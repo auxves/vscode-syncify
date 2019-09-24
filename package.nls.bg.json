@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Изберете Файл",
   "(btn) no": "Няма",
   "(btn) ok": "ОК",
   "(btn) yes": "Да",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Изтегляне",
   "(prompt) customFile.import.filePlaceholder": "Изберете файл за импортиране.",
   "(prompt) customFile.import.folderPlaceholder": "Изберете вашата работна област, за да импортирате файл в",
-  "(prompt) customFile.register.filePlaceholder": "Въведете абсолютен път до желания файл",
   "(setting) autoUploadDelay.name": "Автоматично Изтегляне Забавяне",
   "(setting) autoUploadDelay.placeholder": "Въведете Автоматично Изтегляне Забавяне",
   "(setting) file.path.name": "Износ Начин На Файл ",

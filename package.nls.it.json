@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Selezionare File",
   "(btn) no": "No",
   "(btn) ok": "OK",
   "(btn) yes": "Sì",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Caricamento",
   "(prompt) customFile.import.filePlaceholder": "Selezionare il file da importare",
   "(prompt) customFile.import.folderPlaceholder": "Selezionare l'area di lavoro di importare il file in",
-  "(prompt) customFile.register.filePlaceholder": "Inserire il percorso assoluto del file desiderato",
   "(setting) autoUploadDelay.name": "Upload Automatico Di Ritardo",
   "(setting) autoUploadDelay.placeholder": "Inserire Upload Automatico Di Ritardo",
   "(setting) file.path.name": "Esportazione Dei File Di Percorso",

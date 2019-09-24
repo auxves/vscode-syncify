@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "选择文件",
   "(btn) no": "没有",
   "(btn) ok": "\"确定\"",
   "(btn) yes": "是的",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify：上传",
   "(prompt) customFile.import.filePlaceholder": "选择文件导入",
   "(prompt) customFile.import.folderPlaceholder": "选择工作区将文件导入",
-  "(prompt) customFile.register.filePlaceholder": "输入绝对的道路所需的文件",
   "(setting) autoUploadDelay.name": "自动上的延迟",
   "(setting) autoUploadDelay.placeholder": "输入自动上的延迟",
   "(setting) file.path.name": "文件的出口路径",

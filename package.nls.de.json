@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Wählen Sie \"Datei\"",
   "(btn) no": "Keine",
   "(btn) ok": "OK",
   "(btn) yes": "Ja",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Hochladen",
   "(prompt) customFile.import.filePlaceholder": "Wählen Sie die zu importierende Datei",
   "(prompt) customFile.import.folderPlaceholder": "Wählen Sie den Arbeitsbereich importieren Sie die Datei in",
-  "(prompt) customFile.register.filePlaceholder": "Geben Sie den absoluten Pfad zu der gewünschten Datei",
   "(setting) autoUploadDelay.name": "Auto-Upload-Verzögerung",
   "(setting) autoUploadDelay.placeholder": "Geben Sie Auto-Upload-Verzögerung",
   "(setting) file.path.name": "Datei-Export-Pfad",

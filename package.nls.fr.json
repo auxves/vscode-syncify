@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Sélectionnez Fichier",
   "(btn) no": "Pas de",
   "(btn) ok": "OK",
   "(btn) yes": "Oui",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Téléchargement",
   "(prompt) customFile.import.filePlaceholder": "Sélectionnez le fichier à importer",
   "(prompt) customFile.import.folderPlaceholder": "Sélectionnez l'espace de travail pour importer le fichier dans",
-  "(prompt) customFile.register.filePlaceholder": "Entrez le chemin d'accès absolu du fichier désiré",
   "(setting) autoUploadDelay.name": "Téléchargement Automatique De Retard",
   "(setting) autoUploadDelay.placeholder": "Entrez Téléchargement Automatique De Retard",
   "(setting) file.path.name": "Exportation Du Fichier Chemin D'Accès",

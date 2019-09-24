@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Seleccione Archivo",
   "(btn) no": "No",
   "(btn) ok": "OK",
   "(btn) yes": "Sí",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Carga",
   "(prompt) customFile.import.filePlaceholder": "Seleccione el archivo a importar",
   "(prompt) customFile.import.folderPlaceholder": "Seleccione el espacio de trabajo para importar el archivo en",
-  "(prompt) customFile.register.filePlaceholder": "Introduzca la ruta de acceso absoluta del archivo que desee",
   "(setting) autoUploadDelay.name": "Carga Automática De Retardo",
   "(setting) autoUploadDelay.placeholder": "Introduzca Carga Automática De Retardo",
   "(setting) file.path.name": "Archivo De La Ruta De Exportación",

@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "ファイル選択",
   "(btn) no": "No",
   "(btn) ok": "OK",
   "(btn) yes": "あり",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify:アップロード",
   "(prompt) customFile.import.filePlaceholder": "ファイルを選択し輸入",
   "(prompt) customFile.import.folderPlaceholder": "を選択し、ワークスペースをインポートするにはファイル",
-  "(prompt) customFile.register.filePlaceholder": "入力は、絶対パスのファイル",
   "(setting) autoUploadDelay.name": "自動アップロードの遅延",
   "(setting) autoUploadDelay.placeholder": "入力の自動アップロードの遅延",
   "(setting) file.path.name": "ファイルのExport Path",

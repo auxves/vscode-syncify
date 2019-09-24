@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Select File",
   "(btn) no": "No",
   "(btn) ok": "OK",
   "(btn) yes": "Yes",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Uploading",
   "(prompt) customFile.import.filePlaceholder": "Select the file to import",
   "(prompt) customFile.import.folderPlaceholder": "Select the workspace to import the file into",
-  "(prompt) customFile.register.filePlaceholder": "Enter the absolute path of the desired file",
   "(setting) autoUploadDelay.name": "Auto Upload Delay",
   "(setting) autoUploadDelay.placeholder": "Enter Auto Upload Delay",
   "(setting) file.path.name": "File Export Path",

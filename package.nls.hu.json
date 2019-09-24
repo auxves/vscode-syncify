@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Válassza Ki A Fájl",
   "(btn) no": "Nem",
   "(btn) ok": "OK",
   "(btn) yes": "Igen",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Feltöltés",
   "(prompt) customFile.import.filePlaceholder": "Válassza ki a fájl importálása",
   "(prompt) customFile.import.folderPlaceholder": "Válassza a munkaterület importálni a fájlt",
-  "(prompt) customFile.register.filePlaceholder": "Írja be a teljes elérési utat a kívánt fájlt",
   "(setting) autoUploadDelay.name": "Automatikus Feltöltés Késedelem",
   "(setting) autoUploadDelay.placeholder": "Adja Meg Az Automatikus Feltöltés Késedelem",
   "(setting) file.path.name": "Fájl Export Path",

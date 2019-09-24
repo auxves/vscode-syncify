@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "선택한 파일",
   "(btn) no": "No",
   "(btn) ok": "OK",
   "(btn) yes": "네",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify:로 업로드",
   "(prompt) customFile.import.filePlaceholder": "가져올 파일을 선택하십시오",
   "(prompt) customFile.import.folderPlaceholder": "선택으로 작업 공간으로 파일을 가져온",
-  "(prompt) customFile.register.filePlaceholder": "절대 경로를 입력하의 원하는 파일",
   "(setting) autoUploadDelay.name": "자동 업로드가 지연",
   "(setting) autoUploadDelay.placeholder": "입력 자동 업로드가 지연",
   "(setting) file.path.name": "파일의 수출 경로",

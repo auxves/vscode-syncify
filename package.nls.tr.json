@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Dosya Seç",
   "(btn) no": "Hayır",
   "(btn) ok": "TAMAM",
   "(btn) yes": "Evet",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Yükleniyor",
   "(prompt) customFile.import.filePlaceholder": "İçe aktarılacak dosyayı seçin ",
   "(prompt) customFile.import.folderPlaceholder": "Dosya almak için çalışma alanı seçin ",
-  "(prompt) customFile.register.filePlaceholder": "İstediğiniz dosyanın tam yolunu girin ",
   "(setting) autoUploadDelay.name": "Otomatik Yükleme Gecikme",
   "(setting) autoUploadDelay.placeholder": "Otomatik Yükleme Gecikmesi Girin ",
   "(setting) file.path.name": "Dosya Verme Yolu",

@@ -1,4 +1,5 @@
 {
+  "(action) customFiles.selectFile": "Выберите Файл",
   "(btn) no": "Нет",
   "(btn) ok": "ОК",
   "(btn) yes": "Да",
@@ -22,7 +23,7 @@
   "(info) download.installed": "Syncify: Установлен {0}",
   "(info) download.needToReload": "Syncify: хотели бы вы, чтобы перезагрузить, чтобы завершить процедуру?",
   "(info) download.noRemoteBranches": "Syncify: Нет Удаленных Филиалов",
-  "(info) download.uninstalled": "Syncify: Удалено {0}",
+  "(info) download.uninstalled": "Syncify: Удалить {0}",
   "(info) download.upToDate": "Syncify: уже в курсе",
   "(info) repo.switchedProfile": "Syncify: переключился на профиль '{0}'",
   "(info) reset.resetComplete": "Syncify: настройки были сброшены",
@@ -34,7 +35,6 @@
   "(info) upload.uploading": "Syncify: Загрузка",
   "(prompt) customFile.import.filePlaceholder": "Выберите файл для импорта.",
   "(prompt) customFile.import.folderPlaceholder": "Выберите рабочую область, чтобы импортировать файл в",
-  "(prompt) customFile.register.filePlaceholder": "Введите абсолютный путь к нужному файлу",
   "(setting) autoUploadDelay.name": "Автоматическая Загрузка Задержки",
   "(setting) autoUploadDelay.placeholder": "Введите Автоматическая Загрузка Задержки",
   "(setting) file.path.name": "Экспорт Путь Файл ",

@@ -1,5 +1,5 @@
 import { basename, resolve } from "path";
-import { Uri, window, workspace } from "vscode";
+import { OpenDialogOptions, Uri, window, workspace } from "vscode";
 import { Environment, FS, localize } from "~/services";
 
 export class CustomFiles {
@@ -72,9 +72,18 @@ export class CustomFiles {
 
     const filepath = uri
       ? uri.fsPath
-      : await window.showInputBox({
-          prompt: localize("(prompt) customFile.register.filePlaceholder")
-        });
+      : await (async () => {
+          const result = await window.showOpenDialog({
+            canSelectMany: false,
+            openLabel: localize("(action) customFiles.selectFile")
+          });
+
+          if (!result) {
+            return;
+          }
+
+          return result[0].fsPath;
+        })();
 
     if (!filepath) {
       return;
