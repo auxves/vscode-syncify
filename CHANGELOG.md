@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.15.0
+
+- Allow for registering custom files using a file picker
+
 ## v1.14.0
 
 - Updated UI system
