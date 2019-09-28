@@ -106,7 +106,6 @@
     "@types/fs-extra": "^8.0.0",
     "@types/jest": "^24.0.18",
     "@types/lodash": "^4.14.138",
-    "@types/micromatch": "^3.1.0",
     "@types/node": "^12.7.5",
     "awesome-typescript-loader": "^5.2.1",
     "jest": "^24.9.0",
@@ -132,7 +131,6 @@
     "fast-glob": "^3.0.4",
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.15",
-    "micromatch": "^4.0.2",
     "simple-git": "^1.126.0",
     "vscode-chokidar": "^2.1.7"
   },

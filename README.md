@@ -22,7 +22,6 @@ Visit the [Quick Start Guide][link:quickstart] to get started.
 - More intuitive custom file registration and importing
 - Notification for extension installation/uninstallation progress
 - Status bar button to cancel auto-upload
-- Powerful file exclusion powered by [micromatch][link:micromatch]
 
 ## Special Thanks
 
@@ -33,7 +32,6 @@ Visit the [Quick Start Guide][link:quickstart] to get started.
 [link:shanalikhan]: https://github.com/shanalikhan
 [link:quickstart]: https://github.com/arnohovhannisyan/vscode-syncify/wiki/Quick-Start
 [link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
-[link:micromatch]: https://github.com/micromatch/micromatch
 
 <!-- Badge References -->
 
