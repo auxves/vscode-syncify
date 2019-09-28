@@ -3,6 +3,7 @@ import { defaultSettings, ISettings, PartialSettings, state } from "~/models";
 import {
   Environment,
   FS,
+  Initializer,
   localize,
   Logger,
   Utilities,
@@ -49,14 +50,13 @@ export class Settings {
     await commands.executeCommand("syncify.reinitialize");
   }
 
-  public static async openSettings() {
+  public static async open() {
     await Webview.openSettingsPage(await Settings.get());
   }
 
-  public static async openSettingsFile() {
-    const filepath = Environment.settings;
+  public static async openFile() {
     await window.showTextDocument(
-      await workspace.openTextDocument(filepath),
+      await workspace.openTextDocument(Environment.settings),
       ViewColumn.One,
       true
     );
@@ -75,9 +75,7 @@ export class Settings {
 
     await state.sync.reset();
 
-    if (defaultSettings.watchSettings) {
-      state.watcher.startWatching();
-    }
+    await Initializer.init();
 
     window.showInformationMessage(localize("(info) reset.resetComplete"));
   }

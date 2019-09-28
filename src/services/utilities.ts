@@ -1,7 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { window } from "vscode";
-import { localize } from "~/services/localization";
+import { localize } from "~/services";
 
 export class Utilities {
   public static sleep(ms: number): Promise<void> {

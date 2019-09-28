@@ -25,7 +25,7 @@ export class Webview {
   ): Promise<WebviewPanel> {
     const webview = Webview.webviews[1];
 
-    const content: string = Webview.generateContent({
+    const content = Webview.generateContent({
       settings: JSON.stringify(settings),
       sections: JSON.stringify(Webview.sections),
       content: webview.html,
@@ -51,7 +51,7 @@ export class Webview {
     settingsPanel.webview.html = content;
     settingsPanel.webview.onDidReceiveMessage(message => {
       if (message === "edit") {
-        return Settings.openSettingsFile();
+        return Settings.openFile();
       }
 
       Webview.receiveSettingChange(message);
@@ -62,34 +62,17 @@ export class Webview {
     return settingsPanel;
   }
 
-  public static updateSettingsPage(settings: ISettings) {
-    const webview = Webview.webviews[1];
-
-    if (webview.webview) {
-      webview.webview.webview.html = Webview.generateContent({
-        settings: JSON.stringify(settings),
-        content: webview.html,
-        items: webview.replaceables
-      });
-    }
-  }
-
   public static async receiveSettingChange(message: {
     setting: string;
     value: string;
   }) {
-    const settings = await Settings.get();
-
-    if (has(settings, message.setting)) {
-      set(settings, message.setting, message.value);
-      Settings.set(settings);
-    }
+    await Settings.set(set({}, message.setting, message.value));
   }
 
   public static async openLandingPage() {
     const webview = Webview.webviews[0];
 
-    const content: string = Webview.generateContent({
+    const content = Webview.generateContent({
       changes: JSON.stringify(changes),
       version: Environment.pkg.version,
       content: webview.html,

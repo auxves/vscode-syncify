@@ -1,5 +1,5 @@
 import { basename, resolve } from "path";
-import { OpenDialogOptions, Uri, window, workspace } from "vscode";
+import { Uri, window, workspace } from "vscode";
 import { Environment, FS, localize } from "~/services";
 
 export class CustomFiles {

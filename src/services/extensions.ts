@@ -3,49 +3,51 @@ import { localize } from "~/services";
 
 export class Extensions {
   public static async install(...ids: string[]): Promise<void> {
-    const opts = {
-      location: ProgressLocation.Notification
-    };
+    await window.withProgress(
+      {
+        location: ProgressLocation.Notification
+      },
+      async progress => {
+        const increment = 100 / ids.length;
+        return Promise.all(
+          ids.map(async ext => {
+            await commands.executeCommand(
+              "workbench.extensions.installExtension",
+              ext
+            );
 
-    await window.withProgress(opts, async progress => {
-      const increment = 100 / ids.length;
-      return Promise.all(
-        ids.map(async ext => {
-          await commands.executeCommand(
-            "workbench.extensions.installExtension",
-            ext
-          );
-
-          progress.report({
-            increment,
-            message: localize("(info) download.installed", ext)
-          });
-        })
-      );
-    });
+            progress.report({
+              increment,
+              message: localize("(info) download.installed", ext)
+            });
+          })
+        );
+      }
+    );
   }
 
   public static async uninstall(...ids: string[]): Promise<void> {
-    const opts = {
-      location: ProgressLocation.Notification
-    };
+    await window.withProgress(
+      {
+        location: ProgressLocation.Notification
+      },
+      async progress => {
+        const increment = 100 / ids.length;
+        return Promise.all(
+          ids.map(async ext => {
+            await commands.executeCommand(
+              "workbench.extensions.uninstallExtension",
+              ext
+            );
 
-    await window.withProgress(opts, async progress => {
-      const increment = 100 / ids.length;
-      return Promise.all(
-        ids.map(async ext => {
-          await commands.executeCommand(
-            "workbench.extensions.uninstallExtension",
-            ext
-          );
-
-          progress.report({
-            increment,
-            message: localize("(info) download.uninstalled", ext)
-          });
-        })
-      );
-    });
+            progress.report({
+              increment,
+              message: localize("(info) download.uninstalled", ext)
+            });
+          })
+        );
+      }
+    );
   }
 
   public static get(): string[] {
