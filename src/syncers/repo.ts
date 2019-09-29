@@ -271,10 +271,6 @@ export class RepoSyncer implements ISyncer {
     );
   }
 
-  public async reset(): Promise<void> {
-    // Add repo-specific reset logic
-  }
-
   private async getProfile(): Promise<IProfile> {
     const {
       repo: { profiles, currentProfile }

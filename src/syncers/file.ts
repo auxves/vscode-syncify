@@ -127,10 +127,6 @@ export class FileSyncer implements ISyncer {
     return true;
   }
 
-  public async reset(): Promise<void> {
-    // Add file-specific reset logic
-  }
-
   private async copyFilesToPath(settings: ISettings): Promise<void> {
     const files = await FS.listFiles(Environment.userFolder);
 

@@ -76,8 +76,6 @@ export class Settings {
 
     await FS.delete(store.getState().globalStoragePath);
 
-    await state.sync.reset();
-
     await Initializer.init();
 
     window.showInformationMessage(localize("(info) reset.resetComplete"));

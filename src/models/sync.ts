@@ -3,5 +3,4 @@ export interface ISyncer {
   upload(): Promise<void>;
   download(): Promise<void>;
   isConfigured(): Promise<boolean>;
-  reset(): Promise<void>;
 }

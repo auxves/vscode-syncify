@@ -7,7 +7,7 @@ export class Initializer {
   public static async init() {
     const settings = await Settings.get();
 
-    state.sync = Factory.generate(settings.syncer);
+    const syncer = Factory.generate(settings.syncer);
 
     if (state.watcher) {
       state.watcher.stopWatching();
@@ -21,18 +21,10 @@ export class Initializer {
 
     store.getState().subscriptions.forEach(d => d.dispose());
 
-    Initializer.registerCommands();
-
-    if (settings.syncOnStartup) {
-      await commands.executeCommand("syncify.sync");
-    }
-  }
-
-  private static registerCommands() {
     const cmds: IVSCodeCommands = {
-      "syncify.sync": () => state.sync.sync(),
-      "syncify.upload": () => state.sync.upload(),
-      "syncify.download": () => state.sync.download(),
+      "syncify.sync": () => syncer.sync(),
+      "syncify.upload": () => syncer.upload(),
+      "syncify.download": () => syncer.download(),
       "syncify.reset": () => Settings.reset(),
       "syncify.openSettings": () => Settings.open(),
       "syncify.reinitialize": () => Initializer.init(),
@@ -48,5 +40,9 @@ export class Initializer {
         )
       )
     );
+
+    if (settings.syncOnStartup) {
+      await commands.executeCommand("syncify.sync");
+    }
   }
 }
