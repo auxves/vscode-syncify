@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.16.0
+
+- Use Redux to store `globalStoragePath`, `extensionPath`, and `subscriptions`
+- Use `woff2` format for webview fonts
+
 ## v1.15.0
 
 - Allow for registering custom files using a file picker

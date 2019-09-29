@@ -1,7 +1,7 @@
 import { commands, extensions, window } from "vscode";
 import { watch } from "vscode-chokidar";
-import { state } from "~/models";
 import { Environment, localize, Settings, Utilities } from "~/services";
+import { actions, store } from "~/store";
 
 export class Watcher {
   private watching = false;
@@ -62,7 +62,7 @@ export class Watcher {
       message.dispose();
     });
 
-    state.context.subscriptions.push(disposable);
+    store.dispatch(actions.subscribeDisposable(disposable));
 
     btn.command = "syncify.cancelUpload";
     btn.text = `$(x) ${localize("(command) syncify.cancelUpload")}`;

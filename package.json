@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
-  "version": "1.15.1",
+  "version": "1.16.0",
   "engines": {
     "vscode": "^1.35.0"
   },
@@ -131,6 +131,7 @@
     "fast-glob": "^3.0.4",
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.15",
+    "redux": "^4.0.4",
     "simple-git": "^1.126.0",
     "vscode-chokidar": "^2.1.7"
   },

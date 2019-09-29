@@ -9,13 +9,14 @@ import {
   Utilities,
   Webview
 } from "~/services";
+import { store } from "~/store";
 
 export class Settings {
   public static async get(): Promise<ISettings> {
     const exists = await FS.exists(Environment.settings);
 
     if (!exists) {
-      await FS.mkdir(state.context.globalStoragePath);
+      await FS.mkdir(store.getState().globalStoragePath);
       await FS.write(
         Environment.settings,
         JSON.stringify(defaultSettings, null, 2)
@@ -35,9 +36,11 @@ export class Settings {
   }
 
   public static async set(settings: PartialSettings): Promise<void> {
-    const exists = await FS.exists(state.context.globalStoragePath);
+    const globalStoragePath = store.getState().globalStoragePath;
+
+    const exists = await FS.exists(globalStoragePath);
     if (!exists) {
-      await FS.mkdir(state.context.globalStoragePath);
+      await FS.mkdir(globalStoragePath);
     }
 
     const currentSettings = await Settings.get();
@@ -71,7 +74,7 @@ export class Settings {
 
     state.watcher.stopWatching();
 
-    await FS.delete(state.context.globalStoragePath);
+    await FS.delete(store.getState().globalStoragePath);
 
     await state.sync.reset();
 

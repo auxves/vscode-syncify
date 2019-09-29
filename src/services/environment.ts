@@ -1,6 +1,7 @@
 import { normalize, resolve } from "path";
 import pkg from "~/../package.json";
 import { OperatingSystem, state } from "~/models";
+import { store } from "~/store";
 
 export class Environment {
   public static get userFolder() {
@@ -8,17 +9,17 @@ export class Environment {
 
     const path = process.env.VSCODE_PORTABLE
       ? resolve(process.env.VSCODE_PORTABLE, "user-data")
-      : resolve(state.context.globalStoragePath, "../../..");
+      : resolve(store.getState().globalStoragePath, "../../..");
 
     return resolve(path, "User").concat(slash);
   }
 
   public static get repoFolder() {
-    return resolve(state.context.globalStoragePath, "repo");
+    return resolve(store.getState().globalStoragePath, "repo");
   }
 
   public static get settings() {
-    return resolve(state.context.globalStoragePath, "settings.json");
+    return resolve(store.getState().globalStoragePath, "settings.json");
   }
 
   public static get customFilesFolder() {

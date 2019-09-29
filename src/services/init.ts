@@ -1,6 +1,7 @@
 import { commands, Uri } from "vscode";
 import { IVSCodeCommands, state } from "~/models";
 import { CustomFiles, Factory, Profile, Settings, Watcher } from "~/services";
+import { actions, store } from "~/store";
 
 export class Initializer {
   public static async init() {
@@ -18,7 +19,7 @@ export class Initializer {
       state.watcher.startWatching();
     }
 
-    state.context.subscriptions.forEach(d => d.dispose());
+    store.getState().subscriptions.forEach(d => d.dispose());
 
     Initializer.registerCommands();
 
@@ -40,9 +41,11 @@ export class Initializer {
       "syncify.switchProfile": () => Profile.switch()
     };
 
-    state.context.subscriptions.push(
-      ...Object.entries(cmds).map(([name, fn]) =>
-        commands.registerCommand(name, fn)
+    store.dispatch(
+      actions.setSubscriptions(
+        Object.entries(cmds).map(([name, fn]) =>
+          commands.registerCommand(name, fn)
+        )
       )
     );
   }

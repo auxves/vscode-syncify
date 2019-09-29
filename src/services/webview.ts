@@ -18,6 +18,7 @@ import RepositoryCreationPage from "~/../assets/ui/repository-creation/repositor
 import SettingsPage from "~/../assets/ui/settings/settings.html";
 
 import changes from "~/../assets/release-notes.json";
+import { store } from "~/store";
 
 export class Webview {
   public static async openSettingsPage(
@@ -287,7 +288,7 @@ export class Webview {
       )
       .replace(
         /@PWD/g,
-        Uri.file(resolve(state.context.extensionPath, "assets/ui"))
+        Uri.file(resolve(store.getState().extensionPath, "assets/ui"))
           .with({
             scheme: "vscode-resource"
           })
