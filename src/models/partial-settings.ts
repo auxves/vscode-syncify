@@ -1,4 +1,4 @@
-import { O } from "ts-toolbelt";
+import { DeepPartial } from "utility-types";
 import { ISettings } from "~/models";
 
-export type PartialSettings = O.Optional<ISettings, keyof ISettings, "deep">;
+export type PartialSettings = DeepPartial<ISettings>;
