@@ -7,7 +7,6 @@ import { Environment, FS, Settings } from "~/services";
 import { RepoSyncer } from "~/syncers";
 
 jest.mock("~/services/localization.ts");
-jest.mock("~/models/state.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/repo");
 const pathToRemote = `${cleanupPath}/remote`;

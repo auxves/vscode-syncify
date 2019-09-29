@@ -1,5 +1,6 @@
+import { DeepPartial } from "utility-types";
 import { commands, ViewColumn, window, workspace } from "vscode";
-import { defaultSettings, ISettings, PartialSettings, state } from "~/models";
+import { defaultSettings, ISettings } from "~/models";
 import {
   Environment,
   FS,
@@ -7,16 +8,16 @@ import {
   localize,
   Logger,
   Utilities,
+  Watcher,
   Webview
 } from "~/services";
-import { store } from "~/store";
 
 export class Settings {
   public static async get(): Promise<ISettings> {
     const exists = await FS.exists(Environment.settings);
 
     if (!exists) {
-      await FS.mkdir(store.getState().globalStoragePath);
+      await FS.mkdir(Environment.globalStoragePath);
       await FS.write(
         Environment.settings,
         JSON.stringify(defaultSettings, null, 2)
@@ -35,12 +36,10 @@ export class Settings {
     }
   }
 
-  public static async set(settings: PartialSettings): Promise<void> {
-    const globalStoragePath = store.getState().globalStoragePath;
-
-    const exists = await FS.exists(globalStoragePath);
+  public static async set(settings: DeepPartial<ISettings>): Promise<void> {
+    const exists = await FS.exists(Environment.globalStoragePath);
     if (!exists) {
-      await FS.mkdir(globalStoragePath);
+      await FS.mkdir(Environment.globalStoragePath);
     }
 
     const currentSettings = await Settings.get();
@@ -72,9 +71,9 @@ export class Settings {
       return;
     }
 
-    state.watcher.stopWatching();
+    Watcher.stop();
 
-    await FS.delete(store.getState().globalStoragePath);
+    await FS.delete(Environment.globalStoragePath);
 
     await Initializer.init();
 

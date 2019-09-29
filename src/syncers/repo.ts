@@ -2,7 +2,7 @@ import isEqual from "lodash/isEqual";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, window } from "vscode";
-import { IProfile, ISettings, ISyncer, state } from "~/models";
+import { IProfile, ISettings, ISyncer } from "~/models";
 import {
   Environment,
   Extensions,
@@ -11,6 +11,7 @@ import {
   Logger,
   Pragma,
   Settings,
+  Watcher,
   Webview
 } from "~/services";
 
@@ -99,7 +100,7 @@ export class RepoSyncer implements ISyncer {
   }
 
   public async upload(): Promise<void> {
-    state.watcher.stopWatching();
+    Watcher.stop();
 
     const configured = await this.isConfigured();
     if (!configured) {
@@ -155,12 +156,12 @@ export class RepoSyncer implements ISyncer {
     })();
 
     if (settings.watchSettings) {
-      await state.watcher.startWatching();
+      Watcher.start();
     }
   }
 
   public async download(): Promise<void> {
-    state.watcher.stopWatching();
+    Watcher.stop();
 
     const configured = await this.isConfigured();
     if (!configured) {
@@ -255,7 +256,7 @@ export class RepoSyncer implements ISyncer {
     })();
 
     if (settings.watchSettings) {
-      await state.watcher.startWatching();
+      Watcher.start();
     }
   }
 

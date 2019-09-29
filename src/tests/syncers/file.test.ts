@@ -6,7 +6,6 @@ import { Environment, FS, Settings } from "~/services";
 import { FileSyncer } from "~/syncers";
 
 jest.mock("~/services/localization.ts");
-jest.mock("~/models/state.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/file");
 const pathToExport = `${cleanupPath}/export`;

@@ -1,5 +1,5 @@
 import { commands, Uri } from "vscode";
-import { IVSCodeCommands, state } from "~/models";
+import { IVSCodeCommands } from "~/models";
 import { CustomFiles, Factory, Profile, Settings, Watcher } from "~/services";
 import { actions, store } from "~/store";
 
@@ -9,14 +9,12 @@ export class Initializer {
 
     const syncer = Factory.generate(settings.syncer);
 
-    if (state.watcher) {
-      state.watcher.stopWatching();
-    }
+    Watcher.stop();
 
-    state.watcher = new Watcher(settings.ignoredItems);
+    Watcher.init(settings.ignoredItems);
 
     if (settings.watchSettings) {
-      state.watcher.startWatching();
+      Watcher.start();
     }
 
     store.getState().subscriptions.forEach(d => d.dispose());

@@ -1,6 +1,6 @@
 import { normalize, resolve } from "path";
 import pkg from "~/../package.json";
-import { OperatingSystem, state } from "~/models";
+import { OperatingSystem } from "~/models";
 import { store } from "~/store";
 
 export class Environment {
@@ -9,21 +9,29 @@ export class Environment {
 
     const path = process.env.VSCODE_PORTABLE
       ? resolve(process.env.VSCODE_PORTABLE, "user-data")
-      : resolve(store.getState().globalStoragePath, "../../..");
+      : resolve(Environment.globalStoragePath, "../../..");
 
     return resolve(path, "User").concat(slash);
   }
 
   public static get repoFolder() {
-    return resolve(store.getState().globalStoragePath, "repo");
+    return resolve(Environment.globalStoragePath, "repo");
   }
 
   public static get settings() {
-    return resolve(store.getState().globalStoragePath, "settings.json");
+    return resolve(Environment.globalStoragePath, "settings.json");
   }
 
   public static get customFilesFolder() {
     return resolve(Environment.userFolder, "customFiles");
+  }
+
+  public static get globalStoragePath() {
+    return store.getState().globalStoragePath;
+  }
+
+  public static get extensionPath() {
+    return store.getState().extensionPath;
   }
 
   public static os = process.platform as OperatingSystem;

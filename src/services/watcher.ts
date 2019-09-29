@@ -1,42 +1,40 @@
 import { commands, extensions, window } from "vscode";
-import { watch } from "vscode-chokidar";
+import { FSWatcher, watch } from "vscode-chokidar";
 import { Environment, localize, Settings, Utilities } from "~/services";
 import { actions, store } from "~/store";
 
 export class Watcher {
-  private watching = false;
-  private watcher = watch(Environment.userFolder, {
-    ignored: this.ignoredItems
-  });
+  public static init(ignoredItems: string[]) {
+    this.watcher = watch(Environment.userFolder, {
+      ignored: ignoredItems
+    });
 
-  constructor(private ignoredItems: string[]) {
-    extensions.onDidChange(async () => {
-      if (this.watching && window.state.focused) {
-        this.upload();
-      }
+    extensions.onDidChange(() => {
+      if (this.watching && window.state.focused) this.upload();
     });
   }
 
-  public async startWatching() {
-    this.stopWatching();
+  public static start() {
+    if (!this.watcher) return;
+
+    this.stop();
 
     this.watching = true;
 
     this.watcher.addListener("change", async () => {
-      if (this.watching && window.state.focused) {
-        await this.upload();
-      }
+      if (this.watching && window.state.focused) await this.upload();
     });
   }
 
-  public stopWatching() {
-    if (this.watcher) {
-      this.watcher.removeAllListeners();
-    }
+  public static stop() {
+    if (this.watcher) this.watcher.removeAllListeners();
     this.watching = false;
   }
 
-  private async upload() {
+  private static watching = false;
+  private static watcher: FSWatcher;
+
+  private static async upload() {
     const cmds = await commands.getCommands();
     const alreadyInitiated = cmds.some(cmd => cmd === "syncify.cancelUpload");
 

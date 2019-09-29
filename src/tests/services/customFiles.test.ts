@@ -5,7 +5,6 @@ import { Uri } from "vscode";
 import { CustomFiles, Environment, FS } from "~/services";
 
 jest.mock("~/services/localization.ts");
-jest.mock("~/models/state.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/custom-file");
 const pathToSource = `${cleanupPath}/source`;

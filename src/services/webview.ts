@@ -1,24 +1,19 @@
-import has from "lodash/has";
 import set from "lodash/set";
 import { resolve } from "path";
 import { URL } from "url";
 import { env, Uri, ViewColumn, WebviewPanel, window } from "vscode";
+import changes from "~/../assets/release-notes.json";
+import LandingPage from "~/../assets/ui/landing/landing.html";
+import RepositoryCreationPage from "~/../assets/ui/repository-creation/repository-creation.html";
+import SettingsPage from "~/../assets/ui/settings/settings.html";
 import {
   IGenerationOptions,
   ISettings,
   IWebview,
   IWebviewSection,
-  state,
   UISettingType
 } from "~/models";
 import { Environment, localize, OAuth, Settings } from "~/services";
-
-import LandingPage from "~/../assets/ui/landing/landing.html";
-import RepositoryCreationPage from "~/../assets/ui/repository-creation/repository-creation.html";
-import SettingsPage from "~/../assets/ui/settings/settings.html";
-
-import changes from "~/../assets/release-notes.json";
-import { store } from "~/store";
 
 export class Webview {
   public static async openSettingsPage(
@@ -288,7 +283,7 @@ export class Webview {
       )
       .replace(
         /@PWD/g,
-        Uri.file(resolve(store.getState().extensionPath, "assets/ui"))
+        Uri.file(resolve(Environment.extensionPath, "assets/ui"))
           .with({
             scheme: "vscode-resource"
           })

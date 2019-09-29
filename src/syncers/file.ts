@@ -1,6 +1,6 @@
 import { basename, relative, resolve } from "path";
 import { commands, extensions, window } from "vscode";
-import { ISettings, ISyncer, state } from "~/models";
+import { ISettings, ISyncer } from "~/models";
 import {
   Environment,
   Extensions,
@@ -9,6 +9,7 @@ import {
   Logger,
   Pragma,
   Settings,
+  Watcher,
   Webview
 } from "~/services";
 
@@ -20,7 +21,7 @@ export class FileSyncer implements ISyncer {
   }
 
   public async upload(): Promise<void> {
-    state.watcher.stopWatching();
+    Watcher.stop();
 
     const configured = await this.isConfigured();
     if (!configured) {
@@ -44,12 +45,12 @@ export class FileSyncer implements ISyncer {
     window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
 
     if (settings.watchSettings) {
-      await state.watcher.startWatching();
+      Watcher.start();
     }
   }
 
   public async download(): Promise<void> {
-    state.watcher.stopWatching();
+    Watcher.stop();
 
     const configured = await this.isConfigured();
     if (!configured) {
@@ -108,7 +109,7 @@ export class FileSyncer implements ISyncer {
     window.setStatusBarMessage(localize("(info) download.downloaded"), 2000);
 
     if (settings.watchSettings) {
-      await state.watcher.startWatching();
+      Watcher.start();
     }
   }
 

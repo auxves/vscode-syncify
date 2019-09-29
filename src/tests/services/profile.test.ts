@@ -4,7 +4,6 @@ import { resolve } from "path";
 import { Environment, Initializer, Profile, Settings } from "~/services";
 
 jest.mock("~/services/localization.ts");
-jest.mock("~/models/state.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/prpfile");
 const testFolder = `${cleanupPath}/test`;
