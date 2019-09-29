@@ -10,6 +10,10 @@
 
 Visit the [Quick Start Guide][link:quickstart] to get started.
 
+## Need Help?
+
+Feel free to join our Slack [here][link:slack] or email me at arnohovhannisyan0@gmail.com.
+
 ## Advantages over [Settings Sync][link:settings-sync]
 
 - No annoying popups
@@ -32,6 +36,7 @@ Visit the [Quick Start Guide][link:quickstart] to get started.
 [link:shanalikhan]: https://github.com/shanalikhan
 [link:quickstart]: https://github.com/arnohovhannisyan/vscode-syncify/wiki/Quick-Start
 [link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
+[link:slack]: https://join.slack.com/t/vscode-syncify/shared_invite/enQtNzc5MjYyMjYyNzEwLWQ5MGMxNDljZjk5NmYwNWZlYTBmYjk0MjliNjgyYWRkM2NiYjU2YjExY2RmODg2MGIyZTUwY2YzYWM2YThjMmM
 
 <!-- Badge References -->
 
