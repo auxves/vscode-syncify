@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.16.2
+
+- Use a more uncommon port to prevent Syncify from interfering with other applications
+
 ## v1.16.1
 
 - Fix issue with auto-upload

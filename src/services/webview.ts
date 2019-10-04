@@ -95,12 +95,12 @@ export class Webview {
       const settings = await Settings.get();
       switch (message) {
         case "loginWithGitHub":
-          OAuth.listen(54321);
+          await OAuth.listen(37468);
 
           const host = new URL(settings.github.endpoint).hostname;
           env.openExternal(
             Uri.parse(
-              `https://${host}/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832&redirect_uri=http://localhost:54321/callback`
+              `https://${host}/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832`
             )
           );
           break;
