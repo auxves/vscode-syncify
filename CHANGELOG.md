@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.17.0
+
+- Update webviews for better UX
+
 ## v1.16.2
 
 - Use a more uncommon port to prevent Syncify from interfering with other applications

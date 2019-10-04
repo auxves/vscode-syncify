@@ -2,7 +2,6 @@ import set from "lodash/set";
 import { resolve } from "path";
 import { URL } from "url";
 import { env, Uri, ViewColumn, WebviewPanel, window } from "vscode";
-import changes from "~/../assets/release-notes.json";
 import LandingPage from "~/../assets/ui/landing/landing.html";
 import RepositoryCreationPage from "~/../assets/ui/repository-creation/repository-creation.html";
 import SettingsPage from "~/../assets/ui/settings/settings.html";
@@ -69,8 +68,6 @@ export class Webview {
     const webview = Webview.webviews[0];
 
     const content = Webview.generateContent({
-      changes: JSON.stringify(changes),
-      version: Environment.pkg.version,
       content: webview.html,
       items: webview.replaceables
     });
@@ -104,7 +101,7 @@ export class Webview {
             )
           );
           break;
-        case "editConfiguration":
+        case "openSettings":
           await Webview.openSettingsPage(settings);
           break;
       }
