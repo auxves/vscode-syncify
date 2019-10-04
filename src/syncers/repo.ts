@@ -100,13 +100,13 @@ export class RepoSyncer implements ISyncer {
   }
 
   public async upload(): Promise<void> {
-    Watcher.stop();
-
     const configured = await this.isConfigured();
     if (!configured) {
       Webview.openLandingPage();
       return;
     }
+
+    Watcher.stop();
 
     await this.init();
 
@@ -161,13 +161,13 @@ export class RepoSyncer implements ISyncer {
   }
 
   public async download(): Promise<void> {
-    Watcher.stop();
-
     const configured = await this.isConfigured();
     if (!configured) {
       Webview.openLandingPage();
       return;
     }
+
+    Watcher.stop();
 
     await this.init();
 

@@ -21,13 +21,13 @@ export class FileSyncer implements ISyncer {
   }
 
   public async upload(): Promise<void> {
-    Watcher.stop();
-
     const configured = await this.isConfigured();
     if (!configured) {
       Webview.openLandingPage();
       return;
     }
+
+    Watcher.stop();
 
     const settings = await Settings.get();
 
@@ -50,13 +50,13 @@ export class FileSyncer implements ISyncer {
   }
 
   public async download(): Promise<void> {
-    Watcher.stop();
-
     const configured = await this.isConfigured();
     if (!configured) {
       Webview.openLandingPage();
       return;
     }
+
+    Watcher.stop();
 
     window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
 
