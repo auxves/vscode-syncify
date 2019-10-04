@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.16.1
+
+- Fix issue with auto-upload
+
 ## v1.16.0
 
 - Use Redux to store `globalStoragePath`, `extensionPath`, and `subscriptions`
