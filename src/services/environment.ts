@@ -1,7 +1,7 @@
 import { normalize, resolve } from "path";
 import pkg from "~/../package.json";
 import { OperatingSystem } from "~/models";
-import { store } from "~/store";
+import { store } from "~/redux/store";
 
 export class Environment {
   public static get userFolder() {

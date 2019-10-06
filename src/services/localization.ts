@@ -94,8 +94,6 @@ export class Localization {
   }
 }
 
-type Localize = (key: string, ...args: string[]) => string;
-
-export const localize: Localize = Localization.prototype.localize.bind(
+export const localize: typeof Localization.prototype.localize = Localization.prototype.localize.bind(
   new Localization()
 );

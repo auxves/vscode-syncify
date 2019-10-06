@@ -1,7 +1,8 @@
 import { commands, Uri } from "vscode";
 import { IVSCodeCommands } from "~/models";
+import { setSubscriptions } from "~/redux/actions";
+import { store } from "~/redux/store";
 import { CustomFiles, Factory, Profile, Settings, Watcher } from "~/services";
-import { actions, store } from "~/store";
 
 export class Initializer {
   public static async init() {
@@ -32,7 +33,7 @@ export class Initializer {
     };
 
     store.dispatch(
-      actions.setSubscriptions(
+      setSubscriptions(
         Object.entries(cmds).map(([name, fn]) =>
           commands.registerCommand(name, fn)
         )
