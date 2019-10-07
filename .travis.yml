@@ -18,6 +18,7 @@ deploy:
     on:
       branch: master
       tags: true
+      condition: $TRAVIS_NODE_VERSION = 10
   - provider: script
     script: yarn vsce publish -p $VS_TOKEN
     skip_cleanup: true
