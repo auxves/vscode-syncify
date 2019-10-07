@@ -34,7 +34,7 @@ it("should localize another language", () => {
 });
 
 it("should return key for invalid key", () => {
-  expect(locale("en")(null)).toBe(null);
+  expect(locale("en")("")).toBe("");
 
   const rand = Math.random().toString();
   expect(locale("en")(rand)).toBe(rand);

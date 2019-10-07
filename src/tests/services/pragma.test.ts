@@ -46,7 +46,7 @@ it("should properly ignore", () => {
     "xyz": "def"
   }`;
 
-  expect(Pragma.processIncoming(null, initial2, initial)).toBe(expected2);
+  expect(Pragma.processIncoming("", initial2, initial)).toBe(expected2);
 });
 
 it("should properly handle brackets", () => {
@@ -107,7 +107,7 @@ describe("host", () => {
 describe("os", () => {
   Object.keys(OperatingSystem).forEach(key => {
     it(`should work on 'OperatingSystem.${key}'`, () => {
-      Environment.os = OperatingSystem[key];
+      Environment.os = OperatingSystem[key as keyof typeof OperatingSystem];
 
       const initial = `{
         // @sync os=${key.toLowerCase()}
@@ -119,7 +119,7 @@ describe("os", () => {
         "abc": "xyz"
       }`;
 
-      expect(Pragma.processIncoming(null, initial)).toBe(expected);
+      expect(Pragma.processIncoming("", initial)).toBe(expected);
     });
   });
 });
@@ -139,7 +139,7 @@ describe("env", () => {
       }`
     };
 
-    expect(Pragma.processIncoming(null, valid.initial)).toBe(valid.expected);
+    expect(Pragma.processIncoming("", valid.initial)).toBe(valid.expected);
 
     const invalid = {
       initial: `{
@@ -152,8 +152,6 @@ describe("env", () => {
       }`
     };
 
-    expect(Pragma.processIncoming(null, invalid.initial)).toBe(
-      invalid.expected
-    );
+    expect(Pragma.processIncoming("", invalid.initial)).toBe(invalid.expected);
   });
 });

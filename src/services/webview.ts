@@ -1,290 +1,253 @@
+import merge from "lodash/merge";
 import set from "lodash/set";
 import { resolve } from "path";
 import { URL } from "url";
-import { env, Uri, ViewColumn, WebviewPanel, window } from "vscode";
-import LandingPage from "~/../assets/ui/landing/landing.html";
-import RepositoryCreationPage from "~/../assets/ui/repository-creation/repository-creation.html";
-import SettingsPage from "~/../assets/ui/settings/settings.html";
 import {
-  IGenerationOptions,
+  env,
+  Uri,
+  ViewColumn,
+  WebviewOptions,
+  WebviewPanel,
+  WebviewPanelOptions,
+  window
+} from "vscode";
+import WebviewPage from "~/../assets/ui/index.html";
+import {
+  IReplaceable,
   ISettings,
-  IWebview,
   IWebviewSection,
   UISettingType
 } from "~/models";
 import { Environment, localize, OAuth, Settings } from "~/services";
 
+const sections: IWebviewSection[] = [
+  {
+    name: "General",
+    settings: [
+      {
+        name: localize("(setting) syncer.name"),
+        placeholder: localize("(setting) syncer.placeholder"),
+        correspondingSetting: "syncer",
+        type: UISettingType.Select,
+        options: [
+          {
+            name: "Repo",
+            value: "repo"
+          },
+          {
+            name: "File",
+            value: "file"
+          }
+        ]
+      },
+      {
+        name: localize("(setting) hostname.name"),
+        placeholder: localize("(setting) hostname.placeholder"),
+        correspondingSetting: "hostname",
+        type: UISettingType.TextInput
+      },
+      {
+        name: localize("(setting) ignoredItems.name"),
+        placeholder: localize("(setting) ignoredItems.placeholder"),
+        correspondingSetting: "ignoredItems",
+        type: UISettingType.TextArea
+      },
+      {
+        name: localize("(setting) autoUploadDelay.name"),
+        placeholder: localize("(setting) autoUploadDelay.placeholder"),
+        correspondingSetting: "autoUploadDelay",
+        type: UISettingType.NumberInput
+      },
+      {
+        name: localize("(setting) watchSettings.name"),
+        correspondingSetting: "watchSettings",
+        type: UISettingType.Checkbox
+      },
+      {
+        name: localize("(setting) removeExtensions.name"),
+        correspondingSetting: "removeExtensions",
+        type: UISettingType.Checkbox
+      },
+      {
+        name: localize("(setting) syncOnStartup.name"),
+        correspondingSetting: "syncOnStartup",
+        type: UISettingType.Checkbox
+      },
+      {
+        name: localize("(setting) forceUpload.name"),
+        correspondingSetting: "forceUpload",
+        type: UISettingType.Checkbox
+      },
+      {
+        name: localize("(setting) forceDownload.name"),
+        correspondingSetting: "forceDownload",
+        type: UISettingType.Checkbox
+      }
+    ]
+  },
+  {
+    name: "Repo Syncer",
+    settings: [
+      {
+        name: localize("(setting) repo.url.name"),
+        placeholder: localize("(setting) repo.url.placeholder"),
+        correspondingSetting: "repo.url",
+        type: UISettingType.TextInput
+      }
+    ]
+  },
+  {
+    name: "File Syncer",
+    settings: [
+      {
+        name: localize("(setting) file.path.name"),
+        placeholder: localize("(setting) file.path.placeholder"),
+        correspondingSetting: "file.path",
+        type: UISettingType.TextInput
+      }
+    ]
+  }
+];
+
 export class Webview {
   public static async openSettingsPage(
     settings: ISettings
   ): Promise<WebviewPanel> {
-    const webview = Webview.webviews[1];
+    const content = this.generateContent("settings", [
+      ["@SETTINGS", JSON.stringify(settings)],
+      ["@SECTIONS", JSON.stringify(sections)]
+    ]);
 
-    const content = Webview.generateContent({
-      settings: JSON.stringify(settings),
-      sections: JSON.stringify(Webview.sections),
-      content: webview.html,
-      items: webview.replaceables
-    });
+    return this.createPanel({
+      content,
+      id: "settings",
+      title: "Syncify Settings",
+      onMessage: message => {
+        if (message === "edit") return Settings.openFile();
 
-    if (webview.webview) {
-      webview.webview.webview.html = content;
-      webview.webview.reveal();
-      return webview.webview;
-    }
-
-    const settingsPanel = window.createWebviewPanel(
-      "syncifySettings",
-      "Syncify Settings",
-      ViewColumn.One,
-      {
-        retainContextWhenHidden: true,
-        enableScripts: true
+        return Settings.set(set({}, message.setting, message.value));
       }
-    );
-
-    settingsPanel.webview.html = content;
-    settingsPanel.webview.onDidReceiveMessage(message => {
-      if (message === "edit") {
-        return Settings.openFile();
-      }
-
-      Webview.receiveSettingChange(message);
     });
-
-    webview.webview = settingsPanel;
-    settingsPanel.onDidDispose(() => (webview.webview = null));
-    return settingsPanel;
-  }
-
-  public static async receiveSettingChange(message: {
-    setting: string;
-    value: string;
-  }) {
-    await Settings.set(set({}, message.setting, message.value));
   }
 
   public static async openLandingPage() {
-    const webview = Webview.webviews[0];
+    const content = this.generateContent("landing");
 
-    const content = Webview.generateContent({
-      content: webview.html,
-      items: webview.replaceables
-    });
+    return this.createPanel({
+      content,
+      id: "landing",
+      title: "Welcome to Syncify",
+      onMessage: async message => {
+        const settings = await Settings.get();
+        switch (message) {
+          case "loginWithGitHub":
+            await OAuth.listen(37468);
 
-    if (webview.webview) {
-      webview.webview.webview.html = content;
-      webview.webview.reveal();
-      return webview.webview;
-    }
-
-    const landingPanel = window.createWebviewPanel(
-      "landingPage",
-      "Welcome to Syncify",
-      ViewColumn.One,
-      {
-        retainContextWhenHidden: true,
-        enableScripts: true
-      }
-    );
-
-    landingPanel.webview.onDidReceiveMessage(async message => {
-      const settings = await Settings.get();
-      switch (message) {
-        case "loginWithGitHub":
-          await OAuth.listen(37468);
-
-          const host = new URL(settings.github.endpoint).hostname;
-          env.openExternal(
-            Uri.parse(
-              `https://${host}/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832`
-            )
-          );
-          break;
-        case "openSettings":
-          await Webview.openSettingsPage(settings);
-          break;
+            const host = new URL(settings.github.endpoint).hostname;
+            env.openExternal(
+              Uri.parse(
+                `https://${host}/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832`
+              )
+            );
+            break;
+          case "openSettings":
+            await this.openSettingsPage(settings);
+            break;
+        }
       }
     });
-
-    landingPanel.webview.html = content;
-    webview.webview = landingPanel;
-    landingPanel.onDidDispose(() => (webview.webview = null));
-    return landingPanel;
   }
 
-  public static async openRepositoryCreationPage(
-    token: string,
-    user: string,
-    host: URL
-  ) {
-    const webview = Webview.webviews[2];
-
-    const content = Webview.generateContent({
-      github: JSON.stringify({
-        token,
-        user,
-        host
-      }),
-      content: webview.html,
-      items: webview.replaceables
-    });
-
-    if (webview.webview) {
-      webview.webview.webview.html = content;
-      webview.webview.reveal();
-      return webview.webview;
-    }
-
-    const repositoryCreationPanel = window.createWebviewPanel(
-      "repositoryCreation",
-      "Repository Creation",
-      ViewColumn.One,
-      {
-        retainContextWhenHidden: true,
-        enableScripts: true
-      }
-    );
-
-    repositoryCreationPanel.webview.onDidReceiveMessage(async message => {
-      if (message.close) {
-        return repositoryCreationPanel.dispose();
-      }
-      Settings.set({
-        repo: {
-          url: message
-        }
-      });
-    });
-
-    repositoryCreationPanel.webview.html = content;
-    webview.webview = repositoryCreationPanel;
-    repositoryCreationPanel.onDidDispose(() => (webview.webview = null));
-    return repositoryCreationPanel;
-  }
-
-  private static sections: IWebviewSection[] = [
-    {
-      name: "General",
-      settings: [
-        {
-          name: localize("(setting) syncer.name"),
-          placeholder: localize("(setting) syncer.placeholder"),
-          correspondingSetting: "syncer",
-          type: UISettingType.Select,
-          options: [
-            {
-              name: "Repo",
-              value: "repo"
-            },
-            {
-              name: "File",
-              value: "file"
-            }
-          ]
-        },
-        {
-          name: localize("(setting) hostname.name"),
-          placeholder: localize("(setting) hostname.placeholder"),
-          correspondingSetting: "hostname",
-          type: UISettingType.TextInput
-        },
-        {
-          name: localize("(setting) ignoredItems.name"),
-          placeholder: localize("(setting) ignoredItems.placeholder"),
-          correspondingSetting: "ignoredItems",
-          type: UISettingType.TextArea
-        },
-        {
-          name: localize("(setting) autoUploadDelay.name"),
-          placeholder: localize("(setting) autoUploadDelay.placeholder"),
-          correspondingSetting: "autoUploadDelay",
-          type: UISettingType.NumberInput
-        },
-        {
-          name: localize("(setting) watchSettings.name"),
-          correspondingSetting: "watchSettings",
-          type: UISettingType.Checkbox
-        },
-        {
-          name: localize("(setting) removeExtensions.name"),
-          correspondingSetting: "removeExtensions",
-          type: UISettingType.Checkbox
-        },
-        {
-          name: localize("(setting) syncOnStartup.name"),
-          correspondingSetting: "syncOnStartup",
-          type: UISettingType.Checkbox
-        },
-        {
-          name: localize("(setting) forceUpload.name"),
-          correspondingSetting: "forceUpload",
-          type: UISettingType.Checkbox
-        },
-        {
-          name: localize("(setting) forceDownload.name"),
-          correspondingSetting: "forceDownload",
-          type: UISettingType.Checkbox
-        }
-      ]
-    },
-    {
-      name: "Repo Syncer",
-      settings: [
-        {
-          name: localize("(setting) repo.url.name"),
-          placeholder: localize("(setting) repo.url.placeholder"),
-          correspondingSetting: "repo.url",
-          type: UISettingType.TextInput
-        }
-      ]
-    },
-    {
-      name: "File Syncer",
-      settings: [
-        {
-          name: localize("(setting) file.path.name"),
-          placeholder: localize("(setting) file.path.placeholder"),
-          correspondingSetting: "file.path",
-          type: UISettingType.TextInput
-        }
-      ]
-    }
-  ];
-
-  private static webviews: IWebview[] = [
-    {
-      html: LandingPage,
-      replaceables: [["@CHANGES", "changes"], ["@VERSION", "version"]]
-    },
-    {
-      html: SettingsPage,
-      replaceables: [["@SETTINGS", "settings"], ["@SECTIONS", "sections"]]
-    },
-    {
-      html: RepositoryCreationPage,
-      replaceables: [["@GITHUB", "github"]]
-    }
-  ];
-
-  private static generateContent(options: IGenerationOptions): string {
-    const toReplace = options.items.map<[string, string]>(([find, replace]) => [
-      find,
-      escape(options[replace])
+  public static async openRepositoryCreationPage(options: {
+    token: string;
+    user: string;
+    host: URL;
+  }) {
+    const content = this.generateContent("repo", [
+      ["@GITHUB", JSON.stringify(options)]
     ]);
+
+    return this.createPanel({
+      content,
+      id: "repo",
+      title: "Configure Repository",
+      onMessage: async message => {
+        if (message.close && this.pages.repo) return this.pages.repo.dispose();
+
+        Settings.set({
+          repo: {
+            url: message
+          }
+        });
+      }
+    });
+  }
+
+  private static pages = {
+    landing: null as WebviewPanel | null,
+    repo: null as WebviewPanel | null,
+    settings: null as WebviewPanel | null
+  };
+
+  private static createPanel(options: {
+    id: keyof typeof Webview.pages;
+    content: string;
+    title: string;
+    viewColumn?: ViewColumn;
+    options?: WebviewPanelOptions & WebviewOptions;
+    onMessage: (message: any) => any;
+  }): WebviewPanel {
+    const { id, content } = options;
+
+    const page = this.pages[id];
+
+    if (page) {
+      page.webview.html = content;
+      page.reveal();
+      return page;
+    }
+
+    const defaultOpts = {
+      retainContextWhenHidden: true,
+      enableScripts: true
+    };
+
+    const panel = window.createWebviewPanel(
+      id,
+      options.title,
+      options.viewColumn || ViewColumn.One,
+      merge(defaultOpts, options.options || {})
+    );
+
+    panel.webview.html = content;
+
+    panel.webview.onDidReceiveMessage(options.onMessage);
+    panel.onDidDispose(() => {
+      this.pages[id] = null;
+    });
+
+    this.pages[id] = panel;
+    return panel;
+  }
+
+  private static generateContent(
+    page: string,
+    replaceables: IReplaceable[] = []
+  ): string {
+    const toReplace = replaceables.map<[string, string]>(([find, replace]) => [
+      find,
+      escape(replace)
+    ]);
+
+    const assetPath = resolve(Environment.extensionPath, "assets/ui");
+    const pwdUri = Uri.file(assetPath).with({ scheme: "vscode-resource" });
 
     return toReplace
       .reduce(
         (acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
-        options.content
+        WebviewPage
       )
-      .replace(
-        /@PWD/g,
-        Uri.file(resolve(Environment.extensionPath, "assets/ui"))
-          .with({
-            scheme: "vscode-resource"
-          })
-          .toString()
-      );
+      .replace(/@PAGE/g, page)
+      .replace(/@PWD/g, pwdUri.toString());
   }
 }

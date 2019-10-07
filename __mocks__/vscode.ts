@@ -28,5 +28,5 @@ export const commands = {
 };
 
 export enum ProgressLocation {
-  Notification = null
+  Notification = 1
 }

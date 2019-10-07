@@ -9,6 +9,4 @@ export * from "~/models/sync";
 export * from "~/models/replaceable";
 export * from "~/models/ui/webview-section";
 export * from "~/models/ui/webview-setting";
-export * from "~/models/ui/webview";
 export * from "~/models/ui/selectOption";
-export * from "~/models/ui/generationOptions";

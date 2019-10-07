@@ -14,9 +14,7 @@ export class Initializer {
 
     Watcher.init(settings.ignoredItems);
 
-    if (settings.watchSettings) {
-      Watcher.start();
-    }
+    if (settings.watchSettings) Watcher.start();
 
     store.getState().subscriptions.forEach(d => d.dispose());
 
@@ -40,8 +38,6 @@ export class Initializer {
       )
     );
 
-    if (settings.syncOnStartup) {
-      await commands.executeCommand("syncify.sync");
-    }
+    if (settings.syncOnStartup) await commands.executeCommand("syncify.sync");
   }
 }

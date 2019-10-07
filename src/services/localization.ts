@@ -6,7 +6,7 @@ import { Environment, Logger } from "~/services";
 
 export class Localization {
   private bundle = this.resolveLanguagePack();
-  private options: { locale: string };
+  private options: { locale: string } = { locale: "en" };
 
   constructor(private locale?: string) {}
 
@@ -24,11 +24,9 @@ export class Localization {
         )
       };
 
-      if (this.locale) {
-        this.options.locale = this.locale;
-      }
+      if (this.locale) this.options.locale = this.locale;
     } catch (err) {
-      Logger.error(err, null, true);
+      Logger.error(err, "", true);
       return;
     }
   }
@@ -48,8 +46,11 @@ export class Localization {
     const languageFormat = "package.nls{0}.json";
     const defaultLanguage = languageFormat.replace("{0}", "");
 
-    const rootPath = extensions.getExtension(Environment.extensionId)
-      .extensionPath;
+    const ext = extensions.getExtension(Environment.extensionId);
+
+    if (!ext) return {};
+
+    const rootPath = ext.extensionPath;
 
     const resolvedLanguage = this.recurseCandidates(
       rootPath,
@@ -72,8 +73,8 @@ export class Localization {
 
       return { ...defaultLanguageBundle, ...resolvedLanguageBundle };
     } catch (err) {
-      Logger.error(err, null, true);
-      return;
+      Logger.error(err, "", true);
+      return {};
     }
   }
 
@@ -84,12 +85,13 @@ export class Localization {
   ): string {
     const filename = format.replace("{0}", `.${candidate}`);
     const filepath = resolve(rootPath, filename);
-    if (existsSync(filepath)) {
-      return filename;
-    }
+
+    if (existsSync(filepath)) return filename;
+
     if (candidate.split("-")[0] !== candidate) {
       return this.recurseCandidates(rootPath, format, candidate.split("-")[0]);
     }
+
     return format.replace("{0}", "");
   }
 }

@@ -3,13 +3,11 @@ import { localize } from "~/services";
 
 export class Logger {
   public static error(
-    error: Error,
+    error: Error | null,
     message: string,
     showNotification: boolean
   ): void {
-    if (error) {
-      console.error(error);
-    }
+    if (error) console.error(error);
 
     if (showNotification) {
       window.showErrorMessage(message || localize("(error) checkConsole"));

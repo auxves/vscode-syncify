@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["./*"]
+    },
     "module": "commonjs",
     "target": "es2015",
     "outDir": "out",
@@ -8,11 +12,8 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "rootDirs": ["src", "assets"],
-    "baseUrl": "src",
-    "paths": {
-      "~/*": ["./*"]
-    }
+    "strict": true
   },
-  "include": ["src/**/index.ts", "src/**/*.ts"],
-  "exclude": ["node_modules", "**/__mocks__/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/__mocks__/**/*"]
 }

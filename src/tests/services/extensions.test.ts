@@ -8,7 +8,7 @@ function setExtensions(exts: string[]): void {
     extensionPath: "",
     isActive: false,
     exports: null,
-    activate: () => null
+    activate: () => Promise.resolve()
   }));
 }
 

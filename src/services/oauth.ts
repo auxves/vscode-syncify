@@ -19,6 +19,9 @@ export class OAuth {
       app.get("/callback", async (req, res) => {
         try {
           const token = await OAuth.getToken(req.param("code"), host);
+
+          if (!token) return;
+
           const user = await OAuth.getUser(token, host);
 
           res.send(`
@@ -50,14 +53,14 @@ export class OAuth {
 
           OAuth.saveCredentials(token, user);
 
-          Webview.openRepositoryCreationPage(token, user, host);
+          Webview.openRepositoryCreationPage({ token, user, host });
         } catch (err) {
-          Logger.error(err, null, true);
+          Logger.error(err, "", true);
           return;
         }
       });
     } catch (err) {
-      Logger.error(err, null, true);
+      Logger.error(err, "", true);
       return;
     }
   }
@@ -74,7 +77,7 @@ export class OAuth {
       Logger.error(
         err,
         host.hostname === "github.com"
-          ? null
+          ? ""
           : localize("(error) invalidEnterpriseURL"),
         true
       );
@@ -109,7 +112,7 @@ export class OAuth {
       Logger.error(
         err,
         host.hostname === "github.com"
-          ? null
+          ? ""
           : localize("(error) invalidEnterpriseURL"),
         true
       );

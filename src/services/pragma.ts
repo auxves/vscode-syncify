@@ -59,7 +59,7 @@ export class Pragma {
             shouldComment
           );
         } catch (err) {
-          Logger.error(err, null, true);
+          Logger.error(err, "", true);
           continue;
         }
       } else if (Pragma.ignoreRegex.test(lines[index])) {
@@ -84,8 +84,8 @@ export class Pragma {
       );
       JSON.parse(uncommented);
     } catch (err) {
-      Logger.error(err, null, true);
-      return;
+      Logger.error(err, "", true);
+      return "";
     }
 
     return result;
@@ -233,10 +233,15 @@ export class Pragma {
   }
 
   private static osFromString(osName: string): OperatingSystem {
-    return {
-      windows: OperatingSystem.Windows,
-      linux: OperatingSystem.Linux,
-      mac: OperatingSystem.Mac
-    }[osName];
+    switch (osName) {
+      case "windows":
+        return OperatingSystem.Windows;
+      case "mac":
+        return OperatingSystem.Mac;
+      case "linux":
+        return OperatingSystem.Linux;
+      default:
+        return OperatingSystem.Windows;
+    }
   }
 }

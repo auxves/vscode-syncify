@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.18.0
+
+- Minor improvements to webviews
+
 ## v1.17.0
 
 - Update webviews for better UX

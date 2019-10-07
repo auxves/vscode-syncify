@@ -44,9 +44,7 @@ export class FileSyncer implements ISyncer {
 
     window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
 
-    if (settings.watchSettings) {
-      Watcher.start();
-    }
+    if (settings.watchSettings) Watcher.start();
   }
 
   public async download(): Promise<void> {
@@ -69,9 +67,9 @@ export class FileSyncer implements ISyncer {
         const extensionsExist = await FS.exists(
           resolve(settings.file.path, "extensions.json")
         );
-        if (!extensionsExist) {
-          return [];
-        }
+
+        if (!extensionsExist) return [];
+
         return JSON.parse(
           await FS.read(resolve(settings.file.path, "extensions.json"))
         );
@@ -83,9 +81,12 @@ export class FileSyncer implements ISyncer {
         const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
         if (toDelete.length) {
-          const needToReload = toDelete.some(
-            ext => extensions.getExtension(ext).isActive
-          );
+          const needToReload = toDelete.some(name => {
+            const ext = extensions.getExtension(name);
+            if (!ext) return false;
+
+            return ext.isActive;
+          });
 
           await Extensions.uninstall(...toDelete);
 
@@ -102,28 +103,22 @@ export class FileSyncer implements ISyncer {
         }
       }
     } catch (err) {
-      Logger.error(err, null, true);
+      Logger.error(err, "", true);
       return;
     }
 
     window.setStatusBarMessage(localize("(info) download.downloaded"), 2000);
 
-    if (settings.watchSettings) {
-      Watcher.start();
-    }
+    if (settings.watchSettings) Watcher.start();
   }
 
   public async isConfigured(): Promise<boolean> {
     const settings = await Settings.get();
 
-    if (!settings.file.path) {
-      return false;
-    }
+    if (!settings.file.path) return false;
 
     const folderExists = await FS.exists(settings.file.path);
-    if (!folderExists) {
-      await FS.mkdir(settings.file.path);
-    }
+    if (!folderExists) await FS.mkdir(settings.file.path);
 
     return true;
   }
@@ -167,9 +162,7 @@ export class FileSyncer implements ISyncer {
         const currentContents = await (async () => {
           const exists = await FS.exists(newPath);
 
-          if (exists) {
-            return FS.read(newPath);
-          }
+          if (exists) return FS.read(newPath);
 
           return "{}";
         })();
@@ -188,9 +181,7 @@ export class FileSyncer implements ISyncer {
           return;
         }
 
-        if (currentContents !== contents) {
-          return FS.write(newPath, contents);
-        }
+        if (currentContents !== contents) return FS.write(newPath, contents);
       })
     );
   }

@@ -16,22 +16,18 @@ import {
 } from "~/services";
 
 export class RepoSyncer implements ISyncer {
-  private git: SimpleGit;
+  private git: SimpleGit = createSimpleGit().silent(true);
 
   public async init() {
     const folderExists = await FS.exists(Environment.repoFolder);
 
-    if (!folderExists) {
-      await FS.mkdir(Environment.repoFolder);
-    }
+    if (!folderExists) await FS.mkdir(Environment.repoFolder);
 
-    this.git = createSimpleGit(Environment.repoFolder).silent(true);
+    await this.git.cwd(Environment.repoFolder);
 
     const isRepo = await this.git.checkIsRepo();
 
-    if (!isRepo) {
-      await this.git.init();
-    }
+    if (!isRepo) await this.git.init();
 
     const remotes = await this.git.getRemotes(true);
     const origin = remotes.filter(remote => remote.name === "origin")[0];
@@ -155,9 +151,7 @@ export class RepoSyncer implements ISyncer {
       window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
     })();
 
-    if (settings.watchSettings) {
-      Watcher.start();
-    }
+    if (settings.watchSettings) Watcher.start();
   }
 
   public async download(): Promise<void> {
@@ -207,6 +201,7 @@ export class RepoSyncer implements ISyncer {
         if (branches.all.includes(profile.branch)) {
           await this.git.branch(["-D", profile.branch]);
         }
+
         await this.git.fetch();
         await this.git.checkout(`origin/${profile.branch}`);
       }
@@ -229,9 +224,12 @@ export class RepoSyncer implements ISyncer {
           const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
           if (toDelete.length) {
-            const needToReload = toDelete.some(
-              ext => extensions.getExtension(ext).isActive
-            );
+            const needToReload = toDelete.some(name => {
+              const ext = extensions.getExtension(name);
+              if (!ext) return false;
+
+              return ext.isActive;
+            });
 
             await Extensions.uninstall(...toDelete);
 
@@ -241,6 +239,7 @@ export class RepoSyncer implements ISyncer {
                 localize("(info) download.needToReload"),
                 yes
               );
+
               if (result === yes) {
                 commands.executeCommand("workbench.action.reloadWindow");
               }
@@ -248,16 +247,14 @@ export class RepoSyncer implements ISyncer {
           }
         }
       } catch (err) {
-        Logger.error(err, null, true);
+        Logger.error(err, "", true);
         return;
       }
 
       window.setStatusBarMessage(localize("(info) download.downloaded"), 2000);
     })();
 
-    if (settings.watchSettings) {
-      Watcher.start();
-    }
+    if (settings.watchSettings) Watcher.start();
   }
 
   public async isConfigured(): Promise<boolean> {
@@ -300,9 +297,7 @@ export class RepoSyncer implements ISyncer {
 
         const dirExists = await FS.exists(dir);
 
-        if (!dirExists) {
-          await FS.mkdir(dir);
-        }
+        if (!dirExists) await FS.mkdir(dir);
 
         const newPath = resolve(dir, basename(file));
 
@@ -336,9 +331,7 @@ export class RepoSyncer implements ISyncer {
 
         const dirExists = await FS.exists(dir);
 
-        if (!dirExists) {
-          await FS.mkdir(dir);
-        }
+        if (!dirExists) await FS.mkdir(dir);
 
         const filename = basename(file);
 
@@ -346,9 +339,9 @@ export class RepoSyncer implements ISyncer {
 
         const currentContents = await (async () => {
           const exists = await FS.exists(newPath);
-          if (exists) {
-            return FS.read(newPath);
-          }
+
+          if (exists) return FS.read(newPath);
+
           return "{}";
         })();
 
@@ -362,12 +355,11 @@ export class RepoSyncer implements ISyncer {
           if (currentContents !== afterPragma) {
             return FS.write(newPath, afterPragma);
           }
+
           return;
         }
 
-        if (currentContents !== contents) {
-          return FS.write(newPath, contents);
-        }
+        if (currentContents !== contents) return FS.write(newPath, contents);
       })
     );
   }

@@ -37,9 +37,7 @@ export class Watcher {
     const cmds = await commands.getCommands();
     const alreadyInitiated = cmds.some(cmd => cmd === "syncify.cancelUpload");
 
-    if (alreadyInitiated) {
-      return;
-    }
+    if (alreadyInitiated) return;
 
     const { autoUploadDelay: delay } = await Settings.get();
 
@@ -68,8 +66,6 @@ export class Watcher {
     disposable.dispose();
     btn.dispose();
 
-    if (shouldUpload) {
-      commands.executeCommand("syncify.upload");
-    }
+    if (shouldUpload) commands.executeCommand("syncify.upload");
   }
 }

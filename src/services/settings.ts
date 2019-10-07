@@ -31,16 +31,14 @@ export class Settings {
 
       return Utilities.merge(defaultSettings, settings);
     } catch (err) {
-      Logger.error(err, null, true);
-      return;
+      Logger.error(err, "", true);
+      return defaultSettings;
     }
   }
 
   public static async set(settings: DeepPartial<ISettings>): Promise<void> {
     const exists = await FS.exists(Environment.globalStoragePath);
-    if (!exists) {
-      await FS.mkdir(Environment.globalStoragePath);
-    }
+    if (!exists) await FS.mkdir(Environment.globalStoragePath);
 
     const currentSettings = await Settings.get();
 
@@ -67,9 +65,7 @@ export class Settings {
   public static async reset(): Promise<void> {
     const userIsSure = await Utilities.confirm("reset");
 
-    if (!userIsSure) {
-      return;
-    }
+    if (!userIsSure) return;
 
     Watcher.stop();
 

@@ -21,9 +21,7 @@ export class Profile {
       )[0];
     })();
 
-    if (!newProfile) {
-      return;
-    }
+    if (!newProfile) return;
 
     await Settings.set({
       repo: {

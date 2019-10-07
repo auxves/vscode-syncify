@@ -4,9 +4,7 @@ import { Environment, FS, localize } from "~/services";
 
 export class CustomFiles {
   public static async import(uri?: Uri): Promise<void> {
-    if (!workspace.workspaceFolders.length) {
-      return;
-    }
+    if (!workspace.workspaceFolders) return;
 
     const folderExists = await FS.exists(Environment.customFilesFolder);
 
@@ -28,6 +26,8 @@ export class CustomFiles {
         return uri.fsPath;
       }
 
+      if (!workspace.workspaceFolders) return;
+
       if (workspace.workspaceFolders.length === 1) {
         return workspace.workspaceFolders[0].uri.fsPath;
       }
@@ -43,9 +43,7 @@ export class CustomFiles {
         .fsPath;
     })();
 
-    if (!folder) {
-      return;
-    }
+    if (!folder) return;
 
     const filename = await window.showQuickPick(
       allFiles.map(f => basename(f)),
@@ -54,16 +52,14 @@ export class CustomFiles {
       }
     );
 
-    if (!filename) {
-      return;
-    }
+    if (!filename) return;
 
     const filepath = resolve(Environment.customFilesFolder, filename);
     const contents = await FS.readBuffer(filepath);
     await FS.write(resolve(folder, filename), contents);
   }
 
-  public static async register(uri: Uri) {
+  public static async register(uri: Uri | undefined) {
     const folderExists = await FS.exists(Environment.customFilesFolder);
 
     if (!folderExists) {
@@ -78,16 +74,12 @@ export class CustomFiles {
             openLabel: localize("(action) customFiles.selectFile")
           });
 
-          if (!result) {
-            return;
-          }
+          if (!result) return;
 
           return result[0].fsPath;
         })();
 
-    if (!filepath) {
-      return;
-    }
+    if (!filepath) return;
 
     const filename = basename(filepath);
     const contents = await FS.readBuffer(filepath);
