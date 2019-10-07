@@ -6,9 +6,12 @@
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "preLaunchTask": "Compile"
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--user-data-dir=/tmp/vscode-syncify/user-data",
+        "--extensions-dir=/tmp/vscode-syncify/extensions"
+      ],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
 }

@@ -2,9 +2,13 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Compile",
+      "label": "Watch",
       "type": "shell",
-      "command": "yarn compile"
+      "command": "rm -rf /tmp/vscode-syncify && mkdir -p /tmp/vscode-syncify/{extensions,user-data} && yarn watch",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
       "label": "Test",
