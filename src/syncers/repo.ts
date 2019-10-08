@@ -30,7 +30,7 @@ export class RepoSyncer implements ISyncer {
     if (!isRepo) await this.git.init();
 
     const remotes = await this.git.getRemotes(true);
-    const origin = remotes.filter(remote => remote.name === "origin")[0];
+    const origin = remotes.find(remote => remote.name === "origin");
 
     const settings = await Settings.get();
 
@@ -274,7 +274,7 @@ export class RepoSyncer implements ISyncer {
       repo: { profiles, currentProfile }
     } = await Settings.get();
 
-    const profile = profiles.filter(({ name }) => name === currentProfile)[0];
+    const profile = profiles.find(({ name }) => name === currentProfile);
 
     return profile || profiles[0];
   }

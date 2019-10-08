@@ -39,8 +39,13 @@ export class CustomFiles {
         }
       );
 
-      return workspace.workspaceFolders.filter(f => f.name === result)[0].uri
-        .fsPath;
+      const selectedWorkspace = workspace.workspaceFolders.find(
+        f => f.name === result
+      );
+
+      if (!selectedWorkspace) return;
+
+      return selectedWorkspace.uri.fsPath;
     })();
 
     if (!folder) return;

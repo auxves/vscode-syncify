@@ -7,7 +7,7 @@ export class Profile {
 
     const newProfile = await (async () => {
       if (profile) {
-        return repo.profiles.filter(prof => prof.name === profile)[0];
+        return repo.profiles.find(prof => prof.name === profile);
       }
 
       const mappedProfiles = repo.profiles.map(
@@ -16,9 +16,9 @@ export class Profile {
 
       const selected = await window.showQuickPick(mappedProfiles);
 
-      return repo.profiles.filter(
+      return repo.profiles.find(
         prof => `${prof.name} [branch: ${prof.branch}]` === selected
-      )[0];
+      );
     })();
 
     if (!newProfile) return;
