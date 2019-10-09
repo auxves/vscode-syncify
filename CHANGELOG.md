@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.1
+
+- Fix potential issue with reinitialization
+
 ## v2.0.0
 
 - Added ability to resolve merge conflicts between local and remote settings when downloading
