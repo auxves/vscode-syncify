@@ -4,13 +4,15 @@ import { Environment, localize, Settings, Utilities } from "~/services";
 
 export class Watcher {
   public static init(ignoredItems: string[]) {
-    this.watcher = watch(Environment.userFolder, {
-      ignored: ignoredItems
-    });
+    if (!this.watcher) {
+      this.watcher = watch(Environment.userFolder, {
+        ignored: ignoredItems
+      });
 
-    extensions.onDidChange(() => {
-      if (this.watching && window.state.focused) this.upload();
-    });
+      extensions.onDidChange(
+        () => this.watching && window.state.focused && this.upload()
+      );
+    }
   }
 
   public static start() {

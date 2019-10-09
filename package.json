@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "Sync your settings and extensions across multiple machines",
   "license": "MIT",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "engines": {
     "vscode": "^1.35.0"
   },
