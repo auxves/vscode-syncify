@@ -19,6 +19,7 @@ Visit the [Quick Start Guide][link:quickstart] to get started.
 ## Advantages over [Settings Sync][link:settings-sync]
 
 - No annoying popups
+- Merge conflict resolution supported
 - Multiple profiles with support for hot-switching (currently only supported on `Git` method)
 - Simpler settings with intellisense
 - Multiple sync methods

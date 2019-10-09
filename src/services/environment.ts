@@ -26,6 +26,10 @@ export class Environment {
     return resolve(Environment.userFolder, "customFiles");
   }
 
+  public static get conflictsFolder() {
+    return resolve(Environment.globalStoragePath, "conflicts");
+  }
+
   public static get globalStoragePath() {
     return store.getState().globalStoragePath;
   }
