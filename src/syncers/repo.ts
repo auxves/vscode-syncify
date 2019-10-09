@@ -193,6 +193,13 @@ export class RepoSyncer implements ISyncer {
 
       await this.copyFilesToRepo();
 
+      const installedExtensions = Extensions.get();
+
+      await FS.write(
+        resolve(Environment.repoFolder, "extensions.json"),
+        JSON.stringify(installedExtensions, null, 2)
+      );
+
       const branches = await this.git.branchLocal();
 
       if (branches.current !== profile.branch) {
@@ -220,7 +227,7 @@ export class RepoSyncer implements ISyncer {
 
       try {
         const extensionsFromFile = JSON.parse(
-          await FS.read(resolve(Environment.repoFolder, "extensions.json"))
+          await FS.read(resolve(Environment.userFolder, "extensions.json"))
         );
 
         await Extensions.install(...Extensions.getMissing(extensionsFromFile));
