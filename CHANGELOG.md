@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.0
+
+- Added ability to resolve merge conflicts between local and remote settings when downloading
+
 ## v1.18.0
 
 - Minor improvements to webviews

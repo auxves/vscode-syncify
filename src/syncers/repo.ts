@@ -1,7 +1,7 @@
 import isEqual from "lodash/isEqual";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
-import { commands, extensions, window } from "vscode";
+import { commands, extensions, ViewColumn, window, workspace } from "vscode";
 import { IProfile, ISettings, ISyncer } from "~/models";
 import {
   Environment,
@@ -191,13 +191,15 @@ export class RepoSyncer implements ISyncer {
         return;
       }
 
-      await this.git.add(".");
-      await this.git.commit("Reset");
-      await this.git.reset("hard");
+      await this.copyFilesToRepo();
 
       const branches = await this.git.branchLocal();
 
       if (branches.current !== profile.branch) {
+        await this.git.add(".");
+        await this.git.commit("Reset");
+        await this.git.reset("hard");
+
         if (branches.all.includes(profile.branch)) {
           await this.git.branch(["-D", profile.branch]);
         }
@@ -206,10 +208,13 @@ export class RepoSyncer implements ISyncer {
         await this.git.checkout(`origin/${profile.branch}`);
       }
 
-      await this.git.pull("origin", profile.branch, {
-        "--force": null,
-        "--allow-unrelated-histories": null
-      });
+      const stash = await this.git.stash();
+
+      await this.git.pull("origin", profile.branch);
+
+      if (stash.trim() !== "No local changes to save") {
+        await this.git.stash(["pop"]);
+      }
 
       await this.copyFilesFromRepo(settings);
 
@@ -320,7 +325,39 @@ export class RepoSyncer implements ISyncer {
 
     await Promise.all(
       files.map(async file => {
-        const contents = await FS.read(file);
+        let contents = await FS.read(file);
+
+        const hasConflict = (c: string) =>
+          ["<<<<<<<", "=======", ">>>>>>>"].every(s => c.includes(s));
+
+        if (hasConflict(contents)) {
+          await FS.mkdir(Environment.conflictsFolder);
+
+          const tmpPath = resolve(
+            Environment.conflictsFolder,
+            `${Math.random()}-${basename(file)}`
+          );
+
+          await FS.write(tmpPath, contents);
+
+          const doc = await workspace.openTextDocument(tmpPath);
+
+          await window.showTextDocument(doc, ViewColumn.One, true);
+
+          await new Promise(async res => {
+            const d = workspace.onDidSaveTextDocument(e => {
+              if (e.fileName === doc.fileName && !hasConflict(e.getText())) {
+                commands.executeCommand("workbench.action.closeActiveEditor");
+                d.dispose();
+                res();
+              }
+            });
+          });
+
+          contents = await FS.read(tmpPath);
+
+          await FS.delete(tmpPath);
+        }
 
         const dir = dirname(
           resolve(
