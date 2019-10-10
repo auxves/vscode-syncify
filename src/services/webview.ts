@@ -1,7 +1,6 @@
 import merge from "lodash/merge";
 import set from "lodash/set";
 import { resolve } from "path";
-import { URL } from "url";
 import {
   env,
   Uri,
@@ -143,10 +142,9 @@ export class Webview {
           case "loginWithGitHub":
             await OAuth.listen(37468);
 
-            const host = new URL(settings.github.endpoint).hostname;
             env.openExternal(
               Uri.parse(
-                `https://${host}/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832`
+                `https://github.com/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832`
               )
             );
             break;
@@ -161,7 +159,6 @@ export class Webview {
   public static async openRepositoryCreationPage(options: {
     token: string;
     user: string;
-    host: URL;
   }) {
     const content = this.generateContent("repo", [
       ["@GITHUB", JSON.stringify(options)]

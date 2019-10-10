@@ -10,11 +10,6 @@ export interface ISettings {
   file: {
     path: string;
   };
-  github: {
-    token: string;
-    endpoint: string;
-    user: string;
-  };
   ignoredItems: string[];
   autoUploadDelay: number;
   watchSettings: boolean;
@@ -39,11 +34,6 @@ export const defaultSettings: ISettings = {
   },
   file: {
     path: ""
-  },
-  github: {
-    token: "",
-    endpoint: "https://github.com",
-    user: ""
   },
   ignoredItems: [
     "**/workspaceStorage",

@@ -1,14 +1,11 @@
 import axios from "axios";
 import express from "express";
-import { URL, URLSearchParams } from "url";
-import { localize, Logger, Settings, Webview } from "~/services";
+import { URLSearchParams } from "url";
+import { Logger, Webview } from "~/services";
 
 export class OAuth {
   public static async listen(port: number) {
     try {
-      const settings = await Settings.get();
-      const host = new URL(settings.github.endpoint);
-
       const app = express().use(
         express.json(),
         express.urlencoded({ extended: false })
@@ -18,11 +15,11 @@ export class OAuth {
 
       app.get("/callback", async (req, res) => {
         try {
-          const token = await OAuth.getToken(req.param("code"), host);
+          const token = await OAuth.getToken(req.param("code"));
 
           if (!token) return;
 
-          const user = await OAuth.getUser(token, host);
+          const user = await OAuth.getUser(token);
 
           res.send(`
           <!doctype html>
@@ -51,9 +48,7 @@ export class OAuth {
 
           server.close();
 
-          OAuth.saveCredentials(token, user);
-
-          Webview.openRepositoryCreationPage({ token, user, host });
+          Webview.openRepositoryCreationPage({ token, user });
         } catch (err) {
           Logger.error(err, "", true);
           return;
@@ -65,38 +60,23 @@ export class OAuth {
     }
   }
 
-  private static async getUser(token: string, host: URL) {
+  private static async getUser(token: string) {
     try {
-      const response = await axios.get(`https://api.${host.hostname}/user`, {
+      const response = await axios.get(`https://api.github.com/user`, {
         method: "GET",
         headers: { Authorization: `token ${token}` }
       });
 
       return response.data.login;
     } catch (err) {
-      Logger.error(
-        err,
-        host.hostname === "github.com"
-          ? ""
-          : localize("(error) invalidEnterpriseURL"),
-        true
-      );
+      Logger.error(err, "", true);
     }
   }
 
-  private static async saveCredentials(token: string, user: string) {
-    Settings.set({
-      github: {
-        token,
-        user
-      }
-    });
-  }
-
-  private static async getToken(code: string, host: URL) {
+  private static async getToken(code: string) {
     try {
       const response = await axios.get(
-        `https://${host.hostname}/login/oauth/access_token`,
+        `https://github.com/login/oauth/access_token`,
         {
           method: "POST",
           data: {
@@ -109,13 +89,7 @@ export class OAuth {
 
       return new URLSearchParams(response.data).get("access_token");
     } catch (err) {
-      Logger.error(
-        err,
-        host.hostname === "github.com"
-          ? ""
-          : localize("(error) invalidEnterpriseURL"),
-        true
-      );
+      Logger.error(err, "", true);
     }
   }
 }
