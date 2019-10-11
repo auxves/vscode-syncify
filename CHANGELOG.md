@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.2
+
+- Update CI configuration
+
 ## v2.1.1
 
 - Slight improvements to Settings

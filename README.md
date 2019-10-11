@@ -6,7 +6,22 @@
 [![License][badge-img:license]][badge-link:license]
 [![Deps][badge-img:deps]][badge-link:deps]
 
-## Getting Started
+Syncify can sync your VSCode settings and extensions across all your devices using multiple methods.
+
+## Installation
+
+### Using the Extensions Panel
+
+1. Open the extensions panel: `Ctrl+Shift+X` (`Cmd` on Mac)
+2. Type `syncify`
+3. Click `Install`
+
+### Using the Command Palette
+
+1. Open the command palette: `Ctrl+P` (`Cmd` on Mac)
+2. Type `ext install arnohovhannisyan.syncify`
+
+## Quick Start
 
 Visit the [Quick Start Guide][link:quickstart] to get started.
 
@@ -30,13 +45,15 @@ Visit the [Quick Start Guide][link:quickstart] to get started.
 - Notification for extension installation/uninstallation progress
 - Status bar button to cancel auto-upload
 
-## Special Thanks
+## Credits
 
-- [shanalikhan][link:shanalikhan] - This extension was inspired by [Settings Sync][link:settings-sync]
+- [@arnohovhannisyan (me)][link:me] - Extension author
+- [@shanalikhan][link:shanalikhan] - This extension was inspired by [Settings Sync][link:settings-sync]
 
 <!-- Link References -->
 
 [link:shanalikhan]: https://github.com/shanalikhan
+[link:me]: https://github.com/arnohovhannisyan
 [link:quickstart]: https://github.com/arnohovhannisyan/vscode-syncify/wiki/Quick-Start
 [link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
 [link:slack]: https://join.slack.com/t/vscode-syncify/shared_invite/enQtNzc5MjYyMjYyNzEwLWQ5MGMxNDljZjk5NmYwNWZlYTBmYjk0MjliNjgyYWRkM2NiYjU2YjExY2RmODg2MGIyZTUwY2YzYWM2YThjMmM
