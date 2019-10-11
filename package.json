@@ -132,7 +132,6 @@
     "lodash": "^4.17.15",
     "redux": "^4.0.4",
     "simple-git": "^1.126.0",
-    "vscode": "^1.1.36",
     "vscode-chokidar": "^2.1.7"
   },
   "jest": {
