@@ -109,9 +109,7 @@ const sections: IWebviewSection[] = [
 ];
 
 export class Webview {
-  public static async openSettingsPage(
-    settings: ISettings
-  ): Promise<WebviewPanel> {
+  public static openSettingsPage(settings: ISettings) {
     const content = this.generateContent("settings", [
       ["@SETTINGS", JSON.stringify(settings)],
       ["@SECTIONS", JSON.stringify(sections)]
@@ -129,7 +127,7 @@ export class Webview {
     });
   }
 
-  public static async openLandingPage() {
+  public static openLandingPage() {
     const content = this.generateContent("landing");
 
     return this.createPanel({
@@ -147,16 +145,17 @@ export class Webview {
                 `https://github.com/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832`
               )
             );
+
             break;
           case "openSettings":
-            await this.openSettingsPage(settings);
+            this.openSettingsPage(settings);
             break;
         }
       }
     });
   }
 
-  public static async openRepositoryCreationPage(options: {
+  public static openRepositoryCreationPage(options: {
     token: string;
     user: string;
   }) {
@@ -228,7 +227,7 @@ export class Webview {
   }
 
   private static generateContent(
-    page: string,
+    page: keyof typeof Webview.pages,
     replaceables: IReplaceable[] = []
   ): string {
     const toReplace = replaceables.map<[string, string]>(([find, replace]) => [

@@ -51,7 +51,7 @@ export class Settings {
   }
 
   public static async open() {
-    await Webview.openSettingsPage(await Settings.get());
+    return Webview.openSettingsPage(await Settings.get());
   }
 
   public static async openFile() {
