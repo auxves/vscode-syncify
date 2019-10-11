@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.1.1
+
+- Slight improvements to Settings
+
+## v2.1.0
+
+- List existing repositories after logging in
+
 ## v2.0.1
 
 - Fix potential issue with reinitialization
