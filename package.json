@@ -6,7 +6,7 @@
   "license": "MIT",
   "version": "2.1.0",
   "engines": {
-    "vscode": "^1.35.0"
+    "vscode": "^1.39.0"
   },
   "icon": "assets/logo.png",
   "homepage": "https://github.com/arnohovhannisyan/vscode-syncify",
@@ -95,7 +95,6 @@
     "vscode:prepublish": "yarn generate:schema && webpack --config .webpack/production.js",
     "compile": "webpack --config .webpack/development.js",
     "watch": "webpack --config .webpack/development.js --watch",
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "lint": "tslint -c ./tslint.json -p .",
     "test": "jest",
     "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json",
@@ -107,6 +106,7 @@
     "@types/jest": "^24.0.18",
     "@types/lodash": "^4.14.144",
     "@types/node": "^12.7.12",
+    "@types/vscode": "^1.39.0",
     "awesome-typescript-loader": "^5.2.1",
     "jest": "^24.9.0",
     "jest-raw-loader": "^1.0.1",
@@ -121,7 +121,6 @@
     "typescript-json-schema": "^0.40.0",
     "utility-types": "^3.8.0",
     "vsce": "^1.67.1",
-    "vscode": "^1.1.36",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.9"
   },
@@ -133,6 +132,7 @@
     "lodash": "^4.17.15",
     "redux": "^4.0.4",
     "simple-git": "^1.126.0",
+    "vscode": "^1.1.36",
     "vscode-chokidar": "^2.1.7"
   },
   "jest": {

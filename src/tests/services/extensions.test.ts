@@ -2,7 +2,7 @@ import { extensions } from "vscode";
 import { Extensions } from "~/services";
 
 function setExtensions(exts: string[]): void {
-  extensions.all = exts.map(ext => ({
+  (extensions.all as any) = exts.map(ext => ({
     id: ext,
     packageJSON: { isBuiltin: false },
     extensionPath: "",

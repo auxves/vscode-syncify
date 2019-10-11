@@ -110,7 +110,7 @@ const sections: IWebviewSection[] = [
 
 export class Webview {
   public static openSettingsPage(settings: ISettings) {
-    const content = this.generateContent("settings", [
+    const content = this.generateContent([
       ["@SETTINGS", JSON.stringify(settings)],
       ["@SECTIONS", JSON.stringify(sections)]
     ]);
@@ -128,7 +128,7 @@ export class Webview {
   }
 
   public static openLandingPage() {
-    const content = this.generateContent("landing");
+    const content = this.generateContent();
 
     return this.createPanel({
       content,
@@ -159,7 +159,7 @@ export class Webview {
     token: string;
     user: string;
   }) {
-    const content = this.generateContent("repo", [
+    const content = this.generateContent([
       ["@GITHUB", JSON.stringify(options)]
     ]);
 
@@ -215,7 +215,11 @@ export class Webview {
       merge(defaultOpts, options.options || {})
     );
 
-    panel.webview.html = content;
+    const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));
+
+    panel.webview.html = content
+      .replace(/@PWD/g, panel.webview.asWebviewUri(pwdUri).toString())
+      .replace(/@PAGE/g, id);
 
     panel.webview.onDidReceiveMessage(options.onMessage);
     panel.onDidDispose(() => {
@@ -226,24 +230,15 @@ export class Webview {
     return panel;
   }
 
-  private static generateContent(
-    page: keyof typeof Webview.pages,
-    replaceables: IReplaceable[] = []
-  ): string {
+  private static generateContent(replaceables: IReplaceable[] = []): string {
     const toReplace = replaceables.map<[string, string]>(([find, replace]) => [
       find,
       escape(replace)
     ]);
 
-    const assetPath = resolve(Environment.extensionPath, "assets/ui");
-    const pwdUri = Uri.file(assetPath).with({ scheme: "vscode-resource" });
-
-    return toReplace
-      .reduce(
-        (acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
-        WebviewPage
-      )
-      .replace(/@PAGE/g, page)
-      .replace(/@PWD/g, pwdUri.toString());
+    return toReplace.reduce(
+      (acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
+      WebviewPage
+    );
   }
 }
