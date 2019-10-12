@@ -17,6 +17,7 @@ deploy:
     api_key: $GITHUB_TOKEN
     file_glob: true
     file: "*.vsix"
+    edge: true
     release_notes_file: release-notes.log
     skip_cleanup: true
     on:

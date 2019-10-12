@@ -64,15 +64,13 @@ export class FileSyncer implements ISyncer {
 
     try {
       const extensionsFromFile = await (async () => {
-        const extensionsExist = await FS.exists(
-          resolve(settings.file.path, "extensions.json")
-        );
+        const path = resolve(settings.file.path, "extensions.json");
+
+        const extensionsExist = await FS.exists(path);
 
         if (!extensionsExist) return [];
 
-        return JSON.parse(
-          await FS.read(resolve(settings.file.path, "extensions.json"))
-        );
+        return JSON.parse(await FS.read(path));
       })();
 
       await Extensions.install(...Extensions.getMissing(extensionsFromFile));
@@ -83,20 +81,18 @@ export class FileSyncer implements ISyncer {
         if (toDelete.length) {
           const needToReload = toDelete.some(name => {
             const ext = extensions.getExtension(name);
-            if (!ext) return false;
-
-            return ext.isActive;
+            return ext ? ext.isActive : false;
           });
 
           await Extensions.uninstall(...toDelete);
 
           if (needToReload) {
-            const yes = localize("(btn) yes");
             const result = await window.showInformationMessage(
               localize("(info) download.needToReload"),
-              yes
+              localize("(btn) yes")
             );
-            if (result === yes) {
+
+            if (result) {
               commands.executeCommand("workbench.action.reloadWindow");
             }
           }
@@ -160,9 +156,7 @@ export class FileSyncer implements ISyncer {
         );
 
         const currentContents = await (async () => {
-          const exists = await FS.exists(newPath);
-
-          if (exists) return FS.read(newPath);
+          if (await FS.exists(newPath)) return FS.read(newPath);
 
           return "{}";
         })();
