@@ -11,7 +11,7 @@ script:
   - yarn vsce package
 before_deploy:
   - echo $'## Changes\n\n' > release-notes.log
-  - git log $(git tag | sort -r | sed -n "2p")..@ --oneline --pretty=format:"%h %f" | awk '{print "- "$0}' >> release-notes.log
+  - git log $(git tag | sort -r | sed -n "2p")..@ --oneline --pretty=format:"%h %s" | awk '{print "- "$0}' >> release-notes.log
 deploy:
   - provider: releases
     api_key: $GITHUB_TOKEN
