@@ -10,16 +10,14 @@ script:
   - yarn test
   - yarn vsce package
 before_deploy:
-  - export RELEASE_NOTES=$(git log $(git tag | sort -r | sed -n "2p")..@ --oneline --pretty=format:"%h %f" | awk '{print "- "$0}')
+  - echo $'## Changes\n\n' > release-notes.log
+  - git log $(git tag | sort -r | sed -n "2p")..@ --oneline --pretty=format:"%h %f" | awk '{print "- "$0}' >> release-notes.log
 deploy:
   - provider: releases
     api_key: $GITHUB_TOKEN
     file_glob: true
     file: "*.vsix"
-    release_notes: |
-      ## Changes:
-
-      ${RELEASE_NOTES}
+    release_notes_file: release-notes.log
     skip_cleanup: true
     on:
       branch: master
