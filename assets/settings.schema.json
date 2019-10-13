@@ -38,20 +38,6 @@
         "forceUpload": {
             "type": "boolean"
         },
-        "github": {
-            "properties": {
-                "endpoint": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                },
-                "user": {
-                    "type": "string"
-                }
-            },
-            "type": "object"
-        },
         "hostname": {
             "type": "string"
         },

@@ -22,9 +22,10 @@ export class Watcher {
 
     this.watching = true;
 
-    this.watcher.addListener("change", async () => {
-      if (this.watching && window.state.focused) await this.upload();
-    });
+    this.watcher.addListener(
+      "change",
+      () => this.watching && window.state.focused && this.upload()
+    );
   }
 
   public static stop() {
@@ -37,9 +38,8 @@ export class Watcher {
 
   private static async upload() {
     const cmds = await commands.getCommands();
-    const alreadyInitiated = cmds.some(cmd => cmd === "syncify.cancelUpload");
 
-    if (alreadyInitiated) return;
+    if (cmds.includes("syncify.cancelUpload")) return;
 
     const { autoUploadDelay: delay } = await Settings.get();
 

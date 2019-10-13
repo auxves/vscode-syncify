@@ -1,5 +1,6 @@
 import glob from "fast-glob";
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
+import normalize from "normalize-path";
 import { Settings } from "~/services";
 
 export class FS {
@@ -33,7 +34,7 @@ export class FS {
   ): Promise<string[]> {
     const settings = Settings.get();
 
-    return glob(`${path}/**/*`, {
+    return glob(`${normalize(path)}/**/*`, {
       dot: true,
       ignore: ignoredItems || (await settings).ignoredItems,
       absolute: true
