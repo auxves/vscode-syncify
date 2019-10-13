@@ -1,10 +1,12 @@
 import axios from "axios";
-import express from "express";
+import express, { Request } from "express";
 import { URLSearchParams } from "url";
-import { Logger, Webview } from "~/services";
+import { Environment, Logger, Webview } from "~/services";
+
+type Provider = "github" | "gitlab" | "bitbucket";
 
 export class OAuth {
-  public static async listen(port: number) {
+  public static async listen(port: number, provider: Provider) {
     try {
       const app = express().use(
         express.json(),
@@ -13,13 +15,18 @@ export class OAuth {
 
       const server = app.listen(port);
 
+      app.get("/implicit", async req => {
+        const token = req.param("token");
+        const user = await this.getUser(token, provider);
+
+        if (!user) return;
+
+        Webview.openRepositoryCreationPage({ token, user, provider });
+      });
+
       app.get("/callback", async (req, res) => {
         try {
-          const token = await OAuth.getToken(req.param("code"));
-
-          if (!token) return;
-
-          const user = await OAuth.getUser(token);
+          const data = await this.handleRequest(req, provider);
 
           res.send(`
           <!doctype html>
@@ -42,13 +49,25 @@ export class OAuth {
                     margin: 0;
                   }
                 </style>
+                <script>
+                  if(location.hash) {
+                    const params = new URLSearchParams(location.hash.slice(1));
+                    fetch(\`http://localhost:37468/implicit?token=\${params.get("access_token")}\`);
+                  }
+                </script>
             </body>
           </html>
           `);
 
           server.close();
 
-          Webview.openRepositoryCreationPage({ token, user });
+          if (!data) return;
+
+          const { user, token } = data;
+
+          if (!user || !token) return;
+
+          Webview.openRepositoryCreationPage({ token, user, provider });
         } catch (err) {
           Logger.error(err, "", true);
           return;
@@ -60,14 +79,33 @@ export class OAuth {
     }
   }
 
-  private static async getUser(token: string) {
+  private static async getUser(token: string, provider: Provider) {
     try {
-      const response = await axios.get(`https://api.github.com/user`, {
+      const urls = {
+        github: `https://api.github.com/user`,
+        gitlab: `https://gitlab.com/api/v4/user`,
+        bitbucket: `https://api.bitbucket.org/2.0/user`
+      };
+
+      const authHeader = {
+        github: `token ${token}`,
+        gitlab: `Bearer ${token}`,
+        bitbucket: `Bearer ${token}`
+      };
+
+      const response = await axios.get(urls[provider], {
         method: "GET",
-        headers: { Authorization: `token ${token}` }
+        headers: { Authorization: authHeader[provider] }
       });
 
-      return response.data.login;
+      switch (provider) {
+        case "github":
+          return response.data.login as string;
+        case "gitlab":
+          return response.data.username as string;
+        case "bitbucket":
+          return response.data.username as string;
+      }
     } catch (err) {
       Logger.error(err, "", true);
     }
@@ -81,7 +119,7 @@ export class OAuth {
           method: "POST",
           data: {
             code,
-            client_id: "0b56a3589b5582d11832",
+            client_id: Environment.oauthClientIds.github,
             client_secret: "3ac123310971a75f0a26e979ce0030467fc32682"
           }
         }
@@ -91,5 +129,17 @@ export class OAuth {
     } catch (err) {
       Logger.error(err, "", true);
     }
+  }
+
+  private static async handleRequest(req: Request, provider: Provider) {
+    if (provider !== "github") return;
+
+    const token = await OAuth.getToken(req.param("code"));
+
+    if (!token) return;
+
+    const user = await OAuth.getUser(token, provider);
+
+    return { token, user };
   }
 }

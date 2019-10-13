@@ -134,22 +134,40 @@ export class Webview {
       content,
       id: "landing",
       title: "Welcome to Syncify",
-      onMessage: async message => {
+      onMessage: async (message: string) => {
         const settings = await Settings.get();
-        switch (message) {
-          case "loginWithGitHub":
-            await OAuth.listen(37468);
 
-            env.openExternal(
-              Uri.parse(
-                `https://github.com/login/oauth/authorize?scope=repo%20read:user&client_id=0b56a3589b5582d11832`
-              )
-            );
+        if (message === "settings") {
+          return this.openSettingsPage(settings);
+        }
 
-            break;
-          case "openSettings":
-            this.openSettingsPage(settings);
-            break;
+        const provider = (() => {
+          switch (message) {
+            case "github":
+              return "github";
+            case "gitlab":
+              return "gitlab";
+            case "bitbucket":
+              return "bitbucket";
+            default:
+              return "github";
+          }
+        })();
+
+        const services = ["github", "gitlab", "bitbucket"];
+
+        const clientIds = Environment.oauthClientIds;
+
+        const authUrls = {
+          github: `https://github.com/login/oauth/authorize?scope=repo%20read:user&client_id=${clientIds.github}`,
+          gitlab: `https://gitlab.com/oauth/authorize?client_id=${clientIds.gitlab}&redirect_uri=http://localhost:37468/callback&response_type=token&scope=api+read_repository+read_user+write_repository`,
+          bitbucket: `https://bitbucket.org/site/oauth2/authorize?client_id=${clientIds.bitbucket}&response_type=token`
+        };
+
+        if (services.includes(message)) {
+          await OAuth.listen(37468, provider);
+
+          env.openExternal(Uri.parse(authUrls[provider]));
         }
       }
     });
@@ -158,10 +176,9 @@ export class Webview {
   public static openRepositoryCreationPage(options: {
     token: string;
     user: string;
+    provider: "github" | "gitlab" | "bitbucket";
   }) {
-    const content = this.generateContent([
-      ["@GITHUB", JSON.stringify(options)]
-    ]);
+    const content = this.generateContent([["@AUTH", JSON.stringify(options)]]);
 
     return this.createPanel({
       content,
@@ -215,7 +232,9 @@ export class Webview {
       merge(defaultOpts, options.options || {})
     );
 
-    const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));
+    const pwdUri = Uri.file(
+      resolve(Environment.extensionPath, "assets/ui-test")
+    );
 
     panel.webview.html = content
       .replace(/@PWD/g, panel.webview.asWebviewUri(pwdUri).toString())

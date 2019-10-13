@@ -42,4 +42,10 @@ export class Environment {
 
   public static extensionId = `${pkg.publisher}.${pkg.name}`;
   public static pkg = pkg;
+
+  public static oauthClientIds = {
+    github: "0b56a3589b5582d11832",
+    gitlab: "32c563edb04c312c7959fd1c4863e883878ed4af1f39d6d788c9758d4916a0db",
+    bitbucket: "zhkr5tYsZsUfN9KkDn"
+  };
 }

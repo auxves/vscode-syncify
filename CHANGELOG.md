@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.0.0
+
+- Add support for GitLab
+- Add support for BitBucket
+
 ## v2.2.0
 
 - Fix glob matching on Windows
