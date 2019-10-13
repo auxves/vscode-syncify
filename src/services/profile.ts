@@ -1,4 +1,4 @@
-import { window } from "vscode";
+import { commands, window } from "vscode";
 import { localize, Settings } from "~/services";
 
 export class Profile {
@@ -32,5 +32,7 @@ export class Profile {
     await window.showInformationMessage(
       localize("(info) repo.switchedProfile", newProfile.name)
     );
+
+    await commands.executeCommand("syncify.download");
   }
 }

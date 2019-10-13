@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.2.0
+
+- Fix glob matching on Windows
+- Automatically download after switching profile
+
+## v2.1.3
+
+- Minor improvements to the changelog
+
 ## v2.1.2
 
 - Update CI configuration
