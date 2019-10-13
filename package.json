@@ -2,7 +2,7 @@
   "name": "syncify",
   "displayName": "Syncify",
   "publisher": "arnohovhannisyan",
-  "description": "Sync your settings and extensions across multiple machines",
+  "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
   "version": "2.2.0",
   "engines": {
