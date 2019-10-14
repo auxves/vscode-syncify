@@ -232,9 +232,7 @@ export class Webview {
       merge(defaultOpts, options.options || {})
     );
 
-    const pwdUri = Uri.file(
-      resolve(Environment.extensionPath, "assets/ui-test")
-    );
+    const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));
 
     panel.webview.html = content
       .replace(/@PWD/g, panel.webview.asWebviewUri(pwdUri).toString())

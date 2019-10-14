@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.1
+
+- Fix issues introduced in v3.0.0 related to the new GitLab and BitBucket support
+
 ## v3.0.0
 
 - Add support for GitLab
