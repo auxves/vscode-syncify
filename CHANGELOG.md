@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.1
+
+- Make sure all errors are presented with the Webview
+
 ## v3.1.0
 
 - Present errors in a more user-friendly way using Webviews

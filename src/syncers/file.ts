@@ -21,162 +21,183 @@ export class FileSyncer implements ISyncer {
   }
 
   public async upload(): Promise<void> {
-    const configured = await this.isConfigured();
-    if (!configured) {
-      Webview.openLandingPage();
-      return;
-    }
-
+    const settings = await Settings.get();
     Watcher.stop();
 
-    const settings = await Settings.get();
+    await (async () => {
+      try {
+        const configured = await this.isConfigured();
+        if (!configured) {
+          Webview.openLandingPage();
+          return;
+        }
 
-    window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
+        window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
-    const installedExtensions = Extensions.get();
+        const installedExtensions = Extensions.get();
 
-    await FS.write(
-      resolve(settings.file.path, "extensions.json"),
-      JSON.stringify(installedExtensions, null, 2)
-    );
+        await FS.write(
+          resolve(settings.file.path, "extensions.json"),
+          JSON.stringify(installedExtensions, null, 2)
+        );
 
-    await this.copyFilesToPath(settings);
+        await this.copyFilesToPath(settings);
 
-    window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
+        window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
+      } catch (err) {
+        Logger.error(err);
+      }
+    })();
 
     if (settings.watchSettings) Watcher.start();
   }
 
   public async download(): Promise<void> {
-    const configured = await this.isConfigured();
-    if (!configured) {
-      Webview.openLandingPage();
-      return;
-    }
-
+    const settings = await Settings.get();
     Watcher.stop();
 
-    window.setStatusBarMessage(localize("(info) download.downloading"), 2000);
+    await (async () => {
+      try {
+        const configured = await this.isConfigured();
+        if (!configured) {
+          Webview.openLandingPage();
+          return;
+        }
 
-    const settings = await Settings.get();
+        window.setStatusBarMessage(
+          localize("(info) download.downloading"),
+          2000
+        );
 
-    await this.copyFilesFromPath(settings);
+        await this.copyFilesFromPath(settings);
 
-    try {
-      const extensionsFromFile = await (async () => {
-        const path = resolve(settings.file.path, "extensions.json");
+        const extensionsFromFile = await (async () => {
+          const path = resolve(settings.file.path, "extensions.json");
 
-        const extensionsExist = await FS.exists(path);
+          const extensionsExist = await FS.exists(path);
 
-        if (!extensionsExist) return [];
+          if (!extensionsExist) return [];
 
-        return JSON.parse(await FS.read(path));
-      })();
+          return JSON.parse(await FS.read(path));
+        })();
 
-      await Extensions.install(...Extensions.getMissing(extensionsFromFile));
+        await Extensions.install(...Extensions.getMissing(extensionsFromFile));
 
-      if (settings.removeExtensions) {
-        const toDelete = Extensions.getUnneeded(extensionsFromFile);
+        if (settings.removeExtensions) {
+          const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
-        if (toDelete.length) {
-          const needToReload = toDelete.some(name => {
-            const ext = extensions.getExtension(name);
-            return ext ? ext.isActive : false;
-          });
+          if (toDelete.length) {
+            const needToReload = toDelete.some(name => {
+              const ext = extensions.getExtension(name);
+              return ext ? ext.isActive : false;
+            });
 
-          await Extensions.uninstall(...toDelete);
+            await Extensions.uninstall(...toDelete);
 
-          if (needToReload) {
-            const result = await window.showInformationMessage(
-              localize("(info) download.needToReload"),
-              localize("(btn) yes")
-            );
+            if (needToReload) {
+              const result = await window.showInformationMessage(
+                localize("(info) download.needToReload"),
+                localize("(btn) yes")
+              );
 
-            if (result) {
-              commands.executeCommand("workbench.action.reloadWindow");
+              if (result) {
+                commands.executeCommand("workbench.action.reloadWindow");
+              }
             }
           }
         }
-      }
-    } catch (err) {
-      Logger.error(err);
-      return;
-    }
 
-    window.setStatusBarMessage(localize("(info) download.downloaded"), 2000);
+        window.setStatusBarMessage(
+          localize("(info) download.downloaded"),
+          2000
+        );
+      } catch (err) {
+        Logger.error(err);
+      }
+    })();
 
     if (settings.watchSettings) Watcher.start();
   }
 
   public async isConfigured(): Promise<boolean> {
     const settings = await Settings.get();
+    const { path } = settings.file;
 
-    if (!settings.file.path) return false;
+    if (!path) return false;
 
-    const folderExists = await FS.exists(settings.file.path);
-    if (!folderExists) await FS.mkdir(settings.file.path);
+    const folderExists = await FS.exists(path);
+    if (!folderExists) await FS.mkdir(path);
 
     return true;
   }
 
   private async copyFilesToPath(settings: ISettings): Promise<void> {
-    const files = await FS.listFiles(Environment.userFolder);
+    try {
+      const files = await FS.listFiles(Environment.userFolder);
 
-    const filesToPragma = ["settings.json", "keybindings.json"];
+      const filesToPragma = ["settings.json", "keybindings.json"];
 
-    await Promise.all(
-      files.map(async file => {
-        const contents = await FS.read(file);
-        const newPath = resolve(
-          settings.file.path,
-          relative(Environment.userFolder, file)
-        );
+      await Promise.all(
+        files.map(async file => {
+          const contents = await FS.read(file);
 
-        if (filesToPragma.includes(basename(file))) {
-          return FS.write(newPath, Pragma.processOutgoing(contents));
-        }
+          const newPath = resolve(
+            settings.file.path,
+            relative(Environment.userFolder, file)
+          );
 
-        return FS.write(newPath, contents);
-      })
-    );
+          if (filesToPragma.includes(basename(file))) {
+            return FS.write(newPath, Pragma.processOutgoing(contents));
+          }
+
+          return FS.write(newPath, contents);
+        })
+      );
+    } catch (err) {
+      Logger.error(err);
+    }
   }
 
   private async copyFilesFromPath(settings: ISettings): Promise<void> {
-    const files = await FS.listFiles(settings.file.path);
+    try {
+      const files = await FS.listFiles(settings.file.path);
 
-    const filesToPragma = ["settings.json", "keybindings.json"];
+      const filesToPragma = ["settings.json", "keybindings.json"];
 
-    await Promise.all(
-      files.map(async file => {
-        const contents = await FS.read(file);
+      await Promise.all(
+        files.map(async file => {
+          const contents = await FS.read(file);
 
-        const newPath = resolve(
-          Environment.userFolder,
-          relative(settings.file.path, file)
-        );
-
-        const currentContents = await (async () => {
-          if (await FS.exists(newPath)) return FS.read(newPath);
-
-          return "{}";
-        })();
-
-        if (filesToPragma.includes(basename(file))) {
-          const afterPragma = Pragma.processIncoming(
-            settings.hostname,
-            contents,
-            currentContents
+          const newPath = resolve(
+            Environment.userFolder,
+            relative(settings.file.path, file)
           );
 
-          if (currentContents !== afterPragma) {
-            return FS.write(newPath, afterPragma);
+          const currentContents = await (async () => {
+            if (await FS.exists(newPath)) return FS.read(newPath);
+
+            return "{}";
+          })();
+
+          if (filesToPragma.includes(basename(file))) {
+            const afterPragma = Pragma.processIncoming(
+              settings.hostname,
+              contents,
+              currentContents
+            );
+
+            if (currentContents !== afterPragma) {
+              return FS.write(newPath, afterPragma);
+            }
+
+            return;
           }
 
-          return;
-        }
-
-        if (currentContents !== contents) return FS.write(newPath, contents);
-      })
-    );
+          if (currentContents !== contents) return FS.write(newPath, contents);
+        })
+      );
+    } catch (err) {
+      Logger.error(err);
+    }
   }
 }

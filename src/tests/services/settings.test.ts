@@ -20,13 +20,17 @@ beforeEach(() => Promise.all([ensureDir(testFolder)]));
 afterEach(() => remove(cleanupPath));
 
 it("should set settings", async () => {
-  await FS.write(Environment.settings, JSON.stringify(defaultSettings));
+  try {
+    await FS.write(Environment.settings, JSON.stringify(defaultSettings));
 
-  await Settings.set({ watchSettings: true });
+    await Settings.set({ watchSettings: true });
 
-  const fetched: ISettings = JSON.parse(await FS.read(Environment.settings));
+    const fetched: ISettings = JSON.parse(await FS.read(Environment.settings));
 
-  expect(fetched.watchSettings).toBeTruthy();
+    expect(fetched.watchSettings).toBeTruthy();
+  } catch (err) {
+    expect(err).toBeFalsy();
+  }
 });
 
 it("should get settings", async () => {
