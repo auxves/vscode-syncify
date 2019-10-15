@@ -59,7 +59,7 @@ export class Pragma {
             shouldComment
           );
         } catch (err) {
-          Logger.error(err, "", true);
+          Logger.error(err);
           continue;
         }
       } else if (Pragma.ignoreRegex.test(lines[index])) {
@@ -84,7 +84,7 @@ export class Pragma {
       );
       JSON.parse(uncommented);
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
       return "";
     }
 

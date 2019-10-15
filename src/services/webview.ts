@@ -127,6 +127,18 @@ export class Webview {
     });
   }
 
+  public static openErrorPage(error: Error) {
+    const content = this.generateContent([
+      ["@ERROR", JSON.stringify(error.message)]
+    ]);
+
+    return this.createPanel({
+      content,
+      id: "error",
+      title: "Syncify Error"
+    });
+  }
+
   public static openLandingPage() {
     const content = this.generateContent();
 
@@ -199,7 +211,8 @@ export class Webview {
   private static pages = {
     landing: null as WebviewPanel | null,
     repo: null as WebviewPanel | null,
-    settings: null as WebviewPanel | null
+    settings: null as WebviewPanel | null,
+    error: null as WebviewPanel | null
   };
 
   private static createPanel(options: {
@@ -208,7 +221,7 @@ export class Webview {
     title: string;
     viewColumn?: ViewColumn;
     options?: WebviewPanelOptions & WebviewOptions;
-    onMessage: (message: any) => any;
+    onMessage?: (message: any) => any;
   }): WebviewPanel {
     const { id, content } = options;
 
@@ -238,7 +251,8 @@ export class Webview {
       .replace(/@PWD/g, panel.webview.asWebviewUri(pwdUri).toString())
       .replace(/@PAGE/g, id);
 
-    panel.webview.onDidReceiveMessage(options.onMessage);
+    if (options.onMessage) panel.webview.onDidReceiveMessage(options.onMessage);
+
     panel.onDidDispose(() => {
       this.pages[id] = null;
     });

@@ -99,7 +99,7 @@ export class FileSyncer implements ISyncer {
         }
       }
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
       return;
     }
 

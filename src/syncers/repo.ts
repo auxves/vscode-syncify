@@ -259,7 +259,7 @@ export class RepoSyncer implements ISyncer {
           }
         }
       } catch (err) {
-        Logger.error(err, "", true);
+        Logger.error(err);
         return;
       }
 

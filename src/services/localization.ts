@@ -26,7 +26,7 @@ export class Localization {
 
       if (this.locale) this.options.locale = this.locale;
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
       return;
     }
   }
@@ -73,7 +73,7 @@ export class Localization {
 
       return { ...defaultLanguageBundle, ...resolvedLanguageBundle };
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
       return {};
     }
   }

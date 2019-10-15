@@ -69,12 +69,12 @@ export class OAuth {
 
           Webview.openRepositoryCreationPage({ token, user, provider });
         } catch (err) {
-          Logger.error(err, "", true);
+          Logger.error(err);
           return;
         }
       });
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
       return;
     }
   }
@@ -107,7 +107,7 @@ export class OAuth {
           return response.data.username as string;
       }
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
     }
   }
 
@@ -127,7 +127,7 @@ export class OAuth {
 
       return new URLSearchParams(response.data).get("access_token");
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
     }
   }
 

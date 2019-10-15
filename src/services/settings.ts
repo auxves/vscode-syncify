@@ -31,7 +31,7 @@ export class Settings {
 
       return Utilities.merge(defaultSettings, settings);
     } catch (err) {
-      Logger.error(err, "", true);
+      Logger.error(err);
       return defaultSettings;
     }
   }

@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.0
+
+- Present errors in a more user-friendly way using Webviews
+
 ## v3.0.2
 
 - Decreased overall size of the extension
