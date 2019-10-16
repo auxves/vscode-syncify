@@ -34,6 +34,7 @@ Visit the [Quick Start Guide][link:quickstart] to get started.
 ## Advantages over [Settings Sync][link:settings-sync]
 
 - No annoying popups
+- Quick setup with GitHub, GitLab, or BitBucket
 - Merge conflict resolution supported
 - Multiple profiles with support for hot-switching (currently only supported on `Git` method)
 - Simpler settings with intellisense
