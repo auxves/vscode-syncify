@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.2
+
+- Prevent upload if remote has changes
+
 ## v3.1.1
 
 - Make sure all errors are presented with the Webview

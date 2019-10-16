@@ -45,19 +45,19 @@ export class RepoSyncer implements ISyncer {
       const gitignorePath = resolve(Environment.repoFolder, ".gitignore");
       const gitignoreExists = await FS.exists(gitignorePath);
       if (!gitignoreExists) {
-        await FS.write(gitignorePath, settings.ignoredItems.join("\n"));
-      } else {
-        const contents = await FS.read(gitignorePath);
+        return FS.write(gitignorePath, settings.ignoredItems.join("\n"));
+      }
 
-        const lines = contents.split("\n");
-        const newLines = [
-          ...lines,
-          ...settings.ignoredItems.filter(val => !lines.includes(val))
-        ];
+      const contents = await FS.read(gitignorePath);
 
-        if (!isEqual(lines, newLines)) {
-          await FS.write(gitignorePath, newLines.join("\n"));
-        }
+      const lines = contents.split("\n");
+      const newLines = [
+        ...lines,
+        ...settings.ignoredItems.filter(val => !lines.includes(val))
+      ];
+
+      if (!isEqual(lines, newLines)) {
+        await FS.write(gitignorePath, newLines.join("\n"));
       }
     } catch (err) {
       Logger.error(err);
@@ -66,8 +66,7 @@ export class RepoSyncer implements ISyncer {
 
   public async sync(): Promise<void> {
     try {
-      const configured = await this.isConfigured();
-      if (!configured) {
+      if (!(await this.isConfigured())) {
         Webview.openLandingPage();
         return;
       }
@@ -109,8 +108,7 @@ export class RepoSyncer implements ISyncer {
 
     await (async () => {
       try {
-        const configured = await this.isConfigured();
-        if (!configured) {
+        if (!(await this.isConfigured())) {
           Webview.openLandingPage();
           return;
         }
@@ -120,6 +118,32 @@ export class RepoSyncer implements ISyncer {
         window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
 
         const profile = await this.getProfile();
+
+        await this.git.fetch();
+
+        const mergeBase = await this.git.raw([
+          `merge-base`,
+          profile.branch,
+          `origin/${profile.branch}`
+        ]);
+
+        const revLocal = await this.git.raw([`rev-parse`, profile.branch]);
+        const revRemote = await this.git.raw([
+          `rev-parse`,
+          `origin/${profile.branch}`
+        ]);
+
+        if (
+          revLocal !== revRemote &&
+          revLocal === mergeBase &&
+          !settings.forceUpload
+        ) {
+          window.setStatusBarMessage(
+            localize("(info) upload.remoteChanges"),
+            2000
+          );
+          return;
+        }
 
         const branches = await this.git.branchLocal();
 
@@ -151,10 +175,7 @@ export class RepoSyncer implements ISyncer {
         }
 
         await this.git.commit(`Update [${new Date().toLocaleString()}]`);
-
-        await this.git.push("origin", profile.branch, {
-          "--force": null
-        });
+        await this.git.push("origin", profile.branch);
 
         window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
       } catch (err) {
@@ -171,8 +192,7 @@ export class RepoSyncer implements ISyncer {
 
     await (async () => {
       try {
-        const configured = await this.isConfigured();
-        if (!configured) {
+        if (!(await this.isConfigured())) {
           Webview.openLandingPage();
           return;
         }
@@ -299,13 +319,10 @@ export class RepoSyncer implements ISyncer {
   }
 
   private async getProfile(): Promise<IProfile> {
-    const {
-      repo: { profiles, currentProfile }
-    } = await Settings.get();
+    const settings = await Settings.get();
+    const { profiles, currentProfile } = settings.repo;
 
-    const profile = profiles.find(({ name }) => name === currentProfile);
-
-    return profile || profiles[0];
+    return profiles.find(({ name }) => name === currentProfile) || profiles[0];
   }
 
   private async copyFilesToRepo(): Promise<void> {
