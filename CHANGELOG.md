@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.3
+
+- Fix issues with newly-created repositories
+
 ## v3.1.2
 
 - Prevent upload if remote has changes

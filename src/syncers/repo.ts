@@ -121,23 +121,9 @@ export class RepoSyncer implements ISyncer {
 
         await this.git.fetch();
 
-        const mergeBase = await this.git.raw([
-          `merge-base`,
-          profile.branch,
-          `origin/${profile.branch}`
-        ]);
+        const status = await this.getStatus(settings, profile);
 
-        const revLocal = await this.git.raw([`rev-parse`, profile.branch]);
-        const revRemote = await this.git.raw([
-          `rev-parse`,
-          `origin/${profile.branch}`
-        ]);
-
-        if (
-          revLocal !== revRemote &&
-          revLocal === mergeBase &&
-          !settings.forceUpload
-        ) {
+        if (status === "behind" && !settings.forceUpload) {
           window.setStatusBarMessage(
             localize("(info) upload.remoteChanges"),
             2000
@@ -145,11 +131,9 @@ export class RepoSyncer implements ISyncer {
           return;
         }
 
-        const branches = await this.git.branchLocal();
+        const branchExists = await this.localBranchExists(profile.branch);
 
-        const branchIsNew = !branches.all.includes(profile.branch);
-
-        if (branchIsNew) {
+        if (!branchExists) {
           await this.git.checkout(["-b", profile.branch]);
           await this.git.add(".");
           await this.git.commit("Initial");
@@ -169,7 +153,7 @@ export class RepoSyncer implements ISyncer {
 
         const currentChanges = await this.git.diff([profile.branch]);
 
-        if (!currentChanges && !settings.forceUpload && !branchIsNew) {
+        if (!currentChanges && !settings.forceUpload && branchExists) {
           window.setStatusBarMessage(localize("(info) upload.upToDate"), 2000);
           return;
         }
@@ -469,5 +453,41 @@ export class RepoSyncer implements ISyncer {
     } catch (err) {
       Logger.error(err);
     }
+  }
+
+  private async getStatus(
+    settings: ISettings,
+    profile: IProfile
+  ): Promise<"ahead" | "behind" | "up-to-date"> {
+    const { branch } = profile;
+    const { url } = settings.repo;
+
+    const lsRemote = await this.git.listRemote(["--heads", url, branch]);
+    const localExists = await this.localBranchExists(branch);
+
+    if (!lsRemote) return "ahead";
+    if (!localExists) return "behind";
+
+    const mergeBase = await this.git.raw([
+      `merge-base`,
+      branch,
+      `origin/${branch}`
+    ]);
+
+    const revLocal = await this.git.raw([`rev-parse`, branch]);
+    const revRemote = await this.git.raw([`rev-parse`, `origin/${branch}`]);
+
+    if (revLocal === revRemote) return "up-to-date";
+
+    if (mergeBase === revRemote) return "ahead";
+
+    if (mergeBase === revLocal) return "behind";
+
+    return "up-to-date";
+  }
+
+  private async localBranchExists(branch: string): Promise<boolean> {
+    const localBranches = await this.git.branchLocal();
+    return localBranches.all.includes(branch);
   }
 }
