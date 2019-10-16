@@ -44,6 +44,7 @@ Visit the [Quick Start Guide][link:quickstart] to get started.
 - More intuitive custom file registration and importing
 - Notification for extension installation/uninstallation progress
 - Status bar button to cancel auto-upload
+- Descriptive errors with possible causes and solutions
 
 ## Credits
 
