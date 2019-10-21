@@ -7,6 +7,7 @@ export * from "~/models/profile";
 export * from "~/models/settings";
 export * from "~/models/sync";
 export * from "~/models/replaceable";
+export * from "~/models/action-keys";
 export * from "~/models/ui/webview-section";
 export * from "~/models/ui/webview-setting";
 export * from "~/models/ui/selectOption";

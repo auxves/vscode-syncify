@@ -1,5 +1,6 @@
 import { createStore } from "redux";
 import { Disposable } from "vscode";
+import { ActionKeys } from "~/models";
 import { ActionTypes, IActions } from "~/redux/actions";
 import handlers from "~/redux/handlers";
 
@@ -15,17 +16,19 @@ const defaultState: IReduxState = {
   subscriptions: []
 };
 
+function getKey(action: IActions): ActionKeys | undefined {
+  const entries = Object.entries(ActionTypes);
+  const type = entries.find(([, val]) => val === action.type);
+
+  if (type) return type[0] as ActionKeys;
+}
+
 const reducer = (state: IReduxState = defaultState, action: IActions) => {
-  switch (action.type) {
-    case ActionTypes.setExtensionPath:
-      return handlers.setExtensionPath(state, action);
-    case ActionTypes.setGlobalStoragePath:
-      return handlers.setGlobalStoragePath(state, action);
-    case ActionTypes.setSubscriptions:
-      return handlers.setSubscriptions(state, action);
-    default:
-      return { ...state };
-  }
+  const key = getKey(action);
+
+  if (key) return handlers[key](state, action);
+
+  return { ...state };
 };
 
-export const store = createStore(reducer);
+export const store = createStore(reducer, defaultState);

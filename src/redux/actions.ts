@@ -1,9 +1,9 @@
 import { Disposable } from "vscode";
 
 export enum ActionTypes {
-  setExtensionPath = "SET -> EXTENSION PATH",
-  setGlobalStoragePath = "SET -> GLOBAL STORAGE PATH",
-  setSubscriptions = "SET -> SUBSCRIPTIONS"
+  setExtensionPath = "Set Extension Path",
+  setGlobalStoragePath = "Set Global Storage Path",
+  setSubscriptions = "Set Subscriptions"
 }
 
 export interface IActions<P = any> {
