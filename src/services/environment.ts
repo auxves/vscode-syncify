@@ -5,13 +5,11 @@ import { store } from "~/redux/store";
 
 export class Environment {
   public static get userFolder() {
-    const slash = normalize("/");
-
     const path = process.env.VSCODE_PORTABLE
       ? resolve(process.env.VSCODE_PORTABLE, "user-data")
       : resolve(Environment.globalStoragePath, "../../..");
 
-    return resolve(path, "User").concat(slash);
+    return resolve(path, "User");
   }
 
   public static get repoFolder() {

@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.4
+
+- Fix potential issue on Windows relating to obtaining the user folder
+
 ## v3.1.3
 
 - Fix issues with newly-created repositories
