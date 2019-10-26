@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify:아 원격지점",
   "(info) download.uninstalled": "Syncify:거{0}",
   "(info) download.upToDate": "Syncify:직까지 날짜",
-  "(info) repo.switchedProfile": "Syncify:로 전환 프로파일'{0}'",
+  "(info) repo.switchedProfile": "Syncify:로 전환 프로파일\"{0}\"",
   "(info) reset.resetComplete": "Syncify:설정되었을 다시 설정",
   "(info) sync.nothingToDo": "Syncify:할 수 없",
   "(info) upload.initiating": "Syncify:로 업로드에서{0}초",

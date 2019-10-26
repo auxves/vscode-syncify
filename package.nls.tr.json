@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: Hayır Uzaktan Şubeleri",
   "(info) download.uninstalled": "Syncify: Kaldırıldı {0}",
   "(info) download.upToDate": "Syncify: güncel ",
-  "(info) repo.switchedProfile": "Syncify: profil için{0} Değiştirdi'",
+  "(info) repo.switchedProfile": "Syncify: profil için{0} Değiştirdi\"",
   "(info) reset.resetComplete": "Syncify: Ayarlar sıfırlandı ",
   "(info) sync.nothingToDo": "Yapmak Syncify: Hiçbir Şey ",
   "(info) upload.initiating": "{0} saniye içinde Yükleme Syncify: ",

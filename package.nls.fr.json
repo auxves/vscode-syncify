@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: Pas De Branches Distantes",
   "(info) download.uninstalled": "Syncify: Désinstallé {0}",
   "(info) download.upToDate": "Syncify: Déjà à jour",
-  "(info) repo.switchedProfile": "Syncify: passé à profil '{0}'",
+  "(info) repo.switchedProfile": "Syncify: passé à profil \"{0}\"",
   "(info) reset.resetComplete": "Syncify: les Réglages ont été réinitialisés",
   "(info) sync.nothingToDo": "Syncify: Rien À Faire",
   "(info) upload.initiating": "Syncify: la mise en {0} secondes",

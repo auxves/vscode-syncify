@@ -31,13 +31,11 @@ export class Localization {
     }
   }
 
-  private format(message: string, args: string[] = []): string {
-    return args.length
-      ? message.replace(
-          /\{(\d+)\}/g,
-          (match, rest: any[]) => args[rest[0]] || match
-        )
-      : message;
+  private format(message: string, args: string[]): string {
+    return args.reduce(
+      (acc, v, i) => acc.replace(new RegExp(`\{${i}\}`, "g"), v),
+      message
+    );
   }
 
   private resolveLanguagePack(): ILanguagePack {

@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify：没有远程枝",
   "(info) download.uninstalled": "Syncify:卸载{0}",
   "(info) download.upToDate": "Syncify：已经最新的",
-  "(info) repo.switchedProfile": "Syncify:换档'{0}'",
+  "(info) repo.switchedProfile": "Syncify:切换到的资料\"{0}\"",
   "(info) reset.resetComplete": "Syncify：设置已被重置",
   "(info) sync.nothingToDo": "Syncify：没有什么做",
   "(info) upload.initiating": "Syncify：上载在{0}秒",

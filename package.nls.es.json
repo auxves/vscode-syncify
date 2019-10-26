@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: No Hay Sucursales Remotas",
   "(info) download.uninstalled": "Syncify: Desinstalar {0}",
   "(info) download.upToDate": "Syncify: Ya hasta la fecha",
-  "(info) repo.switchedProfile": "Syncify: Cambió el perfil de '{0}'",
+  "(info) repo.switchedProfile": "Syncify: Cambió el perfil de \"{0}\"",
   "(info) reset.resetComplete": "Syncify: los Ajustes se han restablecido",
   "(info) sync.nothingToDo": "Syncify: No Hay Nada Que Hacer",
   "(info) upload.initiating": "Syncify: Carga en {0} segundos",

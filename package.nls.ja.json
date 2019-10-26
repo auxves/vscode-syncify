@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify：リモート店",
   "(info) download.uninstalled": "Syncify:アンインストール{0}",
   "(info) download.upToDate": "Syncifyについての詳細は、最新の",
-  "(info) repo.switchedProfile": "Syncify:切り替えるプロファイル'{0}'",
+  "(info) repo.switchedProfile": "Syncify:切り替えるプロファイル\"{0}\"",
   "(info) reset.resetComplete": "Syncify:設定リセット",
   "(info) sync.nothingToDo": "Syncify:な",
   "(info) upload.initiating": "Syncify:アップロードには{0}秒",

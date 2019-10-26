@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: Nincs Távoli Ágak",
   "(info) download.uninstalled": "Syncify: Az Eltávolított {0}",
   "(info) download.upToDate": "Syncify: Már naprakész",
-  "(info) repo.switchedProfile": "Syncify: Váltott profilt '{0}'",
+  "(info) repo.switchedProfile": "Syncify: Váltott profilt \"{0}\"",
   "(info) reset.resetComplete": "Syncify: Beállítások visszaállítása",
   "(info) sync.nothingToDo": "Syncify: Semmi",
   "(info) upload.initiating": "Syncify: Feltöltését a {0} másodperc",

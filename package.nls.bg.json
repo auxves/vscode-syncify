@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: Няма На Отдалечени Офиси",
   "(info) download.uninstalled": "Syncify: Изтриете {0}",
   "(info) download.upToDate": "Syncify: вече знае",
-  "(info) repo.switchedProfile": "Syncify: преминах на профил '{0}'",
+  "(info) repo.switchedProfile": "Syncify: преминах на профил \"{0}\"",
   "(info) reset.resetComplete": "Syncify: настройките са били изхвърлени",
   "(info) sync.nothingToDo": "Syncify: Не Прави Нищо",
   "(info) upload.initiating": "Syncify: loading {0} секунди",

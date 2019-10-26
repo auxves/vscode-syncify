@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: No Telecomando Rami",
   "(info) download.uninstalled": "Syncify: Disinstallato {0}",
   "(info) download.upToDate": "Syncify: Già aggiornato",
-  "(info) repo.switchedProfile": "Syncify: Switched per il profilo '{0}'",
+  "(info) repo.switchedProfile": "Syncify: Switched per il profilo \"{0}\"",
   "(info) reset.resetComplete": "Syncify: le Impostazioni sono state ripristinate",
   "(info) sync.nothingToDo": "Syncify: Nulla Da Fare",
   "(info) upload.initiating": "Syncify: Caricamento in {0} secondi",

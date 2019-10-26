@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: Нет Удаленных Филиалов",
   "(info) download.uninstalled": "Syncify: Удалить {0}",
   "(info) download.upToDate": "Syncify: уже в курсе",
-  "(info) repo.switchedProfile": "Syncify: переключился на профиль '{0}'",
+  "(info) repo.switchedProfile": "Syncify: переключился на профиль \"{0}\"",
   "(info) reset.resetComplete": "Syncify: настройки были сброшены",
   "(info) sync.nothingToDo": "Syncify: Ничего Не Делать",
   "(info) upload.initiating": "Syncify: загрузка в {0} секунд",

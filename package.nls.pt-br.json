@@ -25,7 +25,7 @@
   "(info) download.noRemoteBranches": "Syncify: Não Remoto Ramos",
   "(info) download.uninstalled": "Syncify: Desinstalado {0}",
   "(info) download.upToDate": "Syncify: Já atualizado",
-  "(info) repo.switchedProfile": "Syncify: Ligado ao perfil de '{0}'",
+  "(info) repo.switchedProfile": "Syncify: Ligado ao perfil \"{0}\"",
   "(info) reset.resetComplete": "Syncify: Definições foram repostas",
   "(info) sync.nothingToDo": "Syncify: Nada A Ver",
   "(info) upload.initiating": "Syncify: o Upload no {0} segundos",
