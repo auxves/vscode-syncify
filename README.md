@@ -1,5 +1,7 @@
 # Syncify
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/arnohovhannisyan/vscode-syncify.svg)](https://greenkeeper.io/)
+
 [![Travis][badge-img:travis]][badge-link:travis]
 [![Version][badge-img:version]][badge-link:version]
 [![Issues][badge-img:issues]][badge-link:issues]
