@@ -33,7 +33,7 @@ export class Localization {
 
   private format(message: string, args: string[]): string {
     return args.reduce(
-      (acc, v, i) => acc.replace(new RegExp(`\{${i}\}`, "g"), v),
+      (acc, v, i) => acc.replace(new RegExp(`\\{${i}\\}`, "g"), v),
       message
     );
   }
