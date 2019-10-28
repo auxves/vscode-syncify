@@ -11,109 +11,15 @@ import {
   window
 } from "vscode";
 import WebviewPage from "~/../assets/ui/index.html";
-import {
-  IReplaceable,
-  ISettings,
-  IWebviewSection,
-  UISettingType
-} from "~/models";
+import { ISettings, IWebviewSection, Syncer, UISettingType } from "~/models";
 import { Environment, localize, OAuth, Settings } from "~/services";
-
-const sections: IWebviewSection[] = [
-  {
-    name: "General",
-    settings: [
-      {
-        name: localize("(setting) syncer.name"),
-        placeholder: localize("(setting) syncer.placeholder"),
-        correspondingSetting: "syncer",
-        type: UISettingType.Select,
-        options: [
-          {
-            name: "Repo",
-            value: "repo"
-          },
-          {
-            name: "File",
-            value: "file"
-          }
-        ]
-      },
-      {
-        name: localize("(setting) hostname.name"),
-        placeholder: localize("(setting) hostname.placeholder"),
-        correspondingSetting: "hostname",
-        type: UISettingType.TextInput
-      },
-      {
-        name: localize("(setting) ignoredItems.name"),
-        placeholder: localize("(setting) ignoredItems.placeholder"),
-        correspondingSetting: "ignoredItems",
-        type: UISettingType.TextArea
-      },
-      {
-        name: localize("(setting) autoUploadDelay.name"),
-        placeholder: localize("(setting) autoUploadDelay.placeholder"),
-        correspondingSetting: "autoUploadDelay",
-        type: UISettingType.NumberInput
-      },
-      {
-        name: localize("(setting) watchSettings.name"),
-        correspondingSetting: "watchSettings",
-        type: UISettingType.Checkbox
-      },
-      {
-        name: localize("(setting) removeExtensions.name"),
-        correspondingSetting: "removeExtensions",
-        type: UISettingType.Checkbox
-      },
-      {
-        name: localize("(setting) syncOnStartup.name"),
-        correspondingSetting: "syncOnStartup",
-        type: UISettingType.Checkbox
-      },
-      {
-        name: localize("(setting) forceUpload.name"),
-        correspondingSetting: "forceUpload",
-        type: UISettingType.Checkbox
-      },
-      {
-        name: localize("(setting) forceDownload.name"),
-        correspondingSetting: "forceDownload",
-        type: UISettingType.Checkbox
-      }
-    ]
-  },
-  {
-    name: "Repo Syncer",
-    settings: [
-      {
-        name: localize("(setting) repo.url.name"),
-        placeholder: localize("(setting) repo.url.placeholder"),
-        correspondingSetting: "repo.url",
-        type: UISettingType.TextInput
-      }
-    ]
-  },
-  {
-    name: "File Syncer",
-    settings: [
-      {
-        name: localize("(setting) file.path.name"),
-        placeholder: localize("(setting) file.path.placeholder"),
-        correspondingSetting: "file.path",
-        type: UISettingType.TextInput
-      }
-    ]
-  }
-];
 
 export class Webview {
   public static openSettingsPage(settings: ISettings) {
-    const content = this.generateContent([
-      ["@SETTINGS", JSON.stringify(settings)],
-      ["@SECTIONS", JSON.stringify(sections)]
-    ]);
+    const content = this.generateContent({
+      "@SETTINGS": JSON.stringify(settings),
+      "@SECTIONS": JSON.stringify(this.generateSections(settings))
+    });
 
     return this.createPanel({
       content,
@@ -128,9 +34,9 @@ export class Webview {
   }
 
   public static openErrorPage(error: Error) {
-    const content = this.generateContent([
-      ["@ERROR", JSON.stringify(error.message)]
-    ]);
+    const content = this.generateContent({
+      "@ERROR": JSON.stringify(error.message)
+    });
 
     return this.createPanel({
       content,
@@ -149,24 +55,19 @@ export class Webview {
       onMessage: async (message: string) => {
         const settings = await Settings.get();
 
-        if (message === "settings") {
-          return this.openSettingsPage(settings);
-        }
+        if (message === "settings") return this.openSettingsPage(settings);
 
         const provider = (() => {
           switch (message) {
-            case "github":
-              return "github";
             case "gitlab":
               return "gitlab";
             case "bitbucket":
               return "bitbucket";
+            case "github":
             default:
               return "github";
           }
         })();
-
-        const services = ["github", "gitlab", "bitbucket"];
 
         const clientIds = Environment.oauthClientIds;
 
@@ -176,11 +77,9 @@ export class Webview {
           bitbucket: `https://bitbucket.org/site/oauth2/authorize?client_id=${clientIds.bitbucket}&response_type=token`
         };
 
-        if (services.includes(message)) {
-          await OAuth.listen(37468, provider);
+        await OAuth.listen(37468, provider);
 
-          env.openExternal(Uri.parse(authUrls[provider]));
-        }
+        await env.openExternal(Uri.parse(authUrls[provider]));
       }
     });
   }
@@ -188,9 +87,9 @@ export class Webview {
   public static openRepositoryCreationPage(options: {
     token: string;
     user: string;
-    provider: "github" | "gitlab" | "bitbucket";
+    provider: string;
   }) {
-    const content = this.generateContent([["@AUTH", JSON.stringify(options)]]);
+    const content = this.generateContent({ "@AUTH": JSON.stringify(options) });
 
     return this.createPanel({
       content,
@@ -261,15 +160,107 @@ export class Webview {
     return panel;
   }
 
-  private static generateContent(replaceables: IReplaceable[] = []): string {
-    const toReplace = replaceables.map<[string, string]>(([find, replace]) => [
-      find,
-      escape(replace)
-    ]);
+  private static generateContent(items: { [key: string]: string } = {}) {
+    const toReplace = Object.entries(items).map<[string, string]>(
+      ([find, replace]) => [find, escape(replace)]
+    );
 
     return toReplace.reduce(
       (acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
       WebviewPage
     );
+  }
+
+  private static generateSections(settings: ISettings): IWebviewSection[] {
+    return [
+      {
+        name: "General",
+        settings: [
+          {
+            name: localize("(setting) syncer.name"),
+            correspondingSetting: "syncer",
+            type: UISettingType.Select,
+            options: Object.entries(Syncer).map(([key, value]) => ({
+              value,
+              name: key
+            }))
+          },
+          {
+            name: localize("(setting) hostname.name"),
+            placeholder: localize("(setting) hostname.placeholder"),
+            correspondingSetting: "hostname",
+            type: UISettingType.TextInput
+          },
+          {
+            name: localize("(setting) ignoredItems.name"),
+            placeholder: localize("(setting) ignoredItems.placeholder"),
+            correspondingSetting: "ignoredItems",
+            type: UISettingType.TextArea
+          },
+          {
+            name: localize("(setting) autoUploadDelay.name"),
+            placeholder: localize("(setting) autoUploadDelay.placeholder"),
+            correspondingSetting: "autoUploadDelay",
+            type: UISettingType.NumberInput
+          },
+          {
+            name: localize("(setting) watchSettings.name"),
+            correspondingSetting: "watchSettings",
+            type: UISettingType.Checkbox
+          },
+          {
+            name: localize("(setting) removeExtensions.name"),
+            correspondingSetting: "removeExtensions",
+            type: UISettingType.Checkbox
+          },
+          {
+            name: localize("(setting) syncOnStartup.name"),
+            correspondingSetting: "syncOnStartup",
+            type: UISettingType.Checkbox
+          },
+          {
+            name: localize("(setting) forceUpload.name"),
+            correspondingSetting: "forceUpload",
+            type: UISettingType.Checkbox
+          },
+          {
+            name: localize("(setting) forceDownload.name"),
+            correspondingSetting: "forceDownload",
+            type: UISettingType.Checkbox
+          }
+        ]
+      },
+      {
+        name: "Repo Syncer",
+        settings: [
+          {
+            name: localize("(setting) repo.url.name"),
+            placeholder: localize("(setting) repo.url.placeholder"),
+            correspondingSetting: "repo.url",
+            type: UISettingType.TextInput
+          },
+          {
+            name: localize("(setting) repo.currentProfile.name"),
+            correspondingSetting: "repo.currentProfile",
+            type: UISettingType.Select,
+            options: settings.repo.profiles.map(p => ({
+              name: `${p.name} [branch: ${p.branch}]`,
+              value: p.name
+            }))
+          }
+        ]
+      },
+      {
+        name: "File Syncer",
+        settings: [
+          {
+            name: localize("(setting) file.path.name"),
+            placeholder: localize("(setting) file.path.placeholder"),
+            correspondingSetting: "file.path",
+            type: UISettingType.TextInput
+          }
+        ]
+      }
+    ];
   }
 }

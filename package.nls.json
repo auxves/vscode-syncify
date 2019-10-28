@@ -46,10 +46,10 @@
   "(setting) ignoredItems.name": "Ignored Items",
   "(setting) ignoredItems.placeholder": "Enter ignored items (one every line)",
   "(setting) removeExtensions.name": "Remove Extensions",
+  "(setting) repo.currentProfile.name": "Current Profile",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Enter Repo URL",
   "(setting) syncOnStartup.name": "Sync On Startup",
   "(setting) syncer.name": "Syncer",
-  "(setting) syncer.placeholder": "Select Syncer",
   "(setting) watchSettings.name": "Watch Settings"
 }

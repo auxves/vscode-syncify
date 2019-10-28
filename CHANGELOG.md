@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.2.0
+
+- Allow changing the current profile through the Settings UI
+
 ## v3.1.4
 
 - Fix potential issue on Windows relating to obtaining the user folder
