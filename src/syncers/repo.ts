@@ -73,27 +73,23 @@ export class RepoSyncer implements ISyncer {
 
       await this.init();
 
-      await this.copyFilesToRepo();
-
-      const [uploadDiff, , profile] = await Promise.all([
-        this.git.diff(),
+      const [profile, settings] = await Promise.all([
+        this.getProfile(),
+        Settings.get(),
         this.git.fetch(),
-        this.getProfile()
+        this.copyFilesToRepo()
       ]);
 
-      if (uploadDiff) {
-        await this.upload();
-        return;
+      const status = await this.getStatus(settings, profile);
+
+      const diff = await this.git.diff();
+
+      if (diff && status !== "behind") {
+        return this.upload();
       }
 
-      const remoteBranches = await this.git.branch(["-r"]);
-
-      if (remoteBranches.all.length) {
-        const downloadDiff = await this.git.diff([`origin/${profile.branch}`]);
-        if (downloadDiff) {
-          await this.download();
-          return;
-        }
+      if (status === "behind") {
+        return this.download();
       }
 
       window.setStatusBarMessage(localize("(info) sync.nothingToDo"), 2000);

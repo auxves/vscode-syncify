@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.2.2
+
+- Update `Sync` command to support conflict resolution
+
 ## v3.2.1
 
 - Add localizations to newly added setting
