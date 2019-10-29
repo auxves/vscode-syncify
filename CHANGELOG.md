@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.2.1
+
+- Add localizations to newly added setting
+- Disallow nonexistant properties in settings file
+
 ## v3.2.0
 
 - Allow changing the current profile through the Settings UI

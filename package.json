@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "engines": {
     "vscode": "^1.39.0"
   },
