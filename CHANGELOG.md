@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.3.0
+
+- Add documentation to the settings file
+
 ## v3.2.2
 
 - Update `Sync` command to support conflict resolution
