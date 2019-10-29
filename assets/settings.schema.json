@@ -1,7 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
     "definitions": {
         "IProfile": {
+            "additionalProperties": false,
             "properties": {
                 "branch": {
                     "type": "string"
@@ -25,6 +27,7 @@
             "type": "number"
         },
         "file": {
+            "additionalProperties": false,
             "properties": {
                 "path": {
                     "type": "string"
@@ -51,6 +54,7 @@
             "type": "boolean"
         },
         "repo": {
+            "additionalProperties": false,
             "properties": {
                 "currentProfile": {
                     "type": "string"

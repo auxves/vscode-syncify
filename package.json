@@ -97,7 +97,7 @@
     "watch": "webpack --config .webpack/development.js --watch",
     "lint": "tslint -c ./tslint.json -p .",
     "test": "jest",
-    "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json",
+    "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
     "localize": "translocalizer"
   },
   "devDependencies": {
