@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "항목은 무시됩",
   "(setting) ignoredItems.placeholder": "입력 항목을 무시(하나의 모든 라인)",
   "(setting) removeExtensions.name": "제 확장",
+  "(setting) repo.currentProfile.name": "현재 프로파일",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "입력 Repo URL",
   "(setting) syncOnStartup.name": "시작시 동기화",

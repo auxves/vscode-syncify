@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "Figyelmen Kívül Tételek",
   "(setting) ignoredItems.placeholder": "Adja meg figyelmen kívül hagyni elemek (minden vonal)",
   "(setting) removeExtensions.name": "Távolítsa El A Fájlokat",
+  "(setting) repo.currentProfile.name": "Jelenlegi Profil",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Írja be a Repo URL",
   "(setting) syncOnStartup.name": "Fordította: Bekapcsoláskor",

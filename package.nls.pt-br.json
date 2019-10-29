@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "Itens Ignorados",
   "(setting) ignoredItems.placeholder": "Insira itens ignorados (uma em cada linha)",
   "(setting) removeExtensions.name": "Remover Extensões De",
+  "(setting) repo.currentProfile.name": "Perfil Atual",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Digite Repo URL",
   "(setting) syncOnStartup.name": "Sincronização De Arranque",

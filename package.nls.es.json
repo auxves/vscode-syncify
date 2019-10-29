@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "Omite Los Elementos De",
   "(setting) ignoredItems.placeholder": "Entrar en ignorado elementos (uno en cada línea)",
   "(setting) removeExtensions.name": "Quitar Las Extensiones De",
+  "(setting) repo.currentProfile.name": "Perfil Actual",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Introduzca Repo URL",
   "(setting) syncOnStartup.name": "Sincronización En El Inicio",

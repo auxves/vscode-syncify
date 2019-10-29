@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "Аргументи, Които Се Пренебрегват Елементи",
   "(setting) ignoredItems.placeholder": "Въведете черният елементи (по един във всяка линия)",
   "(setting) removeExtensions.name": "Изтриване На Разширения",
+  "(setting) repo.currentProfile.name": "Текущият Профил",
   "(setting) repo.url.name": "URL-адрес на РЕПО ",
   "(setting) repo.url.placeholder": "Въведете URL-адрес на РЕПО ",
   "(setting) syncOnStartup.name": "Синхронизация При Стартиране",

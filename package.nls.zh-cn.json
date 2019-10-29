@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "被忽略的项目",
   "(setting) ignoredItems.placeholder": "该被忽略的项目(每线)",
   "(setting) removeExtensions.name": "删除扩展",
+  "(setting) repo.currentProfile.name": "目前的轮廓",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "该仓库URL",
   "(setting) syncOnStartup.name": "在启动同步",

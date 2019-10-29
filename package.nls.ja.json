@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "無視項目",
   "(setting) ignoredItems.placeholder": "入力項目は無視されます（一毎線）",
   "(setting) removeExtensions.name": "削除の拡張子",
+  "(setting) repo.currentProfile.name": "電流プロファイル",
   "(setting) repo.url.name": "レポURL",
   "(setting) repo.url.placeholder": "入レポURL",
   "(setting) syncOnStartup.name": "同期起動時に",

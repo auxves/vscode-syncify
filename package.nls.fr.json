@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "Éléments Ignorés",
   "(setting) ignoredItems.placeholder": "Entrez éléments ignorés (un de chaque ligne)",
   "(setting) removeExtensions.name": "Supprimer Des Extensions",
+  "(setting) repo.currentProfile.name": "Profil Actuel",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Entrez Repo URL",
   "(setting) syncOnStartup.name": "La Fonction De Synchronisation De Démarrage",

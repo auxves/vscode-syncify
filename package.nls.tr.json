@@ -46,6 +46,7 @@
   "(setting) ignoredItems.name": "Göz Ardı Öğeleri",
   "(setting) ignoredItems.placeholder": "(Her bir satır)girin göz ardı öğeleri ",
   "(setting) removeExtensions.name": "Uzantıları Kaldırmak ",
+  "(setting) repo.currentProfile.name": "Mevcut Profil",
   "(setting) repo.url.name": "Repo URL",
   "(setting) repo.url.placeholder": "Repo URL girin ",
   "(setting) syncOnStartup.name": "Başlangıç Sync ",
