@@ -228,8 +228,5 @@ describe("init", () => {
     const remotes = await git.getRemotes(true);
     expect(remotes[0].name).toBe("origin");
     expect(remotes[0].refs.push).toBe(pathToRemote);
-
-    const gitignoreExists = await FS.exists(resolve(pathToRepo, ".gitignore"));
-    expect(gitignoreExists).toBeTruthy();
   });
 });

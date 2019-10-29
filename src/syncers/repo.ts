@@ -1,4 +1,3 @@
-import isEqual from "lodash/isEqual";
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ViewColumn, window, workspace } from "vscode";
@@ -20,9 +19,7 @@ export class RepoSyncer implements ISyncer {
 
   public async init() {
     try {
-      const folderExists = await FS.exists(Environment.repoFolder);
-
-      if (!folderExists) await FS.mkdir(Environment.repoFolder);
+      await FS.mkdir(Environment.repoFolder);
 
       await this.git.cwd(Environment.repoFolder);
 
@@ -36,28 +33,10 @@ export class RepoSyncer implements ISyncer {
       const settings = await Settings.get();
 
       if (!origin) {
-        this.git.addRemote("origin", settings.repo.url);
+        await this.git.addRemote("origin", settings.repo.url);
       } else if (origin.refs.push !== settings.repo.url) {
         await this.git.removeRemote("origin");
-        this.git.addRemote("origin", settings.repo.url);
-      }
-
-      const gitignorePath = resolve(Environment.repoFolder, ".gitignore");
-      const gitignoreExists = await FS.exists(gitignorePath);
-      if (!gitignoreExists) {
-        return FS.write(gitignorePath, settings.ignoredItems.join("\n"));
-      }
-
-      const contents = await FS.read(gitignorePath);
-
-      const lines = contents.split("\n");
-      const newLines = [
-        ...lines,
-        ...settings.ignoredItems.filter(val => !lines.includes(val))
-      ];
-
-      if (!isEqual(lines, newLines)) {
-        await FS.write(gitignorePath, newLines.join("\n"));
+        await this.git.addRemote("origin", settings.repo.url);
       }
     } catch (err) {
       Logger.error(err);
@@ -131,8 +110,6 @@ export class RepoSyncer implements ISyncer {
 
         if (!branchExists) {
           await this.git.checkout(["-b", profile.branch]);
-          await this.git.add(".");
-          await this.git.commit("Initial");
         }
 
         await this.copyFilesToRepo();
@@ -147,7 +124,7 @@ export class RepoSyncer implements ISyncer {
 
         await this.git.add(".");
 
-        const currentChanges = await this.git.diff([profile.branch]);
+        const currentChanges = await this.git.diff();
 
         if (!currentChanges && !settings.forceUpload && branchExists) {
           window.setStatusBarMessage(localize("(info) upload.upToDate"), 2000);
@@ -219,17 +196,18 @@ export class RepoSyncer implements ISyncer {
 
         const branches = await this.git.branchLocal();
 
-        if (branches.current !== profile.branch) {
-          await this.git.add(".");
-          await this.git.commit("Reset");
-          await this.git.reset("hard");
+        await this.git.fetch();
 
-          if (branches.all.includes(profile.branch)) {
-            await this.git.branch(["-D", profile.branch]);
-          }
-
-          await this.git.fetch();
-          await this.git.checkout(`origin/${profile.branch}`);
+        if (!branches.current || branches.current !== profile.branch) {
+          await this.git.clean("f");
+          await this.git.checkout(profile.branch);
+        } else if (!branches.all.includes(profile.branch)) {
+          await this.git.clean("f");
+          await this.git.checkout([
+            "-b",
+            profile.branch,
+            `origin/${profile.branch}`
+          ]);
         }
 
         const stash = await this.git.stash();

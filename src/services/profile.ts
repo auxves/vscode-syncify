@@ -25,11 +25,11 @@ export class Profile {
 
     await Settings.set({
       repo: {
-        currentProfile: (newProfile || repo.profiles[0]).name
+        currentProfile: newProfile.name
       }
     });
 
-    await window.showInformationMessage(
+    window.showInformationMessage(
       localize("(info) repo.switchedProfile", newProfile.name)
     );
 
