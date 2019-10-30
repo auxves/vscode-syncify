@@ -17,6 +17,12 @@ it("should properly process before uploading", () => {
   expect(Pragma.processOutgoing(initial)).toBe(expected);
 });
 
+it("should return new content if invalid", () => {
+  const newContent = `Invalid JSON`;
+
+  expect(Pragma.processIncoming("", newContent, "")).toBe(newContent);
+});
+
 it("should properly ignore", () => {
   const initial = `{
     // @sync-ignore
