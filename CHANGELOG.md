@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.3.1
+
+- Check JSON before processing Pragmas
+- Remove `.gitignore` file
+- Fix download issues
+
 ## v3.3.0
 
 - Add documentation to the settings file
