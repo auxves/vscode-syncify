@@ -2,13 +2,18 @@
 
 import { OperatingSystem } from "~/models";
 import { Environment, Logger } from "~/services";
+import { isJSON } from "~/utilities";
 
 export class Pragma {
   public static processIncoming(
     hostname: string,
     newContent: string,
-    localContent?: string
+    localContent: string = "{}"
   ): string {
+    if (!isJSON(newContent) || !isJSON(localContent)) {
+      return newContent;
+    }
+
     const parsedLines: string[] = [];
     const lines = newContent.split("\n");
 
@@ -71,27 +76,18 @@ export class Pragma {
 
     let result = parsedLines.join("\n");
 
-    const ignoredBlocks = Pragma.getIgnoredBlocks(localContent || "{}");
+    const ignoredBlocks = Pragma.getIgnoredBlocks(localContent);
 
     if (ignoredBlocks) {
       result = result.replace(/{\s*\n/, `{\n${ignoredBlocks}\n\n\n`);
-    }
-
-    try {
-      const uncommented = Pragma.removeAllComments(result).replace(
-        /,\s*\}/g,
-        " }"
-      );
-      JSON.parse(uncommented);
-    } catch (err) {
-      Logger.error(err);
-      return "";
     }
 
     return result;
   }
 
   public static processOutgoing(fileContent: string): string {
+    if (!isJSON(fileContent)) return fileContent;
+
     const lines = fileContent.split("\n");
     const parsedLines: string[] = [];
 
@@ -171,10 +167,6 @@ export class Pragma {
       }
     }
     return ignoredLines.join("\n");
-  }
-
-  private static removeAllComments(text: string): string {
-    return text.replace(/\s*(\/\/.+)|(\/\*.+\*\/)/g, "");
   }
 
   private static toggleComments(line: string, shouldComment: boolean) {
