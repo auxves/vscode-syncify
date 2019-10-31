@@ -34,9 +34,18 @@ interface ISelect {
   options: ISelectOption[];
 }
 
+interface IObjectArray {
+  name: string;
+  type: UISettingType.ObjectArray;
+  correspondingSetting: string;
+  schema: IWebviewSetting[];
+  newTemplate: object;
+}
+
 export type IWebviewSetting =
   | ICheckbox
   | ISelect
   | ITextArea
   | ITextInput
-  | INumberInput;
+  | INumberInput
+  | IObjectArray;

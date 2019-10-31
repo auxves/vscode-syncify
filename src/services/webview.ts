@@ -247,6 +247,35 @@ export class Webview {
               name: `${p.name} [branch: ${p.branch}]`,
               value: p.name
             }))
+          },
+          {
+            name: localize("(setting) repo.profiles.name"),
+            correspondingSetting: "repo.profiles",
+            type: UISettingType.ObjectArray,
+            newTemplate: {
+              branch: "",
+              name: ""
+            },
+            schema: [
+              {
+                name: localize("(setting) repo.profiles.properties.name.name"),
+                correspondingSetting: "name",
+                placeholder: localize(
+                  "(setting) repo.profiles.properties.name.placeholder"
+                ),
+                type: UISettingType.TextInput
+              },
+              {
+                name: localize(
+                  "(setting) repo.profiles.properties.branch.name"
+                ),
+                correspondingSetting: "branch",
+                placeholder: localize(
+                  "(setting) repo.profiles.properties.branch.placeholder"
+                ),
+                type: UISettingType.TextInput
+              }
+            ]
           }
         ]
       },
