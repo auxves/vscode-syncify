@@ -82,4 +82,4 @@ Check the [Troubleshooting Guide][link:troubleshooting] to see if your issue has
 [badge-link:issues]: https://github.com/arnohovhannisyan/vscode-syncify/issues
 [badge-link:license]: https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE
 [badge-link:deps]: https://david-dm.org/arnohovhannisyan/vscode-syncify
-[badge-link:codacy]: https://app.codacy.com/manual/arnohovhannisyan0/vscode-syncify/dashboard
+[badge-link:codacy]: https://app.codacy.com/manual/arnohovhannisyan/vscode-syncify/dashboard
