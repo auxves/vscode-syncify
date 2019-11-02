@@ -9,7 +9,6 @@ export * from "~/services/init";
 export * from "~/services/logger";
 export * from "~/services/pragma";
 export * from "~/services/settings";
-export * from "~/services/utilities";
 export * from "~/services/watcher";
 export * from "~/services/webview";
 export * from "~/services/profile";

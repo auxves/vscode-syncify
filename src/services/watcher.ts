@@ -1,6 +1,7 @@
 import { commands, extensions, window } from "vscode";
 import { FSWatcher, watch } from "vscode-chokidar";
-import { Environment, localize, Settings, Utilities } from "~/services";
+import { Environment, localize, Settings } from "~/services";
+import { sleep } from "~/utilities";
 
 export class Watcher {
   public static init(ignoredItems: string[]) {
@@ -63,7 +64,7 @@ export class Watcher {
     btn.text = `$(x) ${localize("(command) syncify.cancelUpload")}`;
     btn.show();
 
-    await Utilities.sleep(delay * 1000);
+    await sleep(delay * 1000);
 
     disposable.dispose();
     btn.dispose();

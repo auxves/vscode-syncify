@@ -1,4 +1,4 @@
-import { normalize, resolve } from "path";
+import { resolve } from "path";
 import pkg from "~/../package.json";
 import { OperatingSystem } from "~/models";
 import { store } from "~/redux/store";
