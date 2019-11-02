@@ -1,18 +1,14 @@
-import { commands, extensions, window } from "vscode";
-import { FSWatcher, watch } from "vscode-chokidar";
+import { commands, Disposable, extensions, window } from "vscode";
+import chokidar, { FSWatcher } from "vscode-chokidar";
 import { Environment, localize, Settings } from "~/services";
 import { sleep } from "~/utilities";
 
 export class Watcher {
   public static init(ignoredItems: string[]) {
     if (!this.watcher) {
-      this.watcher = watch(Environment.userFolder, {
+      this.watcher = chokidar.watch([], {
         ignored: ignoredItems
       });
-
-      extensions.onDidChange(
-        () => this.watching && window.state.focused && this.upload()
-      );
     }
   }
 
@@ -21,23 +17,27 @@ export class Watcher {
 
     this.stop();
 
-    this.watching = true;
+    this.watcher.add(Environment.userFolder);
+    this.watcher.on("change", () => this.upload());
 
-    this.watcher.addListener(
-      "change",
-      () => this.watching && window.state.focused && this.upload()
-    );
+    this.disposable = extensions.onDidChange(() => this.upload());
   }
 
   public static stop() {
-    if (this.watcher) this.watcher.removeAllListeners();
-    this.watching = false;
+    if (this.watcher) this.watcher.close();
+
+    if (this.disposable) {
+      this.disposable.dispose();
+      this.disposable = undefined;
+    }
   }
 
-  private static watching = false;
-  private static watcher: FSWatcher;
+  private static disposable?: Disposable = undefined;
+  private static watcher?: FSWatcher = undefined;
 
   private static async upload() {
+    if (!window.state.focused) return;
+
     const cmds = await commands.getCommands();
 
     if (cmds.includes("syncify.cancelUpload")) return;

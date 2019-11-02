@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.3.2
+
+- Improve auto upload
+
 ## v3.3.1
 
 - Check JSON before processing Pragmas
