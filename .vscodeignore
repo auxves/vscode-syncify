@@ -13,3 +13,4 @@ scripts
 *.log
 assets/ui/index.html
 translocalizer.json
+coverage

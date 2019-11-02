@@ -5,3 +5,4 @@ scripts/start.sh
 .vscode-test
 .vsce
 *.log
+coverage

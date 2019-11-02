@@ -6,9 +6,10 @@ install: yarn
 cache: yarn
 script:
   - yarn lint
-  - yarn test
+  - yarn test --coverage
   - yarn vsce package
 before_deploy:
+  - yarn cover
   - echo $'## Changes\n\n' > release-notes.log
   - git log $(git tag | sort -r | sed -n "2p")..@ --oneline --pretty=format:"%h %s" | awk '{print "- "$0}' >> release-notes.log
 deploy:
