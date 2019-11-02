@@ -17,7 +17,7 @@ const pathToUser = `${cleanupPath}/user`;
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 jest.spyOn(Environment, "repoFolder", "get").mockReturnValue(pathToRepo);
 
-Settings.get = jest.fn(async () => ({
+const currentSettings = {
   ...defaultSettings,
   syncer: Syncer.Repo,
   repo: {
@@ -31,7 +31,13 @@ Settings.get = jest.fn(async () => ({
     currentProfile: "main"
   },
   hostname: "jest"
-}));
+};
+
+Settings.get = jest
+  .fn()
+  .mockImplementation(async (selector: any) =>
+    selector ? selector(currentSettings) : currentSettings
+  );
 
 beforeEach(async () => {
   await Promise.all([

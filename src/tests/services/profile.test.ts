@@ -37,7 +37,7 @@ it("should switch profile", async () => {
 
   await Profile.switch("2");
 
-  const settings = await Settings.get();
+  const currentProfile = await Settings.get(s => s.repo.currentProfile);
 
-  expect(settings.repo.currentProfile).toBe("2");
+  expect(currentProfile).toBe("2");
 });

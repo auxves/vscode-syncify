@@ -40,9 +40,9 @@ it("should get settings", async () => {
 
   await FS.write(Environment.settings, JSON.stringify(newSettings));
 
-  const fetched = await Settings.get();
+  const watchSettings = await Settings.get(s => s.watchSettings);
 
-  expect(fetched.watchSettings).toBeTruthy();
+  expect(watchSettings).toBeTruthy();
 });
 
 it("should get settings w/o side effects", async () => {

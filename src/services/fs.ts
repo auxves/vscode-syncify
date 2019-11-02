@@ -32,11 +32,9 @@ export class FS {
     path: string,
     ignoredItems?: string[]
   ): Promise<string[]> {
-    const settings = Settings.get();
-
     return glob(`${normalize(path)}/**/*`, {
       dot: true,
-      ignore: ignoredItems || (await settings).ignoredItems,
+      ignore: ignoredItems || (await Settings.get(s => s.ignoredItems)),
       absolute: true
     });
   }

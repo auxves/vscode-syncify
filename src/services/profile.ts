@@ -3,7 +3,7 @@ import { localize, Settings } from "~/services";
 
 export class Profile {
   public static async switch(profile?: string): Promise<void> {
-    const { repo } = await Settings.get();
+    const repo = await Settings.get(s => s.repo);
 
     const newProfile = await (async () => {
       if (profile) {

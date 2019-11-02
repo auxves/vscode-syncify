@@ -42,7 +42,7 @@ export class Watcher {
 
     if (cmds.includes("syncify.cancelUpload")) return;
 
-    const { autoUploadDelay: delay } = await Settings.get();
+    const delay = await Settings.get(s => s.autoUploadDelay);
 
     let shouldUpload = true;
 
