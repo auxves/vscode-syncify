@@ -3,6 +3,7 @@ import createSimpleGit, { SimpleGit } from "simple-git/promise";
 import { commands, extensions, ViewColumn, window, workspace } from "vscode";
 import { IProfile, ISettings, ISyncer } from "~/models";
 import {
+  Debug,
   Environment,
   Extensions,
   FS,
@@ -25,7 +26,11 @@ export class RepoSyncer implements ISyncer {
 
       const isRepo = await this.git.checkIsRepo();
 
-      if (!isRepo) await this.git.init();
+      if (!isRepo) {
+        Debug.log("Repo folder is not a git repo, initializing...");
+
+        await this.git.init();
+      }
 
       const remotes = await this.git.getRemotes(true);
       const origin = remotes.find(remote => remote.name === "origin");
@@ -33,8 +38,14 @@ export class RepoSyncer implements ISyncer {
       const settings = await Settings.get();
 
       if (!origin) {
+        Debug.log(`Adding new remote "origin" at "${settings.repo.url}"`);
+
         await this.git.addRemote("origin", settings.repo.url);
       } else if (origin.refs.push !== settings.repo.url) {
+        Debug.log(
+          `Wrong remote url for "origin", removing and adding new origin at "${settings.repo.url}"`
+        );
+
         await this.git.removeRemote("origin");
         await this.git.addRemote("origin", settings.repo.url);
       }
@@ -60,6 +71,8 @@ export class RepoSyncer implements ISyncer {
       ]);
 
       const status = await this.getStatus(settings, profile);
+
+      Debug.log(`Current git status: ${status}`);
 
       const diff = await this.git.diff();
 
@@ -98,6 +111,8 @@ export class RepoSyncer implements ISyncer {
 
         const status = await this.getStatus(settings, profile);
 
+        Debug.log(`Current git status: ${status}`);
+
         if (status === "behind" && !settings.forceUpload) {
           window.setStatusBarMessage(
             localize("(info) upload.remoteChanges"),
@@ -109,6 +124,10 @@ export class RepoSyncer implements ISyncer {
         const branchExists = await this.localBranchExists(profile.branch);
 
         if (!branchExists) {
+          Debug.log(
+            `Branch "${profile.branch}" does not exist, creating new branch...`
+          );
+
           await this.git.checkout(["-b", profile.branch]);
         }
 
@@ -116,6 +135,8 @@ export class RepoSyncer implements ISyncer {
         await this.cleanUpRepo();
 
         const installedExtensions = Extensions.get();
+
+        Debug.log("Installed extensions:", installedExtensions);
 
         await FS.write(
           resolve(Environment.repoFolder, "extensions.json"),
@@ -167,6 +188,8 @@ export class RepoSyncer implements ISyncer {
 
         const remoteBranches = await this.git.branch(["-r"]);
 
+        Debug.log("Remote branches:", remoteBranches.all);
+
         if (!remoteBranches.all.length) {
           window.setStatusBarMessage(
             localize("(info) download.noRemoteBranches"),
@@ -196,12 +219,16 @@ export class RepoSyncer implements ISyncer {
 
         const branches = await this.git.branchLocal();
 
+        Debug.log("Local branches:", branches.all);
+
         await this.git.fetch();
 
         if (!branches.current || branches.current !== profile.branch) {
           await this.git.clean("f");
           await this.git.checkout(profile.branch);
         } else if (!branches.all.includes(profile.branch)) {
+          Debug.log(`Checking out remote branch "origin/${profile.branch}"`);
+
           await this.git.clean("f");
           await this.git.checkout([
             "-b",
@@ -215,6 +242,8 @@ export class RepoSyncer implements ISyncer {
         await this.git.pull("origin", profile.branch);
 
         if (stash.trim() !== "No local changes to save") {
+          Debug.log("Reapplying local changes");
+
           await this.git.stash(["pop"]);
         }
 
@@ -224,10 +253,17 @@ export class RepoSyncer implements ISyncer {
           await FS.read(resolve(Environment.userFolder, "extensions.json"))
         );
 
+        Debug.log(
+          "Extensions parsed from downloaded file:",
+          extensionsFromFile
+        );
+
         await Extensions.install(...Extensions.getMissing(extensionsFromFile));
 
         if (settings.removeExtensions) {
           const toDelete = Extensions.getUnneeded(extensionsFromFile);
+
+          Debug.log("Extensions to delete:", toDelete);
 
           if (toDelete.length) {
             const needToReload = toDelete.some(name => {
@@ -236,6 +272,8 @@ export class RepoSyncer implements ISyncer {
 
               return ext.isActive;
             });
+
+            Debug.log("Need to reload:", needToReload);
 
             await Extensions.uninstall(...toDelete);
 
@@ -287,6 +325,11 @@ export class RepoSyncer implements ISyncer {
     try {
       const files = await FS.listFiles(Environment.userFolder);
 
+      Debug.log(
+        "Files to copy to repo:",
+        files.map(f => relative(Environment.userFolder, f))
+      );
+
       const filesToPragma = ["settings.json", "keybindings.json"];
 
       await Promise.all(
@@ -323,6 +366,11 @@ export class RepoSyncer implements ISyncer {
       const files = await FS.listFiles(
         Environment.repoFolder,
         settings.ignoredItems.filter(i => !i.includes(Environment.extensionId))
+      );
+
+      Debug.log(
+        "Files to copy from repo:",
+        files.map(f => relative(Environment.repoFolder, f))
       );
 
       const filesToPragma = ["settings.json", "keybindings.json"];
@@ -415,6 +463,16 @@ export class RepoSyncer implements ISyncer {
         FS.listFiles(Environment.userFolder)
       ]);
 
+      Debug.log(
+        "Files in the repo folder:",
+        repoFiles.map(f => relative(Environment.repoFolder, f))
+      );
+
+      Debug.log(
+        "Files in the user folder:",
+        userFiles.map(f => relative(Environment.userFolder, f))
+      );
+
       const unneeded = repoFiles.filter(f => {
         const correspondingFile = resolve(
           Environment.userFolder,
@@ -422,6 +480,8 @@ export class RepoSyncer implements ISyncer {
         );
         return !userFiles.includes(correspondingFile);
       });
+
+      Debug.log("Unneeded files:", unneeded);
 
       await FS.delete(...unneeded);
     } catch (err) {
