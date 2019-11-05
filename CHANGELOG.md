@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.4.0
+
+- Add Debug Mode for solving issues quicker (#21)
+
 ## v3.3.2
 
 - Improve auto upload
