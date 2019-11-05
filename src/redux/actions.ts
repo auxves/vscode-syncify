@@ -3,7 +3,9 @@ import { Disposable } from "vscode";
 export enum ActionTypes {
   setExtensionPath = "Set Extension Path",
   setGlobalStoragePath = "Set Global Storage Path",
-  setSubscriptions = "Set Subscriptions"
+  setSubscriptions = "Set Subscriptions",
+  enableDebugMode = "Enable Debug Mode",
+  disableDebugMode = "Disable Debug Mode"
 }
 
 export interface IActions<P = any> {
@@ -12,6 +14,7 @@ export interface IActions<P = any> {
 }
 
 type ActionWithData<P> = (data: P) => IActions<P>;
+type ActionWithoutData = () => IActions<null>;
 
 export const setExtensionPath: ActionWithData<string> = data => ({
   data,
@@ -28,8 +31,20 @@ export const setSubscriptions: ActionWithData<Disposable[]> = data => ({
   type: ActionTypes.setSubscriptions
 });
 
+export const enableDebugMode: ActionWithoutData = () => ({
+  data: null,
+  type: ActionTypes.enableDebugMode
+});
+
+export const disableDebugMode: ActionWithoutData = () => ({
+  data: null,
+  type: ActionTypes.disableDebugMode
+});
+
 export default {
   setExtensionPath,
   setGlobalStoragePath,
-  setSubscriptions
+  setSubscriptions,
+  enableDebugMode,
+  disableDebugMode
 };

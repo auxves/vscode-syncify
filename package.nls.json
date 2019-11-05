@@ -5,6 +5,8 @@
   "(btn) yes": "Yes",
   "(command) syncify.cancelUpload": "Cancel Upload",
   "(command) syncify.download": "Syncify: Download",
+  "(command) syncify.disableDebugMode": "Syncify: Disable Debug Mode",
+  "(command) syncify.enableDebugMode": "Syncify: Enable Debug Mode",
   "(command) syncify.importCustomFile": "Syncify: Import Custom File",
   "(command) syncify.openSettings": "Syncify: Open Settings",
   "(command) syncify.registerCustomFile": "Syncify: Register Custom File",

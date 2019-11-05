@@ -1,6 +1,7 @@
+import { relative } from "path";
 import { commands, Disposable, extensions, window } from "vscode";
 import chokidar, { FSWatcher } from "vscode-chokidar";
-import { Environment, localize, Settings } from "~/services";
+import { Debug, Environment, localize, Settings } from "~/services";
 import { sleep } from "~/utilities";
 
 export class Watcher {
@@ -18,9 +19,17 @@ export class Watcher {
     this.stop();
 
     this.watcher.add(Environment.userFolder);
-    this.watcher.on("change", () => this.upload());
+    this.watcher.on("change", path => {
+      Debug.log(`File change: ${relative(Environment.userFolder, path)}`);
 
-    this.disposable = extensions.onDidChange(() => this.upload());
+      return this.upload();
+    });
+
+    this.disposable = extensions.onDidChange(() => {
+      Debug.log("Extension installed/uninstalled");
+
+      return this.upload();
+    });
   }
 
   public static stop() {

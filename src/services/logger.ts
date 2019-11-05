@@ -1,4 +1,4 @@
-import { Webview } from "~/services/webview";
+import { Webview } from "~/services";
 
 export class Logger {
   public static error(error: Error): void {
