@@ -143,8 +143,6 @@ export class RepoSyncer implements ISyncer {
           JSON.stringify(installedExtensions, null, 2)
         );
 
-        await this.git.add(".");
-
         const currentChanges = await this.git.diff();
 
         if (!currentChanges && !settings.forceUpload && branchExists) {
@@ -152,6 +150,7 @@ export class RepoSyncer implements ISyncer {
           return;
         }
 
+        await this.git.add(".");
         await this.git.commit(`Update [${new Date().toLocaleString()}]`);
         await this.git.push("origin", profile.branch);
 
