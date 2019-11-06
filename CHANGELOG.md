@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.4.1
+
+- Detect local changes properly
+
 ## v3.4.0
 
 - Add Debug Mode for solving issues quicker (#21)
