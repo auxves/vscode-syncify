@@ -82,7 +82,10 @@ export class FileSyncer implements ISyncer {
           return JSON.parse(await FS.read(path));
         })();
 
-        Debug.log();
+        Debug.log(
+          "Extensions parsed from downloaded file:",
+          extensionsFromFile
+        );
 
         await Extensions.install(...Extensions.getMissing(extensionsFromFile));
 
