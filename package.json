@@ -100,7 +100,7 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn generate:schema && yarn localize && webpack --config .webpack/production.js",
+    "vscode:prepublish": "run generate:schema && run localize && webpack --config .webpack/production.js",
     "compile": "webpack --config .webpack/development.js",
     "watch": "webpack --config .webpack/development.js --watch",
     "lint": "tslint -c ./tslint.json -p .",
@@ -122,6 +122,7 @@
     "jest": "^24.9.0",
     "jest-raw-loader": "^1.0.1",
     "raw-loader": "^3.1.0",
+    "run-script-proxy": "^1.0.1",
     "translocalizer": "^3.0.0",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",
