@@ -6,7 +6,8 @@ install: yarn
 cache: yarn
 script:
   - yarn lint
-  - yarn test
+  - yarn test --coverage
+  - "if [ $TRAVIS_NODE_VERSION = node ]; then yarn cover; fi"
   - yarn vsce package
 before_deploy:
   - echo $'## Changes\n\n' > release-notes.log

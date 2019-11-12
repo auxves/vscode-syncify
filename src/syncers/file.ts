@@ -2,6 +2,7 @@ import { basename, relative, resolve } from "path";
 import { commands, extensions, window } from "vscode";
 import { ISettings, ISyncer } from "~/models";
 import {
+  Debug,
   Environment,
   Extensions,
   FS,
@@ -81,6 +82,11 @@ export class FileSyncer implements ISyncer {
           return JSON.parse(await FS.read(path));
         })();
 
+        Debug.log(
+          "Extensions parsed from downloaded file:",
+          extensionsFromFile
+        );
+
         await Extensions.install(...Extensions.getMissing(extensionsFromFile));
 
         if (settings.removeExtensions) {
@@ -91,6 +97,8 @@ export class FileSyncer implements ISyncer {
               const ext = extensions.getExtension(name);
               return ext ? ext.isActive : false;
             });
+
+            Debug.log("Need to reload:", needToReload);
 
             await Extensions.uninstall(...toDelete);
 
@@ -135,6 +143,11 @@ export class FileSyncer implements ISyncer {
     try {
       const files = await FS.listFiles(Environment.userFolder);
 
+      Debug.log(
+        "Files to copy to folder:",
+        files.map(f => relative(Environment.userFolder, f))
+      );
+
       const filesToPragma = ["settings.json", "keybindings.json"];
 
       await Promise.all(
@@ -161,6 +174,11 @@ export class FileSyncer implements ISyncer {
   private async copyFilesFromPath(settings: ISettings): Promise<void> {
     try {
       const files = await FS.listFiles(settings.file.path);
+
+      Debug.log(
+        "Files to copy from folder:",
+        files.map(f => relative(settings.file.path, f))
+      );
 
       const filesToPragma = ["settings.json", "keybindings.json"];
 

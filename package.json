@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.3.1",
+  "version": "3.4.1",
   "engines": {
     "vscode": "^1.39.0"
   },
@@ -70,6 +70,14 @@
       {
         "command": "syncify.switchProfile",
         "title": "%(command) syncify.switchProfile%"
+      },
+      {
+        "command": "syncify.enableDebugMode",
+        "title": "%(command) syncify.enableDebugMode%"
+      },
+      {
+        "command": "syncify.disableDebugMode",
+        "title": "%(command) syncify.disableDebugMode%"
       }
     ],
     "jsonValidation": [
@@ -92,11 +100,12 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn generate:schema && yarn localize && webpack --config .webpack/production.js",
+    "vscode:prepublish": "run generate:schema && run localize && webpack --config .webpack/production.js",
     "compile": "webpack --config .webpack/development.js",
     "watch": "webpack --config .webpack/development.js --watch",
     "lint": "tslint -c ./tslint.json -p .",
     "test": "jest",
+    "cover": "cat ./coverage/lcov.info | codacy-coverage",
     "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
     "localize": "translocalizer"
   },
@@ -109,9 +118,11 @@
     "@types/normalize-path": "^3.0.0",
     "@types/vscode": "^1.39.0",
     "awesome-typescript-loader": "^5.2.1",
+    "codacy-coverage": "^3.4.0",
     "jest": "^24.9.0",
     "jest-raw-loader": "^1.0.1",
     "raw-loader": "^3.1.0",
+    "run-script-proxy": "^1.0.1",
     "translocalizer": "^3.0.0",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",
@@ -130,6 +141,7 @@
     "express": "^4.17.1",
     "fast-glob": "^3.1.0",
     "fs-extra": "^8.1.0",
+    "jsonc-parser": "^2.2.0",
     "lodash": "^4.17.15",
     "normalize-path": "^3.0.0",
     "redux": "^4.0.4",

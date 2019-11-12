@@ -83,81 +83,83 @@ it("should properly handle brackets", () => {
 
 describe("host", () => {
   it("should work with 'host'", () => {
-    const valid = {
-      initial: `{
-        // @sync host=jest
-        "abc": "xyz"
-      }`,
-      expected: `{
-        // @sync host=jest
-        // "abc": "xyz"
-      }`
-    };
+    const input = `{
+      // @sync host=jest
+      // "abc": "xyz"
+    }`;
 
-    expect(Pragma.processIncoming("test", valid.initial)).toBe(valid.expected);
+    const withCorrectHost = `{
+      // @sync host=jest
+      "abc": "xyz"
+    }`;
 
-    const invalid = {
-      initial: valid.initial,
-      expected: `{
-        // @sync host=jest
-        "abc": "xyz"
-      }`
-    };
+    const withIncorrectHost = `{
+      // @sync host=jest
+      // "abc": "xyz"
+    }`;
 
-    expect(Pragma.processIncoming("jest", invalid.initial)).toBe(
-      invalid.expected
-    );
+    expect(Pragma.processIncoming("test", input)).toBe(withIncorrectHost);
+    expect(Pragma.processIncoming("jest", input)).toBe(withCorrectHost);
   });
 });
 
 describe("os", () => {
   Object.keys(OperatingSystem).forEach(key => {
     it(`should work on 'OperatingSystem.${key}'`, () => {
-      Environment.os = OperatingSystem[key as keyof typeof OperatingSystem];
+      const os = OperatingSystem[key as keyof typeof OperatingSystem];
 
-      const initial = `{
+      const input = `{
+        // @sync os=${key.toLowerCase()}
+        // "abc": "xyz"
+      }`;
+
+      const withCorrectOS = `{
         // @sync os=${key.toLowerCase()}
         "abc": "xyz"
       }`;
 
-      const expected = `{
+      const withIncorrectOS = `{
         // @sync os=${key.toLowerCase()}
-        "abc": "xyz"
+        // "abc": "xyz"
       }`;
 
-      expect(Pragma.processIncoming("", initial)).toBe(expected);
+      Environment.os = os;
+
+      expect(Pragma.processIncoming("", input)).toBe(withCorrectOS);
+
+      Environment.os =
+        os === OperatingSystem.Windows
+          ? OperatingSystem.Mac
+          : OperatingSystem.Windows;
+
+      expect(Pragma.processIncoming("", input)).toBe(withIncorrectOS);
     });
   });
 });
 
 describe("env", () => {
   it("should work with 'env'", () => {
+    const input = `{
+      // @sync env=SYNCIFY
+      "abc": "xyz"
+    }`;
+
+    const withCorrectEnv = `{
+      // @sync env=SYNCIFY
+      "abc": "xyz"
+    }`;
+
+    const withIncorrectEnv = `{
+      // @sync env=SYNCIFY
+      // "abc": "xyz"
+    }`;
+
     process.env.SYNCIFY = "true";
 
-    const valid = {
-      initial: `{
-        // @sync env=SYNCIFY
-        "abc": "xyz"
-      }`,
-      expected: `{
-        // @sync env=SYNCIFY
-        "abc": "xyz"
-      }`
-    };
+    expect(Pragma.processIncoming("", input)).toBe(withCorrectEnv);
 
-    expect(Pragma.processIncoming("", valid.initial)).toBe(valid.expected);
+    process.env.SYNCIFY = "";
 
-    const invalid = {
-      initial: `{
-        // @sync env=SINCIFY
-        "abc": "xyz"
-      }`,
-      expected: `{
-        // @sync env=SINCIFY
-        // "abc": "xyz"
-      }`
-    };
-
-    expect(Pragma.processIncoming("", invalid.initial)).toBe(invalid.expected);
+    expect(Pragma.processIncoming("", input)).toBe(withIncorrectEnv);
   });
 });

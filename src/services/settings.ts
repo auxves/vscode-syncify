@@ -7,13 +7,15 @@ import {
   Initializer,
   localize,
   Logger,
-  Utilities,
   Watcher,
   Webview
 } from "~/services";
+import { confirm, merge } from "~/utilities";
 
 export class Settings {
-  public static async get(): Promise<ISettings> {
+  public static async get<T = ISettings>(
+    selector?: (s: ISettings) => T
+  ): Promise<T> {
     const exists = await FS.exists(Environment.settings);
 
     if (!exists) {
@@ -22,17 +24,27 @@ export class Settings {
         Environment.settings,
         JSON.stringify(defaultSettings, null, 2)
       );
-      return defaultSettings;
+
+      if (selector) return selector(defaultSettings);
+
+      return defaultSettings as any;
     }
 
     try {
       const contents = await FS.read(Environment.settings);
       const settings = JSON.parse(contents);
 
-      return Utilities.merge(defaultSettings, settings);
+      const merged = merge(defaultSettings, settings);
+
+      if (selector) return selector(merged);
+
+      return merged;
     } catch (err) {
       Logger.error(err);
-      return defaultSettings;
+
+      if (selector) return selector(defaultSettings);
+
+      return defaultSettings as any;
     }
   }
 
@@ -44,7 +56,7 @@ export class Settings {
 
     await FS.write(
       Environment.settings,
-      JSON.stringify(Utilities.merge(currentSettings, settings), null, 2)
+      JSON.stringify(merge(currentSettings, settings), null, 2)
     );
 
     await commands.executeCommand("syncify.reinitialize");
@@ -63,7 +75,7 @@ export class Settings {
   }
 
   public static async reset(): Promise<void> {
-    const userIsSure = await Utilities.confirm("reset");
+    const userIsSure = await confirm("reset");
 
     if (!userIsSure) return;
 

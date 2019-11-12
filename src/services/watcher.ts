@@ -1,17 +1,15 @@
-import { commands, extensions, window } from "vscode";
-import { FSWatcher, watch } from "vscode-chokidar";
-import { Environment, localize, Settings, Utilities } from "~/services";
+import { relative } from "path";
+import { commands, Disposable, extensions, window } from "vscode";
+import chokidar, { FSWatcher } from "vscode-chokidar";
+import { Debug, Environment, localize, Settings } from "~/services";
+import { sleep } from "~/utilities";
 
 export class Watcher {
   public static init(ignoredItems: string[]) {
     if (!this.watcher) {
-      this.watcher = watch(Environment.userFolder, {
+      this.watcher = chokidar.watch([], {
         ignored: ignoredItems
       });
-
-      extensions.onDidChange(
-        () => this.watching && window.state.focused && this.upload()
-      );
     }
   }
 
@@ -20,28 +18,40 @@ export class Watcher {
 
     this.stop();
 
-    this.watching = true;
+    this.watcher.add(Environment.userFolder);
+    this.watcher.on("change", path => {
+      Debug.log(`File change: ${relative(Environment.userFolder, path)}`);
 
-    this.watcher.addListener(
-      "change",
-      () => this.watching && window.state.focused && this.upload()
-    );
+      return this.upload();
+    });
+
+    this.disposable = extensions.onDidChange(() => {
+      Debug.log("Extension installed/uninstalled");
+
+      return this.upload();
+    });
   }
 
   public static stop() {
-    if (this.watcher) this.watcher.removeAllListeners();
-    this.watching = false;
+    if (this.watcher) this.watcher.close();
+
+    if (this.disposable) {
+      this.disposable.dispose();
+      this.disposable = undefined;
+    }
   }
 
-  private static watching = false;
-  private static watcher: FSWatcher;
+  private static disposable?: Disposable = undefined;
+  private static watcher?: FSWatcher = undefined;
 
   private static async upload() {
+    if (!window.state.focused) return;
+
     const cmds = await commands.getCommands();
 
     if (cmds.includes("syncify.cancelUpload")) return;
 
-    const { autoUploadDelay: delay } = await Settings.get();
+    const delay = await Settings.get(s => s.autoUploadDelay);
 
     let shouldUpload = true;
 
@@ -63,7 +73,7 @@ export class Watcher {
     btn.text = `$(x) ${localize("(command) syncify.cancelUpload")}`;
     btn.show();
 
-    await Utilities.sleep(delay * 1000);
+    await sleep(delay * 1000);
 
     disposable.dispose();
     btn.dispose();

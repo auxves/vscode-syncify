@@ -8,12 +8,14 @@ export interface IReduxState {
   extensionPath: string;
   globalStoragePath: string;
   subscriptions: Disposable[];
+  isDebugMode: boolean;
 }
 
 const defaultState: IReduxState = {
   extensionPath: "",
   globalStoragePath: "",
-  subscriptions: []
+  subscriptions: [],
+  isDebugMode: false
 };
 
 function getKey(action: IActions): ActionKeys | undefined {
@@ -26,7 +28,7 @@ function getKey(action: IActions): ActionKeys | undefined {
 const reducer = (state: IReduxState = defaultState, action: IActions) => {
   const key = getKey(action);
 
-  if (key) return handlers[key](state, action);
+  if (key) return (handlers as any)[key](state, action.data);
 
   return { ...state };
 };

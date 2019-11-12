@@ -1,9 +1,9 @@
 import { commands, window } from "vscode";
-import { localize, Settings } from "~/services";
+import { Debug, localize, Settings } from "~/services";
 
 export class Profile {
   public static async switch(profile?: string): Promise<void> {
-    const { repo } = await Settings.get();
+    const repo = await Settings.get(s => s.repo);
 
     const newProfile = await (async () => {
       if (profile) {
@@ -22,6 +22,8 @@ export class Profile {
     })();
 
     if (!newProfile) return;
+
+    Debug.log(`Switching to profile:`, newProfile.name);
 
     await Settings.set({
       repo: {

@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.4.1
+
+- Detect local changes properly
+
+## v3.4.0
+
+- Add Debug Mode for solving issues quicker (#21)
+
+## v3.3.2
+
+- Improve auto upload
+
 ## v3.3.1
 
 - Check JSON before processing Pragmas

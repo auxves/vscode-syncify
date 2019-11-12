@@ -5,6 +5,8 @@
 [![Issues][badge-img:issues]][badge-link:issues]
 [![License][badge-img:license]][badge-link:license]
 [![Deps][badge-img:deps]][badge-link:deps]
+[![Quality][badge-img:quality]][badge-link:codacy]
+[![Coverage][badge-img:coverage]][badge-link:codacy]
 
 Syncify can sync your VSCode settings and extensions across all your devices using multiple methods.
 
@@ -73,8 +75,11 @@ Check the [Troubleshooting Guide][link:troubleshooting] to see if your issue has
 [badge-img:issues]: https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify.svg
 [badge-img:license]: https://img.shields.io/github/license/arnohovhannisyan/vscode-syncify
 [badge-img:deps]: https://img.shields.io/david/arnohovhannisyan/vscode-syncify
+[badge-img:coverage]: https://img.shields.io/codacy/coverage/91d77e1b0b56428cb4c9902d247e57a7
+[badge-img:quality]: https://img.shields.io/codacy/grade/91d77e1b0b56428cb4c9902d247e57a7
 [badge-link:travis]: https://travis-ci.com/arnohovhannisyan/vscode-syncify
 [badge-link:version]: https://marketplace.visualstudio.com/items?itemName=arnohovhannisyan.syncify
 [badge-link:issues]: https://github.com/arnohovhannisyan/vscode-syncify/issues
 [badge-link:license]: https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE
 [badge-link:deps]: https://david-dm.org/arnohovhannisyan/vscode-syncify
+[badge-link:codacy]: https://app.codacy.com/manual/arnohovhannisyan/vscode-syncify/dashboard

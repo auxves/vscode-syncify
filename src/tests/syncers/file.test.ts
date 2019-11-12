@@ -13,14 +13,20 @@ const pathToUser = `${cleanupPath}/user`;
 
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 
-Settings.get = jest.fn(async () => ({
+const currentSettings = {
   ...defaultSettings,
   syncer: Syncer.File,
   file: {
     path: pathToExport
   },
   hostname: "jest"
-}));
+};
+
+Settings.get = jest
+  .fn()
+  .mockImplementation(async (selector: any) =>
+    selector ? selector(currentSettings) : currentSettings
+  );
 
 beforeEach(() => Promise.all([ensureDir(pathToExport), ensureDir(pathToUser)]));
 

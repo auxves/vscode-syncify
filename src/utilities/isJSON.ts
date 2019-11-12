@@ -1,12 +1,5 @@
-export function isJSON(json: string): boolean {
-  try {
-    const uncommented = json
-      .replace(/\s*(\/\/.+)|(\/\*.+\*\/)/g, "")
-      .replace(/,\s*\}/g, " }");
+import { parse } from "jsonc-parser";
 
-    JSON.parse(uncommented);
-    return true;
-  } catch {
-    return false;
-  }
+export function isJSON(json: string): boolean {
+  return !!parse(json);
 }
