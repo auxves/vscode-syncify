@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import { DeepPartial } from "utility-types";
 import { commands, ViewColumn, window, workspace } from "vscode";
 import { defaultSettings, ISettings } from "~/models";
@@ -25,9 +26,9 @@ export class Settings {
         JSON.stringify(defaultSettings, null, 2)
       );
 
-      if (selector) return selector(defaultSettings);
+      if (selector) return cloneDeep(selector(defaultSettings));
 
-      return defaultSettings as any;
+      return cloneDeep<any>(defaultSettings);
     }
 
     try {
@@ -36,15 +37,15 @@ export class Settings {
 
       const merged = merge(defaultSettings, settings);
 
-      if (selector) return selector(merged);
+      if (selector) return cloneDeep(selector(merged));
 
-      return merged;
+      return cloneDeep(merged);
     } catch (err) {
       Logger.error(err);
 
-      if (selector) return selector(defaultSettings);
+      if (selector) return cloneDeep(selector(defaultSettings));
 
-      return defaultSettings as any;
+      return cloneDeep<any>(defaultSettings);
     }
   }
 

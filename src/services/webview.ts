@@ -25,10 +25,12 @@ export class Webview {
       content,
       id: "settings",
       title: "Syncify Settings",
-      onMessage: message => {
+      onMessage: async message => {
         if (message === "edit") return Settings.openFile();
 
-        return Settings.set(set({}, message.setting, message.value));
+        const curSettings = await Settings.get();
+
+        return Settings.set(set(curSettings, message.setting, message.value));
       }
     });
   }
