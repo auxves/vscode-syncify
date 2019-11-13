@@ -9,11 +9,12 @@ os:
 install: yarn
 cache: yarn
 before_script:
+  - "SHOULD_DEPLOY = $(. .travis/should-deploy.sh)"
   - "if [ $TRAVIS_OS_NAME = windows ]; then source .travis/setup-windows.sh; fi" 
 script:
   - yarn lint
   - yarn test --coverage
-  - "if [ $TRAVIS_NODE_VERSION = node ] && [ $TRAVIS_OS_NAME = linux ]; then yarn cover; fi"
+  - "if [ $SHOULD_DEPLOY = yes ]; then yarn cover; fi"
   - yarn vsce package
 before_deploy:
   - echo $'## Changes\n\n' > release-notes.log
@@ -29,11 +30,11 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_NODE_VERSION = node && $TRAVIS_OS_NAME = linux
+      condition: $SHOULD_DEPLOY = yes
   - provider: script
     script: yarn vsce publish -p $VS_TOKEN
     skip_cleanup: true
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_NODE_VERSION = node && $TRAVIS_OS_NAME = linux
+      condition: $SHOULD_DEPLOY = yes
