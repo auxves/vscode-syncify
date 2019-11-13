@@ -24,14 +24,10 @@ it("should not list ignored files", async () => {
 });
 
 it("should list files that aren't ignored", async () => {
-  try {
-    const filepath = resolve(testFolder, "file");
-    await FS.write(filepath, "test");
+  const filepath = resolve(testFolder, "file");
+  await FS.write(filepath, "test");
 
-    const files = await FS.listFiles(testFolder, ["**/fole"]);
+  const files = await FS.listFiles(testFolder, ["**/fole"]);
 
-    expect(files.includes(filepath)).toBeTruthy();
-  } catch (err) {
-    expect(err).toBeFalsy();
-  }
+  expect(files.includes(filepath)).toBeTruthy();
 });
