@@ -8,10 +8,12 @@ os:
   - windows
 install: yarn
 cache: yarn
+before_script:
+  - "if [ $TRAVIS_OS_NAME = windows ]; then source .travis/setup-windows.sh; fi" 
 script:
   - yarn lint
   - yarn test --coverage
-  - "if [ $TRAVIS_NODE_VERSION = node ]; then yarn cover; fi"
+  - "if [ $TRAVIS_NODE_VERSION = node ] && [ $TRAVIS_OS_NAME = linux ]; then yarn cover; fi"
   - yarn vsce package
 before_deploy:
   - echo $'## Changes\n\n' > release-notes.log
