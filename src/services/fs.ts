@@ -1,6 +1,7 @@
 import glob from "fast-glob";
 import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
-import normalize from "normalize-path";
+import unixify from "normalize-path";
+import { normalize } from "path";
 import { Settings } from "~/services";
 
 export class FS {
@@ -32,10 +33,12 @@ export class FS {
     path: string,
     ignoredItems?: string[]
   ): Promise<string[]> {
-    return glob(`${normalize(path)}/**/*`, {
+    const files = await glob(`${normalize(path)}/**/*`, {
       dot: true,
       ignore: ignoredItems || (await Settings.get(s => s.ignoredItems)),
       absolute: true
     });
+      
+    return files.map(normalize);
   }
 }
