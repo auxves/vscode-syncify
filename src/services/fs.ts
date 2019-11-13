@@ -33,7 +33,7 @@ export class FS {
     path: string,
     ignoredItems?: string[]
   ): Promise<string[]> {
-    const files = await glob(`${normalize(path)}/**/*`, {
+    const files = await glob(`${unixify(path)}/**/*`, {
       dot: true,
       ignore: ignoredItems || (await Settings.get(s => s.ignoredItems)),
       absolute: true
