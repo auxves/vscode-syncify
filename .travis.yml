@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - node
   - lts/*
+os:
+  - linux
+  - osx
+  - windows
 install: yarn
 cache: yarn
 script:
