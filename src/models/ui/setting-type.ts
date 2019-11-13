@@ -3,5 +3,6 @@ export enum UISettingType {
   NumberInput = "numberinput",
   Checkbox = "checkbox",
   TextArea = "textarea",
-  Select = "select"
+  Select = "select",
+  ObjectArray = "objectarray"
 }

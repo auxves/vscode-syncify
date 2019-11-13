@@ -25,10 +25,12 @@ export class Webview {
       content,
       id: "settings",
       title: "Syncify Settings",
-      onMessage: message => {
+      onMessage: async message => {
         if (message === "edit") return Settings.openFile();
 
-        return Settings.set(set({}, message.setting, message.value));
+        const curSettings = await Settings.get();
+
+        return Settings.set(set(curSettings, message.setting, message.value));
       }
     });
   }
@@ -247,6 +249,35 @@ export class Webview {
               name: `${p.name} [branch: ${p.branch}]`,
               value: p.name
             }))
+          },
+          {
+            name: localize("(setting) repo.profiles.name"),
+            correspondingSetting: "repo.profiles",
+            type: UISettingType.ObjectArray,
+            newTemplate: {
+              branch: "",
+              name: ""
+            },
+            schema: [
+              {
+                name: localize("(setting) repo.profiles.properties.name.name"),
+                correspondingSetting: "name",
+                placeholder: localize(
+                  "(setting) repo.profiles.properties.name.placeholder"
+                ),
+                type: UISettingType.TextInput
+              },
+              {
+                name: localize(
+                  "(setting) repo.profiles.properties.branch.name"
+                ),
+                correspondingSetting: "branch",
+                placeholder: localize(
+                  "(setting) repo.profiles.properties.branch.placeholder"
+                ),
+                type: UISettingType.TextInput
+              }
+            ]
           }
         ]
       },
