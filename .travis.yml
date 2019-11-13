@@ -1,40 +1,75 @@
 language: node_js
-node_js:
-  - node
-  - lts/*
-os:
-  - linux
-  - osx
-  - windows
+
 install: yarn
 cache: yarn
-before_script:
-  - "SHOULD_DEPLOY = $(. .travis/should-deploy.sh)"
-  - "if [ $TRAVIS_OS_NAME = windows ]; then source .travis/setup-windows.sh; fi" 
-script:
-  - yarn lint
-  - yarn test --coverage
-  - "if [ $SHOULD_DEPLOY = yes ]; then yarn cover; fi"
-  - yarn vsce package
-before_deploy:
-  - echo $'## Changes\n\n' > release-notes.log
-  - git log $(git tag | sort -r | sed -n "2p")..@ --oneline --pretty=format:"%h %s" | awk '{print "- "$0}' >> release-notes.log
-deploy:
-  - provider: releases
-    api_key: $GITHUB_TOKEN
-    file_glob: true
-    file: "*.vsix"
-    edge: true
-    release_notes_file: release-notes.log
-    skip_cleanup: true
-    on:
-      branch: master
-      tags: true
-      condition: $SHOULD_DEPLOY = yes
-  - provider: script
-    script: yarn vsce publish -p $VS_TOKEN
-    skip_cleanup: true
-    on:
-      branch: master
-      tags: true
-      condition: $SHOULD_DEPLOY = yes
+
+jobs:
+  include:
+    - stage: tests
+      name: Tests
+
+      node_js:
+        - node
+        - lts/*
+      os:
+        - linux
+        - osx
+        - windows
+
+      before_script:
+        - git config --global user.email "travis@travis-ci.com"
+        - git config --global user.name "Travis"
+
+      script:
+        - yarn lint
+        - yarn test
+
+    - stage: coverage
+      name: Coverage
+
+      node_js: node
+      os: linux
+
+      before_script:
+        - git config --global user.email "travis@travis-ci.com"
+        - git config --global user.name "Travis"
+
+      script:
+        - yarn test --coverage
+        - yarn cover
+
+    - stage: deploy
+      name: Deploy
+
+      node_js: node
+      os: linux
+
+      script:
+        - yarn vsce package
+
+      before_deploy:
+        - echo $'## Changes\n\n' > release-notes.log
+        - git log $(git tag | sort -r | sed -n "2p")..@ --oneline --pretty=format:"%h %s" | awk '{print "- "$0}' >> release-notes.log
+
+      deploy:
+        - provider: releases
+          api_key: $GITHUB_TOKEN
+          file_glob: true
+          file: "*.vsix"
+          edge: true
+          release_notes_file: release-notes.log
+          skip_cleanup: true
+          on:
+            branch: master
+            tags: true
+        - provider: script
+          script: yarn vsce publish -p $VS_TOKEN
+          skip_cleanup: true
+          on:
+            branch: master
+            tags: true
+
+stages:
+  - tests
+  - coverage
+  - deploy
