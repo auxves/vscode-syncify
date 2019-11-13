@@ -29,11 +29,11 @@ deploy:
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_NODE_VERSION = node
+      condition: $TRAVIS_NODE_VERSION = node && $TRAVIS_OS_NAME = linux
   - provider: script
     script: yarn vsce publish -p $VS_TOKEN
     skip_cleanup: true
     on:
       branch: master
       tags: true
-      condition: $TRAVIS_NODE_VERSION = node
+      condition: $TRAVIS_NODE_VERSION = node && $TRAVIS_OS_NAME = linux
