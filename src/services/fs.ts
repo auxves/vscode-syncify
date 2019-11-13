@@ -24,8 +24,8 @@ export class FS {
     return writeFile(path, data);
   }
 
-  public static delete(...paths: string[]): Promise<void[]> {
-    return Promise.all(paths.map(path => remove(path)));
+  public static async delete(...paths: string[]): Promise<void> {
+    await Promise.all(paths.map(path => remove(path)));
   }
 
   public static async listFiles(
