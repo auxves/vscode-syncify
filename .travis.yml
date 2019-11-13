@@ -1,5 +1,13 @@
 language: node_js
 
+node_js:
+  - node
+  - lts/*
+os:
+  - linux
+  - osx
+  - windows
+
 install: yarn
 cache: yarn
 
@@ -7,14 +15,6 @@ jobs:
   include:
     - stage: tests
       name: Tests
-
-      node_js:
-        - node
-        - lts/*
-      os:
-        - linux
-        - osx
-        - windows
 
       before_script:
         - git config --global user.email "travis@travis-ci.com"
