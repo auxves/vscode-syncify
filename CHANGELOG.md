@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.5.0
+
+- Allow for Modifying Profiles using the Settings UI
+
 ## v3.4.1
 
 - Detect local changes properly
