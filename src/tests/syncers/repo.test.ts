@@ -164,15 +164,7 @@ describe("download", () => {
 
     const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));
 
-    // TODO: remove this after testing
-    console.log({
-      userData,
-      downloadedData,
-      expected,
-      same: downloadedData === expected
-    });
-
-    expect(downloadedData).toBe(expected);
+    expect(downloadedData.replace(/\r\n/g, "\n")).toBe(expected);
   });
 
   it("shouldn't download if ahead of remote", async () => {
@@ -227,7 +219,7 @@ describe("sync", () => {
     await repoSyncer.sync();
 
     const syncedData = await FS.read(resolve(pathToUser, "settings.json"));
-    expect(syncedData).toBe(expected);
+    expect(syncedData.replace(/\r\n/g, "\n")).toBe(expected);
   });
 });
 
