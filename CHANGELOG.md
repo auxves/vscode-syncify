@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.5.1
+
+- Fix issue with Windows where only `extensions.json` would be uploaded
+
 ## v3.5.0
 
 - Allow for Modifying Profiles using the Settings UI
