@@ -17,6 +17,7 @@ before_script:
 script:
   - yarn lint
   - yarn test
+  - ps -W
 
 jobs:
   include:
@@ -33,6 +34,7 @@ jobs:
       script:
         - yarn test --coverage
         - yarn cover
+        - if [ $TRAVIS_OS_NAME = windows ]; then powershell kill -n gpg-agent; fi
 
     - stage: deploy
       name: Deploy
