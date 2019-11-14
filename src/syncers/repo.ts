@@ -222,18 +222,25 @@ export class RepoSyncer implements ISyncer {
 
         await this.git.fetch();
 
-        if (!branches.current || branches.current !== profile.branch) {
+        if (!branches.current) {
+          Debug.log(`First download, checking out ${profile.branch}`);
+
           await this.git.clean("f");
-          await this.git.checkout(profile.branch);
+          await this.git.checkout(["-f", profile.branch]);
         } else if (!branches.all.includes(profile.branch)) {
           Debug.log(`Checking out remote branch "origin/${profile.branch}"`);
 
           await this.git.clean("f");
           await this.git.checkout([
+            "-f",
             "-b",
             profile.branch,
             `origin/${profile.branch}`
           ]);
+        } else if (branches.current !== profile.branch) {
+          Debug.log(`Branch exists, switching to ${profile.branch}`);
+
+          await this.git.raw(["switch", "-f", profile.branch]);
         }
 
         const stash = await this.git.stash();
