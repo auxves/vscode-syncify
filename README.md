@@ -44,6 +44,7 @@ Check the [Troubleshooting Guide][link:troubleshooting] to see if your issue has
 - Merge conflict resolution supported
 - Multiple profiles with support for hot-switching (currently only supported on `Git` method)
 - Simpler settings with intellisense
+- Debug mode for quickly resolving issues
 - Multiple sync methods
   - `Git` — sync using a git repository
   - `File` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc...)
