@@ -163,6 +163,15 @@ describe("download", () => {
     await repoSyncer.download();
 
     const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));
+
+    // TODO: remove this after testing
+    console.log({
+      userData,
+      downloadedData,
+      expected,
+      same: downloadedData === expected
+    });
+
     expect(downloadedData).toBe(expected);
   });
 
