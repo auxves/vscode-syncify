@@ -17,6 +17,8 @@ const pathToUser = `${cleanupPath}/user`;
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 jest.spyOn(Environment, "repoFolder", "get").mockReturnValue(pathToRepo);
 
+jest.setTimeout(15000);
+
 const currentSettings = {
   ...defaultSettings,
   syncer: Syncer.Repo,
