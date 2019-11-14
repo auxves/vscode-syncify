@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.5.3
+
+- Improve profile switching
+
 ## v3.5.2
 
 - Fix text input padding in the repo configuration page
