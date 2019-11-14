@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.5.2
+
+- Fix text input padding in the repo configuration page
+- Fix github repository creation
+
 ## v3.5.1
 
 - Fix issue with Windows where only `extensions.json` would be uploaded
