@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.6.0
+
+- Add Support for Custom Extensions
+
 ## v3.5.3
 
 - Improve profile switching
