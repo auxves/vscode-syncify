@@ -10,6 +10,15 @@
 
 Syncify can sync your VSCode settings and extensions across all your devices using multiple methods.
 
+- [Installation](#installation)
+  - [Using the Extensions Panel](#using-the-extensions-panel)
+  - [Using the Command Palette](#using-the-command-palette)
+- [Quick Start](#quick-start)
+- [Troubleshooting](#troubleshooting)
+- [Need Help?](#need-help)
+- [Advantages over Settings Sync](#advantages-over-settings-sync)
+- [Credits](#credits)
+
 ## Installation
 
 ### Using the Extensions Panel
