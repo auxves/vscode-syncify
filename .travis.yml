@@ -24,7 +24,7 @@ jobs:
     - stage: deploy
       name: Deploy
 
-      if: branch = master AND type != pull_request AND tag IS present
+      if: tag IS present
 
       node_js: node
       os: linux
