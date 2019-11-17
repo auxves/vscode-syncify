@@ -3,7 +3,7 @@ const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 
 module.exports = {
   stats: {
-    warningsFilter: /Critical dependency: the request of a dependency is an expression/
+    warningsFilter: /(Critical dependency: the request of a dependency is an expression|Can't resolve 'original-fs')/
   },
   target: "node",
   entry: "./src/main.ts",
