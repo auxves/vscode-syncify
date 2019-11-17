@@ -24,6 +24,14 @@ export class Environment {
     return resolve(Environment.userFolder, "customFiles");
   }
 
+  public static get vsixFolder() {
+    return resolve(Environment.userFolder, "vsix");
+  }
+
+  public static get vsixCacheFolder() {
+    return resolve(Environment.globalStoragePath, "vsixCache");
+  }
+
   public static get conflictsFolder() {
     return resolve(Environment.globalStoragePath, "conflicts");
   }
