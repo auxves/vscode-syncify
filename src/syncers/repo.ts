@@ -1,6 +1,13 @@
 import { basename, dirname, relative, resolve } from "path";
 import createSimpleGit, { SimpleGit } from "simple-git/promise";
-import { commands, extensions, ViewColumn, window, workspace } from "vscode";
+import {
+  commands,
+  extensions,
+  ProgressLocation,
+  ViewColumn,
+  window,
+  workspace
+} from "vscode";
 import { IProfile, ISettings, ISyncer } from "~/models";
 import {
   Debug,
@@ -14,6 +21,7 @@ import {
   Watcher,
   Webview
 } from "~/services";
+import { sleep } from "~/utilities";
 
 export class RepoSyncer implements ISyncer {
   private git: SimpleGit = createSimpleGit().silent(true);
@@ -94,71 +102,87 @@ export class RepoSyncer implements ISyncer {
     const settings = await Settings.get();
     Watcher.stop();
 
-    await (async () => {
-      try {
-        if (!(await this.isConfigured())) {
-          Webview.openLandingPage();
-          return;
-        }
+    await window.withProgress(
+      { location: ProgressLocation.Window },
+      async progress => {
+        try {
+          if (!(await this.isConfigured())) {
+            Webview.openLandingPage();
+            return;
+          }
 
-        await this.init();
+          await this.init();
 
-        window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
+          progress.report({ message: localize("(info) upload.uploading") });
 
-        const profile = await this.getProfile();
+          const profile = await this.getProfile();
 
-        await this.git.fetch();
+          await this.git.fetch();
 
-        const status = await this.getStatus(settings, profile);
+          const status = await this.getStatus(settings, profile);
 
-        Debug.log(`Current git status: ${status}`);
+          Debug.log(`Current git status: ${status}`);
 
-        if (status === "behind" && !settings.forceUpload) {
-          window.setStatusBarMessage(
-            localize("(info) upload.remoteChanges"),
-            2000
+          if (status === "behind" && !settings.forceUpload) {
+            progress.report({ increment: 100 });
+
+            await sleep(10);
+
+            return window.setStatusBarMessage(
+              localize("(info) upload.remoteChanges"),
+              2000
+            );
+          }
+
+          const branchExists = await this.localBranchExists(profile.branch);
+
+          if (!branchExists) {
+            Debug.log(
+              `Branch "${profile.branch}" does not exist, creating new branch...`
+            );
+
+            await this.git.checkout(["-b", profile.branch]);
+          }
+
+          await this.copyFilesToRepo();
+          await this.cleanUpRepo();
+
+          const installedExtensions = Extensions.get();
+
+          Debug.log("Installed extensions:", installedExtensions);
+
+          await FS.write(
+            resolve(Environment.repoFolder, "extensions.json"),
+            JSON.stringify(installedExtensions, null, 2)
           );
-          return;
+
+          const currentChanges = await this.git.diff();
+
+          if (!currentChanges && !settings.forceUpload && branchExists) {
+            progress.report({ increment: 100 });
+
+            await sleep(10);
+
+            return window.setStatusBarMessage(
+              localize("(info) upload.upToDate"),
+              2000
+            );
+          }
+
+          await this.git.add(".");
+          await this.git.commit(`Update [${new Date().toLocaleString()}]`);
+          await this.git.push("origin", profile.branch);
+
+          progress.report({ increment: 100 });
+
+          await sleep(10);
+
+          window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
+        } catch (err) {
+          Logger.error(err);
         }
-
-        const branchExists = await this.localBranchExists(profile.branch);
-
-        if (!branchExists) {
-          Debug.log(
-            `Branch "${profile.branch}" does not exist, creating new branch...`
-          );
-
-          await this.git.checkout(["-b", profile.branch]);
-        }
-
-        await this.copyFilesToRepo();
-        await this.cleanUpRepo();
-
-        const installedExtensions = Extensions.get();
-
-        Debug.log("Installed extensions:", installedExtensions);
-
-        await FS.write(
-          resolve(Environment.repoFolder, "extensions.json"),
-          JSON.stringify(installedExtensions, null, 2)
-        );
-
-        const currentChanges = await this.git.diff();
-
-        if (!currentChanges && !settings.forceUpload && branchExists) {
-          window.setStatusBarMessage(localize("(info) upload.upToDate"), 2000);
-          return;
-        }
-
-        await this.git.add(".");
-        await this.git.commit(`Update [${new Date().toLocaleString()}]`);
-        await this.git.push("origin", profile.branch);
-
-        window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
-      } catch (err) {
-        Logger.error(err);
       }
-    })();
+    );
 
     if (settings.watchSettings) Watcher.start();
   }
@@ -167,144 +191,155 @@ export class RepoSyncer implements ISyncer {
     const settings = await Settings.get();
     Watcher.stop();
 
-    await (async () => {
-      try {
-        if (!(await this.isConfigured())) {
-          Webview.openLandingPage();
-          return;
-        }
+    await window.withProgress(
+      { location: ProgressLocation.Window },
+      async progress => {
+        try {
+          if (!(await this.isConfigured())) {
+            Webview.openLandingPage();
+            return;
+          }
 
-        await this.init();
+          await this.init();
 
-        window.setStatusBarMessage(
-          localize("(info) download.downloading"),
-          2000
-        );
+          progress.report({
+            message: localize("(info) download.downloading")
+          });
 
-        const profile = await this.getProfile();
+          const profile = await this.getProfile();
 
-        await this.git.fetch();
+          await this.git.fetch();
 
-        const remoteBranches = await this.git.branch(["-r"]);
+          const remoteBranches = await this.git.branch(["-r"]);
 
-        Debug.log("Remote branches:", remoteBranches.all);
+          Debug.log("Remote branches:", remoteBranches.all);
 
-        if (!remoteBranches.all.length) {
-          window.setStatusBarMessage(
-            localize("(info) download.noRemoteBranches"),
-            2000
+          if (!remoteBranches.all.length) {
+            progress.report({ increment: 100 });
+
+            await sleep(10);
+
+            return window.setStatusBarMessage(
+              localize("(info) download.noRemoteBranches"),
+              2000
+            );
+          }
+
+          const diff = await this.git.diff([`origin/${profile.branch}`]);
+
+          if (!diff && !settings.forceDownload) {
+            progress.report({ increment: 100 });
+
+            await sleep(10);
+
+            return window.setStatusBarMessage(
+              localize("(info) download.upToDate"),
+              2000
+            );
+          }
+
+          await this.copyFilesToRepo();
+
+          const installedExtensions = Extensions.get();
+
+          await FS.write(
+            resolve(Environment.repoFolder, "extensions.json"),
+            JSON.stringify(installedExtensions, null, 2)
           );
-          return;
-        }
 
-        const diff = await this.git.diff([`origin/${profile.branch}`]);
+          const branches = await this.git.branchLocal();
 
-        if (!diff && !settings.forceDownload) {
-          window.setStatusBarMessage(
-            localize("(info) download.upToDate"),
-            2000
+          Debug.log("Local branches:", branches.all);
+
+          await this.git.fetch();
+
+          if (!branches.current) {
+            Debug.log(`First download, checking out ${profile.branch}`);
+
+            await this.git.clean("f");
+            await this.git.checkout(["-f", profile.branch]);
+          } else if (!branches.all.includes(profile.branch)) {
+            Debug.log(`Checking out remote branch "origin/${profile.branch}"`);
+
+            await this.git.clean("f");
+            await this.git.checkout([
+              "-f",
+              "-b",
+              profile.branch,
+              `origin/${profile.branch}`
+            ]);
+          } else if (branches.current !== profile.branch) {
+            Debug.log(`Branch exists, switching to ${profile.branch}`);
+
+            await this.git.raw(["switch", "-f", profile.branch]);
+          }
+
+          const stash = await this.git.stash();
+
+          await this.git.pull("origin", profile.branch);
+
+          if (stash.trim() !== "No local changes to save") {
+            Debug.log("Reapplying local changes");
+
+            await this.git.stash(["pop"]);
+          }
+
+          await this.copyFilesFromRepo(settings);
+
+          const extensionsFromFile = JSON.parse(
+            await FS.read(resolve(Environment.userFolder, "extensions.json"))
           );
-          return;
-        }
 
-        await this.copyFilesToRepo();
+          Debug.log(
+            "Extensions parsed from downloaded file:",
+            extensionsFromFile
+          );
 
-        const installedExtensions = Extensions.get();
+          await Extensions.install(
+            ...Extensions.getMissing(extensionsFromFile)
+          );
 
-        await FS.write(
-          resolve(Environment.repoFolder, "extensions.json"),
-          JSON.stringify(installedExtensions, null, 2)
-        );
+          if (settings.removeExtensions) {
+            const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
-        const branches = await this.git.branchLocal();
+            Debug.log("Extensions to delete:", toDelete);
 
-        Debug.log("Local branches:", branches.all);
-
-        await this.git.fetch();
-
-        if (!branches.current) {
-          Debug.log(`First download, checking out ${profile.branch}`);
-
-          await this.git.clean("f");
-          await this.git.checkout(["-f", profile.branch]);
-        } else if (!branches.all.includes(profile.branch)) {
-          Debug.log(`Checking out remote branch "origin/${profile.branch}"`);
-
-          await this.git.clean("f");
-          await this.git.checkout([
-            "-f",
-            "-b",
-            profile.branch,
-            `origin/${profile.branch}`
-          ]);
-        } else if (branches.current !== profile.branch) {
-          Debug.log(`Branch exists, switching to ${profile.branch}`);
-
-          await this.git.raw(["switch", "-f", profile.branch]);
-        }
-
-        const stash = await this.git.stash();
-
-        await this.git.pull("origin", profile.branch);
-
-        if (stash.trim() !== "No local changes to save") {
-          Debug.log("Reapplying local changes");
-
-          await this.git.stash(["pop"]);
-        }
-
-        await this.copyFilesFromRepo(settings);
-
-        const extensionsFromFile = JSON.parse(
-          await FS.read(resolve(Environment.userFolder, "extensions.json"))
-        );
-
-        Debug.log(
-          "Extensions parsed from downloaded file:",
-          extensionsFromFile
-        );
-
-        await Extensions.install(...Extensions.getMissing(extensionsFromFile));
-
-        if (settings.removeExtensions) {
-          const toDelete = Extensions.getUnneeded(extensionsFromFile);
-
-          Debug.log("Extensions to delete:", toDelete);
-
-          if (toDelete.length) {
-            const needToReload = toDelete.some(name => {
-              const ext = extensions.getExtension(name);
-              if (!ext) return false;
-
-              return ext.isActive;
-            });
-
-            Debug.log("Need to reload:", needToReload);
-
-            await Extensions.uninstall(...toDelete);
-
-            if (needToReload) {
-              const yes = localize("(btn) yes");
-              const result = await window.showInformationMessage(
-                localize("(info) download.needToReload"),
-                yes
+            if (toDelete.length) {
+              const needToReload = toDelete.some(
+                name => extensions.getExtension(name)?.isActive ?? false
               );
 
-              if (result === yes) {
-                commands.executeCommand("workbench.action.reloadWindow");
+              Debug.log("Need to reload:", needToReload);
+
+              await Extensions.uninstall(...toDelete);
+
+              if (needToReload) {
+                const yes = localize("(btn) yes");
+                const result = await window.showInformationMessage(
+                  localize("(info) download.needToReload"),
+                  yes
+                );
+
+                if (result === yes) {
+                  commands.executeCommand("workbench.action.reloadWindow");
+                }
               }
             }
           }
-        }
 
-        window.setStatusBarMessage(
-          localize("(info) download.downloaded"),
-          2000
-        );
-      } catch (err) {
-        Logger.error(err);
+          progress.report({ increment: 100 });
+
+          await sleep(10);
+
+          window.setStatusBarMessage(
+            localize("(info) download.downloaded"),
+            2000
+          );
+        } catch (err) {
+          Logger.error(err);
+        }
       }
-    })();
+    );
 
     if (settings.watchSettings) Watcher.start();
   }

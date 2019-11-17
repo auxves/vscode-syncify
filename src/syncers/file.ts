@@ -1,5 +1,5 @@
-import { basename, relative, resolve } from "path";
-import { commands, extensions, window } from "vscode";
+import { basename, dirname, relative, resolve } from "path";
+import { commands, extensions, ProgressLocation, window } from "vscode";
 import { ISettings, ISyncer } from "~/models";
 import {
   Debug,
@@ -13,6 +13,7 @@ import {
   Watcher,
   Webview
 } from "~/services";
+import { sleep } from "~/utilities";
 
 export class FileSyncer implements ISyncer {
   public async sync(): Promise<void> {
@@ -25,30 +26,37 @@ export class FileSyncer implements ISyncer {
     const settings = await Settings.get();
     Watcher.stop();
 
-    await (async () => {
-      try {
-        const configured = await this.isConfigured();
-        if (!configured) {
-          Webview.openLandingPage();
-          return;
+    await window.withProgress(
+      { location: ProgressLocation.Window },
+      async progress => {
+        try {
+          const configured = await this.isConfigured();
+          if (!configured) {
+            Webview.openLandingPage();
+            return;
+          }
+
+          progress.report({ message: localize("(info) upload.uploading") });
+
+          const installedExtensions = Extensions.get();
+
+          await FS.write(
+            resolve(settings.file.path, "extensions.json"),
+            JSON.stringify(installedExtensions, null, 2)
+          );
+
+          await this.copyFilesToPath(settings);
+
+          progress.report({ increment: 100 });
+
+          await sleep(10);
+
+          window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
+        } catch (err) {
+          Logger.error(err);
         }
-
-        window.setStatusBarMessage(localize("(info) upload.uploading"), 2000);
-
-        const installedExtensions = Extensions.get();
-
-        await FS.write(
-          resolve(settings.file.path, "extensions.json"),
-          JSON.stringify(installedExtensions, null, 2)
-        );
-
-        await this.copyFilesToPath(settings);
-
-        window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
-      } catch (err) {
-        Logger.error(err);
       }
-    })();
+    );
 
     if (settings.watchSettings) Watcher.start();
   }
@@ -57,72 +65,77 @@ export class FileSyncer implements ISyncer {
     const settings = await Settings.get();
     Watcher.stop();
 
-    await (async () => {
-      try {
-        const configured = await this.isConfigured();
-        if (!configured) {
-          Webview.openLandingPage();
-          return;
-        }
+    await window.withProgress(
+      { location: ProgressLocation.Window },
+      async progress => {
+        try {
+          const configured = await this.isConfigured();
+          if (!configured) {
+            Webview.openLandingPage();
+            return;
+          }
 
-        window.setStatusBarMessage(
-          localize("(info) download.downloading"),
-          2000
-        );
+          progress.report({ message: localize("(info) download.downloading") });
 
-        await this.copyFilesFromPath(settings);
+          await this.copyFilesFromPath(settings);
 
-        const extensionsFromFile = await (async () => {
-          const path = resolve(settings.file.path, "extensions.json");
+          const extensionsFromFile = await (async () => {
+            const path = resolve(settings.file.path, "extensions.json");
 
-          const extensionsExist = await FS.exists(path);
+            const extensionsExist = await FS.exists(path);
 
-          if (!extensionsExist) return [];
+            if (!extensionsExist) return [];
 
-          return JSON.parse(await FS.read(path));
-        })();
+            return JSON.parse(await FS.read(path));
+          })();
 
-        Debug.log(
-          "Extensions parsed from downloaded file:",
-          extensionsFromFile
-        );
+          Debug.log(
+            "Extensions parsed from downloaded file:",
+            extensionsFromFile
+          );
 
-        await Extensions.install(...Extensions.getMissing(extensionsFromFile));
+          await Extensions.install(
+            ...Extensions.getMissing(extensionsFromFile)
+          );
 
-        if (settings.removeExtensions) {
-          const toDelete = Extensions.getUnneeded(extensionsFromFile);
+          if (settings.removeExtensions) {
+            const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
-          if (toDelete.length) {
-            const needToReload = toDelete.some(name => {
-              const ext = extensions.getExtension(name);
-              return ext ? ext.isActive : false;
-            });
-
-            Debug.log("Need to reload:", needToReload);
-
-            await Extensions.uninstall(...toDelete);
-
-            if (needToReload) {
-              const result = await window.showInformationMessage(
-                localize("(info) download.needToReload"),
-                localize("(btn) yes")
+            if (toDelete.length) {
+              const needToReload = toDelete.some(
+                name => extensions.getExtension(name)?.isActive ?? false
               );
 
-              if (result) {
-                commands.executeCommand("workbench.action.reloadWindow");
+              Debug.log("Need to reload:", needToReload);
+
+              await Extensions.uninstall(...toDelete);
+
+              if (needToReload) {
+                const result = await window.showInformationMessage(
+                  localize("(info) download.needToReload"),
+                  localize("(btn) yes")
+                );
+
+                if (result) {
+                  commands.executeCommand("workbench.action.reloadWindow");
+                }
               }
             }
           }
-        }
 
-        window.setStatusBarMessage(
-          localize("(info) download.downloaded"),
-          2000
-        );
-      } catch (err) {
-        Logger.error(err);
+          progress.report({ increment: 100 });
+
+          await sleep(10);
+
+          window.setStatusBarMessage(
+            localize("(info) download.downloaded"),
+            2000
+          );
+        } catch (err) {
+          Logger.error(err);
+        }
       }
-    })();
+    );
 
     if (settings.watchSettings) Watcher.start();
   }
@@ -159,6 +172,8 @@ export class FileSyncer implements ISyncer {
             relative(Environment.userFolder, file)
           );
 
+          await FS.mkdir(dirname(newPath));
+
           if (filesToPragma.includes(basename(file))) {
             return FS.write(newPath, Pragma.processOutgoing(contents));
           }
@@ -190,6 +205,8 @@ export class FileSyncer implements ISyncer {
             Environment.userFolder,
             relative(settings.file.path, file)
           );
+
+          await FS.mkdir(dirname(newPath));
 
           const currentContents = await (async () => {
             if (await FS.exists(newPath)) return FS.read(newPath);

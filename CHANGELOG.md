@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.7.0
+
+- Fix `File` syncer
+- Always show sync progress
+
 ## v3.6.0
 
 - Add Support for Custom Extensions

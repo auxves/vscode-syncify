@@ -2,7 +2,7 @@ import { resolve } from "path";
 
 export const window = {
   setStatusBarMessage: () => null,
-  withProgress: () => null,
+  withProgress: (_: any, fn: any) => fn({ report: () => null }),
   showInformationMessage: () => null
 };
 
