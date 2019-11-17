@@ -38,7 +38,7 @@ export class FS {
       ignore: ignoredItems || (await Settings.get(s => s.ignoredItems)),
       absolute: true
     });
-      
+
     return files.map(normalize);
   }
 }
