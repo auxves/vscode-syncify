@@ -62,6 +62,7 @@ Check the [Troubleshooting Guide][link:troubleshooting] to see if your issue has
 - Notification for extension installation/uninstallation progress
 - Status bar button to cancel auto-upload
 - Descriptive errors with possible causes and solutions
+- Support for syncing extensions that are not from the VSCode Marketplace
 
 ## Credits
 
