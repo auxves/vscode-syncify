@@ -1,5 +1,5 @@
 import { basename, resolve } from "path";
-import { Uri, window, workspace } from "vscode";
+import { QuickPickItem, Uri, window, workspace } from "vscode";
 import { Environment, FS, localize, Logger } from "~/services";
 
 export class CustomFiles {
@@ -34,7 +34,10 @@ export class CustomFiles {
         }
 
         const result = await window.showQuickPick(
-          workspace.workspaceFolders.map(f => f.name),
+          workspace.workspaceFolders.map<QuickPickItem>(f => ({
+            label: f.name,
+            description: f.uri.fsPath
+          })),
           {
             placeHolder: localize(
               "(prompt) customFile.import.folderPlaceholder"
@@ -43,7 +46,7 @@ export class CustomFiles {
         );
 
         const selectedWorkspace = workspace.workspaceFolders.find(
-          f => f.name === result
+          f => f.uri.fsPath === result?.description
         );
 
         if (!selectedWorkspace) return;

@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify: Caricamento",
   "(prompt) customFile.import.filePlaceholder": "Selezionare il file da importare",
   "(prompt) customFile.import.folderPlaceholder": "Selezionare l'area di lavoro di importare il file in",
+  "(prompt) profile.switch.placeholder": "Selezionare il profilo per passare a",
   "(setting) autoUploadDelay.name": "Upload Automatico Di Ritardo",
   "(setting) autoUploadDelay.placeholder": "Inserire Upload Automatico Di Ritardo",
   "(setting) file.path.name": "Esportazione Dei File Di Percorso",

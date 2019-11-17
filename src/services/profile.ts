@@ -1,24 +1,26 @@
-import { commands, window } from "vscode";
+import { commands, QuickPickItem, window } from "vscode";
 import { Debug, localize, Settings } from "~/services";
 
 export class Profile {
   public static async switch(profile?: string): Promise<void> {
-    const repo = await Settings.get(s => s.repo);
+    const profiles = await Settings.get(s => s.repo.profiles);
 
     const newProfile = await (async () => {
       if (profile) {
-        return repo.profiles.find(prof => prof.name === profile);
+        return profiles.find(p => p.name === profile);
       }
 
-      const mappedProfiles = repo.profiles.map(
-        prof => `${prof.name} [branch: ${prof.branch}]`
+      const selected = await window.showQuickPick(
+        profiles.map<QuickPickItem>(p => ({
+          label: p.name,
+          description: p.branch
+        })),
+        {
+          placeHolder: localize("(prompt) profile.switch.placeholder")
+        }
       );
 
-      const selected = await window.showQuickPick(mappedProfiles);
-
-      return repo.profiles.find(
-        prof => `${prof.name} [branch: ${prof.branch}]` === selected
-      );
+      return profiles.find(p => p.name === selected?.label);
     })();
 
     if (!newProfile) return;

@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify: Загрузка",
   "(prompt) customFile.import.filePlaceholder": "Выберите файл для импорта.",
   "(prompt) customFile.import.folderPlaceholder": "Выберите рабочую область, чтобы импортировать файл в",
+  "(prompt) profile.switch.placeholder": "Выберите профиль, чтобы перейти к",
   "(setting) autoUploadDelay.name": "Автоматическая Загрузка Задержки",
   "(setting) autoUploadDelay.placeholder": "Введите Автоматическая Загрузка Задержки",
   "(setting) file.path.name": "Экспорт Путь Файл ",

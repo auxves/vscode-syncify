@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify:アップロード",
   "(prompt) customFile.import.filePlaceholder": "ファイルを選択し輸入",
   "(prompt) customFile.import.folderPlaceholder": "を選択し、ワークスペースをインポートするにはファイル",
+  "(prompt) profile.switch.placeholder": "プロファイルを選択しに切り替える",
   "(setting) autoUploadDelay.name": "自動アップロードの遅延",
   "(setting) autoUploadDelay.placeholder": "入力の自動アップロードの遅延",
   "(setting) file.path.name": "ファイルのExport Path",

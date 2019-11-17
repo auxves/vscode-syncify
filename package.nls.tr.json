@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify: Yükleniyor",
   "(prompt) customFile.import.filePlaceholder": "İçe aktarılacak dosyayı seçin ",
   "(prompt) customFile.import.folderPlaceholder": "Dosya almak için çalışma alanı seçin ",
+  "(prompt) profile.switch.placeholder": "Profile geçiş yapmak için seçin ",
   "(setting) autoUploadDelay.name": "Otomatik Yükleme Gecikme",
   "(setting) autoUploadDelay.placeholder": "Otomatik Yükleme Gecikmesi Girin ",
   "(setting) file.path.name": "Dosya Verme Yolu",

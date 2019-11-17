@@ -100,7 +100,7 @@ export class Webview {
       onMessage: async message => {
         if (message.close && this.pages.repo) return this.pages.repo.dispose();
 
-        Settings.set({
+        await Settings.set({
           repo: {
             url: message
           }

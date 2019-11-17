@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify：上传",
   "(prompt) customFile.import.filePlaceholder": "选择文件导入",
   "(prompt) customFile.import.folderPlaceholder": "选择工作区将文件导入",
+  "(prompt) profile.switch.placeholder": "选择配置换到",
   "(setting) autoUploadDelay.name": "自动上的延迟",
   "(setting) autoUploadDelay.placeholder": "输入自动上的延迟",
   "(setting) file.path.name": "文件的出口路径",

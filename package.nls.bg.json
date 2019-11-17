@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify: Изтегляне",
   "(prompt) customFile.import.filePlaceholder": "Изберете файл за импортиране.",
   "(prompt) customFile.import.folderPlaceholder": "Изберете вашата работна област, за да импортирате файл в",
+  "(prompt) profile.switch.placeholder": "Изберете профил, за да преминете към",
   "(setting) autoUploadDelay.name": "Автоматично Изтегляне Забавяне",
   "(setting) autoUploadDelay.placeholder": "Въведете Автоматично Изтегляне Забавяне",
   "(setting) file.path.name": "Износ Начин На Файл ",

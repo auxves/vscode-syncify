@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify: Feltöltés",
   "(prompt) customFile.import.filePlaceholder": "Válassza ki a fájl importálása",
   "(prompt) customFile.import.folderPlaceholder": "Válassza a munkaterület importálni a fájlt",
+  "(prompt) profile.switch.placeholder": "Válassza ki a profilt váltani",
   "(setting) autoUploadDelay.name": "Automatikus Feltöltés Késedelem",
   "(setting) autoUploadDelay.placeholder": "Adja Meg Az Automatikus Feltöltés Késedelem",
   "(setting) file.path.name": "Fájl Export Path",

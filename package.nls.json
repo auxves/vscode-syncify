@@ -37,6 +37,7 @@
   "(info) upload.uploading": "Syncify: Uploading",
   "(prompt) customFile.import.filePlaceholder": "Select the file to import",
   "(prompt) customFile.import.folderPlaceholder": "Select the workspace to import the file into",
+  "(prompt) profile.switch.placeholder": "Select the profile to switch to",
   "(setting) autoUploadDelay.name": "Auto Upload Delay",
   "(setting) autoUploadDelay.placeholder": "Enter Auto Upload Delay",
   "(setting) file.path.name": "File Export Path",
