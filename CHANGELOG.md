@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.7.1
+
+- Update logo
+
 ## v3.7.0
 
 - Fix `File` syncer
