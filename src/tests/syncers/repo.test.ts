@@ -13,9 +13,14 @@ const pathToRemote = `${cleanupPath}/remote`;
 const pathToRepo = `${cleanupPath}/repo`;
 const pathToTmpRepo = `${cleanupPath}/tmpRepo`;
 const pathToUser = `${cleanupPath}/user`;
+const pathToGlobalStoragePath = `${cleanupPath}/globalStoragePath`;
 
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 jest.spyOn(Environment, "repoFolder", "get").mockReturnValue(pathToRepo);
+
+jest
+  .spyOn(Environment, "globalStoragePath", "get")
+  .mockReturnValue(pathToGlobalStoragePath);
 
 jest.setTimeout(15000);
 

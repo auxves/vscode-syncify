@@ -10,8 +10,13 @@ jest.mock("~/services/localization.ts");
 const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/file");
 const pathToExport = `${cleanupPath}/export`;
 const pathToUser = `${cleanupPath}/user`;
+const pathToGlobalStoragePath = `${cleanupPath}/globalStoragePath`;
 
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
+
+jest
+  .spyOn(Environment, "globalStoragePath", "get")
+  .mockReturnValue(pathToGlobalStoragePath);
 
 const currentSettings = {
   ...defaultSettings,
