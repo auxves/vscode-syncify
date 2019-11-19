@@ -1,16 +1,19 @@
-.vscode/**
-.vscode-test/**
-dist/test/**
-src/**
-.gitignore
-**/tsconfig.json
-**/tslint.json
-**/*.map
-**/*.ts
-node_modules
+# Folders
+
+.vscode
+.github
 .webpack
-scripts
-*.log
+src
+node_modules
+coverage
+
+# Files
+
+.gitignore
+.gitmodules
+tsconfig.json
+tslint.json
 assets/ui/index.html
 translocalizer.json
-coverage
+*.map
+*.log

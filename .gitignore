@@ -1,8 +1,11 @@
+# Folders
+
+.vsce
 dist
 node_modules
-*.vsix
-scripts/start.sh
-.vscode-test
-.vsce
-*.log
 coverage
+
+# Files
+
+*.vsix
+*.log
