@@ -39,8 +39,8 @@ export class OAuth {
                 <h1>Success! You may now close this tab.</h1>
                 <style>
                   html, body {
-                    background-color: #1a1a1a;
-                    color: #c3c3c3;
+                    background-color: #343a40;
+                    color: #e9e9e9;
                     display: flex;
                     justify-content: center;
                     align-items: center;
