@@ -34,7 +34,7 @@ export class FS {
   ): Promise<string[]> {
     const files = await glob("**/*", {
       dot: true,
-      ignore: ignoredItems || (await Settings.get(s => s.ignoredItems)),
+      ignore: ignoredItems ?? (await Settings.get(s => s.ignoredItems)),
       absolute: true,
       cwd: path
     });

@@ -3,7 +3,7 @@ import { FileSyncer, RepoSyncer } from "~/syncers";
 
 export class Factory {
   public static generate(syncer: Syncer): ISyncer {
-    return new (this.syncers[syncer] || RepoSyncer)();
+    return new (this.syncers[syncer] ?? RepoSyncer)();
   }
 
   private static get syncers() {

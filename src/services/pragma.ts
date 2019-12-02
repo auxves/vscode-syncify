@@ -97,7 +97,7 @@ export class Pragma {
       } else if (Pragma.pragmaRegex.test(lines[index])) {
         const osMatch = lines[index].match(Pragma.osRegex);
         if (osMatch) {
-          const osFromPragma = osMatch[1] || osMatch[2] || osMatch[3];
+          const osFromPragma = osMatch[1] ?? osMatch[2] ?? osMatch[3];
 
           if (osFromPragma && /\s/.test(osFromPragma)) {
             lines[index] = lines[index].replace(
@@ -109,7 +109,7 @@ export class Pragma {
 
         const hostMatch = lines[index].match(Pragma.hostRegex);
         if (hostMatch) {
-          const hostFromPragma = hostMatch[1] || hostMatch[2] || hostMatch[3];
+          const hostFromPragma = hostMatch[1] ?? hostMatch[2] ?? hostMatch[3];
           if (hostFromPragma && /\s/.test(hostFromPragma)) {
             lines[index] = lines[index].replace(
               hostFromPragma,
@@ -120,7 +120,7 @@ export class Pragma {
 
         const envMatch = lines[index].match(Pragma.envRegex);
         if (envMatch) {
-          const envFromPragma = envMatch[1] || envMatch[2] || envMatch[3];
+          const envFromPragma = envMatch[1] ?? envMatch[2] ?? envMatch[3];
           if (envFromPragma && /\s/.test(envFromPragma)) {
             lines[index] = lines[index].replace(
               envFromPragma,
@@ -202,7 +202,7 @@ export class Pragma {
     const opensCurlyBraces = /{/.test(currentLine);
     const opensBrackets = /".+"\s*:\s*\[/.test(currentLine);
 
-    let openedBlock = opensCurlyBraces || opensBrackets;
+    let openedBlock = opensCurlyBraces ?? opensBrackets;
     if (openedBlock) {
       while (openedBlock) {
         currentLine = lines[++index];

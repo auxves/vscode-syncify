@@ -11,7 +11,7 @@ export class Localization {
   constructor(private locale?: string) {}
 
   public localize(key: string, ...args: string[]): string {
-    const message = this.bundle[key] || key;
+    const message = this.bundle[key] ?? key;
     return this.format(message, args);
   }
 
@@ -20,7 +20,7 @@ export class Localization {
       this.options = {
         ...this.options,
         ...JSON.parse(
-          process.env.VSCODE_NLS_CONFIG || JSON.stringify({ locale: "en" })
+          process.env.VSCODE_NLS_CONFIG ?? JSON.stringify({ locale: "en" })
         )
       };
 

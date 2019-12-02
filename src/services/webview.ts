@@ -142,8 +142,8 @@ export class Webview {
     const panel = window.createWebviewPanel(
       id,
       options.title,
-      options.viewColumn || ViewColumn.One,
-      merge(defaultOpts, options.options || {})
+      options.viewColumn ?? ViewColumn.One,
+      merge(defaultOpts, options.options ?? {})
     );
 
     const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));

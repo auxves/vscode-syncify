@@ -359,7 +359,7 @@ export class RepoSyncer implements ISyncer {
     const settings = await Settings.get();
     const { profiles, currentProfile } = settings.repo;
 
-    return profiles.find(({ name }) => name === currentProfile) || profiles[0];
+    return profiles.find(({ name }) => name === currentProfile) ?? profiles[0];
   }
 
   private async copyFilesToRepo(): Promise<void> {
