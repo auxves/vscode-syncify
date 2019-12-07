@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.7.2
+
+- Update dependencies to fix vulnerability
+
 ## v3.7.1
 
 - Update logo

@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.7.1",
+  "version": "3.7.2",
   "engines": {
     "vscode": "^1.40.0"
   },
@@ -130,10 +130,10 @@
     "tslint": "^5.20.1",
     "tslint-config-airbnb": "^5.11.2",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.2",
-    "typescript-json-schema": "^0.40.0",
+    "typescript": "^3.7.3",
+    "typescript-json-schema": "^0.41.0",
     "utility-types": "^3.10.0",
-    "vsce": "^1.69.0",
+    "vsce": "^1.70.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
@@ -146,7 +146,7 @@
     "jsonc-parser": "^2.2.0",
     "lodash": "^4.17.15",
     "redux": "^4.0.4",
-    "simple-git": "^1.126.0",
+    "simple-git": "^1.128.0",
     "vscode-chokidar": "^2.1.7",
     "xml-parser": "^1.2.1"
   },
