@@ -79,7 +79,7 @@ export class Pragma {
     const ignoredBlocks = Pragma.getIgnoredBlocks(localContent);
 
     if (ignoredBlocks) {
-      result = result.replace(/{\s*\n/, `{\n${ignoredBlocks}\n\n\n`);
+      result = result.replace(/}\s*\n/, `\n\n\n${ignoredBlocks}\n}`);
     }
 
     return result;
