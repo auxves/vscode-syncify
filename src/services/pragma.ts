@@ -191,7 +191,12 @@ export class Pragma {
     let index = currentIndex;
     let currentLine = lines[++index];
 
-    if (checkTrailingComma && !currentLine.trim().endsWith(",")) {
+    const opensCurlyBraces = /{/.test(currentLine);
+    const opensBrackets = /".+"\s*:\s*\[/.test(currentLine);
+
+    let openedBlock = opensCurlyBraces || opensBrackets;
+
+    if (!openedBlock && checkTrailingComma && !currentLine.trim().endsWith(",")) {
       currentLine = `${currentLine.trimRight()},`;
     }
 
@@ -199,10 +204,6 @@ export class Pragma {
       parsedLines.push(Pragma.toggleComments(currentLine, shouldComment));
     }
 
-    const opensCurlyBraces = /{/.test(currentLine);
-    const opensBrackets = /".+"\s*:\s*\[/.test(currentLine);
-
-    let openedBlock = opensCurlyBraces ?? opensBrackets;
     if (openedBlock) {
       while (openedBlock) {
         currentLine = lines[++index];
