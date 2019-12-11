@@ -25,31 +25,31 @@ it("should return new content if invalid", () => {
 
 it("should properly ignore", () => {
   const initial = `{
+    "xyz": "abc",
     // @sync-ignore
     "abc": "xyz",
     // @sync-ignore
-    "abc2": "xyz2",
-    "xyz": "abc"
+    "abc2": "xyz2"
   }`;
 
   const expected = `{
-    "xyz": "abc"
+    "xyz": "abc",
   }`;
 
   expect(Pragma.processOutgoing(initial)).toBe(expected);
 
   const initial2 = `{
-    "xyz": "def"
+    "xyz": "def",
   }`;
 
   const expected2 = `{
+    "xyz": "def",
+
+
     // @sync-ignore
     "abc": "xyz",
     // @sync-ignore
     "abc2": "xyz2",
-
-
-    "xyz": "def"
   }`;
 
   expect(Pragma.processIncoming("", initial2, initial)).toBe(expected2);
