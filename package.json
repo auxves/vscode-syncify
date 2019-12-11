@@ -18,7 +18,9 @@
     "url": "https://github.com/arnohovhannisyan/vscode-syncify/issues",
     "email": "arnohovhannisyan0@gmail.com"
   },
-  "extensionKind": "ui",
+  "extensionKind": [
+    "ui"
+  ],
   "categories": [
     "Other"
   ],
