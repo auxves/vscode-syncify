@@ -3,99 +3,194 @@ import { Environment, Pragma } from "~/services";
 
 jest.mock("~/services/localization.ts");
 
-it("should properly process before uploading", () => {
-  const initial = `{
-    // @sync host=jest
-    // "abc": "xyz"
-  }`;
-
-  const expected = `{
-    // @sync host=jest
-    "abc": "xyz"
-  }`;
-
-  expect(Pragma.processOutgoing(initial)).toBe(expected);
-});
-
 it("should return new content if invalid", () => {
   const newContent = `Invalid JSON`;
 
   expect(Pragma.processIncoming("", newContent, "")).toBe(newContent);
 });
 
-it("should properly ignore", () => {
-  const initial = `{
-    "xyz": "abc",
-    // @sync-ignore
-    "abc": "xyz",
-    // @sync-ignore
-    "abc2": "xyz2"
-  }`;
-
-  const expected = `{
-    "xyz": "abc",
-  }`;
-
-  expect(Pragma.processOutgoing(initial)).toBe(expected);
-
-  const initial2 = `{
-    "xyz": "def",
-  }`;
-
-  const expected2 = `{
-    "xyz": "def",
-
-
-    // @sync-ignore
-    "abc": "xyz",
-    // @sync-ignore
-    "abc2": "xyz2",
-  }`;
-
-  expect(Pragma.processIncoming("", initial2, initial)).toBe(expected2);
-});
-
 it("should properly handle brackets", () => {
   const initial = `{
     // @sync host=jest
-    // "abc": "{xyz}"
+    // "abc": "{xyz}",
   }`;
 
   const expected = `{
     // @sync host=jest
-    "abc": "{xyz}"
+    "abc": "{xyz}",
   }`;
 
   expect(Pragma.processOutgoing(initial)).toBe(expected);
 
   const initial2 = `{
     // @sync host=jest
-    "abc": "[xyz]"
+    "abc": "[xyz]",
   }`;
 
   const expected2 = `{
     // @sync host=jest
-    // "abc": "[xyz]"
+    // "abc": "[xyz]",
   }`;
 
   expect(Pragma.processIncoming("test", initial2, initial2)).toBe(expected2);
+});
+
+describe("outgoing", () => {
+  it("should uncomment", () => {
+    const initial = `{
+      // @sync host=jest
+      // "abc": "xyz",
+    }`;
+
+    const expected = `{
+      // @sync host=jest
+      "abc": "xyz",
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expected);
+  });
+
+  it("should remove unnecessary whitespace", () => {
+    const initial = `{
+
+      "abc": "xyz",
+
+    }`;
+
+    const expected = `{
+      "abc": "xyz",
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expected);
+  });
+
+  it("should remove ignored settings", () => {
+    const initial = `{
+      // @sync-ignore
+      "asd": 5,
+      
+      "abc": "xyz",
+    }`;
+
+    const expected = `{
+      "abc": "xyz",
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expected);
+  });
+});
+
+describe("ignore", () => {
+  it("should move to the bottom", () => {
+    const initial = `{
+      // @sync-ignore
+      "abc": "xyz",
+
+      // @sync-ignore
+      "abc2": "xyz2"
+
+      "xyz": "abc",
+    }`;
+
+    const expectedOutgoing = `{
+      "xyz": "abc",
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expectedOutgoing);
+
+    const expectedIncoming = `{
+      "xyz": "abc",
+
+
+      // @sync-ignore
+      "abc": "xyz",
+      // @sync-ignore
+      "abc2": "xyz2",
+    }`;
+
+    expect(Pragma.processIncoming("", expectedOutgoing, initial)).toBe(
+      expectedIncoming
+    );
+  });
+
+  it("should work with arrays", () => {
+    const initial = `{
+      // @sync-ignore
+      "array": [
+        1
+      ],
+
+      "xyz": "abc",
+    }`;
+
+    const expectedOutgoing = `{
+      "xyz": "abc",
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expectedOutgoing);
+
+    const expectedIncoming = `{
+      "xyz": "abc",
+
+
+      // @sync-ignore
+      "array": [
+        1
+      ],
+    }`;
+
+    expect(Pragma.processIncoming("", expectedOutgoing, initial)).toBe(
+      expectedIncoming
+    );
+  });
+
+  it("should work with objects", () => {
+    const initial = `{
+      // @sync-ignore
+      "object": {
+        ...
+      },
+
+      "xyz": "abc",
+    }`;
+
+    const expectedOutgoing = `{
+      "xyz": "abc",
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expectedOutgoing);
+
+    const expectedIncoming = `{
+      "xyz": "abc",
+
+
+      // @sync-ignore
+      "object": {
+        ...
+      },
+    }`;
+
+    expect(Pragma.processIncoming("", expectedOutgoing, initial)).toBe(
+      expectedIncoming
+    );
+  });
 });
 
 describe("host", () => {
   it("should work with 'host'", () => {
     const input = `{
       // @sync host=jest
-      // "abc": "xyz"
+      // "abc": "xyz",
     }`;
 
     const withCorrectHost = `{
       // @sync host=jest
-      "abc": "xyz"
+      "abc": "xyz",
     }`;
 
     const withIncorrectHost = `{
       // @sync host=jest
-      // "abc": "xyz"
+      // "abc": "xyz",
     }`;
 
     expect(Pragma.processIncoming("test", input)).toBe(withIncorrectHost);
@@ -110,17 +205,17 @@ describe("os", () => {
 
       const input = `{
         // @sync os=${key.toLowerCase()}
-        // "abc": "xyz"
+        // "abc": "xyz",
       }`;
 
       const withCorrectOS = `{
         // @sync os=${key.toLowerCase()}
-        "abc": "xyz"
+        "abc": "xyz",
       }`;
 
       const withIncorrectOS = `{
         // @sync os=${key.toLowerCase()}
-        // "abc": "xyz"
+        // "abc": "xyz",
       }`;
 
       Environment.os = os;
@@ -141,17 +236,17 @@ describe("env", () => {
   it("should work with 'env'", () => {
     const input = `{
       // @sync env=SYNCIFY
-      "abc": "xyz"
+      "abc": "xyz",
     }`;
 
     const withCorrectEnv = `{
       // @sync env=SYNCIFY
-      "abc": "xyz"
+      "abc": "xyz",
     }`;
 
     const withIncorrectEnv = `{
       // @sync env=SYNCIFY
-      // "abc": "xyz"
+      // "abc": "xyz",
     }`;
 
     process.env.SYNCIFY = "true";
