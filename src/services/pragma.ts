@@ -79,7 +79,10 @@ export class Pragma {
     const ignoredBlocks = Pragma.getIgnoredBlocks(localContent);
 
     if (ignoredBlocks) {
-      result = result.replace(/(\s*)\}(?![\s\S]*\s*\})/, `\n\n\n${ignoredBlocks}$1}`);
+      result = result.replace(
+        /(\s*)\}(?![\s\S]*\s*\})/,
+        `\n\n\n${ignoredBlocks}$1}`
+      );
     }
 
     return result;
@@ -135,7 +138,11 @@ export class Pragma {
         parsedLines.push(lines[index]);
       }
     }
-    return parsedLines.join("\n");
+
+    return parsedLines
+      .join("\n")
+      .replace(/{(\n|\s)+?\n(\s)/, "{$2")
+      .replace(/(\n|\s)+(\s*)}(?![\s\S]*\s*})/, "\n$2}");
   }
 
   private static pragmaRegex: RegExp = /\/{2}[\s\t]*\@sync[\s\t]+(?:os=.+[\s\t]*)?(?:host=.+[\s\t]*)?(?:env=.+[\s\t]*)?/;
@@ -196,7 +203,11 @@ export class Pragma {
 
     let openedBlock = opensCurlyBraces || opensBrackets;
 
-    if (!openedBlock && checkTrailingComma && !currentLine.trim().endsWith(",")) {
+    if (
+      !openedBlock &&
+      checkTrailingComma &&
+      !currentLine.trim().endsWith(",")
+    ) {
       currentLine = `${currentLine.trimRight()},`;
     }
 
