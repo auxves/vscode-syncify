@@ -141,8 +141,8 @@ export class Pragma {
 
     return parsedLines
       .join("\n")
-      .replace(/{(\n|\s)+?\n(\s)/, "{$2")
-      .replace(/(\n|\s)+(\s*)}(?![\s\S]*\s*})/, "\n$2}");
+      .replace(/(\s*){(\n|\s)+\n(\s*)/, "$1{\n$3")
+      .replace(/(\n|\s)+\n(\s*)}(?![\s\S]*\s*})/, "\n$2}");
   }
 
   private static pragmaRegex: RegExp = /\/{2}[\s\t]*\@sync[\s\t]+(?:os=.+[\s\t]*)?(?:host=.+[\s\t]*)?(?:env=.+[\s\t]*)?/;
