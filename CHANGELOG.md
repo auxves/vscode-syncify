@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.8.0
+
+- Fix whitespace issues with `@sync-ignore`
+- Append `@sync-ignore` settings to the end (#27 by clawoflight)
+- Fix pragmas for objects and arrays (#28 by clawoflight)
+
 ## v3.7.2
 
 - Update dependencies to fix vulnerability
