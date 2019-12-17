@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.9.0
+
+- Add `Download without Login` button for quick setup for teams
+
 ## v3.8.0
 
 - Fix whitespace issues with `@sync-ignore`

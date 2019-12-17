@@ -1,7 +1,7 @@
-import merge from "lodash/merge";
 import set from "lodash/set";
 import { resolve } from "path";
 import {
+  commands,
   env,
   Uri,
   ViewColumn,
@@ -12,7 +12,15 @@ import {
 } from "vscode";
 import WebviewPage from "~/../assets/ui/index.html";
 import { ISettings, IWebviewSection, Syncer, UISettingType } from "~/models";
-import { Environment, localize, OAuth, Settings } from "~/services";
+import {
+  Environment,
+  FS,
+  localize,
+  OAuth,
+  Settings,
+  Watcher
+} from "~/services";
+import { merge } from "~/utilities";
 
 export class Webview {
   public static openSettingsPage(settings: ISettings) {
@@ -58,6 +66,28 @@ export class Webview {
         const settings = await Settings.get();
 
         if (message === "settings") return this.openSettingsPage(settings);
+
+        if (message === "nologin") {
+          const result = await window.showInputBox({
+            placeHolder: localize("(prompt) webview.landingPage.nologin")
+          });
+
+          if (!result) return;
+
+          const currentSettings = await Settings.get();
+
+          Watcher.stop();
+
+          await FS.delete(Environment.globalStoragePath);
+
+          await Settings.set(merge(currentSettings, { repo: { url: result } }));
+
+          await commands.executeCommand("syncify.download");
+
+          await Settings.set(currentSettings);
+
+          return;
+        }
 
         const provider = (() => {
           switch (message) {
