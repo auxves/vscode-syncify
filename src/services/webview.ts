@@ -84,6 +84,10 @@ export class Webview {
 
           await commands.executeCommand("syncify.download");
 
+          Watcher.stop();
+
+          await FS.delete(Environment.globalStoragePath);
+
           await Settings.set(currentSettings);
 
           return;
