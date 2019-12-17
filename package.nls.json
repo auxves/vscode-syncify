@@ -16,8 +16,6 @@
   "(command) syncify.sync": "Syncify: Sync",
   "(command) syncify.upload": "Syncify: Upload",
   "(confirm) reset": "Syncify: Are you sure you want to reset?",
-  "(error) checkConsole": "Syncify: Please check the Developer Console for specific error (Help -> Toggle Developer Tools)",
-  "(error) invalidEnterpriseURL": "Syncify: Invalid GitHub Enterprise URL",
   "(info) customFiles.noFilesAvailable": "Syncify: No Files Available",
   "(info) customFiles.registered": "Syncify: Registered \"{0}\"",
   "(info) download.downloaded": "Syncify: Downloaded",
