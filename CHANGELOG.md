@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.9.1
+
+- Minor improvements and bugfixes
+
 ## v3.9.0
 
 - Add `Download without Login` button for quick setup for teams
