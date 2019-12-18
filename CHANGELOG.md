@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.9.2
+
+- Minor improvements and bugfixes
+
 ## v3.9.1
 
 - Minor improvements and bugfixes
