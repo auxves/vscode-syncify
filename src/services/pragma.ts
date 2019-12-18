@@ -183,7 +183,7 @@ export class Pragma {
         ? line.replace(/^(\s*)/, "$1// ")
         : line
       : isCommented
-      ? line.replace(/\/\/\s*/, "")
+      ? line.replace(/\/\/\s/, "")
       : line;
   }
 
@@ -201,7 +201,12 @@ export class Pragma {
     const opensCurlyBraces = /{/.test(currentLine);
     const opensBrackets = /".+"\s*:\s*\[/.test(currentLine);
 
-    let openedBlock = opensCurlyBraces || opensBrackets;
+    const closesCurlyBraces = /}/.test(currentLine);
+    const closesBrackets = /\]/.test(currentLine);
+
+    let openedBlock =
+      (opensCurlyBraces || opensBrackets) &&
+      !(closesCurlyBraces || closesBrackets);
 
     if (
       !openedBlock &&

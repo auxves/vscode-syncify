@@ -36,6 +36,58 @@ it("should properly handle brackets", () => {
 });
 
 describe("outgoing", () => {
+  it("should work with arrays", () => {
+    const initial = `{
+      // @sync host=jest
+      // "abc": ["xyz"],
+
+      // @sync host=jest
+      // "abc2": [
+      //   "test",
+      //   "test2"
+      // ],
+    }`;
+
+    const expected = `{
+      // @sync host=jest
+      "abc": ["xyz"],
+
+      // @sync host=jest
+      "abc2": [
+        "test",
+        "test2"
+      ],
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expected);
+  });
+
+  it("should work with objects", () => {
+    const initial = `{
+      // @sync host=jest
+      // "abc": {"test": "xyz"},
+
+      // @sync host=jest
+      // "abc2": {
+      //   "test": true,
+      //   "test2": false
+      // },
+    }`;
+
+    const expected = `{
+      // @sync host=jest
+      "abc": {"test": "xyz"},
+
+      // @sync host=jest
+      "abc2": {
+        "test": true,
+        "test2": false
+      },
+    }`;
+
+    expect(Pragma.processOutgoing(initial)).toBe(expected);
+  });
+
   it("should uncomment", () => {
     const initial = `{
       // @sync host=jest
@@ -200,7 +252,7 @@ describe("host", () => {
 
 describe("os", () => {
   Object.keys(OperatingSystem).forEach(key => {
-    it(`should work on 'OperatingSystem.${key}'`, () => {
+    it(`should work on '${key}'`, () => {
       const os = OperatingSystem[key as keyof typeof OperatingSystem];
 
       const input = `{
