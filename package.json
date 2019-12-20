@@ -107,7 +107,6 @@
     "watch": "run clean && webpack --config .webpack/development.js --watch",
     "lint": "tslint -c ./tslint.json -p .",
     "test": "jest",
-    "cover": "cat ./coverage/lcov.info | codacy-coverage",
     "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
     "localize": "translocalizer",
     "clean": "shx rm -rf dist"
@@ -121,7 +120,7 @@
     "@types/node": "^12.12.21",
     "@types/vscode": "^1.41.0",
     "awesome-typescript-loader": "^5.2.1",
-    "codacy-coverage": "^3.4.0",
+    "codecov": "^3.6.1",
     "jest": "^24.9.0",
     "jest-raw-loader": "^1.0.1",
     "raw-loader": "^4.0.0",
