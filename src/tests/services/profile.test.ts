@@ -1,22 +1,22 @@
-import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
-import { Environment, Initializer, Profile, Settings } from "~/services";
+import { Environment, FS, Profile, Settings } from "~/services";
 
 jest.mock("~/services/localization.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/prpfile");
-const testFolder = `${cleanupPath}/test`;
+
+const pathToTest = resolve(cleanupPath, "test");
+
+const paths = [pathToTest];
 
 jest
   .spyOn(Environment, "settings", "get")
-  .mockReturnValue(resolve(testFolder, "settings.json"));
+  .mockReturnValue(resolve(pathToTest, "settings.json"));
 
-Initializer.init = jest.fn();
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
-beforeEach(() => Promise.all([ensureDir(testFolder)]));
-
-afterEach(() => remove(cleanupPath));
+afterEach(() => FS.delete(cleanupPath));
 
 it("should switch profile", async () => {
   await Settings.set({

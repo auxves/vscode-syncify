@@ -84,7 +84,7 @@ export class Settings {
 
     await FS.delete(Environment.globalStoragePath);
 
-    await Initializer.init();
+    await commands.executeCommand("syncify.reinitialize");
 
     window.showInformationMessage(localize("(info) reset.resetComplete"));
   }

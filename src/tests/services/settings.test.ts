@@ -1,28 +1,25 @@
-import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import { defaultSettings, ISettings } from "~/models";
-import { Environment, FS, Initializer, Settings } from "~/services";
+import { Environment, FS, Settings } from "~/services";
 
 jest.mock("~/services/localization.ts");
 jest.mock("~/utilities/confirm.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/settings");
-const testFolder = `${cleanupPath}/test`;
 
-jest
-  .spyOn(Environment, "settings", "get")
-  .mockReturnValue(resolve(testFolder, "settings.json"));
+const pathToTest = resolve(cleanupPath, "test");
 
-jest
-  .spyOn(Environment, "globalStoragePath", "get")
-  .mockReturnValue(resolve(testFolder));
+const paths = [pathToTest];
 
-Initializer.init = jest.fn();
+const pathToSettings = resolve(pathToTest, "settings.json");
 
-beforeEach(() => Promise.all([ensureDir(testFolder)]));
+jest.spyOn(Environment, "settings", "get").mockReturnValue(pathToSettings);
+jest.spyOn(Environment, "globalStoragePath", "get").mockReturnValue(pathToTest);
 
-afterEach(() => remove(cleanupPath));
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
+
+afterEach(() => FS.delete(cleanupPath));
 
 it("should set settings", async () => {
   await Settings.set({ watchSettings: true });

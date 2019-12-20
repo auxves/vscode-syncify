@@ -1,8 +1,14 @@
 import { Localization } from "~/services";
 
-function locale(lang: string): (key: string, ...args: string[]) => string {
-  return (key: string, ...args: string[]) =>
-    new Localization(lang).localize(key, ...args);
+const cache: { [key: string]: typeof Localization.prototype.localize } = {};
+
+function locale(lang: string) {
+  if (cache[lang]) return cache[lang];
+
+  const localizer = new Localization(lang);
+  cache[lang] = localizer.localize.bind(localizer);
+
+  return cache[lang];
 }
 
 it("should localize english", () => {

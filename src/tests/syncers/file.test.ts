@@ -1,16 +1,22 @@
-import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
-import { defaultSettings, Syncer } from "~/models";
+import { Syncer } from "~/models";
 import { Environment, FS, Settings } from "~/services";
 import { FileSyncer } from "~/syncers";
+import { stringifyPretty } from "~/utilities";
 
 jest.mock("~/services/localization.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/file");
-const pathToExport = `${cleanupPath}/export`;
-const pathToUser = `${cleanupPath}/user`;
-const pathToGlobalStoragePath = `${cleanupPath}/globalStoragePath`;
+
+const pathToExport = resolve(cleanupPath, "export");
+const pathToUser = resolve(cleanupPath, "user");
+const pathToGlobalStoragePath = resolve(cleanupPath, "globalStoragePath");
+
+const paths = [pathToExport, pathToUser, pathToGlobalStoragePath];
+
+const pathToSettings = resolve(pathToUser, "settings.json");
+const pathToExportSettings = resolve(pathToExport, "settings.json");
 
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 
@@ -19,56 +25,48 @@ jest
   .mockReturnValue(pathToGlobalStoragePath);
 
 const currentSettings = {
-  ...defaultSettings,
   syncer: Syncer.File,
   file: {
     path: pathToExport
-  },
-  hostname: "jest"
+  }
 };
 
-Settings.get = jest
-  .fn()
-  .mockImplementation(async (selector: any) =>
-    selector ? selector(currentSettings) : currentSettings
-  );
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
-beforeEach(() => Promise.all([ensureDir(pathToExport), ensureDir(pathToUser)]));
-
-afterEach(() => remove(cleanupPath));
+afterEach(() => FS.delete(cleanupPath));
 
 describe("upload", () => {
   it("should upload", async () => {
-    const userData = {
+    await Settings.set(currentSettings);
+
+    const userData = stringifyPretty({
       "test.key": true
-    };
-    const expected = JSON.stringify(userData, null, 2);
-    await FS.write(resolve(pathToUser, "settings.json"), expected);
+    });
+
+    await FS.write(pathToSettings, userData);
 
     const fileSyncer = new FileSyncer();
     await fileSyncer.upload();
 
-    const uploadedData = await FS.read(resolve(pathToExport, "settings.json"));
-    expect(uploadedData).toBe(expected);
+    const uploadedData = await FS.read(pathToExportSettings);
+    expect(uploadedData).toBe(userData);
   });
 });
 
 describe("download", () => {
   it("should download", async () => {
-    const expected = JSON.stringify(
-      {
-        "test.key": true
-      },
-      null,
-      2
-    );
+    await Settings.set(currentSettings);
 
-    await FS.write(resolve(pathToExport, "settings.json"), expected);
+    const expected = stringifyPretty({
+      "test.key": true
+    });
+
+    await FS.write(pathToExportSettings, expected);
 
     const fileSyncer = new FileSyncer();
     await fileSyncer.download();
 
-    const downloadedData = await FS.read(resolve(pathToUser, "settings.json"));
+    const downloadedData = await FS.read(pathToSettings);
     expect(downloadedData).toBe(expected);
   });
 });

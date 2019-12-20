@@ -1,4 +1,3 @@
-import { ensureDir, remove } from "fs-extra";
 import { tmpdir } from "os";
 import { resolve } from "path";
 import { FS, Settings } from "~/services";
@@ -6,28 +5,29 @@ import { FS, Settings } from "~/services";
 jest.mock("~/services/localization.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/fs");
-const testFolder = `${cleanupPath}/test`;
 
-beforeEach(() => Promise.all([ensureDir(testFolder)]));
+const pathToTest = resolve(cleanupPath, "test");
 
-afterEach(() => remove(cleanupPath));
+const paths = [pathToTest];
 
-Settings.get = jest.fn();
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
+
+afterEach(() => FS.delete(cleanupPath));
 
 it("should not list ignored files", async () => {
-  const filepath = resolve(testFolder, "file");
+  const filepath = resolve(pathToTest, "file");
   await FS.write(filepath, "test");
 
-  const files = await FS.listFiles(testFolder, ["**/file"]);
+  const files = await FS.listFiles(pathToTest, ["**/file"]);
 
   expect(files.includes(filepath)).toBeFalsy();
 });
 
 it("should list files that aren't ignored", async () => {
-  const filepath = resolve(testFolder, "file");
+  const filepath = resolve(pathToTest, "file");
   await FS.write(filepath, "test");
 
-  const files = await FS.listFiles(testFolder, ["**/fole"]);
+  const files = await FS.listFiles(pathToTest, ["**/fole"]);
 
   expect(files.includes(filepath)).toBeTruthy();
 });
