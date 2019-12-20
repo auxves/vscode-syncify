@@ -5,8 +5,6 @@ import { Environment, FS, localize, Logger } from "~/services";
 export class CustomFiles {
   public static async import(uri?: Uri): Promise<void> {
     try {
-      if (!workspace.workspaceFolders) return;
-
       const folderExists = await FS.exists(Environment.customFilesFolder);
 
       if (!folderExists) {
