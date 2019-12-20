@@ -11,7 +11,7 @@ import {
   Watcher,
   Webview
 } from "~/services";
-import { confirm, merge } from "~/utilities";
+import { confirm, merge, stringifyPretty } from "~/utilities";
 
 export class Settings {
   public static async get<T = ISettings>(
@@ -21,10 +21,7 @@ export class Settings {
 
     if (!exists) {
       await FS.mkdir(Environment.globalStoragePath);
-      await FS.write(
-        Environment.settings,
-        JSON.stringify(defaultSettings, null, 2)
-      );
+      await FS.write(Environment.settings, stringifyPretty(defaultSettings));
 
       if (selector) return cloneDeep(selector(defaultSettings));
 
@@ -57,7 +54,7 @@ export class Settings {
 
     await FS.write(
       Environment.settings,
-      JSON.stringify(merge(currentSettings, settings), null, 2)
+      stringifyPretty(merge(currentSettings, settings))
     );
 
     await commands.executeCommand("syncify.reinitialize");

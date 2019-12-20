@@ -21,7 +21,7 @@ import {
   Watcher,
   Webview
 } from "~/services";
-import { checkGit, sleep } from "~/utilities";
+import { checkGit, sleep, stringifyPretty } from "~/utilities";
 
 export class RepoSyncer implements ISyncer {
   private git: SimpleGit = createSimpleGit().silent(true);
@@ -153,7 +153,7 @@ export class RepoSyncer implements ISyncer {
 
           await FS.write(
             resolve(Environment.repoFolder, "extensions.json"),
-            JSON.stringify(installedExtensions, null, 2)
+            stringifyPretty(installedExtensions)
           );
 
           const currentChanges = await this.git.diff();
@@ -244,7 +244,7 @@ export class RepoSyncer implements ISyncer {
 
           await FS.write(
             resolve(Environment.repoFolder, "extensions.json"),
-            JSON.stringify(installedExtensions, null, 2)
+            stringifyPretty(installedExtensions)
           );
 
           const branches = await this.git.branchLocal();

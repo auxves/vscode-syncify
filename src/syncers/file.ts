@@ -13,7 +13,7 @@ import {
   Watcher,
   Webview
 } from "~/services";
-import { sleep } from "~/utilities";
+import { sleep, stringifyPretty } from "~/utilities";
 
 export class FileSyncer implements ISyncer {
   public async sync(): Promise<void> {
@@ -42,7 +42,7 @@ export class FileSyncer implements ISyncer {
 
           await FS.write(
             resolve(settings.file.path, "extensions.json"),
-            JSON.stringify(installedExtensions, null, 2)
+            stringifyPretty(installedExtensions)
           );
 
           await this.copyFilesToPath(settings);
