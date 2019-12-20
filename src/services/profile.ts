@@ -3,7 +3,7 @@ import { Debug, localize, Settings } from "~/services";
 
 export class Profile {
   public static async switch(profile?: string): Promise<void> {
-    const profiles = await Settings.get(s => s.repo.profiles);
+    const { profiles, currentProfile } = await Settings.get(s => s.repo);
 
     const newProfile = await (async () => {
       if (profile) {
@@ -12,7 +12,7 @@ export class Profile {
 
       const selected = await window.showQuickPick(
         profiles.map<QuickPickItem>(p => ({
-          label: p.name,
+          label: p.name === currentProfile ? `${p.name} [current]` : p.name,
           description: p.branch
         })),
         {

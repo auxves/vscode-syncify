@@ -21,7 +21,7 @@ import {
   Watcher,
   Webview
 } from "~/services";
-import { sleep } from "~/utilities";
+import { checkGit, sleep } from "~/utilities";
 
 export class RepoSyncer implements ISyncer {
   private git: SimpleGit = createSimpleGit().silent(true);
@@ -271,7 +271,16 @@ export class RepoSyncer implements ISyncer {
           } else if (branches.current !== profile.branch) {
             Debug.log(`Branch exists, switching to ${profile.branch}`);
 
-            await this.git.raw(["switch", "-f", profile.branch]);
+            if (await checkGit("2.23.0")) {
+              Debug.log(`Git version is >=2.23.0, using git-switch`);
+
+              await this.git.raw(["switch", "-f", profile.branch]);
+            } else {
+              Debug.log(`Git version is <2.23.0, not using git-switch`);
+
+              await this.git.reset(["--hard", "HEAD"]);
+              await this.git.checkout(["-f", profile.branch]);
+            }
           }
 
           const stash = await this.git.stash();

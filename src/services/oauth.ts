@@ -16,7 +16,7 @@ export class OAuth {
       const server = app.listen(port);
 
       app.get("/implicit", async req => {
-        const token = req.param("token");
+        const token = req.query.token;
         const user = await this.getUser(token, provider);
 
         if (!user) return;
@@ -134,7 +134,7 @@ export class OAuth {
   private static async handleRequest(req: Request, provider: Provider) {
     if (provider !== "github") return;
 
-    const token = await OAuth.getToken(req.param("code"));
+    const token = await OAuth.getToken(req.query.code);
 
     if (!token) return;
 

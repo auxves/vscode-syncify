@@ -4,9 +4,9 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.9.2",
+  "version": "3.9.3",
   "engines": {
-    "vscode": "^1.40.0"
+    "vscode": "^1.41.0"
   },
   "icon": "assets/logo.png",
   "homepage": "https://github.com/arnohovhannisyan/vscode-syncify",
@@ -102,23 +102,25 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "run generate:schema && run localize && webpack --config .webpack/production.js",
-    "compile": "webpack --config .webpack/development.js",
-    "watch": "webpack --config .webpack/development.js --watch",
+    "vscode:prepublish": "run generate:schema && run localize && run clean && webpack --config .webpack/production.js",
+    "compile": "run clean && webpack --config .webpack/development.js",
+    "watch": "run clean && webpack --config .webpack/development.js --watch",
     "lint": "tslint -c ./tslint.json -p .",
     "test": "jest",
     "cover": "cat ./coverage/lcov.info | codacy-coverage",
     "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
-    "localize": "translocalizer"
+    "localize": "translocalizer",
+    "clean": "shx rm -rf dist"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.4.32",
+    "@types/compare-versions": "^3.3.0",
     "@types/express": "^4.17.2",
     "@types/fs-extra": "^8.0.1",
-    "@types/jest": "^24.0.23",
+    "@types/jest": "^24.0.24",
     "@types/lodash": "^4.14.149",
-    "@types/node": "^12.12.17",
-    "@types/vscode": "^1.40.0",
+    "@types/node": "^12.12.21",
+    "@types/vscode": "^1.41.0",
     "@types/xml-parser": "^1.2.29",
     "awesome-typescript-loader": "^5.2.1",
     "codacy-coverage": "^3.4.0",
@@ -126,6 +128,7 @@
     "jest-raw-loader": "^1.0.1",
     "raw-loader": "^4.0.0",
     "run-script-proxy": "^1.0.1",
+    "shx": "^0.3.2",
     "translocalizer": "^3.0.1",
     "ts-jest": "^24.2.0",
     "ts-loader": "^6.2.1",
@@ -136,19 +139,20 @@
     "typescript-json-schema": "^0.41.0",
     "utility-types": "^3.10.0",
     "vsce": "^1.71.0",
-    "webpack": "^4.41.2",
+    "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
     "adm-zip": "^0.4.13",
     "axios": "^0.19.0",
+    "compare-versions": "^3.5.1",
     "express": "^4.17.1",
     "fast-glob": "^3.1.1",
     "fs-extra": "^8.1.0",
     "jsonc-parser": "^2.2.0",
     "lodash": "^4.17.15",
     "redux": "^4.0.4",
-    "simple-git": "^1.128.0",
+    "simple-git": "^1.129.0",
     "vscode-chokidar": "^2.1.7",
     "xml-parser": "^1.2.1"
   },
