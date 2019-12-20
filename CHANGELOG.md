@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.10.0
+
+- Allow for syncing VSIX files
+- Allow for syncing binary files
+
 ## v3.9.3
 
 - Make sure that `git --version >= 2.23.0` before using the `switch` command

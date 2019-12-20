@@ -146,8 +146,7 @@ export class FileSyncer implements ISyncer {
 
     if (!path) return false;
 
-    const folderExists = await FS.exists(path);
-    if (!folderExists) await FS.mkdir(path);
+    await FS.mkdir(path);
 
     return true;
   }
@@ -161,12 +160,8 @@ export class FileSyncer implements ISyncer {
         files.map(f => relative(Environment.userFolder, f))
       );
 
-      const filesToPragma = ["settings.json", "keybindings.json"];
-
       await Promise.all(
         files.map(async file => {
-          const contents = await FS.read(file);
-
           const newPath = resolve(
             settings.file.path,
             relative(Environment.userFolder, file)
@@ -174,11 +169,14 @@ export class FileSyncer implements ISyncer {
 
           await FS.mkdir(dirname(newPath));
 
-          if (filesToPragma.includes(basename(file))) {
-            return FS.write(newPath, Pragma.processOutgoing(contents));
+          if (/\.json$/.test(file)) {
+            return FS.write(
+              newPath,
+              Pragma.processOutgoing(await FS.read(file))
+            );
           }
 
-          return FS.write(newPath, contents);
+          return FS.cp(file, newPath);
         })
       );
     } catch (err) {
@@ -195,12 +193,8 @@ export class FileSyncer implements ISyncer {
         files.map(f => relative(settings.file.path, f))
       );
 
-      const filesToPragma = ["settings.json", "keybindings.json"];
-
       await Promise.all(
         files.map(async file => {
-          const contents = await FS.read(file);
-
           const newPath = resolve(
             Environment.userFolder,
             relative(settings.file.path, file)
@@ -208,16 +202,16 @@ export class FileSyncer implements ISyncer {
 
           await FS.mkdir(dirname(newPath));
 
-          const currentContents = await (async () => {
-            if (await FS.exists(newPath)) return FS.read(newPath);
+          if (/\.json$/.test(file)) {
+            const currentContents = await (async () => {
+              if (await FS.exists(newPath)) return FS.read(newPath);
 
-            return "{}";
-          })();
+              return "{}";
+            })();
 
-          if (filesToPragma.includes(basename(file))) {
             const afterPragma = Pragma.processIncoming(
               settings.hostname,
-              contents,
+              await FS.read(file),
               currentContents
             );
 
@@ -228,7 +222,7 @@ export class FileSyncer implements ISyncer {
             return;
           }
 
-          if (currentContents !== contents) return FS.write(newPath, contents);
+          return FS.cp(file, newPath);
         })
       );
     } catch (err) {

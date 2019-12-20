@@ -1,5 +1,12 @@
 import glob from "fast-glob";
-import { ensureDir, pathExists, readFile, remove, writeFile } from "fs-extra";
+import {
+  copy,
+  ensureDir,
+  pathExists,
+  readFile,
+  remove,
+  writeFile
+} from "fs-extra";
 import { normalize } from "path";
 import { Settings } from "~/services";
 
@@ -10,6 +17,14 @@ export class FS {
 
   public static mkdir(path: string): Promise<void> {
     return ensureDir(path);
+  }
+
+  public static cp(src: string, dest: string): Promise<void> {
+    return copy(src, dest, {
+      overwrite: true,
+      recursive: true,
+      preserveTimestamps: true
+    });
   }
 
   public static read(path: string): Promise<string> {

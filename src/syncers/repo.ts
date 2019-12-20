@@ -294,6 +294,7 @@ export class RepoSyncer implements ISyncer {
           }
 
           await this.copyFilesFromRepo(settings);
+          await this.cleanUpUser();
 
           const extensionsFromFile = JSON.parse(
             await FS.read(resolve(Environment.userFolder, "extensions.json"))
@@ -380,30 +381,23 @@ export class RepoSyncer implements ISyncer {
         files.map(f => relative(Environment.userFolder, f))
       );
 
-      const filesToPragma = ["settings.json", "keybindings.json"];
-
       await Promise.all(
         files.map(async file => {
-          const contents = await FS.read(file);
-
-          const dir = dirname(
-            resolve(
-              Environment.repoFolder,
-              relative(Environment.userFolder, file)
-            )
+          const newPath = resolve(
+            Environment.repoFolder,
+            relative(Environment.userFolder, file)
           );
 
-          const dirExists = await FS.exists(dir);
+          await FS.mkdir(dirname(newPath));
 
-          if (!dirExists) await FS.mkdir(dir);
-
-          const newPath = resolve(dir, basename(file));
-
-          if (filesToPragma.includes(basename(file))) {
-            return FS.write(newPath, Pragma.processOutgoing(contents));
+          if (/\.json$/.test(file)) {
+            return FS.write(
+              newPath,
+              Pragma.processOutgoing(await FS.read(file))
+            );
           }
 
-          return FS.write(newPath, contents);
+          return FS.cp(file, newPath);
         })
       );
     } catch (err) {
@@ -423,16 +417,17 @@ export class RepoSyncer implements ISyncer {
         files.map(f => relative(Environment.repoFolder, f))
       );
 
-      const filesToPragma = ["settings.json", "keybindings.json"];
-
       await Promise.all(
         files.map(async file => {
-          let contents = await FS.read(file);
+          let contents = await FS.readBuffer(file);
 
-          const hasConflict = (c: string) =>
-            ["<<<<<<<", "=======", ">>>>>>>"].every(s => c.includes(s));
+          const hasConflict = (c: string) => {
+            const regexes = [/^<<<<<<<$/, /^=======$/, /^>>>>>>>$/];
 
-          if (hasConflict(contents)) {
+            return !c.split("\n").every(v => regexes.every(r => !r.test(v)));
+          };
+
+          if (hasConflict(contents.toString())) {
             await FS.mkdir(Environment.conflictsFolder);
 
             const tmpPath = resolve(
@@ -440,7 +435,7 @@ export class RepoSyncer implements ISyncer {
               `${Math.random()}-${basename(file)}`
             );
 
-            await FS.write(tmpPath, contents);
+            await FS.cp(file, tmpPath);
 
             const doc = await workspace.openTextDocument(tmpPath);
 
@@ -456,38 +451,28 @@ export class RepoSyncer implements ISyncer {
               });
             });
 
-            contents = await FS.read(tmpPath);
+            contents = await FS.readBuffer(tmpPath);
 
             await FS.delete(tmpPath);
           }
 
-          const dir = dirname(
-            resolve(
-              Environment.userFolder,
-              relative(Environment.repoFolder, file)
-            )
+          const newPath = resolve(
+            Environment.userFolder,
+            relative(Environment.repoFolder, file)
           );
 
-          const dirExists = await FS.exists(dir);
+          await FS.mkdir(dirname(newPath));
 
-          if (!dirExists) await FS.mkdir(dir);
+          if (/\.json$/.test(file)) {
+            const currentContents = await (async () => {
+              if (await FS.exists(newPath)) return FS.read(newPath);
 
-          const filename = basename(file);
+              return "{}";
+            })();
 
-          const newPath = resolve(dir, filename);
-
-          const currentContents = await (async () => {
-            const exists = await FS.exists(newPath);
-
-            if (exists) return FS.read(newPath);
-
-            return "{}";
-          })();
-
-          if (filesToPragma.includes(filename)) {
             const afterPragma = Pragma.processIncoming(
               settings.hostname,
-              contents,
+              contents.toString(),
               currentContents
             );
 
@@ -498,7 +483,7 @@ export class RepoSyncer implements ISyncer {
             return;
           }
 
-          if (currentContents !== contents) return FS.write(newPath, contents);
+          return FS.write(newPath, contents);
         })
       );
     } catch (err) {
@@ -529,6 +514,39 @@ export class RepoSyncer implements ISyncer {
           relative(Environment.repoFolder, f)
         );
         return !userFiles.includes(correspondingFile);
+      });
+
+      Debug.log("Unneeded files:", unneeded);
+
+      await FS.delete(...unneeded);
+    } catch (err) {
+      Logger.error(err);
+    }
+  }
+
+  private async cleanUpUser(): Promise<void> {
+    try {
+      const [repoFiles, userFiles] = await Promise.all([
+        FS.listFiles(Environment.repoFolder),
+        FS.listFiles(Environment.userFolder)
+      ]);
+
+      Debug.log(
+        "Files in the repo folder:",
+        repoFiles.map(f => relative(Environment.repoFolder, f))
+      );
+
+      Debug.log(
+        "Files in the user folder:",
+        userFiles.map(f => relative(Environment.userFolder, f))
+      );
+
+      const unneeded = userFiles.filter(f => {
+        const correspondingFile = resolve(
+          Environment.repoFolder,
+          relative(Environment.userFolder, f)
+        );
+        return !repoFiles.includes(correspondingFile);
       });
 
       Debug.log("Unneeded files:", unneeded);

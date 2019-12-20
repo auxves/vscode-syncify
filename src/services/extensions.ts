@@ -1,121 +1,13 @@
 import AdmZip from "adm-zip";
 import axios from "axios";
-import { basename, resolve } from "path";
+import { basename } from "path";
 import { commands, extensions, ProgressLocation, Uri, window } from "vscode";
 import parseXML from "xml-parser";
-import { Debug, Environment, FS, localize } from "~/services";
+import { Environment, FS, localize } from "~/services";
 
 export class Extensions {
   public static async install(...ids: string[]): Promise<void> {
-    await FS.mkdir(Environment.vsixCacheFolder);
-
-    const vsixFiles = await FS.listFiles(Environment.vsixFolder, [])
-      .then(files => files.filter(f => ids.includes(basename(f))))
-      .then(async files => {
-        function getVersion(path: string) {
-          const zip = new AdmZip(path);
-
-          return new Promise<string>(res => {
-            zip.readAsTextAsync("extension.vsixmanifest", data => {
-              res(
-                parseXML(data).root.children[0].children[0].attributes.Version
-              );
-            });
-          });
-        }
-
-        return Promise.all(
-          files.map(async path => {
-            const id = basename(path);
-
-            const metaPath = resolve(
-              Environment.vsixCacheFolder,
-              `${id}.meta.json`
-            );
-
-            const metaExists = await FS.exists(metaPath);
-
-            const metadata = metaExists
-              ? JSON.parse(await FS.read(metaPath))
-              : {};
-
-            return {
-              id,
-              path: await (async () => {
-                const contents = await FS.read(
-                  resolve(Environment.vsixFolder, id)
-                );
-
-                const trimmedContents = contents.trim();
-
-                const cachePath = resolve(
-                  Environment.vsixCacheFolder,
-                  `${id}.vsix`
-                );
-
-                const cacheExists = await FS.exists(cachePath);
-
-                if (cacheExists) {
-                  Debug.log(`Extension "${id}" already in cache`);
-
-                  const version = await getVersion(cachePath);
-
-                  const isDifferent = (() => {
-                    if (metadata.version !== version) {
-                      return true;
-                    }
-
-                    if (metadata.url !== trimmedContents) {
-                      return true;
-                    }
-
-                    return false;
-                  })();
-
-                  if (isDifferent) {
-                    Debug.log(
-                      `Extension "${id}" is differnet, redownloading...`
-                    );
-
-                    const { data } = await axios.get(trimmedContents, {
-                      responseType: "arraybuffer"
-                    });
-
-                    await FS.write(cachePath, data);
-
-                    metadata.version = version;
-                    metadata.url = trimmedContents;
-
-                    await FS.write(metaPath, JSON.stringify(metadata));
-                  }
-                } else {
-                  Debug.log(
-                    `Extension "${id}" is not in cache, downloading...`
-                  );
-
-                  const { data: zipContents } = await axios.get(
-                    trimmedContents,
-                    {
-                      responseType: "arraybuffer"
-                    }
-                  );
-
-                  await FS.write(cachePath, zipContents);
-
-                  const version = await getVersion(cachePath);
-
-                  metadata.version = version;
-                  metadata.url = trimmedContents;
-
-                  await FS.write(metaPath, JSON.stringify(metadata));
-                }
-
-                return Uri.file(cachePath);
-              })()
-            };
-          })
-        );
-      });
+    const vsixFiles = await FS.listFiles(Environment.vsixFolder, []);
 
     await window.withProgress(
       {
@@ -126,11 +18,15 @@ export class Extensions {
 
         return Promise.all(
           ids.map(async ext => {
-            const vsix = vsixFiles.find(f => f.id === ext);
+            const vsix = vsixFiles.find(file =>
+              new RegExp(`^${ext}(-\d+?\.\d+?\.\d+?)?.vsix$`, "i").test(
+                basename(file)
+              )
+            );
 
             await commands.executeCommand(
               "workbench.extensions.installExtension",
-              vsix ? vsix.path : ext
+              vsix ? Uri.file(vsix) : ext
             );
 
             progress.report({
