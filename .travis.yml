@@ -40,18 +40,16 @@ jobs:
 
       deploy:
         - provider: releases
-          api_key: $GITHUB_TOKEN
+          token: $GITHUB_TOKEN
           file_glob: true
           file: "*.vsix"
           edge: true
           release_notes_file: release-notes.log
-          skip_cleanup: true
           on:
             branch: master
             tags: true
         - provider: script
           script: yarn vsce publish -p $VS_TOKEN
-          skip_cleanup: true
           on:
             branch: master
             tags: true
