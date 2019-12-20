@@ -4,7 +4,7 @@ import { Uri } from "vscode";
 import { CustomFiles, Environment, FS } from "~/services";
 import { stringifyPretty } from "~/utilities";
 
-jest.mock("~/services/localization.ts");
+jest.mock("~/services/localize.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/custom-file");
 

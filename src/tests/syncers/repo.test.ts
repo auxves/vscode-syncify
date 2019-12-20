@@ -5,7 +5,7 @@ import { Environment, FS, Profile, Settings } from "~/services";
 import { RepoSyncer } from "~/syncers";
 import { merge, stringifyPretty } from "~/utilities";
 
-jest.mock("~/services/localization.ts");
+jest.mock("~/services/localize.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/repo");
 

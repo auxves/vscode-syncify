@@ -1,3 +1,3 @@
 export interface ILanguagePack {
-  [key: string]: string;
+  [key: string]: string | undefined;
 }

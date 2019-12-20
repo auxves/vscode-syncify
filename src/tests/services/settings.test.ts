@@ -3,7 +3,7 @@ import { resolve } from "path";
 import { defaultSettings, ISettings } from "~/models";
 import { Environment, FS, Settings } from "~/services";
 
-jest.mock("~/services/localization.ts");
+jest.mock("~/services/localize.ts");
 jest.mock("~/utilities/confirm.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/settings");

@@ -1,7 +1,7 @@
 import { OperatingSystem } from "~/models";
 import { Environment, Pragma } from "~/services";
 
-jest.mock("~/services/localization.ts");
+jest.mock("~/services/localize.ts");
 
 it("should return new content if invalid", () => {
   const newContent = `Invalid JSON`;

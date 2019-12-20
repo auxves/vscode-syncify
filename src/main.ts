@@ -1,12 +1,13 @@
 import { ExtensionContext } from "vscode";
 import actions from "~/redux/actions";
 import { store } from "~/redux/store";
-import { Initializer } from "~/services";
+import { Initializer, initLocalization } from "~/services";
 
 export async function activate(context: ExtensionContext) {
   store.dispatch(actions.setGlobalStoragePath(context.globalStoragePath));
   store.dispatch(actions.setExtensionPath(context.extensionPath));
 
+  await initLocalization();
   await Initializer.init();
 }
 

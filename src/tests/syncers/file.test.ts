@@ -5,7 +5,7 @@ import { Environment, FS, Settings } from "~/services";
 import { FileSyncer } from "~/syncers";
 import { stringifyPretty } from "~/utilities";
 
-jest.mock("~/services/localization.ts");
+jest.mock("~/services/localize.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/file");
 

@@ -2,7 +2,7 @@ import { tmpdir } from "os";
 import { resolve } from "path";
 import { Environment, FS, Profile, Settings } from "~/services";
 
-jest.mock("~/services/localization.ts");
+jest.mock("~/services/localize.ts");
 
 const cleanupPath = resolve(tmpdir(), "syncify-jest/services/prpfile");
 
