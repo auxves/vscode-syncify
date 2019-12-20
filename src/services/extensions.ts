@@ -1,8 +1,5 @@
-import AdmZip from "adm-zip";
-import axios from "axios";
 import { basename } from "path";
 import { commands, extensions, ProgressLocation, Uri, window } from "vscode";
-import parseXML from "xml-parser";
 import { Environment, FS, localize } from "~/services";
 
 export class Extensions {
