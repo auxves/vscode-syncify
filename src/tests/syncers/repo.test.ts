@@ -1,13 +1,13 @@
-import { tmpdir } from "os";
 import { resolve } from "path";
 import createSimpleGit from "simple-git/promise";
 import { Environment, FS, Profile, Settings } from "~/services";
 import { RepoSyncer } from "~/syncers";
+import { getCleanupPath } from "~/tests/getCleanupPath";
 import { merge, stringifyPretty } from "~/utilities";
 
 jest.mock("~/services/localize.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/repo");
+const cleanupPath = getCleanupPath("syncers/repo");
 
 const pathToRemote = resolve(cleanupPath, "remote");
 const pathToRepo = resolve(cleanupPath, "repo");

@@ -1,10 +1,10 @@
-import { tmpdir } from "os";
 import { resolve } from "path";
-import { FS, Settings } from "~/services";
+import { FS } from "~/services";
+import { getCleanupPath } from "~/tests/getCleanupPath";
 
 jest.mock("~/services/localize.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/services/fs");
+const cleanupPath = getCleanupPath("services/fs");
 
 const pathToTest = resolve(cleanupPath, "test");
 

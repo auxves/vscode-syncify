@@ -158,6 +158,7 @@
     },
     "transform": {
       "\\.html$": "jest-raw-loader"
-    }
+    },
+    "globalTeardown": "<rootDir>/src/tests/teardown.ts"
   }
 }

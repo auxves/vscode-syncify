@@ -1,13 +1,13 @@
-import { tmpdir } from "os";
 import { resolve } from "path";
 import { Syncer } from "~/models";
 import { Environment, FS, Settings } from "~/services";
 import { FileSyncer } from "~/syncers";
+import { getCleanupPath } from "~/tests/getCleanupPath";
 import { stringifyPretty } from "~/utilities";
 
 jest.mock("~/services/localize.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/syncers/file");
+const cleanupPath = getCleanupPath("syncers/file");
 
 const pathToExport = resolve(cleanupPath, "export");
 const pathToUser = resolve(cleanupPath, "user");

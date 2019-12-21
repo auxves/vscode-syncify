@@ -1,10 +1,10 @@
-import { tmpdir } from "os";
 import { resolve } from "path";
 import { Environment, FS, Profile, Settings } from "~/services";
+import { getCleanupPath } from "~/tests/getCleanupPath";
 
 jest.mock("~/services/localize.ts");
 
-const cleanupPath = resolve(tmpdir(), "syncify-jest/services/prpfile");
+const cleanupPath = getCleanupPath("services/profile");
 
 const pathToTest = resolve(cleanupPath, "test");
 
