@@ -22,7 +22,7 @@ Syncify can sync your VSCode settings and extensions across all your devices usi
 
 ### Using the Extensions Panel
 
-1. Open the extensions panel: `Ctrl+Shift+X` (`Cmd` on Mac)
+1. Open the extensions panel: `Ctrl+Shift+X` (`⌘` on Mac)
 2. Type `syncify`
 3. Click `Install`
 
