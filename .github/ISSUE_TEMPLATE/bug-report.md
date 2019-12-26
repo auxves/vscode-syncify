@@ -4,12 +4,11 @@ about: Report a bug to help improve Syncify
 title: "[BUG] "
 labels: bug
 assignees: arnohovhannisyan
-
 ---
 
 ### Syncify Version
 
-I am using Syncify vX.X.X
+I am using Syncify `vX.X.X`
 
 ### Describe the bug
 
