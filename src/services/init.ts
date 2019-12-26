@@ -1,15 +1,7 @@
 import { commands, Uri } from "vscode";
 import { IVSCodeCommands } from "~/models";
-import { setSubscriptions } from "~/redux/actions";
-import { store } from "~/redux/store";
-import {
-  CustomFiles,
-  Debug,
-  Factory,
-  Profile,
-  Settings,
-  Watcher
-} from "~/services";
+import { CustomFiles, Factory, Profile, Settings, Watcher } from "~/services";
+import state from "~/state";
 
 export class Initializer {
   public static async init() {
@@ -23,7 +15,7 @@ export class Initializer {
 
     if (settings.watchSettings) Watcher.start();
 
-    store.getState().subscriptions.forEach(d => d.dispose());
+    state.context?.subscriptions.forEach(d => d.dispose());
 
     const cmds: IVSCodeCommands = {
       "syncify.sync": () => syncer.sync(),
@@ -35,15 +27,13 @@ export class Initializer {
       "syncify.importCustomFile": (uri?: Uri) => CustomFiles.import(uri),
       "syncify.registerCustomFile": (uri?: Uri) => CustomFiles.register(uri),
       "syncify.switchProfile": () => Profile.switch(),
-      "syncify.enableDebugMode": () => Debug.setDebug(true),
-      "syncify.disableDebugMode": () => Debug.setDebug(false)
+      "syncify.enableDebugMode": () => (state.isDebugMode = true),
+      "syncify.disableDebugMode": () => (state.isDebugMode = false)
     };
 
-    store.dispatch(
-      setSubscriptions(
-        Object.entries(cmds).map(([name, fn]) =>
-          commands.registerCommand(name, fn)
-        )
+    state.context?.subscriptions.push(
+      ...Object.entries(cmds).map(([name, fn]) =>
+        commands.registerCommand(name, fn)
       )
     );
 

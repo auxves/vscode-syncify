@@ -10,7 +10,6 @@ import {
 } from "vscode";
 import { IProfile, ISettings, ISyncer } from "~/models";
 import {
-  Debug,
   Environment,
   Extensions,
   FS,
@@ -35,7 +34,7 @@ export class RepoSyncer implements ISyncer {
       const isRepo = await this.git.checkIsRepo();
 
       if (!isRepo) {
-        Debug.log("Repo folder is not a git repo, initializing...");
+        Logger.debug("Repo folder is not a git repo, initializing...");
 
         await this.git.init();
       }
@@ -46,11 +45,11 @@ export class RepoSyncer implements ISyncer {
       const settings = await Settings.get();
 
       if (!origin) {
-        Debug.log(`Adding new remote "origin" at "${settings.repo.url}"`);
+        Logger.debug(`Adding new remote "origin" at "${settings.repo.url}"`);
 
         await this.git.addRemote("origin", settings.repo.url);
       } else if (origin.refs.push !== settings.repo.url) {
-        Debug.log(
+        Logger.debug(
           `Wrong remote url for "origin", removing and adding new origin at "${settings.repo.url}"`
         );
 
@@ -80,7 +79,7 @@ export class RepoSyncer implements ISyncer {
 
       const status = await this.getStatus(settings, profile);
 
-      Debug.log(`Current git status: ${status}`);
+      Logger.debug(`Current git status: ${status}`);
 
       const diff = await this.git.diff();
 
@@ -121,7 +120,7 @@ export class RepoSyncer implements ISyncer {
 
           const status = await this.getStatus(settings, profile);
 
-          Debug.log(`Current git status: ${status}`);
+          Logger.debug(`Current git status: ${status}`);
 
           if (status === "behind" && !settings.forceUpload) {
             progress.report({ increment: 100 });
@@ -137,7 +136,7 @@ export class RepoSyncer implements ISyncer {
           const branchExists = await this.localBranchExists(profile.branch);
 
           if (!branchExists) {
-            Debug.log(
+            Logger.debug(
               `Branch "${profile.branch}" does not exist, creating new branch...`
             );
 
@@ -149,7 +148,7 @@ export class RepoSyncer implements ISyncer {
 
           const installedExtensions = Extensions.get();
 
-          Debug.log("Installed extensions:", installedExtensions);
+          Logger.debug("Installed extensions:", installedExtensions);
 
           await FS.write(
             resolve(Environment.repoFolder, "extensions.json"),
@@ -212,7 +211,7 @@ export class RepoSyncer implements ISyncer {
 
           const remoteBranches = await this.git.branch(["-r"]);
 
-          Debug.log("Remote branches:", remoteBranches.all);
+          Logger.debug("Remote branches:", remoteBranches.all);
 
           if (!remoteBranches.all.length) {
             progress.report({ increment: 100 });
@@ -249,17 +248,19 @@ export class RepoSyncer implements ISyncer {
 
           const branches = await this.git.branchLocal();
 
-          Debug.log("Local branches:", branches.all);
+          Logger.debug("Local branches:", branches.all);
 
           await this.git.fetch();
 
           if (!branches.current) {
-            Debug.log(`First download, checking out ${profile.branch}`);
+            Logger.debug(`First download, checking out ${profile.branch}`);
 
             await this.git.clean("f");
             await this.git.checkout(["-f", profile.branch]);
           } else if (!branches.all.includes(profile.branch)) {
-            Debug.log(`Checking out remote branch "origin/${profile.branch}"`);
+            Logger.debug(
+              `Checking out remote branch "origin/${profile.branch}"`
+            );
 
             await this.git.clean("f");
             await this.git.checkout([
@@ -269,14 +270,14 @@ export class RepoSyncer implements ISyncer {
               `origin/${profile.branch}`
             ]);
           } else if (branches.current !== profile.branch) {
-            Debug.log(`Branch exists, switching to ${profile.branch}`);
+            Logger.debug(`Branch exists, switching to ${profile.branch}`);
 
             if (await checkGit("2.23.0")) {
-              Debug.log(`Git version is >=2.23.0, using git-switch`);
+              Logger.debug(`Git version is >=2.23.0, using git-switch`);
 
               await this.git.raw(["switch", "-f", profile.branch]);
             } else {
-              Debug.log(`Git version is <2.23.0, not using git-switch`);
+              Logger.debug(`Git version is <2.23.0, not using git-switch`);
 
               await this.git.reset(["--hard", "HEAD"]);
               await this.git.checkout(["-f", profile.branch]);
@@ -288,7 +289,7 @@ export class RepoSyncer implements ISyncer {
           await this.git.pull("origin", profile.branch);
 
           if (stash.trim() !== "No local changes to save") {
-            Debug.log("Reapplying local changes");
+            Logger.debug("Reapplying local changes");
 
             await this.git.stash(["pop"]);
           }
@@ -300,7 +301,7 @@ export class RepoSyncer implements ISyncer {
             await FS.read(resolve(Environment.userFolder, "extensions.json"))
           );
 
-          Debug.log(
+          Logger.debug(
             "Extensions parsed from downloaded file:",
             extensionsFromFile
           );
@@ -309,30 +310,28 @@ export class RepoSyncer implements ISyncer {
             ...Extensions.getMissing(extensionsFromFile)
           );
 
-          if (settings.removeExtensions) {
-            const toDelete = Extensions.getUnneeded(extensionsFromFile);
+          const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
-            Debug.log("Extensions to delete:", toDelete);
+          Logger.debug("Extensions to delete:", toDelete);
 
-            if (toDelete.length) {
-              const needToReload = toDelete.some(
-                name => extensions.getExtension(name)?.isActive ?? false
+          if (toDelete.length) {
+            const needToReload = toDelete.some(
+              name => extensions.getExtension(name)?.isActive ?? false
+            );
+
+            Logger.debug("Need to reload:", needToReload);
+
+            await Extensions.uninstall(...toDelete);
+
+            if (needToReload) {
+              const yes = localize("(btn) yes");
+              const result = await window.showInformationMessage(
+                localize("(info) download.needToReload"),
+                yes
               );
 
-              Debug.log("Need to reload:", needToReload);
-
-              await Extensions.uninstall(...toDelete);
-
-              if (needToReload) {
-                const yes = localize("(btn) yes");
-                const result = await window.showInformationMessage(
-                  localize("(info) download.needToReload"),
-                  yes
-                );
-
-                if (result === yes) {
-                  commands.executeCommand("workbench.action.reloadWindow");
-                }
+              if (result === yes) {
+                commands.executeCommand("workbench.action.reloadWindow");
               }
             }
           }
@@ -376,7 +375,7 @@ export class RepoSyncer implements ISyncer {
     try {
       const files = await FS.listFiles(Environment.userFolder);
 
-      Debug.log(
+      Logger.debug(
         "Files to copy to repo:",
         files.map(f => relative(Environment.userFolder, f))
       );
@@ -412,7 +411,7 @@ export class RepoSyncer implements ISyncer {
         settings.ignoredItems.filter(i => !i.includes(Environment.extensionId))
       );
 
-      Debug.log(
+      Logger.debug(
         "Files to copy from repo:",
         files.map(f => relative(Environment.repoFolder, f))
       );
@@ -498,12 +497,12 @@ export class RepoSyncer implements ISyncer {
         FS.listFiles(Environment.userFolder)
       ]);
 
-      Debug.log(
+      Logger.debug(
         "Files in the repo folder:",
         repoFiles.map(f => relative(Environment.repoFolder, f))
       );
 
-      Debug.log(
+      Logger.debug(
         "Files in the user folder:",
         userFiles.map(f => relative(Environment.userFolder, f))
       );
@@ -516,7 +515,7 @@ export class RepoSyncer implements ISyncer {
         return !userFiles.includes(correspondingFile);
       });
 
-      Debug.log("Unneeded files:", unneeded);
+      Logger.debug("Unneeded files:", unneeded);
 
       await FS.delete(...unneeded);
     } catch (err) {
@@ -531,12 +530,12 @@ export class RepoSyncer implements ISyncer {
         FS.listFiles(Environment.userFolder)
       ]);
 
-      Debug.log(
+      Logger.debug(
         "Files in the repo folder:",
         repoFiles.map(f => relative(Environment.repoFolder, f))
       );
 
-      Debug.log(
+      Logger.debug(
         "Files in the user folder:",
         userFiles.map(f => relative(Environment.userFolder, f))
       );
@@ -549,7 +548,7 @@ export class RepoSyncer implements ISyncer {
         return !repoFiles.includes(correspondingFile);
       });
 
-      Debug.log("Unneeded files:", unneeded);
+      Logger.debug("Unneeded files:", unneeded);
 
       await FS.delete(...unneeded);
     } catch (err) {

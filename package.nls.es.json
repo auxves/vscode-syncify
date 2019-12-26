@@ -47,7 +47,6 @@
   "(setting) hostname.placeholder": "Introduzca Nombre De Host",
   "(setting) ignoredItems.name": "Omite Los Elementos De",
   "(setting) ignoredItems.placeholder": "Entrar en ignorado elementos (uno en cada línea)",
-  "(setting) removeExtensions.name": "Quitar Las Extensiones De",
   "(setting) repo.currentProfile.name": "Perfil Actual",
   "(setting) repo.profiles.name": "Perfiles",
   "(setting) repo.profiles.properties.branch.name": "Rama",

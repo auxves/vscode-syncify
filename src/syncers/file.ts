@@ -1,8 +1,7 @@
-import { basename, dirname, relative, resolve } from "path";
+import { dirname, relative, resolve } from "path";
 import { commands, extensions, ProgressLocation, window } from "vscode";
 import { ISettings, ISyncer } from "~/models";
 import {
-  Debug,
   Environment,
   Extensions,
   FS,
@@ -89,7 +88,7 @@ export class FileSyncer implements ISyncer {
             return JSON.parse(await FS.read(path));
           })();
 
-          Debug.log(
+          Logger.debug(
             "Extensions parsed from downloaded file:",
             extensionsFromFile
           );
@@ -98,27 +97,25 @@ export class FileSyncer implements ISyncer {
             ...Extensions.getMissing(extensionsFromFile)
           );
 
-          if (settings.removeExtensions) {
-            const toDelete = Extensions.getUnneeded(extensionsFromFile);
+          const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
-            if (toDelete.length) {
-              const needToReload = toDelete.some(
-                name => extensions.getExtension(name)?.isActive ?? false
+          if (toDelete.length) {
+            const needToReload = toDelete.some(
+              name => extensions.getExtension(name)?.isActive ?? false
+            );
+
+            Logger.debug("Need to reload:", needToReload);
+
+            await Extensions.uninstall(...toDelete);
+
+            if (needToReload) {
+              const result = await window.showInformationMessage(
+                localize("(info) download.needToReload"),
+                localize("(btn) yes")
               );
 
-              Debug.log("Need to reload:", needToReload);
-
-              await Extensions.uninstall(...toDelete);
-
-              if (needToReload) {
-                const result = await window.showInformationMessage(
-                  localize("(info) download.needToReload"),
-                  localize("(btn) yes")
-                );
-
-                if (result) {
-                  commands.executeCommand("workbench.action.reloadWindow");
-                }
+              if (result) {
+                commands.executeCommand("workbench.action.reloadWindow");
               }
             }
           }
@@ -155,7 +152,7 @@ export class FileSyncer implements ISyncer {
     try {
       const files = await FS.listFiles(Environment.userFolder);
 
-      Debug.log(
+      Logger.debug(
         "Files to copy to folder:",
         files.map(f => relative(Environment.userFolder, f))
       );
@@ -188,7 +185,7 @@ export class FileSyncer implements ISyncer {
     try {
       const files = await FS.listFiles(settings.file.path);
 
-      Debug.log(
+      Logger.debug(
         "Files to copy from folder:",
         files.map(f => relative(settings.file.path, f))
       );

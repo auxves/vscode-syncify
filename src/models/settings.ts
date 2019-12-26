@@ -54,11 +54,6 @@ export interface ISettings {
   watchSettings: boolean;
 
   /**
-   * Controls whether or not extensions will be removed when downloading settings that don't include them
-   */
-  removeExtensions: boolean;
-
-  /**
    * Controls whether or not Syncify should run the `Sync` command when opening the editor.
    */
   syncOnStartup: boolean;
@@ -102,7 +97,6 @@ export const defaultSettings: ISettings = {
   ],
   autoUploadDelay: 20,
   watchSettings: false,
-  removeExtensions: true,
   syncOnStartup: false,
   hostname: "",
   forceDownload: false,

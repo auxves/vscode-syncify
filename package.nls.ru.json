@@ -47,7 +47,6 @@
   "(setting) hostname.placeholder": "Введите Имя Хоста",
   "(setting) ignoredItems.name": "Игнорируемые Элементы",
   "(setting) ignoredItems.placeholder": "Введите игнорируемых элементов (по одному в каждой строчке)",
-  "(setting) removeExtensions.name": "Удаление Расширений",
   "(setting) repo.currentProfile.name": "Текущий Профиль",
   "(setting) repo.profiles.name": "Профили",
   "(setting) repo.profiles.properties.branch.name": "Филиал",

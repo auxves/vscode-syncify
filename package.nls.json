@@ -47,7 +47,6 @@
   "(setting) hostname.placeholder": "Enter Hostname",
   "(setting) ignoredItems.name": "Ignored Items",
   "(setting) ignoredItems.placeholder": "Enter ignored items (one every line)",
-  "(setting) removeExtensions.name": "Remove Extensions",
   "(setting) repo.currentProfile.name": "Current Profile",
   "(setting) repo.profiles.name": "Profiles",
   "(setting) repo.profiles.properties.name.name": "Name",

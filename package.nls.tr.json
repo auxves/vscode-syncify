@@ -47,7 +47,6 @@
   "(setting) hostname.placeholder": "Makine Adını Girin ",
   "(setting) ignoredItems.name": "Göz Ardı Öğeleri",
   "(setting) ignoredItems.placeholder": "(Her bir satır)girin göz ardı öğeleri ",
-  "(setting) removeExtensions.name": "Uzantıları Kaldırmak ",
   "(setting) repo.currentProfile.name": "Mevcut Profil",
   "(setting) repo.profiles.name": "Profiller",
   "(setting) repo.profiles.properties.branch.name": "Şube",

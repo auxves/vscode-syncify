@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import pkg from "~/../package.json";
 import { OperatingSystem } from "~/models";
-import { store } from "~/redux/store";
+import state from "~/state";
 
 export class Environment {
   public static get userFolder() {
@@ -33,11 +33,11 @@ export class Environment {
   }
 
   public static get globalStoragePath() {
-    return store.getState().globalStoragePath;
+    return state.context?.globalStoragePath ?? "";
   }
 
   public static get extensionPath() {
-    return store.getState().extensionPath;
+    return state.context?.extensionPath ?? "";
   }
 
   public static os = process.platform as OperatingSystem;

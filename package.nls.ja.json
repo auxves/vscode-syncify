@@ -47,7 +47,6 @@
   "(setting) hostname.placeholder": "ホスト名を入力",
   "(setting) ignoredItems.name": "無視項目",
   "(setting) ignoredItems.placeholder": "入力項目は無視されます（一毎線）",
-  "(setting) removeExtensions.name": "削除の拡張子",
   "(setting) repo.currentProfile.name": "電流プロファイル",
   "(setting) repo.profiles.name": "プロファイル",
   "(setting) repo.profiles.properties.branch.name": "支店",

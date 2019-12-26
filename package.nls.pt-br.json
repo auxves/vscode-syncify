@@ -47,7 +47,6 @@
   "(setting) hostname.placeholder": "Introduza O Nome De Host",
   "(setting) ignoredItems.name": "Itens Ignorados",
   "(setting) ignoredItems.placeholder": "Insira itens ignorados (uma em cada linha)",
-  "(setting) removeExtensions.name": "Remover Extensões De",
   "(setting) repo.currentProfile.name": "Perfil Atual",
   "(setting) repo.profiles.name": "Perfis",
   "(setting) repo.profiles.properties.branch.name": "Ramo",

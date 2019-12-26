@@ -5,7 +5,6 @@ import { defaultSettings, ISettings } from "~/models";
 import {
   Environment,
   FS,
-  Initializer,
   localize,
   Logger,
   Watcher,

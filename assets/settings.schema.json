@@ -59,10 +59,6 @@
             },
             "type": "array"
         },
-        "removeExtensions": {
-            "description": "Controls whether or not extensions will be removed when downloading settings that don't include them",
-            "type": "boolean"
-        },
         "repo": {
             "additionalProperties": false,
             "description": "Settings relating to the `Repo` syncer.",

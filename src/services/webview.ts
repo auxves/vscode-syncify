@@ -245,11 +245,6 @@ export class Webview {
             type: UISettingType.Checkbox
           },
           {
-            name: localize("(setting) removeExtensions.name"),
-            correspondingSetting: "removeExtensions",
-            type: UISettingType.Checkbox
-          },
-          {
             name: localize("(setting) syncOnStartup.name"),
             correspondingSetting: "syncOnStartup",
             type: UISettingType.Checkbox

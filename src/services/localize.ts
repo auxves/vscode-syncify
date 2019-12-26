@@ -1,15 +1,12 @@
 import { resolve } from "path";
 import { ILanguagePack } from "~/models";
-import { store } from "~/redux/store";
-import { FS, Logger } from "~/services";
+import { Environment, FS, Logger } from "~/services";
 
 let pack: ILanguagePack = {};
 
 export async function initLocalization(lang?: string) {
   pack = await (async () => {
     try {
-      const extensionPath = store.getState().extensionPath;
-
       const language = (() => {
         if (lang) return lang;
 
@@ -19,7 +16,7 @@ export async function initLocalization(lang?: string) {
       })();
 
       const languagePackPath = resolve(
-        extensionPath,
+        Environment.extensionPath,
         `package.nls.${language}.json`
       );
 
@@ -27,7 +24,7 @@ export async function initLocalization(lang?: string) {
 
       if (!languageExists || language === "en-us") {
         return JSON.parse(
-          await FS.read(resolve(extensionPath, "package.nls.json"))
+          await FS.read(resolve(Environment.extensionPath, "package.nls.json"))
         );
       }
 

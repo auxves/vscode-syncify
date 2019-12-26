@@ -47,7 +47,6 @@
   "(setting) hostname.placeholder": "Entrez Le Nom D'Hôte",
   "(setting) ignoredItems.name": "Éléments Ignorés",
   "(setting) ignoredItems.placeholder": "Entrez éléments ignorés (un de chaque ligne)",
-  "(setting) removeExtensions.name": "Supprimer Des Extensions",
   "(setting) repo.currentProfile.name": "Profil Actuel",
   "(setting) repo.profiles.name": "Profils",
   "(setting) repo.profiles.properties.branch.name": "Branche",

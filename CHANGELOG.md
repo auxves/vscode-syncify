@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.11.0
+
+- Improve user interfaces
+- Minor improvements and bugfixes
+
 ## v3.10.0
 
 - Allow for syncing VSIX files

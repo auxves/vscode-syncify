@@ -1,4 +1,3 @@
-export * from "~/services/debug";
 export * from "~/services/environment";
 export * from "~/services/localize";
 export * from "~/services/customFiles";
