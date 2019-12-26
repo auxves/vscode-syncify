@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.12.1
+
+- Add minimum for `autoUploadDelay` setting
+
 ## v3.12.0
 
 - Remove non-english localizations

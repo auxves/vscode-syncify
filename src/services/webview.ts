@@ -237,7 +237,8 @@ export class Webview {
             name: localize("(setting) autoUploadDelay -> name"),
             placeholder: localize("(setting) autoUploadDelay -> placeholder"),
             correspondingSetting: "autoUploadDelay",
-            type: UISettingType.NumberInput
+            type: UISettingType.NumberInput,
+            min: 0
           },
           {
             name: localize("(setting) watchSettings -> name"),

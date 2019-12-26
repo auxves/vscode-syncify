@@ -25,6 +25,8 @@ interface INumberInput {
   type: UISettingType.NumberInput;
   correspondingSetting: string;
   placeholder: string;
+  min?: number;
+  max?: number;
 }
 
 interface ISelect {

@@ -45,6 +45,8 @@ export interface ISettings {
 
   /**
    * The amount of time to wait before automatically uploading. This is only used when `#watchSettings` is on.
+   *
+   * @minimum 0
    */
   autoUploadDelay: number;
 
