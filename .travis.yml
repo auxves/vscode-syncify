@@ -50,6 +50,7 @@ jobs:
             tags: true
         - provider: script
           script: yarn vsce publish -p $VS_TOKEN
+          edge: true
           on:
             branch: master
             tags: true
