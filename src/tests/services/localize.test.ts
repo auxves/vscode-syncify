@@ -7,28 +7,14 @@ it("should localize english", async () => {
     expected: "Syncify: Installed 5",
     result: localize("(info) extensions -> installed", "5")
   };
+
   expect(installed.result).toBe(installed.expected);
 
   const uninstalled = {
     expected: "Syncify: Uninstalled 10",
     result: localize("(info) extensions -> uninstalled", "10")
   };
-  expect(uninstalled.result).toBe(uninstalled.expected);
-});
 
-it("should localize another language", async () => {
-  await initLocalization("it");
-
-  const installed = {
-    expected: "Syncify: Installato 5",
-    result: localize("(info) extensions -> installed", "5")
-  };
-  expect(installed.result).toBe(installed.expected);
-
-  const uninstalled = {
-    expected: "Syncify: Disinstallato 10",
-    result: localize("(info) extensions -> uninstalled", "10")
-  };
   expect(uninstalled.result).toBe(uninstalled.expected);
 });
 
@@ -38,5 +24,6 @@ it("should return key for invalid key", async () => {
   expect(localize("")).toBe("");
 
   const rand = Math.random().toString();
+
   expect(localize(rand)).toBe(rand);
 });
