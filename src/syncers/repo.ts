@@ -91,7 +91,7 @@ export class RepoSyncer implements ISyncer {
         return this.download();
       }
 
-      window.setStatusBarMessage(localize("(info) sync.nothingToDo"), 2000);
+      window.setStatusBarMessage(localize("(info) sync -> nothingToDo"), 2000);
     } catch (err) {
       Logger.error(err);
     }
@@ -112,7 +112,7 @@ export class RepoSyncer implements ISyncer {
 
           await this.init();
 
-          progress.report({ message: localize("(info) upload.uploading") });
+          progress.report({ message: localize("(info) sync -> uploading") });
 
           const profile = await this.getProfile();
 
@@ -128,7 +128,7 @@ export class RepoSyncer implements ISyncer {
             await sleep(10);
 
             return window.setStatusBarMessage(
-              localize("(info) upload.remoteChanges"),
+              localize("(info) repo -> remoteChanges"),
               2000
             );
           }
@@ -163,7 +163,7 @@ export class RepoSyncer implements ISyncer {
             await sleep(10);
 
             return window.setStatusBarMessage(
-              localize("(info) upload.upToDate"),
+              localize("(info) repo -> remoteUpToDate"),
               2000
             );
           }
@@ -176,7 +176,7 @@ export class RepoSyncer implements ISyncer {
 
           await sleep(10);
 
-          window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
+          window.setStatusBarMessage(localize("(info) sync -> uploaded"), 2000);
         } catch (err) {
           Logger.error(err);
         }
@@ -202,7 +202,7 @@ export class RepoSyncer implements ISyncer {
           await this.init();
 
           progress.report({
-            message: localize("(info) download.downloading")
+            message: localize("(info) sync -> downloading")
           });
 
           const profile = await this.getProfile();
@@ -219,7 +219,7 @@ export class RepoSyncer implements ISyncer {
             await sleep(10);
 
             return window.setStatusBarMessage(
-              localize("(info) download.noRemoteBranches"),
+              localize("(info) repo -> noRemoteBranches"),
               2000
             );
           }
@@ -232,7 +232,7 @@ export class RepoSyncer implements ISyncer {
             await sleep(10);
 
             return window.setStatusBarMessage(
-              localize("(info) download.upToDate"),
+              localize("(info) repo -> upToDate"),
               2000
             );
           }
@@ -324,9 +324,9 @@ export class RepoSyncer implements ISyncer {
             await Extensions.uninstall(...toDelete);
 
             if (needToReload) {
-              const yes = localize("(btn) yes");
+              const yes = localize("(label) yes");
               const result = await window.showInformationMessage(
-                localize("(info) download.needToReload"),
+                localize("(info) sync -> needToReload"),
                 yes
               );
 
@@ -341,7 +341,7 @@ export class RepoSyncer implements ISyncer {
           await sleep(10);
 
           window.setStatusBarMessage(
-            localize("(info) download.downloaded"),
+            localize("(info) sync -> downloaded"),
             2000
           );
         } catch (err) {

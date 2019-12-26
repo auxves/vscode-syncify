@@ -16,7 +16,7 @@ export class Profile {
           description: p.branch
         })),
         {
-          placeHolder: localize("(prompt) profile.switch.placeholder")
+          placeHolder: localize("(prompt) profile -> switch -> placeholder")
         }
       );
 
@@ -34,7 +34,7 @@ export class Profile {
     });
 
     window.showInformationMessage(
-      localize("(info) repo.switchedProfile", newProfile.name)
+      localize("(info) repo -> switchedProfile", newProfile.name)
     );
 
     await commands.executeCommand("syncify.download");

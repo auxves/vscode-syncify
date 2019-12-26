@@ -35,7 +35,7 @@ export class FileSyncer implements ISyncer {
             return;
           }
 
-          progress.report({ message: localize("(info) upload.uploading") });
+          progress.report({ message: localize("(info) sync -> uploading") });
 
           const installedExtensions = Extensions.get();
 
@@ -50,7 +50,7 @@ export class FileSyncer implements ISyncer {
 
           await sleep(10);
 
-          window.setStatusBarMessage(localize("(info) upload.uploaded"), 2000);
+          window.setStatusBarMessage(localize("(info) sync -> uploaded"), 2000);
         } catch (err) {
           Logger.error(err);
         }
@@ -74,7 +74,7 @@ export class FileSyncer implements ISyncer {
             return;
           }
 
-          progress.report({ message: localize("(info) download.downloading") });
+          progress.report({ message: localize("(info) sync -> downloading") });
 
           await this.copyFilesFromPath(settings);
 
@@ -110,8 +110,8 @@ export class FileSyncer implements ISyncer {
 
             if (needToReload) {
               const result = await window.showInformationMessage(
-                localize("(info) download.needToReload"),
-                localize("(btn) yes")
+                localize("(info) sync -> needToReload"),
+                localize("(label) yes")
               );
 
               if (result) {
@@ -125,7 +125,7 @@ export class FileSyncer implements ISyncer {
           await sleep(10);
 
           window.setStatusBarMessage(
-            localize("(info) download.downloaded"),
+            localize("(info) sync -> downloaded"),
             2000
           );
         } catch (err) {

@@ -28,7 +28,7 @@ export class Extensions {
 
             progress.report({
               increment,
-              message: localize("(info) download.installed", ext)
+              message: localize("(info) extensions -> installed", ext)
             });
           })
         );
@@ -53,7 +53,7 @@ export class Extensions {
 
             progress.report({
               increment,
-              message: localize("(info) download.uninstalled", ext)
+              message: localize("(info) extensions -> uninstalled", ext)
             });
           })
         );

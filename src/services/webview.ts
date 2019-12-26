@@ -69,7 +69,7 @@ export class Webview {
 
         if (message === "nologin") {
           const result = await window.showInputBox({
-            placeHolder: localize("(prompt) webview.landingPage.nologin")
+            placeHolder: localize("(prompt) webview -> landingPage -> nologin")
           });
 
           if (!result) return;
@@ -213,7 +213,7 @@ export class Webview {
         name: "General",
         settings: [
           {
-            name: localize("(setting) syncer.name"),
+            name: localize("(setting) syncer -> name"),
             correspondingSetting: "syncer",
             type: UISettingType.Select,
             options: Object.entries(Syncer).map(([key, value]) => ({
@@ -222,40 +222,40 @@ export class Webview {
             }))
           },
           {
-            name: localize("(setting) hostname.name"),
-            placeholder: localize("(setting) hostname.placeholder"),
+            name: localize("(setting) hostname -> name"),
+            placeholder: localize("(setting) hostname -> placeholder"),
             correspondingSetting: "hostname",
             type: UISettingType.TextInput
           },
           {
-            name: localize("(setting) ignoredItems.name"),
-            placeholder: localize("(setting) ignoredItems.placeholder"),
+            name: localize("(setting) ignoredItems -> name"),
+            placeholder: localize("(setting) ignoredItems -> placeholder"),
             correspondingSetting: "ignoredItems",
             type: UISettingType.TextArea
           },
           {
-            name: localize("(setting) autoUploadDelay.name"),
-            placeholder: localize("(setting) autoUploadDelay.placeholder"),
+            name: localize("(setting) autoUploadDelay -> name"),
+            placeholder: localize("(setting) autoUploadDelay -> placeholder"),
             correspondingSetting: "autoUploadDelay",
             type: UISettingType.NumberInput
           },
           {
-            name: localize("(setting) watchSettings.name"),
+            name: localize("(setting) watchSettings -> name"),
             correspondingSetting: "watchSettings",
             type: UISettingType.Checkbox
           },
           {
-            name: localize("(setting) syncOnStartup.name"),
+            name: localize("(setting) syncOnStartup -> name"),
             correspondingSetting: "syncOnStartup",
             type: UISettingType.Checkbox
           },
           {
-            name: localize("(setting) forceUpload.name"),
+            name: localize("(setting) forceUpload -> name"),
             correspondingSetting: "forceUpload",
             type: UISettingType.Checkbox
           },
           {
-            name: localize("(setting) forceDownload.name"),
+            name: localize("(setting) forceDownload -> name"),
             correspondingSetting: "forceDownload",
             type: UISettingType.Checkbox
           }
@@ -265,13 +265,13 @@ export class Webview {
         name: "Repo Syncer",
         settings: [
           {
-            name: localize("(setting) repo.url.name"),
-            placeholder: localize("(setting) repo.url.placeholder"),
+            name: localize("(setting) repo.url -> name"),
+            placeholder: localize("(setting) repo.url -> placeholder"),
             correspondingSetting: "repo.url",
             type: UISettingType.TextInput
           },
           {
-            name: localize("(setting) repo.currentProfile.name"),
+            name: localize("(setting) repo.currentProfile -> name"),
             correspondingSetting: "repo.currentProfile",
             type: UISettingType.Select,
             options: settings.repo.profiles.map(p => ({
@@ -280,7 +280,7 @@ export class Webview {
             }))
           },
           {
-            name: localize("(setting) repo.profiles.name"),
+            name: localize("(setting) repo.profiles -> name"),
             correspondingSetting: "repo.profiles",
             type: UISettingType.ObjectArray,
             newTemplate: {
@@ -289,20 +289,22 @@ export class Webview {
             },
             schema: [
               {
-                name: localize("(setting) repo.profiles.properties.name.name"),
+                name: localize(
+                  "(setting) repo.profiles.properties.name -> name"
+                ),
                 correspondingSetting: "name",
                 placeholder: localize(
-                  "(setting) repo.profiles.properties.name.placeholder"
+                  "(setting) repo.profiles.properties.name -> placeholder"
                 ),
                 type: UISettingType.TextInput
               },
               {
                 name: localize(
-                  "(setting) repo.profiles.properties.branch.name"
+                  "(setting) repo.profiles.properties.branch -> name"
                 ),
                 correspondingSetting: "branch",
                 placeholder: localize(
-                  "(setting) repo.profiles.properties.branch.placeholder"
+                  "(setting) repo.profiles.properties.branch -> placeholder"
                 ),
                 type: UISettingType.TextInput
               }
@@ -314,8 +316,8 @@ export class Webview {
         name: "File Syncer",
         settings: [
           {
-            name: localize("(setting) file.path.name"),
-            placeholder: localize("(setting) file.path.placeholder"),
+            name: localize("(setting) file.path -> name"),
+            placeholder: localize("(setting) file.path -> placeholder"),
             correspondingSetting: "file.path",
             type: UISettingType.TextInput
           }

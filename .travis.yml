@@ -15,7 +15,6 @@ before_script:
   - git config --global user.name "Travis"
 
 script:
-  - yarn lint
   - yarn test
   - if [ $TRAVIS_OS_NAME = windows ]; then powershell kill -n gpg-agent; fi
 

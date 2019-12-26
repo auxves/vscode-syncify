@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.12.0
+
+- Remove non-english localizations
+
 ## v3.11.0
 
 - Improve user interfaces

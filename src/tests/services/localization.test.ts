@@ -5,13 +5,13 @@ it("should localize english", async () => {
 
   const installed = {
     expected: "Syncify: Installed 5",
-    result: localize("(info) download.installed", "5")
+    result: localize("(info) extensions -> installed", "5")
   };
   expect(installed.result).toBe(installed.expected);
 
   const uninstalled = {
     expected: "Syncify: Uninstalled 10",
-    result: localize("(info) download.uninstalled", "10")
+    result: localize("(info) extensions -> uninstalled", "10")
   };
   expect(uninstalled.result).toBe(uninstalled.expected);
 });
@@ -21,13 +21,13 @@ it("should localize another language", async () => {
 
   const installed = {
     expected: "Syncify: Installato 5",
-    result: localize("(info) download.installed", "5")
+    result: localize("(info) extensions -> installed", "5")
   };
   expect(installed.result).toBe(installed.expected);
 
   const uninstalled = {
     expected: "Syncify: Disinstallato 10",
-    result: localize("(info) download.uninstalled", "10")
+    result: localize("(info) extensions -> uninstalled", "10")
   };
   expect(uninstalled.result).toBe(uninstalled.expected);
 });

@@ -15,7 +15,7 @@ export class CustomFiles {
 
       if (!allFiles.length) {
         await window.showInformationMessage(
-          localize("(info) customFiles.noFilesAvailable")
+          localize("(info) customFiles -> noFilesAvailable")
         );
         return;
       }
@@ -38,7 +38,7 @@ export class CustomFiles {
           })),
           {
             placeHolder: localize(
-              "(prompt) customFile.import.folderPlaceholder"
+              "(prompt) customFiles -> import -> folder -> placeholder"
             )
           }
         );
@@ -57,7 +57,9 @@ export class CustomFiles {
       const filename = await window.showQuickPick(
         allFiles.map(f => basename(f)),
         {
-          placeHolder: localize("(prompt) customFile.import.filePlaceholder")
+          placeHolder: localize(
+            "(prompt) customFiles -> import -> file -> placeholder"
+          )
         }
       );
 
@@ -84,7 +86,7 @@ export class CustomFiles {
         : await (async () => {
             const result = await window.showOpenDialog({
               canSelectMany: false,
-              openLabel: localize("(action) customFiles.selectFile")
+              openLabel: localize("(label) customFiles -> selectFile")
             });
 
             if (!result) return;
@@ -99,7 +101,7 @@ export class CustomFiles {
       const newPath = resolve(Environment.customFilesFolder, filename);
       await FS.write(newPath, contents);
       await window.showInformationMessage(
-        localize("(info) customFiles.registered", filename)
+        localize("(info) customFiles -> registered", filename)
       );
     } catch (err) {
       Logger.error(err);

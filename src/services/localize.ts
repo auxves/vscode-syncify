@@ -22,13 +22,15 @@ export async function initLocalization(lang?: string) {
 
       const languageExists = await FS.exists(languagePackPath);
 
+      const defaultPack = JSON.parse(
+        await FS.read(resolve(Environment.extensionPath, "package.nls.json"))
+      );
+
       if (!languageExists || language === "en-us") {
-        return JSON.parse(
-          await FS.read(resolve(Environment.extensionPath, "package.nls.json"))
-        );
+        return defaultPack;
       }
 
-      return JSON.parse(await FS.read(languagePackPath));
+      return { ...defaultPack, ...JSON.parse(await FS.read(languagePackPath)) };
     } catch (err) {
       Logger.error(err);
       return {};

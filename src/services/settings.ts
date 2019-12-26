@@ -82,6 +82,6 @@ export class Settings {
 
     await commands.executeCommand("syncify.reinitialize");
 
-    window.showInformationMessage(localize("(info) reset.resetComplete"));
+    window.showInformationMessage(localize("(info) reset -> complete"));
   }
 }

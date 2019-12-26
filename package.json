@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.11.0",
+  "version": "3.12.0",
   "engines": {
     "vscode": "^1.41.0"
   },
@@ -39,47 +39,47 @@
     "commands": [
       {
         "command": "syncify.sync",
-        "title": "%(command) syncify.sync%"
+        "title": "%(command) sync%"
       },
       {
         "command": "syncify.upload",
-        "title": "%(command) syncify.upload%"
+        "title": "%(command) upload%"
       },
       {
         "command": "syncify.download",
-        "title": "%(command) syncify.download%"
+        "title": "%(command) download%"
       },
       {
         "command": "syncify.reset",
-        "title": "%(command) syncify.reset%"
+        "title": "%(command) reset%"
       },
       {
         "command": "syncify.openSettings",
-        "title": "%(command) syncify.openSettings%"
+        "title": "%(command) openSettings%"
       },
       {
         "command": "syncify.reinitialize",
-        "title": "%(command) syncify.reinitialize%"
+        "title": "%(command) reinitialize%"
       },
       {
         "command": "syncify.registerCustomFile",
-        "title": "%(command) syncify.registerCustomFile%"
+        "title": "%(command) registerCustomFile%"
       },
       {
         "command": "syncify.importCustomFile",
-        "title": "%(command) syncify.importCustomFile%"
+        "title": "%(command) importCustomFile%"
       },
       {
         "command": "syncify.switchProfile",
-        "title": "%(command) syncify.switchProfile%"
+        "title": "%(command) switchProfile%"
       },
       {
         "command": "syncify.enableDebugMode",
-        "title": "%(command) syncify.enableDebugMode%"
+        "title": "%(command) enableDebugMode%"
       },
       {
         "command": "syncify.disableDebugMode",
-        "title": "%(command) syncify.disableDebugMode%"
+        "title": "%(command) disableDebugMode%"
       }
     ],
     "jsonValidation": [
@@ -102,21 +102,20 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "run generate:schema && run localize && run clean && webpack --config .webpack/production.js",
-    "compile": "run clean && webpack --config .webpack/development.js",
+    "start": "run watch",
+    "build": "run clean && webpack --config .webpack/production.js",
     "watch": "run clean && webpack --config .webpack/development.js --watch",
-    "lint": "tslint -c ./tslint.json -p .",
     "test": "jest",
-    "generate:schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
-    "localize": "translocalizer",
-    "clean": "shx rm -rf dist"
+    "schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
+    "clean": "shx rm -rf dist",
+    "vscode:prepublish": "run schema && run build"
   },
   "devDependencies": {
     "@types/express": "^4.17.2",
     "@types/fs-extra": "^8.0.1",
-    "@types/jest": "^24.0.24",
+    "@types/jest": "^24.0.25",
     "@types/lodash": "^4.14.149",
-    "@types/node": "^13.1.0",
+    "@types/node": "^13.1.1",
     "@types/vscode": "^1.41.0",
     "awesome-typescript-loader": "^5.2.1",
     "codecov": "^3.6.1",
@@ -125,7 +124,6 @@
     "raw-loader": "^4.0.0",
     "run-script-proxy": "^1.0.1",
     "shx": "^0.3.2",
-    "translocalizer": "^3.0.1",
     "ts-jest": "^24.2.0",
     "ts-loader": "^6.2.1",
     "tslint": "^5.20.1",
@@ -139,6 +137,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "compare-versions": "^3.5.1",
     "express": "^4.17.1",
     "fast-glob": "^3.1.1",

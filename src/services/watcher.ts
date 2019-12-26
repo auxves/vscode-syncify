@@ -56,7 +56,7 @@ export class Watcher {
     let shouldUpload = true;
 
     const message = window.setStatusBarMessage(
-      localize("(info) upload.initiating", delay.toString()),
+      localize("(info) watcher -> initiating", delay.toString()),
       5000
     );
 
@@ -70,7 +70,7 @@ export class Watcher {
     });
 
     btn.command = "syncify.cancelUpload";
-    btn.text = `$(x) ${localize("(command) syncify.cancelUpload")}`;
+    btn.text = `$(x) ${localize("(command) cancelUpload")}`;
     btn.show();
 
     await sleep(delay * 1000);
