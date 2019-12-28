@@ -9,7 +9,7 @@
     "vscode": "^1.41.0"
   },
   "icon": "assets/logo.png",
-  "homepage": "https://github.com/arnohovhannisyan/vscode-syncify",
+  "homepage": "https://arnohovhannisyan.space/vscode-syncify",
   "repository": {
     "type": "git",
     "url": "https://github.com/arnohovhannisyan/vscode-syncify"
