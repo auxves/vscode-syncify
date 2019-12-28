@@ -9,41 +9,9 @@
 
 Syncify can sync your VSCode settings and extensions across all your devices using multiple methods.
 
-- [Installation](#installation)
-  - [Using the Extensions Panel](#using-the-extensions-panel)
-  - [Using the Command Palette](#using-the-command-palette)
-- [Quick Start](#quick-start)
-- [Troubleshooting](#troubleshooting)
-- [Need Help?](#need-help)
-- [Advantages over Settings Sync](#advantages-over-settings-sync)
-- [Credits](#credits)
+## Documentation
 
-## Installation
-
-### Using the Extensions Panel
-
-1. Open the extensions panel: `Ctrl+Shift+X` (`⌘` on Mac)
-2. Type `syncify`
-3. Click `Install`
-
-### Using the Command Palette
-
-1. Open the command palette: `Ctrl+P` (`Cmd` on Mac)
-2. Type `ext install arnohovhannisyan.syncify`
-
-## Quick Start
-
-Visit the [Quick Start Guide][link:quickstart] to get started.
-
-## Troubleshooting
-
-Check the [Troubleshooting Guide][link:troubleshooting] to see if your issue has already been solved.
-
-## Need Help?
-
-- Join the [Slack Workspace][link:slack]
-- Join the [Discord Server][link:discord]
-- Email me at arnohovhannisyan0@gmail.com.
+The documentation can be found [here][link:docs].
 
 ## Advantages over [Settings Sync][link:settings-sync]
 
@@ -72,11 +40,8 @@ Check the [Troubleshooting Guide][link:troubleshooting] to see if your issue has
 
 [link:shanalikhan]: https://github.com/shanalikhan
 [link:me]: https://github.com/arnohovhannisyan
-[link:quickstart]: https://github.com/arnohovhannisyan/vscode-syncify/wiki/Quick-Start
-[link:troubleshooting]: https://github.com/arnohovhannisyan/vscode-syncify/wiki/Troubleshooting
 [link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
-[link:slack]: https://join.slack.com/t/vscode-syncify/shared_invite/enQtNzc5MjYyMjYyNzEwLWQ5MGMxNDljZjk5NmYwNWZlYTBmYjk0MjliNjgyYWRkM2NiYjU2YjExY2RmODg2MGIyZTUwY2YzYWM2YThjMmM
-[link:discord]: https://discord.gg/DwFKj57
+[link:docs]: https://arnohovhannisyan.space/vscode-syncify
 
 <!-- Badge References -->
 
