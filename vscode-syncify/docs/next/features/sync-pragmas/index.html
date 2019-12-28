@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Sync Pragmas · Syncify</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Syncify supports per-os, per-host, and per-env inline settings and keybindings by using Sync Pragmas."/><meta name="docsearch:version" content="next"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Sync Pragmas · Syncify"/><meta property="og:type" content="website"/><meta property="og:url" content="https://arnohovhannisyan.space/vscode-syncify/"/><meta property="og:description" content="Syncify supports per-os, per-host, and per-env inline settings and keybindings by using Sync Pragmas."/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/vscode-syncify/img/logo.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="alternate" type="application/atom+xml" href="https://arnohovhannisyan.space/vscode-syncify/blog/atom.xml" title="Syncify Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://arnohovhannisyan.space/vscode-syncify/blog/feed.xml" title="Syncify Blog RSS Feed"/><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700"/><script src="/vscode-syncify/js/scrollSpy.js"></script><link rel="stylesheet" href="/vscode-syncify/css/main.css"/><script src="/vscode-syncify/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/vscode-syncify/"><h2 class="headerTitle">Syncify</h2></a><a href="/vscode-syncify/versions"><h3>next</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/vscode-syncify/docs/next/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="/vscode-syncify/blog/" target="_self">Updates</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Features</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Getting Started</h3><ul class=""><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/getting-started/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/getting-started/prerequisites">Prerequisites</a></li><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/getting-started/setup">Setup</a></li><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/getting-started/configuring">Configuring</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Contributing</h3><ul class=""><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/contributing/prerequisites">Prerequisites</a></li><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/contributing/language-support">Language Support</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Features</h3><ul class=""><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/features/profiles">Profiles</a></li><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/features/custom-files">Custom Files</a></li><li class="navListItem"><a class="navItem" href="/vscode-syncify/docs/next/features/custom-extensions">Custom Extensions</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/vscode-syncify/docs/next/features/sync-pragmas">Sync Pragmas</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Sync Pragmas</h1></header><article><div><span><p>Syncify supports per-os, per-host, and per-env inline settings and keybindings by using Sync Pragmas.</p>
+<h2><a class="anchor" aria-hidden="true" id="ignoring-certain-settings"></a><a href="#ignoring-certain-settings" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Ignoring Certain Settings</h2>
+<p>You can ignore certain settings in <code>settings.json</code> or <code>keybindings.json</code> by using the <code>@sync-ignore</code> pragma.</p>
+<pre><code class="hljs"><span class="hljs-comment">// settings.json</span>
+
+{
+  <span class="hljs-comment">// @sync-ignore</span>
+  <span class="hljs-attr">"window.zoomLevel"</span>: <span class="hljs-string">"1"</span>, <span class="hljs-comment">/* won't upload to gist */</span>
+}
+</code></pre>
+<pre><code class="hljs"><span class="hljs-comment">// keybindings.json</span>
+
+[
+  <span class="hljs-comment">// @sync-ignore</span>
+  {
+    <span class="hljs-attr">"key"</span>: <span class="hljs-string">"alt+v"</span>,
+    <span class="hljs-attr">"command"</span>: <span class="hljs-string">"workbench.action.closeActiveEditor"</span>,
+    <span class="hljs-attr">"when"</span>: <span class="hljs-string">"editorTextFocus"</span>
+  }, <span class="hljs-comment">/* won't upload to gist */</span>
+]
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="keywords"></a><a href="#keywords" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Keywords</h2>
+<p>There are 3 different keywords that can be used with Sync Pragmas:</p>
+<ul>
+<li>host</li>
+<li>os</li>
+<li>env</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="per-host"></a><a href="#per-host" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Per-Host</h3>
+<p>After <a href="#setup-hostname">configuring a hostname</a> for your computer, you can use the <code>host</code> keyword to only include certain parts of <code>settings.json</code> or <code>keybindings.json</code>.</p>
+<pre><code class="hljs"><span class="hljs-comment">// settings.json on "home" computer</span>
+
+{
+  <span class="hljs-comment">// @sync host=home</span>
+  <span class="hljs-attr">"window.zoomLevel"</span>: <span class="hljs-string">"1"</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="per-os"></a><a href="#per-os" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Per-OS</h3>
+<p>The <code>os</code> keyword can also be used to only include certain parts of <code>settings.json</code> or <code>keybindings.json</code>.</p>
+<p>Currently, there are 3 operating systems supported:</p>
+<ul>
+<li>windows</li>
+<li>linux</li>
+<li>mac</li>
+</ul>
+<pre><code class="hljs"><span class="hljs-comment">// settings.json on linux</span>
+
+{
+  <span class="hljs-comment">// @sync os=linux</span>
+  <span class="hljs-attr">"window.zoomLevel"</span>: <span class="hljs-string">"1"</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="per-env"></a><a href="#per-env" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Per-Env</h3>
+<p>Syncify can check for the existence of environmental variables using <a href="https://nodejs.org/api/process.html#process_process_env"><code>process.env</code></a> to only include certain parts of <code>settings.json</code> or <code>keybindings.json</code>.</p>
+<pre><code class="hljs"><span class="hljs-comment">// settings.json on a computer with the environmental variable "CODE_ZOOM_1" set</span>
+
+{
+  <span class="hljs-comment">// @sync env=CODE_ZOOM_1</span>
+  <span class="hljs-attr">"window.zoomLevel"</span>: <span class="hljs-string">"1"</span>
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="example-syntax"></a><a href="#example-syntax" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example Syntax</h2>
+<h3><a class="anchor" aria-hidden="true" id="settings-settingsjson"></a><a href="#settings-settingsjson" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Settings (settings.json)</h3>
+<pre><code class="hljs"><span class="hljs-regexp">//</span> settings.json on <span class="hljs-string">"home"</span> computer running Linux
+
+{
+  <span class="hljs-regexp">//</span> @sync host=home os=linux
+  <span class="hljs-string">"window.zoomLevel"</span>: <span class="hljs-string">"1"</span>,
+  <span class="hljs-regexp">//</span> @sync host=work os=windows
+  <span class="hljs-regexp">//</span> <span class="hljs-string">"window.zoomLevel"</span>: <span class="hljs-string">"0"</span>,
+}
+</code></pre>
+<pre><code class="hljs"><span class="hljs-regexp">//</span> settings.json on <span class="hljs-string">"work"</span> computer running Windows
+
+{
+  <span class="hljs-regexp">//</span> @sync host=home os=linux
+  <span class="hljs-regexp">//</span> <span class="hljs-string">"window.zoomLevel"</span>: <span class="hljs-string">"1"</span>,
+  <span class="hljs-regexp">//</span> @sync host=work os=windows
+  <span class="hljs-string">"window.zoomLevel"</span>: <span class="hljs-string">"0"</span>,
+}
+</code></pre>
+<pre><code class="hljs"><span class="hljs-comment">// settings.json on "work-pc" running Linux</span>
+
+{
+  <span class="hljs-comment">// @sync os=linux host=work-pc</span>
+  <span class="hljs-attr">"python.autoComplete.extraPaths"</span>: [
+    <span class="hljs-string">"/blah/blah/python2.7/site-packages"</span>,
+    <span class="hljs-string">"/usr/lib/python2.7/site-packages"</span>,
+  ],
+  <span class="hljs-comment">// @sync os=windows host=home-pc</span>
+  <span class="hljs-comment">// "python.autoComplete.extraPaths": [</span>
+  <span class="hljs-comment">//   "C:\\Program Files\\blah\\site-packages",</span>
+  <span class="hljs-comment">// ],</span>
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="keybindings-keybindingsjson"></a><a href="#keybindings-keybindingsjson" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Keybindings (keybindings.json)</h3>
+<pre><code class="hljs"><span class="hljs-regexp">//</span> keybindings.json on <span class="hljs-string">"home"</span> computer running macOS
+
+[
+  <span class="hljs-regexp">//</span> @sync host=home os=mac
+  {
+    <span class="hljs-string">"key"</span>: <span class="hljs-string">"alt+v"</span>,
+    <span class="hljs-string">"command"</span>: <span class="hljs-string">"workbench.action.closeActiveEditor"</span>,
+    <span class="hljs-string">"when"</span>: <span class="hljs-string">"editorTextFocus"</span>
+  },
+  <span class="hljs-regexp">//</span> @sync host=work os=linux env=CODE_WORK
+  <span class="hljs-regexp">//</span> {
+  <span class="hljs-regexp">//</span>   <span class="hljs-string">"key"</span>: <span class="hljs-string">"alt+q"</span>,
+  <span class="hljs-regexp">//</span>   <span class="hljs-string">"command"</span>: <span class="hljs-string">"workbench.action.closeActiveEditor"</span>,
+  <span class="hljs-regexp">//</span>   <span class="hljs-string">"when"</span>: <span class="hljs-string">"editorTextFocus"</span>
+  <span class="hljs-regexp">//</span> }
+]
+</code></pre>
+<pre><code class="hljs"><span class="hljs-regexp">//</span> keybindings.json on <span class="hljs-string">"work"</span> computer running Linux
+
+[
+  <span class="hljs-regexp">//</span> @sync host=home os=mac
+  <span class="hljs-regexp">//</span> {
+  <span class="hljs-regexp">//</span>   <span class="hljs-string">"key"</span>: <span class="hljs-string">"alt+v"</span>,
+  <span class="hljs-regexp">//</span>   <span class="hljs-string">"command"</span>: <span class="hljs-string">"workbench.action.closeActiveEditor"</span>,
+  <span class="hljs-regexp">//</span>   <span class="hljs-string">"when"</span>: <span class="hljs-string">"editorTextFocus"</span>
+  <span class="hljs-regexp">//</span> },
+  <span class="hljs-regexp">//</span> @sync host=work os=linux env=CODE_WORK
+  {
+    <span class="hljs-string">"key"</span>: <span class="hljs-string">"alt+q"</span>,
+    <span class="hljs-string">"command"</span>: <span class="hljs-string">"workbench.action.closeActiveEditor"</span>,
+    <span class="hljs-string">"when"</span>: <span class="hljs-string">"editorTextFocus"</span>
+  }
+]
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="setup-hostname"></a><a href="#setup-hostname" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup Hostname</h2>
+<p>Visit the <a href="Settings-Guide#hostname">Settings Guide</a> to learn how to configure the hostname.</p>
+<h2><a class="anchor" aria-hidden="true" id="how-it-works"></a><a href="#how-it-works" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How It Works</h2>
+<p>Before uploading your settings from <code>settings.json</code> or <code>keybindings.json</code>, all settings with inline pragmas are uncommented. Then, when your settings or keybindings are synchronized, all the settings or keybindings values with pragmas that don't match with your machine (OS, hostname or ENV variables) will be commented. Therefore VS Code won't apply them.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/vscode-syncify/docs/next/features/custom-extensions"><span class="arrow-prev">← </span><span>Custom Extensions</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#ignoring-certain-settings">Ignoring Certain Settings</a></li><li><a href="#keywords">Keywords</a><ul class="toc-headings"><li><a href="#per-host">Per-Host</a></li><li><a href="#per-os">Per-OS</a></li><li><a href="#per-env">Per-Env</a></li></ul></li><li><a href="#example-syntax">Example Syntax</a><ul class="toc-headings"><li><a href="#settings-settingsjson">Settings (settings.json)</a></li><li><a href="#keybindings-keybindingsjson">Keybindings (keybindings.json)</a></li></ul></li><li><a href="#setup-hostname">Setup Hostname</a></li><li><a href="#how-it-works">How It Works</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><div><h5>Docs</h5><a href="/vscode-syncify/docs/en/getting-started/installation">Getting Started</a></div><div><h5>Community</h5><a href="https://discord.gg/DGvuqWD" target="_blank" rel="noreferrer noopener">Discord</a><a href="https://join.slack.com/t/vscode-syncify/shared_invite/enQtNzc5MjYyMjYyNzEwLWQ5MGMxNDljZjk5NmYwNWZlYTBmYjk0MjliNjgyYWRkM2NiYjU2YjExY2RmODg2MGIyZTUwY2YzYWM2YThjMmM" target="_blank" rel="noreferrer noopener">Slack</a></div><div><h5>More</h5><a href="https://github.com/arnohovhannisyan/vscode-syncify">GitHub Repo</a><a href="https://github.com/arnohovhannisyan">@arnohovhannisyan</a></div></section><section class="copyright">Copyright © 2019 Arno Hovhannisyan</section></footer></div></body></html>

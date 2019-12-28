@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://arnohovhannisyan.space/vscode-syncify/blog</id>
+    <title>Syncify Blog</title>
+    <updated>2019-12-27T06:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://arnohovhannisyan.space/vscode-syncify/blog"/>
+    <subtitle>The best place to stay up-to-date with the latest Syncify news and events.</subtitle>
+    <logo>https://arnohovhannisyan.space/vscode-syncify/undefined</logo>
+    <rights>Copyright © 2019 Arno Hovhannisyan</rights>
+    <entry>
+        <title type="html"><![CDATA[Initial Documentation]]></title>
+        <id>https://arnohovhannisyan.space/vscode-syncify/blog/2019/12/27/initial-documentation.html</id>
+        <link href="https://arnohovhannisyan.space/vscode-syncify/blog/2019/12/27/initial-documentation.html"/>
+        <updated>2019-12-27T06:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>Initial documentation for Syncify has been created!</p> ]]></summary>
+        <author>
+            <name>Arno Hovhannisyan</name>
+            <email/>
+            <uri/>
+        </author>
+    </entry>
+</feed>
