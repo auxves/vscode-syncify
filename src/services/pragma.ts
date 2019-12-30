@@ -243,12 +243,11 @@ export class Pragma {
 
   private static osFromString(osName: string): OperatingSystem {
     switch (osName) {
-      case "windows":
-        return OperatingSystem.Windows;
       case "mac":
         return OperatingSystem.Mac;
       case "linux":
         return OperatingSystem.Linux;
+      case "windows":
       default:
         return OperatingSystem.Windows;
     }

@@ -1,5 +1,4 @@
 import { commands, Uri } from "vscode";
-import { IVSCodeCommands } from "~/models";
 import { CustomFiles, Factory, Profile, Settings, Watcher } from "~/services";
 import state from "~/state";
 
@@ -17,7 +16,7 @@ export class Initializer {
 
     state.context?.subscriptions.forEach(d => d.dispose());
 
-    const cmds: IVSCodeCommands = {
+    const cmds = {
       "syncify.sync": () => syncer.sync(),
       "syncify.upload": () => syncer.upload(),
       "syncify.download": () => syncer.download(),

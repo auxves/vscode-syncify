@@ -102,7 +102,6 @@ export class OAuth {
         case "github":
           return response.data.login as string;
         case "gitlab":
-          return response.data.username as string;
         case "bitbucket":
           return response.data.username as string;
       }

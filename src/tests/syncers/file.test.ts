@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { Syncer } from "~/models";
+import { Syncers } from "~/models";
 import { Environment, FS, Settings } from "~/services";
 import { FileSyncer } from "~/syncers";
 import { getCleanupPath } from "~/tests/getCleanupPath";
@@ -25,7 +25,7 @@ jest
   .mockReturnValue(pathToGlobalStoragePath);
 
 const currentSettings = {
-  syncer: Syncer.File,
+  syncer: Syncers.File,
   file: {
     path: pathToExport
   }

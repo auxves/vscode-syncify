@@ -1,10 +1,10 @@
-import { IProfile, Syncer } from "~/models";
+import { IProfile, Syncers } from "~/models";
 
 export interface ISettings {
   /**
    * The method used to sync your settings.
    */
-  syncer: Syncer;
+  syncer: Syncers;
 
   /**
    * Settings relating to the `Repo` syncer.
@@ -77,7 +77,7 @@ export interface ISettings {
 }
 
 export const defaultSettings: ISettings = {
-  syncer: Syncer.Repo,
+  syncer: Syncers.Repo,
   repo: {
     url: "",
     profiles: [

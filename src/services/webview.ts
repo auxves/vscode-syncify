@@ -11,7 +11,7 @@ import {
   window
 } from "vscode";
 import WebviewPage from "~/../assets/ui/index.html";
-import { ISettings, IWebviewSection, Syncer, UISettingType } from "~/models";
+import { ISettings, IWebviewSection, Syncers, UISettingType } from "~/models";
 import {
   Environment,
   FS,
@@ -65,57 +65,54 @@ export class Webview {
       onMessage: async (message: string) => {
         const settings = await Settings.get();
 
-        if (message === "settings") return this.openSettingsPage(settings);
+        switch (message) {
+          case "gitlab":
+          case "bitbucket":
+          case "github": {
+            const clientIds = Environment.oauthClientIds;
 
-        if (message === "nologin") {
-          const result = await window.showInputBox({
-            placeHolder: localize("(prompt) webview -> landingPage -> nologin")
-          });
+            const authUrls = {
+              github: `https://github.com/login/oauth/authorize?scope=repo%20read:user&client_id=${clientIds.github}`,
+              gitlab: `https://gitlab.com/oauth/authorize?client_id=${clientIds.gitlab}&redirect_uri=http://localhost:37468/callback&response_type=token&scope=api+read_repository+read_user+write_repository`,
+              bitbucket: `https://bitbucket.org/site/oauth2/authorize?client_id=${clientIds.bitbucket}&response_type=token`
+            };
 
-          if (!result) return;
+            await OAuth.listen(37468, message);
 
-          const currentSettings = await Settings.get();
-
-          Watcher.stop();
-
-          await FS.delete(Environment.globalStoragePath);
-
-          await Settings.set(merge(currentSettings, { repo: { url: result } }));
-
-          await commands.executeCommand("syncify.download");
-
-          Watcher.stop();
-
-          await FS.delete(Environment.globalStoragePath);
-
-          await Settings.set(currentSettings);
-
-          return;
-        }
-
-        const provider = (() => {
-          switch (message) {
-            case "gitlab":
-              return "gitlab";
-            case "bitbucket":
-              return "bitbucket";
-            case "github":
-            default:
-              return "github";
+            return env.openExternal(Uri.parse(authUrls[message]));
           }
-        })();
 
-        const clientIds = Environment.oauthClientIds;
+          case "settings":
+            return this.openSettingsPage(settings);
 
-        const authUrls = {
-          github: `https://github.com/login/oauth/authorize?scope=repo%20read:user&client_id=${clientIds.github}`,
-          gitlab: `https://gitlab.com/oauth/authorize?client_id=${clientIds.gitlab}&redirect_uri=http://localhost:37468/callback&response_type=token&scope=api+read_repository+read_user+write_repository`,
-          bitbucket: `https://bitbucket.org/site/oauth2/authorize?client_id=${clientIds.bitbucket}&response_type=token`
-        };
+          case "nologin": {
+            const result = await window.showInputBox({
+              placeHolder: localize(
+                "(prompt) webview -> landingPage -> nologin"
+              )
+            });
 
-        await OAuth.listen(37468, provider);
+            if (!result) return;
 
-        await env.openExternal(Uri.parse(authUrls[provider]));
+            const currentSettings = await Settings.get();
+
+            Watcher.stop();
+
+            await FS.delete(Environment.globalStoragePath);
+
+            await Settings.set(
+              merge(currentSettings, { repo: { url: result } })
+            );
+
+            await commands.executeCommand("syncify.download");
+
+            Watcher.stop();
+
+            await FS.delete(Environment.globalStoragePath);
+
+            return Settings.set(currentSettings);
+          }
+        }
       }
     });
   }
@@ -198,7 +195,7 @@ export class Webview {
 
   private static generateContent(items: { [key: string]: string } = {}) {
     const toReplace = Object.entries(items).map<[string, string]>(
-      ([find, replace]) => [find, escape(replace)]
+      ([find, replace]) => [find, encodeURIComponent(replace)]
     );
 
     return toReplace.reduce(
@@ -216,7 +213,7 @@ export class Webview {
             name: localize("(setting) syncer -> name"),
             correspondingSetting: "syncer",
             type: UISettingType.Select,
-            options: Object.entries(Syncer).map(([key, value]) => ({
+            options: Object.entries(Syncers).map(([key, value]) => ({
               value,
               name: key
             }))
@@ -293,20 +290,20 @@ export class Webview {
                 name: localize(
                   "(setting) repo.profiles.properties.name -> name"
                 ),
-                correspondingSetting: "name",
                 placeholder: localize(
                   "(setting) repo.profiles.properties.name -> placeholder"
                 ),
+                correspondingSetting: "name",
                 type: UISettingType.TextInput
               },
               {
                 name: localize(
                   "(setting) repo.profiles.properties.branch -> name"
                 ),
-                correspondingSetting: "branch",
                 placeholder: localize(
                   "(setting) repo.profiles.properties.branch -> placeholder"
                 ),
+                correspondingSetting: "branch",
                 type: UISettingType.TextInput
               }
             ]

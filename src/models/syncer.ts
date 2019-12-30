@@ -1,4 +1,6 @@
-export enum Syncer {
-  Repo = "repo",
-  File = "file"
+export interface ISyncer {
+  sync(): Promise<void>;
+  upload(): Promise<void>;
+  download(): Promise<void>;
+  isConfigured(): Promise<boolean>;
 }
