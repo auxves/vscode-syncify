@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.12.2
+
+- Fix issue with arrays in Settings GUI
+
 ## v3.12.1
 
 - Add minimum for `autoUploadDelay` setting

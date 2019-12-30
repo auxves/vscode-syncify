@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.12.1",
+  "version": "3.12.2",
   "engines": {
     "vscode": "^1.41.0"
   },
@@ -133,7 +133,7 @@
     "typescript-json-schema": "^0.41.0",
     "utility-types": "^3.10.0",
     "vsce": "^1.71.0",
-    "webpack": "^4.41.4",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
