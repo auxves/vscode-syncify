@@ -15,6 +15,7 @@ __mocks__
 tsconfig.json
 tslint.json
 assets/ui/index.html
+assets/banner.svg
 translocalizer.json
 *.map
 *.log

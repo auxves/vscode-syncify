@@ -1,11 +1,27 @@
-# Syncify
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/arnohovhannisyan/vscode-syncify/master/assets/banner.svg" alt="Syncify">
+</h1>
 
-[![Travis][badge-img:travis]][badge-link:travis]
-[![Version][badge-img:version]][badge-link:version]
-[![Issues][badge-img:issues]][badge-link:issues]
-[![License][badge-img:license]][badge-link:license]
-[![Deps][badge-img:deps]][badge-link:deps]
-[![Coverage][badge-img:coverage]][badge-link:coverage]
+<p align="center">
+  <a href="https://travis-ci.com/arnohovhannisyan/vscode-syncify">
+    <img src="https://img.shields.io/travis/com/arnohovhannisyan/vscode-syncify" alt="Travis">
+  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=arnohovhannisyan.syncify">
+    <img src="https://vsmarketplacebadge.apphb.com/version/arnohovhannisyan.syncify.svg" alt="Version">
+  </a>
+  <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues">
+    <img src="https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify.svg" alt="Issues">
+  </a>
+  <a href="https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/arnohovhannisyan/vscode-syncify" alt="License">
+  </a>
+  <a href="https://david-dm.org/arnohovhannisyan/vscode-syncify">
+    <img src="https://img.shields.io/david/arnohovhannisyan/vscode-syncify" alt="Deps">
+  </a>
+  <a href="https://codecov.io/gh/arnohovhannisyan/vscode-syncify">
+    <img src="https://img.shields.io/codecov/c/github/arnohovhannisyan/vscode-syncify" alt="Coverage">
+  </a>
+</p>
 
 Syncify can sync your VSCode settings and extensions across all your devices using multiple methods.
 
@@ -42,18 +58,3 @@ The documentation can be found [here][link:docs].
 [link:me]: https://github.com/arnohovhannisyan
 [link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
 [link:docs]: https://arnohovhannisyan.space/vscode-syncify
-
-<!-- Badge References -->
-
-[badge-img:travis]: https://img.shields.io/travis/com/arnohovhannisyan/vscode-syncify
-[badge-img:version]: https://vsmarketplacebadge.apphb.com/version/arnohovhannisyan.syncify.svg
-[badge-img:issues]: https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify.svg
-[badge-img:license]: https://img.shields.io/github/license/arnohovhannisyan/vscode-syncify
-[badge-img:deps]: https://img.shields.io/david/arnohovhannisyan/vscode-syncify
-[badge-img:coverage]: https://img.shields.io/codecov/c/github/arnohovhannisyan/vscode-syncify
-[badge-link:travis]: https://travis-ci.com/arnohovhannisyan/vscode-syncify
-[badge-link:version]: https://marketplace.visualstudio.com/items?itemName=arnohovhannisyan.syncify
-[badge-link:issues]: https://github.com/arnohovhannisyan/vscode-syncify/issues
-[badge-link:license]: https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE
-[badge-link:deps]: https://david-dm.org/arnohovhannisyan/vscode-syncify
-[badge-link:coverage]: https://codecov.io/gh/arnohovhannisyan/vscode-syncify
