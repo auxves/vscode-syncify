@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/arnohovhannisyan/vscode-syncify/master/assets/banner.svg" alt="Syncify">
+  <img src="https://arnohovhannisyan.space/vscode-syncify/img/banner.svg" alt="Syncify">
 </h1>
 
 <p align="center">
