@@ -1,6 +1,4 @@
-<h1 align="center">
-  <img src="https://arnohovhannisyan.space/vscode-syncify/img/banner.svg" alt="Syncify">
-</h1>
+## ![Syncify][img:banner]
 
 <p align="center">
   <a href="https://travis-ci.com/arnohovhannisyan/vscode-syncify">
@@ -58,3 +56,7 @@ The documentation can be found [here][link:docs].
 [link:me]: https://github.com/arnohovhannisyan
 [link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
 [link:docs]: https://arnohovhannisyan.space/vscode-syncify
+
+<!-- Image References -->
+
+[img:banner]: https://arnohovhannisyan.space/vscode-syncify/img/banner.svg
