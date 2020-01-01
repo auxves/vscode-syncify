@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.12.2",
+  "version": "3.12.3",
   "main": "./dist/main.js",
   "scripts": {
     "start": "run watch",

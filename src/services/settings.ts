@@ -72,7 +72,7 @@ export class Settings {
   }
 
   public static async reset(): Promise<void> {
-    const userIsSure = await confirm("reset");
+    const userIsSure = await confirm("settings -> reset");
 
     if (!userIsSure) return;
 

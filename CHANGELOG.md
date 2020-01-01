@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.12.3
+
+- Fix reset confirmation
+
 ## v3.12.2
 
 - Fix issue with arrays in Settings GUI
