@@ -59,4 +59,4 @@ The documentation can be found [here][link:docs].
 
 <!-- Image References -->
 
-[img:banner]: https://arnohovhannisyan.space/vscode-syncify/img/banner.svg
+[img:banner]: https://raw.githubusercontent.com/arnohovhannisyan/vscode-syncify/gh-pages/img/banner.jpg
