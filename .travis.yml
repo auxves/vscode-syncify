@@ -20,6 +20,18 @@ script:
 
 jobs:
   include:
+    - stage: coverage
+      name: Coverage
+
+      node_js: node
+      os: linux
+
+      before_script: skip
+
+      script:
+        - yarn test --coverage
+        - yarn codecov
+
     - stage: deploy
       name: Deploy
 
@@ -31,8 +43,6 @@ jobs:
       before_script: skip
 
       script:
-        - yarn test --coverage
-        - yarn codecov
         - yarn vsce package
         - echo $'## Changes\n\n' > release-notes.log
         - git log $(git log --tags --no-walk --pretty="format:%d" | sed 2q | sed "s/[()]//g; s ......  ; 1d")..@ --oneline --pretty=format:"%h %s" | awk '{print "- "$0}' >> release-notes.log
