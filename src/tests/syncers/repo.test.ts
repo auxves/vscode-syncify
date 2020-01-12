@@ -362,7 +362,9 @@ describe("download", () => {
   it("should download binary files properly", async () => {
     await Settings.set(currentSettings);
 
-    await FS.write(pathToSettings, Buffer.alloc(2).fill(0));
+    const pathToBuffer = resolve(pathToUser, "buffer");
+
+    await FS.write(pathToBuffer, Buffer.alloc(2).fill(0));
 
     const repoSyncer = new RepoSyncer();
     await repoSyncer.upload();
@@ -374,7 +376,7 @@ describe("download", () => {
 
     const buffer = Buffer.alloc(2).fill(1);
 
-    await FS.write(resolve(pathToTmpRepo, "settings.json"), buffer);
+    await FS.write(resolve(pathToTmpRepo, "buffer"), buffer);
 
     await git.add(".");
     await git.commit("Testing");
@@ -382,7 +384,7 @@ describe("download", () => {
 
     await repoSyncer.download();
 
-    const downloadedBuffer = await FS.readBuffer(pathToSettings);
+    const downloadedBuffer = await FS.readBuffer(pathToBuffer);
 
     expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
   });
