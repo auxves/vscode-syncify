@@ -177,6 +177,26 @@ describe("download", () => {
     expect(downloadedData.replace(/\r\n/g, "\n")).toBe(expected);
   });
 
+  it("should create branch if first download", async () => {
+    await Settings.set(currentSettings);
+
+    const userData = stringifyPretty({
+      "test.key": true
+    });
+
+    await FS.write(pathToSettings, userData);
+
+    await new RepoSyncer().upload();
+
+    await FS.delete(pathToRepo);
+
+    await new RepoSyncer().download();
+
+    const downloadedData = await FS.read(pathToSettings);
+
+    expect(downloadedData.replace(/\r\n/g, "\n")).toBe(userData);
+  });
+
   it("shouldn't download if ahead of remote", async () => {
     await Settings.set(currentSettings);
 
@@ -186,8 +206,7 @@ describe("download", () => {
 
     await FS.write(pathToSettings, userData);
 
-    const repoSyncer = new RepoSyncer();
-    await repoSyncer.download();
+    await new RepoSyncer().download();
 
     const currentData = await FS.read(pathToSettings);
     expect(currentData).toBe(userData);
@@ -339,6 +358,34 @@ describe("download", () => {
     const keybindingsData = await FS.read(pathToKeybindings);
     expect(keybindingsData.replace(/\r\n/g, "\n")).toBe(keybindings);
   });
+
+  it("should download binary files properly", async () => {
+    await Settings.set(currentSettings);
+
+    await FS.write(pathToSettings, Buffer.alloc(2).fill(0));
+
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.upload();
+
+    const git = createSimpleGit(pathToTmpRepo);
+    await git.init();
+    await git.addRemote("origin", pathToRemote);
+    await git.pull("origin", "master", { "--force": null });
+
+    const buffer = Buffer.alloc(2).fill(1);
+
+    await FS.write(resolve(pathToTmpRepo, "settings.json"), buffer);
+
+    await git.add(".");
+    await git.commit("Testing");
+    await git.push("origin", "master", { "--force": null });
+
+    await repoSyncer.download();
+
+    const downloadedBuffer = await FS.readBuffer(pathToSettings);
+
+    expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
+  });
 });
 
 describe("sync", () => {
@@ -426,14 +473,14 @@ describe("init", () => {
   it("should initialize", async () => {
     await Settings.set(currentSettings);
 
-    const repoSyncer = new RepoSyncer();
-    await repoSyncer.init();
+    await new RepoSyncer().init();
 
     const git = createSimpleGit(pathToRepo);
-    const isRepo = await git.checkIsRepo();
-    expect(isRepo).toBeTruthy();
+
+    expect(await git.checkIsRepo()).toBeTruthy();
 
     const remotes = await git.getRemotes(true);
+
     expect(remotes[0].name).toBe("origin");
     expect(remotes[0].refs.push).toBe(pathToRemote);
   });
@@ -446,10 +493,10 @@ describe("init", () => {
 
     await Settings.set(currentSettings);
 
-    const repoSyncer = new RepoSyncer();
-    await repoSyncer.init();
+    await new RepoSyncer().init();
 
     const remotes = await git.getRemotes(true);
+
     expect(remotes[0].name).toBe("origin");
     expect(remotes[0].refs.push).toBe(pathToRemote);
   });
