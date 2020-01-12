@@ -51,22 +51,61 @@ describe("upload", () => {
     const uploadedData = await FS.read(pathToExportSettings);
     expect(uploadedData).toBe(userData);
   });
+
+  it("should upload binary files properly", async () => {
+    await Settings.set(currentSettings);
+
+    const buffer = Buffer.alloc(2).fill(1);
+
+    await FS.write(resolve(pathToUser, "buffer"), buffer);
+
+    const fileSyncer = new FileSyncer();
+    await fileSyncer.upload();
+
+    const uploadedBuffer = await FS.readBuffer(resolve(pathToExport, "buffer"));
+
+    expect(Buffer.compare(buffer, uploadedBuffer)).toBe(0);
+  });
 });
 
 describe("download", () => {
   it("should download", async () => {
     await Settings.set(currentSettings);
 
-    const expected = stringifyPretty({
+    const settings = stringifyPretty({
       "test.key": true
     });
 
-    await FS.write(pathToExportSettings, expected);
+    const extensions = stringifyPretty([1, 2, 3]);
+
+    await FS.write(pathToExportSettings, settings);
+    await FS.write(resolve(pathToExport, "extensions.json"), extensions);
 
     const fileSyncer = new FileSyncer();
     await fileSyncer.download();
 
-    const downloadedData = await FS.read(pathToSettings);
-    expect(downloadedData).toBe(expected);
+    const downloadedSettings = await FS.read(pathToSettings);
+
+    const downloadedExtensions = await FS.read(
+      resolve(pathToUser, "extensions.json")
+    );
+
+    expect(downloadedSettings).toBe(settings);
+    expect(downloadedExtensions).toBe(extensions);
+  });
+
+  it("should download binary files properly", async () => {
+    await Settings.set(currentSettings);
+
+    const buffer = Buffer.alloc(2).fill(1);
+
+    await FS.write(resolve(pathToExport, "buffer"), buffer);
+
+    const fileSyncer = new FileSyncer();
+    await fileSyncer.download();
+
+    const downloadedBuffer = await FS.readBuffer(resolve(pathToUser, "buffer"));
+
+    expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
   });
 });

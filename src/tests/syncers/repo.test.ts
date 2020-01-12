@@ -140,6 +140,30 @@ describe("upload", () => {
       2000
     );
   });
+
+  it("should upload binary files properly", async () => {
+    await Settings.set(currentSettings);
+
+    const pathToBuffer = resolve(pathToUser, "buffer");
+
+    const buffer = Buffer.alloc(2).fill(1);
+
+    await FS.write(pathToBuffer, buffer);
+
+    const repoSyncer = new RepoSyncer();
+    await repoSyncer.upload();
+
+    const git = createSimpleGit(pathToTmpRepo);
+    await git.init();
+    await git.addRemote("origin", pathToRemote);
+    await git.pull("origin", "master", { "--force": null });
+
+    const downloadedBuffer = await FS.readBuffer(
+      resolve(pathToTmpRepo, "buffer")
+    );
+
+    expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
+  });
 });
 
 describe("download", () => {
