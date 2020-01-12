@@ -139,6 +139,8 @@ describe("upload", () => {
       localize("(info) repo -> remoteUpToDate"),
       2000
     );
+
+    spy.mockRestore();
   });
 
   it("should upload binary files properly", async () => {
@@ -340,6 +342,8 @@ describe("download", () => {
     await repoSyncer.download();
 
     expect(spy).toHaveBeenCalledWith(localize("(info) repo -> upToDate"), 2000);
+
+    spy.mockRestore();
   });
 
   it("should merge if changes exist", async () => {
@@ -438,6 +442,8 @@ describe("sync", () => {
     await repoSyncer.sync();
 
     expect(spy).toHaveBeenCalled();
+
+    spy.mockRestore();
   });
 
   it("should not do anything if no changes and not behind", async () => {
@@ -459,6 +465,9 @@ describe("sync", () => {
 
     expect(uploadSpy).not.toHaveBeenCalled();
     expect(downloadSpy).not.toHaveBeenCalled();
+
+    uploadSpy.mockRestore();
+    downloadSpy.mockRestore();
   });
 
   it("should download if behind remote", async () => {

@@ -23,8 +23,9 @@ export const extensions = {
 };
 
 export const commands = {
-  registerCommand: () => null,
-  executeCommand: () => null
+  registerCommand: () => ({ dispose: () => null }),
+  executeCommand: () => null,
+  getCommands: () => []
 };
 
 export enum ProgressLocation {
