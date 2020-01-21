@@ -3,6 +3,9 @@
   "files.exclude": {
     "dist": false
   },
+  "files.associations": {
+    ".all-contributorsrc": "json"
+  },
   "search.exclude": {
     "dist": true
   },

@@ -45,18 +45,27 @@ The documentation can be found [here][link:docs].
 - Descriptive errors with possible causes and solutions
 - Support for syncing custom extensions that are not from the VSCode Marketplace
 
-## Credits
+## Contributors
 
-- [@arnohovhannisyan (me)][link:me] - Extension author
-- [@shanalikhan][link:shanalikhan] - This extension was inspired by [Settings Sync][link:settings-sync]
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-<!-- Link References -->
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://bennett.piater.name"><img src="https://avatars3.githubusercontent.com/u/1181744?v=4" width="100px;" alt=""/><br /><sub><b>Bennett Piater</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/commits?author=clawoflight" title="Code">💻</a></td>
+    <td align="center"><a href="http://shanalikhan.github.io"><img src="https://avatars0.githubusercontent.com/u/8774556?v=4" width="100px;" alt=""/><br /><sub><b>Shan Khan</b></sub></a><br /><a href="#ideas-shanalikhan" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/dxman"><img src="https://avatars2.githubusercontent.com/u/10678981?v=4" width="100px;" alt=""/><br /><sub><b>dxman</b></sub></a><br /><a href="#userTesting-dxman" title="User Testing">📓</a></td>
+    <td align="center"><a href="https://github.com/everito"><img src="https://avatars3.githubusercontent.com/u/31976784?v=4" width="100px;" alt=""/><br /><sub><b>everito</b></sub></a><br /><a href="#userTesting-everito" title="User Testing">📓</a></td>
+  </tr>
+</table>
 
-[link:shanalikhan]: https://github.com/shanalikhan
-[link:me]: https://github.com/arnohovhannisyan
-[link:settings-sync]: https://github.com/shanalikhan/code-settings-sync
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
 [link:docs]: https://arnohovhannisyan.space/vscode-syncify
-
-<!-- Image References -->
-
 [img:banner]: https://raw.githubusercontent.com/arnohovhannisyan/vscode-syncify/gh-pages/img/banner.jpg
