@@ -56,8 +56,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="http://bennett.piater.name"><img src="https://avatars3.githubusercontent.com/u/1181744?v=4" width="100px;" alt=""/><br /><sub><b>Bennett Piater</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/commits?author=clawoflight" title="Code">💻</a></td>
     <td align="center"><a href="http://shanalikhan.github.io"><img src="https://avatars0.githubusercontent.com/u/8774556?v=4" width="100px;" alt=""/><br /><sub><b>Shan Khan</b></sub></a><br /><a href="#ideas-shanalikhan" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/dxman"><img src="https://avatars2.githubusercontent.com/u/10678981?v=4" width="100px;" alt=""/><br /><sub><b>dxman</b></sub></a><br /><a href="#userTesting-dxman" title="User Testing">📓</a></td>
+    <td align="center"><a href="https://github.com/dxman"><img src="https://avatars2.githubusercontent.com/u/10678981?v=4" width="100px;" alt=""/><br /><sub><b>dxman</b></sub></a><br /><a href="#userTesting-dxman" title="User Testing">📓</a> <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Adxman" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/everito"><img src="https://avatars3.githubusercontent.com/u/31976784?v=4" width="100px;" alt=""/><br /><sub><b>everito</b></sub></a><br /><a href="#userTesting-everito" title="User Testing">📓</a></td>
+    <td align="center"><a href="https://allenyllee.gitlab.io/"><img src="https://avatars3.githubusercontent.com/u/3991134?v=4" width="100px;" alt=""/><br /><sub><b>Allen.YL</b></sub></a><br /><a href="#userTesting-allenyllee" title="User Testing">📓</a></td>
+    <td align="center"><a href="http://frank.hommers.nl/"><img src="https://avatars2.githubusercontent.com/u/7355878?v=4" width="100px;" alt=""/><br /><sub><b>Frank Hommers</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Afrankhommers" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
