@@ -27,7 +27,7 @@ Syncify can sync your VSCode settings and extensions across all your devices usi
 
 The documentation can be found [here][link:docs].
 
-## Advantages over [Settings Sync][link:settings-sync]
+## Advantages over Settings Sync
 
 - No annoying popups
 - Quick setup with GitHub, GitLab, or BitBucket
