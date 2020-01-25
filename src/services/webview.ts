@@ -100,9 +100,7 @@ export class Webview {
 
             await FS.delete(Environment.globalStoragePath);
 
-            await Settings.set(
-              merge(currentSettings, { repo: { url: result } })
-            );
+            await Settings.set({ repo: { url: result } });
 
             await commands.executeCommand("syncify.download");
 
