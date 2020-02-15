@@ -27,12 +27,15 @@ export class FS {
     });
   }
 
-  public static read(path: string): Promise<string> {
-    return readFile(path, "utf-8");
-  }
+  public static read(path: string): Promise<string>;
+  public static read(path: string, asBuffer: true): Promise<Buffer>;
+  public static read(
+    path: string,
+    asBuffer?: boolean
+  ): Promise<string | Buffer> {
+    if (asBuffer) return readFile(path);
 
-  public static readBuffer(path: string): Promise<Buffer> {
-    return readFile(path);
+    return readFile(path, "utf-8");
   }
 
   public static write(path: string, data: any): Promise<void> {

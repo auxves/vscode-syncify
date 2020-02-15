@@ -83,13 +83,9 @@ export class RepoSyncer implements ISyncer {
 
       const diff = await this.git.diff();
 
-      if (diff && status !== "behind") {
-        return this.upload();
-      }
+      if (diff && status !== "behind") return this.upload();
 
-      if (status === "behind") {
-        return this.download();
-      }
+      if (status === "behind") return this.download();
 
       window.setStatusBarMessage(localize("(info) sync -> nothingToDo"), 2000);
     } catch (err) {
@@ -418,7 +414,7 @@ export class RepoSyncer implements ISyncer {
 
       await Promise.all(
         files.map(async file => {
-          let contents = await FS.readBuffer(file);
+          let contents = await FS.read(file, true);
 
           const hasConflict = (c: string) => {
             const regexes = [/^<<<<<<<$/, /^=======$/, /^>>>>>>>$/];
@@ -450,7 +446,7 @@ export class RepoSyncer implements ISyncer {
               });
             });
 
-            contents = await FS.readBuffer(tmpPath);
+            contents = await FS.read(tmpPath, true);
 
             await FS.delete(tmpPath);
           }

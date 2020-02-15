@@ -21,9 +21,7 @@ export class CustomFiles {
       }
 
       const folder = await (async () => {
-        if (uri) {
-          return uri.fsPath;
-        }
+        if (uri) return uri.fsPath;
 
         if (!workspace.workspaceFolders) return;
 
@@ -66,8 +64,14 @@ export class CustomFiles {
       if (!filename) return;
 
       const filepath = resolve(Environment.customFilesFolder, filename);
-      const contents = await FS.readBuffer(filepath);
-      await FS.write(resolve(folder, filename), contents);
+
+      const newName = await window.showInputBox({
+        prompt: localize("(prompt) customFiles -> import -> file -> name"),
+        value: filename
+      });
+
+      const contents = await FS.read(filepath, true);
+      await FS.write(resolve(folder, newName || filename), contents);
     } catch (err) {
       Logger.error(err);
     }
@@ -97,9 +101,22 @@ export class CustomFiles {
       if (!filepath) return;
 
       const filename = basename(filepath);
-      const contents = await FS.readBuffer(filepath);
       const newPath = resolve(Environment.customFilesFolder, filename);
+
+      if (await FS.exists(newPath)) {
+        const res = await window.showWarningMessage(
+          localize("(prompt) customFiles -> register -> exists"),
+          localize("(label) no"),
+          localize("(label) yes")
+        );
+
+        if (res !== localize("(label) yes")) return;
+      }
+
+      const contents = await FS.read(filepath, true);
+
       await FS.write(newPath, contents);
+
       await window.showInformationMessage(
         localize("(info) customFiles -> registered", filename)
       );

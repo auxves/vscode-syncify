@@ -62,7 +62,7 @@ describe("upload", () => {
     const fileSyncer = new FileSyncer();
     await fileSyncer.upload();
 
-    const uploadedBuffer = await FS.readBuffer(resolve(pathToExport, "buffer"));
+    const uploadedBuffer = await FS.read(resolve(pathToExport, "buffer"), true);
 
     expect(Buffer.compare(buffer, uploadedBuffer)).toBe(0);
   });
@@ -104,7 +104,7 @@ describe("download", () => {
     const fileSyncer = new FileSyncer();
     await fileSyncer.download();
 
-    const downloadedBuffer = await FS.readBuffer(resolve(pathToUser, "buffer"));
+    const downloadedBuffer = await FS.read(resolve(pathToUser, "buffer"), true);
 
     expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
   });

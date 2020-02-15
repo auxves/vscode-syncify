@@ -160,8 +160,9 @@ describe("upload", () => {
     await git.addRemote("origin", pathToRemote);
     await git.pull("origin", "master", { "--force": null });
 
-    const downloadedBuffer = await FS.readBuffer(
-      resolve(pathToTmpRepo, "buffer")
+    const downloadedBuffer = await FS.read(
+      resolve(pathToTmpRepo, "buffer"),
+      true
     );
 
     expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
@@ -412,7 +413,7 @@ describe("download", () => {
 
     await repoSyncer.download();
 
-    const downloadedBuffer = await FS.readBuffer(pathToBuffer);
+    const downloadedBuffer = await FS.read(pathToBuffer, true);
 
     expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
   });
