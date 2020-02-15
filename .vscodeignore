@@ -10,10 +10,12 @@ __mocks__
 
 # Files
 
+.all-contributorsrc
 .gitignore
 .gitmodules
 tsconfig.json
 tslint.json
+assets/ui/.git
 assets/ui/index.html
 translocalizer.json
 *.map
