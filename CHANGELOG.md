@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.13.2
+
+- Show less obtrusive error messages
+
 ## v3.13.1
 
 - Small improvements and bugfixes
