@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.13.3
+
+- Fix issue with simple-git
+
 ## v3.13.2
 
 - Show less obtrusive error messages
