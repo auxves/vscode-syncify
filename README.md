@@ -60,12 +60,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/everito"><img src="https://avatars3.githubusercontent.com/u/31976784?v=4" width="100px;" alt=""/><br /><sub><b>everito</b></sub></a><br /><a href="#userTesting-everito" title="User Testing">📓</a> <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Aeverito" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://allenyllee.gitlab.io/"><img src="https://avatars3.githubusercontent.com/u/3991134?v=4" width="100px;" alt=""/><br /><sub><b>Allen.YL</b></sub></a><br /><a href="#userTesting-allenyllee" title="User Testing">📓</a></td>
     <td align="center"><a href="http://frank.hommers.nl/"><img src="https://avatars2.githubusercontent.com/u/7355878?v=4" width="100px;" alt=""/><br /><sub><b>Frank Hommers</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Afrankhommers" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/nawordar"><img src="https://avatars2.githubusercontent.com/u/26769700?v=4" width="100px;" alt=""/><br /><sub><b>Cezary Drożak</b></sub></a><br /><a href="#ideas-nawordar" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
