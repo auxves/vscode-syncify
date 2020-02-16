@@ -25,7 +25,7 @@ import { checkGit, sleep, stringifyPretty } from "~/utilities";
 export class RepoSyncer implements ISyncer {
   private git: SimpleGit = createSimpleGit().silent(true);
 
-  public async init() {
+  public async init(): Promise<void> {
     try {
       await FS.mkdir(Environment.repoFolder);
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.13.1
+
+- Small improvements and bugfixes
+
+## v3.13.0
+
+- Show warning if custom file already exists
+
 ## v3.12.3
 
 - Fix reset confirmation

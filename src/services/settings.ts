@@ -13,9 +13,9 @@ import {
 import { confirm, merge, stringifyPretty } from "~/utilities";
 
 export class Settings {
-  public static async get<T = ISettings>(
-    selector?: (s: ISettings) => T
-  ): Promise<T> {
+  public static async get(): Promise<ISettings>;
+  public static async get<T>(selector: (s: ISettings) => T): Promise<T>;
+  public static async get<T>(selector?: (s: ISettings) => T): Promise<T> {
     const exists = await FS.exists(Environment.settings);
 
     if (!exists) {

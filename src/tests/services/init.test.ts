@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import { commands } from "vscode";
-import { Environment, FS, Initializer, Settings, Watcher } from "~/services";
+import { Environment, FS, init, Settings, Watcher } from "~/services";
 import state from "~/state";
 import { getCleanupPath } from "~/tests/getCleanupPath";
 
@@ -34,7 +34,7 @@ jest.mock("~/services/localize.ts");
 it("should register commands", async () => {
   const spy = jest.spyOn(commands, "registerCommand");
 
-  await Initializer.init();
+  await init();
 
   expect(spy).toBeCalled();
 
@@ -46,7 +46,7 @@ it("should start watching", async () => {
 
   const spy = jest.spyOn(Watcher, "start");
 
-  await Initializer.init();
+  await init();
 
   expect(spy).toBeCalled();
 
@@ -58,7 +58,7 @@ it("should start syncing", async () => {
 
   const spy = jest.spyOn(commands, "executeCommand");
 
-  await Initializer.init();
+  await init();
 
   expect(spy).toBeCalledWith("syncify.sync");
 

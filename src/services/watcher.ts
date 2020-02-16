@@ -6,11 +6,11 @@ import { sleep } from "~/utilities";
 
 export class Watcher {
   public static init(ignoredItems: string[]) {
-    if (!this.watcher) {
-      this.watcher = chokidar.watch([], {
-        ignored: ignoredItems
-      });
-    }
+    if (this.watcher) this.watcher.close();
+
+    this.watcher = chokidar.watch([], {
+      ignored: ignoredItems
+    });
   }
 
   public static start() {

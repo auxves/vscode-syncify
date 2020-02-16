@@ -16,7 +16,7 @@ export class Extensions {
         return Promise.all(
           ids.map(async ext => {
             const vsix = vsixFiles.find(file =>
-              new RegExp(`^${ext}(-\d+?\.\d+?\.\d+?)?.vsix$`, "i").test(
+              new RegExp(`^${ext}(-\\d+?\.\\d+?\.\\d+?)?.vsix$`, "i").test(
                 basename(file)
               )
             );
