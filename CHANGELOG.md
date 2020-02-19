@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.14.0
+
+- Allow user to rename a custom file before registering it
+
 ## v3.13.3
 
 - Fix issue with simple-git

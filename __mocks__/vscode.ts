@@ -3,7 +3,8 @@ import { resolve } from "path";
 export const window = {
   setStatusBarMessage: () => null,
   withProgress: (_: any, fn: any) => fn({ report: () => null }),
-  showInformationMessage: () => null
+  showInformationMessage: () => null,
+  showInputBox: () => null
 };
 
 export const extensions = {

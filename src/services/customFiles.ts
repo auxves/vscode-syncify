@@ -52,7 +52,7 @@ export class CustomFiles {
 
       if (!folder) return;
 
-      const filename = await window.showQuickPick(
+      const selectedFile = await window.showQuickPick(
         allFiles.map(f => basename(f)),
         {
           placeHolder: localize(
@@ -61,17 +61,23 @@ export class CustomFiles {
         }
       );
 
-      if (!filename) return;
+      if (!selectedFile) return;
 
-      const filepath = resolve(Environment.customFilesFolder, filename);
+      const filepath = resolve(Environment.customFilesFolder, selectedFile);
 
-      const newName = await window.showInputBox({
-        prompt: localize("(prompt) customFiles -> import -> file -> name"),
-        value: filename
-      });
+      const filename = await (async () => {
+        const newName = await window.showInputBox({
+          prompt: localize("(prompt) customFiles -> import -> file -> name"),
+          value: selectedFile
+        });
+
+        if (newName?.length) return newName;
+
+        return selectedFile;
+      })();
 
       const contents = await FS.read(filepath, true);
-      await FS.write(resolve(folder, newName || filename), contents);
+      await FS.write(resolve(folder, filename), contents);
     } catch (err) {
       Logger.error(err);
     }
@@ -100,7 +106,19 @@ export class CustomFiles {
 
       if (!filepath) return;
 
-      const filename = basename(filepath);
+      const filename = await (async () => {
+        const original = basename(filepath);
+
+        const newName = await window.showInputBox({
+          prompt: localize("(prompt) customFiles -> register -> name"),
+          value: original
+        });
+
+        if (newName?.length) return newName;
+
+        return original;
+      })();
+
       const newPath = resolve(Environment.customFilesFolder, filename);
 
       if (await FS.exists(newPath)) {
