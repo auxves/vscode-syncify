@@ -16,22 +16,22 @@ export async function init() {
   state.context?.subscriptions.forEach(d => d.dispose());
 
   const cmds = {
-    "syncify.sync": () => syncer.sync(),
-    "syncify.upload": () => syncer.upload(),
-    "syncify.download": () => syncer.download(),
-    "syncify.reset": () => Settings.reset(),
-    "syncify.openSettings": () => Settings.open(),
-    "syncify.reinitialize": () => init(),
-    "syncify.importCustomFile": (uri?: Uri) => CustomFiles.import(uri),
-    "syncify.registerCustomFile": (uri?: Uri) => CustomFiles.register(uri),
-    "syncify.switchProfile": () => Profile.switch(),
-    "syncify.enableDebugMode": () => (state.isDebugMode = true),
-    "syncify.disableDebugMode": () => (state.isDebugMode = false)
+    sync: () => syncer.sync(),
+    upload: () => syncer.upload(),
+    download: () => syncer.download(),
+    reset: () => Settings.reset(),
+    openSettings: () => Settings.open(),
+    reinitialize: () => init(),
+    importCustomFile: (uri?: Uri) => CustomFiles.import(uri),
+    registerCustomFile: (uri?: Uri) => CustomFiles.register(uri),
+    switchProfile: () => Profile.switch(),
+    enableDebugMode: () => (state.isDebugMode = true),
+    disableDebugMode: () => (state.isDebugMode = false)
   };
 
   state.context?.subscriptions.push(
     ...Object.entries(cmds).map(([name, fn]) =>
-      commands.registerCommand(name, fn)
+      commands.registerCommand(`syncify.${name}`, fn)
     )
   );
 

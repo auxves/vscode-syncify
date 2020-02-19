@@ -77,7 +77,7 @@ export class CustomFiles {
     }
   }
 
-  public static async register(uri: Uri | undefined) {
+  public static async register(uri?: Uri) {
     try {
       const folderExists = await FS.exists(Environment.customFilesFolder);
 
