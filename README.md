@@ -71,4 +71,4 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 [link:docs]: https://arnohovhannisyan.space/vscode-syncify
-[img:banner]: https://raw.githubusercontent.com/arnohovhannisyan/vscode-syncify/gh-pages/img/banner.jpg
+[img:banner]: https://arnohovhannisyan.space/vscode-syncify/img/banner.jpg
