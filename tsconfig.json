@@ -5,7 +5,7 @@
       "~/*": ["./*"]
     },
     "module": "commonjs",
-    "target": "es2015",
+    "target": "ES5",
     "outDir": "out",
     "lib": ["esnext"],
     "esModuleInterop": true,

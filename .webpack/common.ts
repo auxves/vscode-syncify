@@ -1,7 +1,8 @@
-const { resolve } = require("path");
-const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
+import { resolve } from "path";
+import { TsConfigPathsPlugin } from "awesome-typescript-loader";
+import { Configuration } from "webpack";
 
-module.exports = {
+const config: Configuration = {
   stats: {
     warningsFilter: /(Critical dependency: the request of a dependency is an expression|Can't resolve 'original-fs')/
   },
@@ -36,3 +37,5 @@ module.exports = {
     "vscode-fsevents": "commonjs vscode-fsevents"
   }
 };
+
+export default config;
