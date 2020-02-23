@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.14.1
+
+- Prompt user to download after switching profile
+
 ## v3.14.0
 
 - Allow user to rename a custom file before registering it

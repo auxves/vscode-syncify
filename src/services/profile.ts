@@ -20,7 +20,9 @@ export class Profile {
         }
       );
 
-      return profiles.find(p => p.name === selected?.label);
+      if (!selected) return;
+
+      return profiles.find(p => p.name === selected.label);
     })();
 
     if (!newProfile) return;
@@ -33,10 +35,11 @@ export class Profile {
       }
     });
 
-    window.showInformationMessage(
-      localize("(info) repo -> switchedProfile", newProfile.name)
+    const res = await window.showInformationMessage(
+      localize("(info) repo -> switchedProfile", newProfile.name),
+      localize("(label) yes")
     );
 
-    await commands.executeCommand("syncify.download");
+    if (res) await commands.executeCommand("syncify.download");
   }
 }

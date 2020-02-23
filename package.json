@@ -4,7 +4,7 @@
   "publisher": "arnohovhannisyan",
   "description": "A reliable way of syncing your VSCode settings and extensions",
   "license": "MIT",
-  "version": "3.14.0",
+  "version": "3.14.1",
   "main": "./dist/main.js",
   "scripts": {
     "start": "webpack --config .webpack/development.ts --watch",
