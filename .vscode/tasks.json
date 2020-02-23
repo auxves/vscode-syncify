@@ -4,7 +4,7 @@
     {
       "label": "Watch",
       "type": "shell",
-      "command": "rm -rf /tmp/vscode-syncify && mkdir -p /tmp/vscode-syncify/{extensions,user-data} && yarn watch",
+      "command": "rm -rf /tmp/vscode-syncify && mkdir -p /tmp/vscode-syncify/{extensions,user-data} && yarn start",
       "group": {
         "kind": "build",
         "isDefault": true

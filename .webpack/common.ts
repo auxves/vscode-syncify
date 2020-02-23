@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { TsConfigPathsPlugin } from "awesome-typescript-loader";
 import { Configuration } from "webpack";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
 const config: Configuration = {
   stats: {
@@ -32,6 +33,7 @@ const config: Configuration = {
       }
     ]
   },
+  plugins: [new CleanWebpackPlugin()],
   externals: {
     vscode: "commonjs vscode",
     "vscode-fsevents": "commonjs vscode-fsevents"

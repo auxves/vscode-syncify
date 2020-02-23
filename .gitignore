@@ -9,3 +9,4 @@ coverage
 
 *.vsix
 *.log
+assets/settings.schema.json

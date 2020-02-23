@@ -7,16 +7,16 @@
   "version": "3.14.0",
   "main": "./dist/main.js",
   "scripts": {
-    "start": "run watch",
-    "build": "run clean && webpack --config .webpack/production.ts",
-    "watch": "run clean && webpack --config .webpack/development.ts --watch",
+    "start": "webpack --config .webpack/development.ts --watch",
+    "build": "webpack --config .webpack/production.ts",
     "test": "jest",
     "schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
-    "clean": "shx rm -rf dist",
-    "vscode:prepublish": "run schema && run build"
+    "vscode:prepublish": "yarn schema && yarn build"
   },
   "dependencies": {
+    "@types/terser-webpack-plugin": "^2.2.0",
     "axios": "^0.19.2",
+    "clean-webpack-plugin": "^3.0.0",
     "compare-versions": "^3.6.0",
     "express": "^4.17.1",
     "fast-glob": "^3.1.1",
@@ -24,6 +24,7 @@
     "jsonc-parser": "^2.2.0",
     "lodash": "^4.17.15",
     "simple-git": "^1.131.0",
+    "terser-webpack-plugin": "^2.3.5",
     "vscode-chokidar": "^2.1.7"
   },
   "devDependencies": {
@@ -34,13 +35,13 @@
     "@types/node": "^13.7.4",
     "@types/vscode": "1.41.0",
     "@types/webpack": "^4.41.6",
+    "@types/webpack-merge": "^4.1.5",
     "all-contributors-cli": "^6.13.0",
     "awesome-typescript-loader": "^5.2.1",
     "codecov": "^3.6.5",
     "jest": "^25.1.0",
     "jest-raw-loader": "^1.0.1",
     "raw-loader": "^4.0.0",
-    "run-script-proxy": "^1.0.1",
     "shx": "^0.3.2",
     "ts-jest": "^25.2.1",
     "ts-loader": "^6.2.1",
@@ -53,7 +54,8 @@
     "utility-types": "^3.10.0",
     "vsce": "^1.73.0",
     "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
   },
   "engines": {
     "vscode": "^1.41.0"
