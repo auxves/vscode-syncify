@@ -31,30 +31,11 @@ export class OAuth {
           res.send(`
           <!doctype html>
           <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            </head>
+            <head><meta charset="utf-8"></head>
             <body>
                 <h1>Success! You may now close this tab.</h1>
-                <style>
-                  html, body {
-                    background-color: #343a40;
-                    color: #e9e9e9;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100%;
-                    width: 100%;
-                    margin: 0;
-                  }
-                </style>
-                <script>
-                  if(location.hash) {
-                    const params = new URLSearchParams(location.hash.slice(1));
-                    fetch(\`http://localhost:37468/implicit?token=\${params.get("access_token")}\`);
-                  }
-                </script>
+                <style>html,body{background-color:#343a40;color:#e9e9e9;display:flex;justify-content:center;align-items:center;height:100%;width:100%;margin:0;}</style>
+                <script>location.hash&&fetch(\`http://localhost:37468/implicit?token=\${new URLSearchParams(location.hash.slice(1)).get("access_token")}\`);</script>
             </body>
           </html>
           `);
@@ -93,17 +74,17 @@ export class OAuth {
         bitbucket: `Bearer ${token}`
       };
 
-      const response = await axios.get(urls[provider], {
+      const { data } = await axios(urls[provider], {
         method: "GET",
         headers: { Authorization: authHeader[provider] }
       });
 
       switch (provider) {
         case "github":
-          return response.data.login as string;
+          return data.login as string;
         case "gitlab":
         case "bitbucket":
-          return response.data.username as string;
+          return data.username as string;
       }
     } catch (err) {
       Logger.error(err);
@@ -112,7 +93,7 @@ export class OAuth {
 
   private static async getToken(code: string) {
     try {
-      const response = await axios.get(
+      const { data } = await axios(
         `https://github.com/login/oauth/access_token`,
         {
           method: "POST",
@@ -124,7 +105,7 @@ export class OAuth {
         }
       );
 
-      return new URLSearchParams(response.data).get("access_token");
+      return new URLSearchParams(data).get("access_token");
     } catch (err) {
       Logger.error(err);
     }
