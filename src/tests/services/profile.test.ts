@@ -18,7 +18,7 @@ beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
 afterEach(() => FS.delete(cleanupPath));
 
-it("should switch profile", async () => {
+test("switch", async () => {
   await Settings.set({
     repo: {
       profiles: [

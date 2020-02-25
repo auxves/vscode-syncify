@@ -12,7 +12,7 @@ function setExtensions(exts: string[]): void {
   }));
 }
 
-it("should properly get missing extensions", () => {
+test("missing extensions", () => {
   setExtensions(["publisher1.extension1"]);
 
   const missing = Extensions.getMissing([
@@ -26,7 +26,7 @@ it("should properly get missing extensions", () => {
   expect(missing).toStrictEqual(expected);
 });
 
-it("should properly get unneeded extensions", () => {
+test("unneeded extensions", () => {
   setExtensions([
     "publisher1.extension1",
     "publisher2.extension2",

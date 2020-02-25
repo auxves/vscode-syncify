@@ -21,7 +21,7 @@ beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
 afterEach(() => FS.delete(cleanupPath));
 
-it("should set settings", async () => {
+test("set", async () => {
   await Settings.set({ watchSettings: true });
 
   const fetched: ISettings = JSON.parse(await FS.read(Environment.settings));
@@ -29,7 +29,7 @@ it("should set settings", async () => {
   expect(fetched.watchSettings).toBeTruthy();
 });
 
-it("should get settings", async () => {
+test("get", async () => {
   const newSettings: ISettings = {
     ...defaultSettings,
     watchSettings: true
@@ -42,11 +42,14 @@ it("should get settings", async () => {
   expect(watchSettings).toBeTruthy();
 });
 
-it("should get settings w/o side effects", async () => {
-  expect(await Settings.get()).toStrictEqual(defaultSettings);
+test("immutability", async () => {
+  const settings = await Settings.get();
+
+  expect(settings).toStrictEqual(defaultSettings);
+  expect(settings).not.toBe(defaultSettings);
 });
 
-it("should delete settings during reset", async () => {
+test("reset", async () => {
   await Settings.set({ watchSettings: true });
 
   await Settings.reset();

@@ -138,8 +138,7 @@ export class FileSyncer implements ISyncer {
   }
 
   public async isConfigured(): Promise<boolean> {
-    const settings = await Settings.get();
-    const { path } = settings.file;
+    const path = await Settings.get(s => s.file.path);
 
     if (!path) return false;
 

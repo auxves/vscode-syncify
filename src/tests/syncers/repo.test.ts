@@ -49,7 +49,7 @@ beforeEach(async () => {
 afterEach(() => FS.delete(cleanupPath));
 
 describe("upload", () => {
-  it("should upload", async () => {
+  test("basic functionality", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -65,7 +65,7 @@ describe("upload", () => {
     expect(uploadedData).toBe(userData);
   });
 
-  it("shouldn't upload if behind remote", async () => {
+  test("behind remote", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -100,7 +100,7 @@ describe("upload", () => {
     expect(syncedData).toBe(expected);
   });
 
-  it("should properly ignore items", async () => {
+  test("ignore items", async () => {
     await Settings.set(currentSettings);
 
     const expected = stringifyPretty({
@@ -119,7 +119,7 @@ describe("upload", () => {
     expect(settingsData).toBe(expected);
   });
 
-  it("should not upload if up to date", async () => {
+  test("up to date", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -143,7 +143,7 @@ describe("upload", () => {
     spy.mockRestore();
   });
 
-  it("should upload binary files properly", async () => {
+  test("binary files", async () => {
     await Settings.set(currentSettings);
 
     const pathToBuffer = resolve(pathToUser, "buffer");
@@ -170,7 +170,7 @@ describe("upload", () => {
 });
 
 describe("download", () => {
-  it("should download", async () => {
+  test("basic functionality", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -204,7 +204,7 @@ describe("download", () => {
     expect(downloadedData.replace(/\r\n/g, "\n")).toBe(expected);
   });
 
-  it("should create branch if first download", async () => {
+  test("create branch if first download", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -224,7 +224,7 @@ describe("download", () => {
     expect(downloadedData.replace(/\r\n/g, "\n")).toBe(userData);
   });
 
-  it("shouldn't download if ahead of remote", async () => {
+  test("ahead of remote", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -239,7 +239,7 @@ describe("download", () => {
     expect(currentData).toBe(userData);
   });
 
-  it("should switch profiles properly", async () => {
+  test("switch profiles", async () => {
     await Settings.set(
       merge(currentSettings, {
         repo: {
@@ -278,7 +278,7 @@ describe("download", () => {
     expect(downloadedData.replace(/\r\n/g, "\n")).toBe(userData);
   });
 
-  it("should download new profile properly", async () => {
+  test("download new profile", async () => {
     await Settings.set(
       merge(currentSettings, {
         repo: {
@@ -326,7 +326,7 @@ describe("download", () => {
     expect(downloadedData.replace(/\r\n/g, "\n")).toBe(newUserData);
   });
 
-  it("should not upload if up to date", async () => {
+  test("up to date", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -347,7 +347,7 @@ describe("download", () => {
     spy.mockRestore();
   });
 
-  it("should merge if changes exist", async () => {
+  test("merge if dirty", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -388,7 +388,7 @@ describe("download", () => {
     expect(keybindingsData.replace(/\r\n/g, "\n")).toBe(keybindings);
   });
 
-  it("should download binary files properly", async () => {
+  test("binary files", async () => {
     await Settings.set(currentSettings);
 
     const pathToBuffer = resolve(pathToUser, "buffer");
@@ -420,7 +420,7 @@ describe("download", () => {
 });
 
 describe("sync", () => {
-  it("should upload if changes exist and not behind", async () => {
+  test("dirty and not behind", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -447,7 +447,7 @@ describe("sync", () => {
     spy.mockRestore();
   });
 
-  it("should not do anything if no changes and not behind", async () => {
+  test("clean and not behind", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -471,7 +471,7 @@ describe("sync", () => {
     downloadSpy.mockRestore();
   });
 
-  it("should download if behind remote", async () => {
+  test("behind remote", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -506,7 +506,7 @@ describe("sync", () => {
 });
 
 describe("init", () => {
-  it("should initialize", async () => {
+  test("basic functionality", async () => {
     await Settings.set(currentSettings);
 
     await new RepoSyncer().init();
@@ -521,7 +521,7 @@ describe("init", () => {
     expect(remotes[0].refs.push).toBe(pathToRemote);
   });
 
-  it("should update remote if not correct", async () => {
+  test("update remote if not correct", async () => {
     const git = createSimpleGit(pathToRepo);
 
     await git.init();

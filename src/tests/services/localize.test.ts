@@ -1,6 +1,6 @@
 import { initLocalization, localize } from "~/services";
 
-it("should localize english", async () => {
+test("basic functionality", async () => {
   await initLocalization("en-us");
 
   const installed = {
@@ -18,7 +18,7 @@ it("should localize english", async () => {
   expect(uninstalled.result).toBe(uninstalled.expected);
 });
 
-it("should return key for invalid key", async () => {
+test("invalid key", async () => {
   await initLocalization("en-us");
 
   expect(localize("")).toBe("");

@@ -42,19 +42,19 @@ export class RepoSyncer implements ISyncer {
       const remotes = await this.git.getRemotes(true);
       const origin = remotes.find(remote => remote.name === "origin");
 
-      const settings = await Settings.get();
+      const repoUrl = await Settings.get(s => s.repo.url);
 
       if (!origin) {
-        Logger.debug(`Adding new remote "origin" at "${settings.repo.url}"`);
+        Logger.debug(`Adding new remote "origin" at "${repoUrl}"`);
 
-        await this.git.addRemote("origin", settings.repo.url);
-      } else if (origin.refs.push !== settings.repo.url) {
+        await this.git.addRemote("origin", repoUrl);
+      } else if (origin.refs.push !== repoUrl) {
         Logger.debug(
-          `Wrong remote url for "origin", removing and adding new origin at "${settings.repo.url}"`
+          `Wrong remote url for "origin", removing and adding new origin at "${repoUrl}"`
         );
 
         await this.git.removeRemote("origin");
-        await this.git.addRemote("origin", settings.repo.url);
+        await this.git.addRemote("origin", repoUrl);
       }
     } catch (err) {
       Logger.error(err);
@@ -350,8 +350,7 @@ export class RepoSyncer implements ISyncer {
   }
 
   public async isConfigured(): Promise<boolean> {
-    const settings = await Settings.get();
-    const { currentProfile, profiles, url } = settings.repo;
+    const { currentProfile, profiles, url } = await Settings.get(s => s.repo);
 
     return (
       !!url &&
@@ -361,8 +360,7 @@ export class RepoSyncer implements ISyncer {
   }
 
   private async getProfile(): Promise<IProfile> {
-    const settings = await Settings.get();
-    const { profiles, currentProfile } = settings.repo;
+    const { currentProfile, profiles } = await Settings.get(s => s.repo);
 
     return profiles.find(({ name }) => name === currentProfile) ?? profiles[0];
   }

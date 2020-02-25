@@ -21,7 +21,7 @@ beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
 afterEach(() => FS.delete(cleanupPath));
 
-it("should register a provided file", async () => {
+test("register", async () => {
   const testPath = resolve(pathToSource, "test.json");
 
   const data = stringifyPretty({ test: true });

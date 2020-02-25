@@ -14,7 +14,7 @@ beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
 afterEach(() => FS.delete(cleanupPath));
 
-it("should not list ignored files", async () => {
+it("regular files", async () => {
   const filepath = resolve(pathToTest, "file");
   await FS.write(filepath, "test");
 
@@ -23,7 +23,7 @@ it("should not list ignored files", async () => {
   expect(files.includes(filepath)).toBeFalsy();
 });
 
-it("should list files that aren't ignored", async () => {
+it("ignored files", async () => {
   const filepath = resolve(pathToTest, "file");
   await FS.write(filepath, "test");
 

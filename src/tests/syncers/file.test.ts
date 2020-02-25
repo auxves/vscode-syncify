@@ -36,7 +36,7 @@ beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 afterEach(() => FS.delete(cleanupPath));
 
 describe("upload", () => {
-  it("should upload", async () => {
+  test("basic functionality", async () => {
     await Settings.set(currentSettings);
 
     const userData = stringifyPretty({
@@ -52,7 +52,7 @@ describe("upload", () => {
     expect(uploadedData).toBe(userData);
   });
 
-  it("should upload binary files properly", async () => {
+  test("binary files", async () => {
     await Settings.set(currentSettings);
 
     const buffer = Buffer.alloc(2).fill(1);
@@ -69,7 +69,7 @@ describe("upload", () => {
 });
 
 describe("download", () => {
-  it("should download", async () => {
+  test("basic functionality", async () => {
     await Settings.set(currentSettings);
 
     const settings = stringifyPretty({
@@ -94,7 +94,7 @@ describe("download", () => {
     expect(downloadedExtensions).toBe(extensions);
   });
 
-  it("should download binary files properly", async () => {
+  test("binary files", async () => {
     await Settings.set(currentSettings);
 
     const buffer = Buffer.alloc(2).fill(1);

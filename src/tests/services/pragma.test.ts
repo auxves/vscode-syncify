@@ -3,13 +3,13 @@ import { Environment, Pragma } from "~/services";
 
 jest.mock("~/services/localize.ts");
 
-it("should return new content if invalid", () => {
+test("invalid content", () => {
   const newContent = `Invalid JSON`;
 
   expect(Pragma.processIncoming("", newContent, "")).toBe(newContent);
 });
 
-it("should properly handle brackets", () => {
+test("brackets in string", () => {
   const initial = `{
     // @sync host=jest
     // "abc": "{xyz}",
@@ -36,7 +36,7 @@ it("should properly handle brackets", () => {
 });
 
 describe("outgoing", () => {
-  it("should work with arrays", () => {
+  test("arrays", () => {
     const initial = `{
       // @sync host=jest
       // "abc": ["xyz"],
@@ -62,7 +62,7 @@ describe("outgoing", () => {
     expect(Pragma.processOutgoing(initial)).toBe(expected);
   });
 
-  it("should work with objects", () => {
+  test("objects", () => {
     const initial = `{
       // @sync host=jest
       // "abc": {"test": "xyz"},
@@ -88,7 +88,7 @@ describe("outgoing", () => {
     expect(Pragma.processOutgoing(initial)).toBe(expected);
   });
 
-  it("should uncomment", () => {
+  test("uncomment", () => {
     const initial = `{
       // @sync host=jest
       // "abc": "xyz",
@@ -102,7 +102,7 @@ describe("outgoing", () => {
     expect(Pragma.processOutgoing(initial)).toBe(expected);
   });
 
-  it("should remove unnecessary whitespace", () => {
+  test("remove unnecessary whitespace", () => {
     const initial = `{
 
       "abc": "xyz",
@@ -116,7 +116,7 @@ describe("outgoing", () => {
     expect(Pragma.processOutgoing(initial)).toBe(expected);
   });
 
-  it("should remove ignored settings", () => {
+  test("remove ignored settings", () => {
     const initial = `{
       // @sync-ignore
       "asd": 5,
@@ -133,7 +133,7 @@ describe("outgoing", () => {
 });
 
 describe("ignore", () => {
-  it("should move to the bottom", () => {
+  test("move to the bottom", () => {
     const initial = `{
       // @sync-ignore
       "abc": "xyz",
@@ -165,7 +165,7 @@ describe("ignore", () => {
     );
   });
 
-  it("should work with arrays", () => {
+  test("arrays", () => {
     const initial = `{
       // @sync-ignore
       "array": [
@@ -196,7 +196,7 @@ describe("ignore", () => {
     );
   });
 
-  it("should work with objects", () => {
+  test("objects", () => {
     const initial = `{
       // @sync-ignore
       "object": {
@@ -229,7 +229,7 @@ describe("ignore", () => {
 });
 
 describe("host", () => {
-  it("should work with 'host'", () => {
+  test("basic functionality", () => {
     const input = `{
       // @sync host=jest
       // "abc": "xyz",
@@ -252,7 +252,7 @@ describe("host", () => {
 
 describe("os", () => {
   Object.keys(OperatingSystem).forEach(key => {
-    it(`should work on '${key}'`, () => {
+    test(key, () => {
       const os = OperatingSystem[key as keyof typeof OperatingSystem];
 
       const input = `{
@@ -285,7 +285,7 @@ describe("os", () => {
 });
 
 describe("env", () => {
-  it("should work with 'env'", () => {
+  test("basic functionality", () => {
     const input = `{
       // @sync env=SYNCIFY
       "abc": "xyz",

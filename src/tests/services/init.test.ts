@@ -31,7 +31,7 @@ afterEach(() => {
 
 jest.mock("~/services/localize.ts");
 
-it("should register commands", async () => {
+test("command registration", async () => {
   const spy = jest.spyOn(commands, "registerCommand");
 
   await init();
@@ -41,7 +41,7 @@ it("should register commands", async () => {
   spy.mockRestore();
 });
 
-it("should start watching", async () => {
+test("watch settings", async () => {
   await Settings.set({ watchSettings: true });
 
   const spy = jest.spyOn(Watcher, "start");
@@ -53,7 +53,7 @@ it("should start watching", async () => {
   spy.mockRestore();
 });
 
-it("should start syncing", async () => {
+test("sync on startup", async () => {
   await Settings.set({ syncOnStartup: true });
 
   const spy = jest.spyOn(commands, "executeCommand");
