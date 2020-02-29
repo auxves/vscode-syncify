@@ -76,7 +76,7 @@ describe("download", () => {
       "test.key": true
     });
 
-    const extensions = stringifyPretty([1, 2, 3]);
+    const extensions = stringifyPretty(["1", "2", "3"]);
 
     await FS.write(pathToExportSettings, settings);
     await FS.write(resolve(pathToExport, "extensions.json"), extensions);
