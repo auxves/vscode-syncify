@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.14.2
+
+- Remove version from `vsix` filenames
+
 ## v3.14.1
 
 - Prompt user to download after switching profile
