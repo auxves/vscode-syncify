@@ -11,7 +11,7 @@ import {
   window
 } from "vscode";
 import WebviewPage from "~/../assets/ui/index.html";
-import { ISettings, IWebviewSection, Syncers, UISettingType } from "~/models";
+import { ISettings, WebviewSection, Syncers, UISettingType } from "~/models";
 import {
   Environment,
   FS,
@@ -202,7 +202,7 @@ export class Webview {
     );
   }
 
-  private static generateSections(settings: ISettings): IWebviewSection[] {
+  private static generateSections(settings: ISettings): WebviewSection[] {
     return [
       {
         name: "General",

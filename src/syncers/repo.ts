@@ -8,7 +8,7 @@ import {
   window,
   workspace
 } from "vscode";
-import { IProfile, ISettings, ISyncer } from "~/models";
+import { Profile, ISettings, Syncer } from "~/models";
 import {
   Environment,
   Extensions,
@@ -22,7 +22,7 @@ import {
 } from "~/services";
 import { checkGit, sleep, stringifyPretty } from "~/utilities";
 
-export class RepoSyncer implements ISyncer {
+export class RepoSyncer implements Syncer {
   private git: SimpleGit = createSimpleGit().silent(true);
 
   public async init(): Promise<void> {
@@ -359,7 +359,7 @@ export class RepoSyncer implements ISyncer {
     );
   }
 
-  private async getProfile(): Promise<IProfile> {
+  private async getProfile(): Promise<Profile> {
     const { currentProfile, profiles } = await Settings.get(s => s.repo);
 
     return profiles.find(({ name }) => name === currentProfile) ?? profiles[0];
@@ -552,7 +552,7 @@ export class RepoSyncer implements ISyncer {
 
   private async getStatus(
     settings: ISettings,
-    profile: IProfile
+    profile: Profile
   ): Promise<"ahead" | "behind" | "up-to-date"> {
     const { branch } = profile;
     const { url } = settings.repo;

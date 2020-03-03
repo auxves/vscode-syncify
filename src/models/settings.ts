@@ -1,4 +1,4 @@
-import { IProfile, Syncers } from "~/models";
+import { Profile, Syncers } from "~/models";
 
 export interface ISettings {
   /**
@@ -18,7 +18,7 @@ export interface ISettings {
     /**
      * Profiles can be used to sync different settings for different occasions.
      */
-    profiles: IProfile[];
+    profiles: Profile[];
 
     /**
      * The profile currently being used.

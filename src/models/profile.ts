@@ -1,4 +1,4 @@
-export interface IProfile {
+export interface Profile {
   /**
    * The Git branch used to store the settings
    */

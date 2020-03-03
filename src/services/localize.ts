@@ -1,8 +1,8 @@
 import { resolve } from "path";
-import { ILanguagePack } from "~/models";
+import { LanguagePack } from "~/models";
 import { Environment, FS, Logger } from "~/services";
 
-let pack: ILanguagePack = {};
+let pack: LanguagePack = {};
 
 export async function initLocalization(lang?: string) {
   pack = await (async () => {

@@ -1,6 +1,6 @@
-import { IWebviewSetting } from "~/models";
+import { WebviewSetting } from "~/models";
 
-export interface IWebviewSection {
+export interface WebviewSection {
   name: string;
-  settings: IWebviewSetting[];
+  settings: WebviewSetting[];
 }

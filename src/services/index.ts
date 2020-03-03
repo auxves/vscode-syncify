@@ -12,3 +12,4 @@ export * from "~/services/settings";
 export * from "~/services/watcher";
 export * from "~/services/webview";
 export * from "~/services/profile";
+export * from "~/services/migrator";

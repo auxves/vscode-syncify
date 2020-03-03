@@ -12,6 +12,7 @@
     "semicolon": false,
     "no-console": false,
     "object-literal-sort-keys": false,
-    "no-increment-decrement": false
+    "no-increment-decrement": false,
+    "variable-name": false
   }
 }

@@ -1,4 +1,4 @@
-import { compare } from "compare-versions";
+import { gte } from "semver";
 import { tmpdir } from "os";
 import createGit from "simple-git/promise";
 
@@ -12,5 +12,5 @@ export async function checkGit(required: string) {
 
   if (!version) return false;
 
-  return compare(version, required, ">=");
+  return gte(version, required);
 }

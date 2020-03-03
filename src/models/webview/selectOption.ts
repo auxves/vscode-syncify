@@ -1,4 +1,4 @@
-export interface ISelectOption {
+export interface SelectOption {
   name: string;
   value: string;
 }

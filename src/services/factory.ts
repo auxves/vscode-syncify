@@ -1,8 +1,8 @@
-import { ISyncer, Syncers } from "~/models";
+import { Syncer, Syncers } from "~/models";
 import { FileSyncer, RepoSyncer } from "~/syncers";
 
 export class Factory {
-  public static generate(syncer: Syncers): ISyncer {
+  public static generate(syncer: Syncers): Syncer {
     return new this.syncers[syncer]();
   }
 

@@ -1,26 +1,26 @@
-import { ISelectOption, UISettingType } from "~/models";
+import { SelectOption, UISettingType } from "~/models";
 
-interface ICheckbox {
+interface Checkbox {
   name: string;
   type: UISettingType.Checkbox;
   correspondingSetting: string;
 }
 
-interface ITextInput {
+interface TextInput {
   name: string;
   type: UISettingType.TextInput;
   correspondingSetting: string;
   placeholder: string;
 }
 
-interface ITextArea {
+interface TextArea {
   name: string;
   type: UISettingType.TextArea;
   correspondingSetting: string;
   placeholder: string;
 }
 
-interface INumberInput {
+interface NumberInput {
   name: string;
   type: UISettingType.NumberInput;
   correspondingSetting: string;
@@ -29,25 +29,25 @@ interface INumberInput {
   max?: number;
 }
 
-interface ISelect {
+interface Select {
   name: string;
   type: UISettingType.Select;
   correspondingSetting: string;
-  options: ISelectOption[];
+  options: SelectOption[];
 }
 
-interface IObjectArray {
+interface ObjectArray {
   name: string;
   type: UISettingType.ObjectArray;
   correspondingSetting: string;
-  schema: IWebviewSetting[];
+  schema: WebviewSetting[];
   newTemplate: object;
 }
 
-export type IWebviewSetting =
-  | ICheckbox
-  | ISelect
-  | ITextArea
-  | ITextInput
-  | INumberInput
-  | IObjectArray;
+export type WebviewSetting =
+  | Checkbox
+  | Select
+  | TextArea
+  | TextInput
+  | NumberInput
+  | ObjectArray;

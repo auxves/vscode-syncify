@@ -1,4 +1,4 @@
-export interface ISyncer {
+export interface Syncer {
   sync(): Promise<void>;
   upload(): Promise<void>;
   download(): Promise<void>;

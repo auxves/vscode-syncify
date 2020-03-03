@@ -3,51 +3,54 @@ import pkg from "~/../package.json";
 import { OperatingSystem } from "~/models";
 import state from "~/state";
 
-export class Environment {
-  public static get userFolder() {
+export const Environment = {
+  pkg,
+
+  get userFolder() {
     const path = process.env.VSCODE_PORTABLE
       ? resolve(process.env.VSCODE_PORTABLE, "user-data")
       : resolve(Environment.globalStoragePath, "../../..");
 
     return resolve(path, "User");
-  }
+  },
 
-  public static get repoFolder() {
+  get repoFolder() {
     return resolve(Environment.globalStoragePath, "repo");
-  }
+  },
 
-  public static get settings() {
+  get settings() {
     return resolve(Environment.globalStoragePath, "settings.json");
-  }
+  },
 
-  public static get customFilesFolder() {
+  get customFilesFolder() {
     return resolve(Environment.userFolder, "customFiles");
-  }
+  },
 
-  public static get vsixFolder() {
+  get vsixFolder() {
     return resolve(Environment.userFolder, "vsix");
-  }
+  },
 
-  public static get conflictsFolder() {
+  get conflictsFolder() {
     return resolve(Environment.globalStoragePath, "conflicts");
-  }
+  },
 
-  public static get globalStoragePath() {
+  get globalStoragePath() {
     return state.context?.globalStoragePath ?? "";
-  }
+  },
 
-  public static get extensionPath() {
+  get extensionPath() {
     return state.context?.extensionPath ?? "";
-  }
+  },
 
-  public static os = process.platform as OperatingSystem;
+  os: process.platform as OperatingSystem,
 
-  public static extensionId = `${pkg.publisher}.${pkg.name}`;
-  public static pkg = pkg;
+  version: pkg.version,
 
-  public static oauthClientIds = {
+  extensionId: `${pkg.publisher}.${pkg.name}`,
+
+  oauthClientIds: {
     github: "0b56a3589b5582d11832",
     gitlab: "32c563edb04c312c7959fd1c4863e883878ed4af1f39d6d788c9758d4916a0db",
     bitbucket: "zhkr5tYsZsUfN9KkDn"
-  };
-}
+  }
+};

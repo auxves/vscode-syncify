@@ -2,6 +2,7 @@ export * from "~/models/syncers";
 export * from "~/models/languagePack";
 export * from "~/models/os";
 export * from "~/models/profile";
+export * from "~/models/migrations";
 export * from "~/models/settings";
 export * from "~/models/syncer";
 export * from "~/models/webview/settingType";

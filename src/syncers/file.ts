@@ -1,6 +1,6 @@
 import { dirname, relative, resolve } from "path";
 import { commands, extensions, ProgressLocation, window } from "vscode";
-import { ISettings, ISyncer } from "~/models";
+import { ISettings, Syncer } from "~/models";
 import {
   Environment,
   Extensions,
@@ -14,7 +14,7 @@ import {
 } from "~/services";
 import { sleep, stringifyPretty } from "~/utilities";
 
-export class FileSyncer implements ISyncer {
+export class FileSyncer implements Syncer {
   public async sync(): Promise<void> {
     window.showInformationMessage(
       "Syncify: Sync is not available for File Syncer yet"
