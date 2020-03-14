@@ -1,14 +1,14 @@
 ## ![Syncify][img:banner]
 
 <p align="center">
-	<a href="https://travis-ci.com/arnohovhannisyan/vscode-syncify">
-		<img src="https://img.shields.io/travis/com/arnohovhannisyan/vscode-syncify" alt="Travis">
+	<a href="https://github.com/arnohovhannisyan/vscode-syncify/actions">
+		<img src="https://img.shields.io/github/workflow/status/arnohovhannisyan/vscode-syncify/CI" alt="Travis">
 	</a>
 	<a href="https://marketplace.visualstudio.com/items?itemName=arnohovhannisyan.syncify">
-		<img src="https://vsmarketplacebadge.apphb.com/version/arnohovhannisyan.syncify.svg" alt="Version">
+		<img src="https://img.shields.io/visual-studio-marketplace/v/arnohovhannisyan.syncify" alt="Version">
 	</a>
 	<a href="https://github.com/arnohovhannisyan/vscode-syncify/issues">
-		<img src="https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify.svg" alt="Issues">
+		<img src="https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify" alt="Issues">
 	</a>
 	<a href="https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE">
 		<img src="https://img.shields.io/github/license/arnohovhannisyan/vscode-syncify" alt="License">
