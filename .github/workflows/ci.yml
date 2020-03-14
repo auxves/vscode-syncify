@@ -29,8 +29,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email "travis@travis-ci.com"
-          git config --global user.name "Travis"
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
 
       - name: Test
         run: yarn test
@@ -57,8 +57,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email "travis@travis-ci.com"
-          git config --global user.name "Travis"
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
 
       - name: Calculate Coverage
         run: yarn test --coverage
