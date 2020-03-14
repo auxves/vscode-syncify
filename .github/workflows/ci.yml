@@ -16,10 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - uses: actions/setup-node@v1
+
       - name: Install Dependencies
-        uses: borales/actions-yarn@v2.1.0
-        with:
-          cmd: install
+        run: yarn install
 
       - name: Configure Git
         run: |
@@ -27,6 +27,4 @@ jobs:
           git config --global user.name "Travis"
 
       - name: Test
-        uses: borales/actions-yarn@v2.1.0
-        with:
-          cmd: test
+        run: yarn test
