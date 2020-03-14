@@ -10,57 +10,57 @@ const pathToUser = resolve(cleanupPath, "user");
 const pathToGlobalStoragePath = resolve(cleanupPath, "user");
 
 jest
-  .spyOn(Environment, "globalStoragePath", "get")
-  .mockReturnValue(pathToGlobalStoragePath);
+	.spyOn(Environment, "globalStoragePath", "get")
+	.mockReturnValue(pathToGlobalStoragePath);
 
 const paths = [pathToUser, pathToGlobalStoragePath];
 
-beforeEach(() => {
-  (state.context as any) = {
-    subscriptions: []
-  };
+beforeEach(async () => {
+	(state.context as any) = {
+		subscriptions: []
+	};
 
-  return Promise.all(paths.map(FS.mkdir));
+	return Promise.all(paths.map(FS.mkdir));
 });
 
-afterEach(() => {
-  state.context = undefined;
+afterEach(async () => {
+	state.context = undefined;
 
-  return FS.delete(cleanupPath);
+	return FS.remove(cleanupPath);
 });
 
 jest.mock("~/services/localize.ts");
 
 test("command registration", async () => {
-  const spy = jest.spyOn(commands, "registerCommand");
+	const spy = jest.spyOn(commands, "registerCommand");
 
-  await init();
+	await init();
 
-  expect(spy).toBeCalled();
+	expect(spy).toBeCalled();
 
-  spy.mockRestore();
+	spy.mockRestore();
 });
 
 test("watch settings", async () => {
-  await Settings.set({ watchSettings: true });
+	await Settings.set({ watchSettings: true });
 
-  const spy = jest.spyOn(Watcher, "start");
+	const spy = jest.spyOn(Watcher, "start");
 
-  await init();
+	await init();
 
-  expect(spy).toBeCalled();
+	expect(spy).toBeCalled();
 
-  spy.mockRestore();
+	spy.mockRestore();
 });
 
 test("sync on startup", async () => {
-  await Settings.set({ syncOnStartup: true });
+	await Settings.set({ syncOnStartup: true });
 
-  const spy = jest.spyOn(commands, "executeCommand");
+	const spy = jest.spyOn(commands, "executeCommand");
 
-  await init();
+	await init();
 
-  expect(spy).toBeCalledWith("syncify.sync");
+	expect(spy).toBeCalledWith("syncify.sync");
 
-  spy.mockRestore();
+	spy.mockRestore();
 });

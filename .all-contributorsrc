@@ -1,81 +1,81 @@
 {
-  "projectName": "vscode-syncify",
-  "projectOwner": "arnohovhannisyan",
-  "repoType": "github",
-  "repoHost": "https://github.com",
-  "files": [
-    "README.md"
-  ],
-  "imageSize": 100,
-  "commit": false,
-  "commitConvention": "none",
-  "contributors": [
-    {
-      "login": "clawoflight",
-      "name": "Bennett Piater",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/1181744?v=4",
-      "profile": "http://bennett.piater.name",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "shanalikhan",
-      "name": "Shan Khan",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/8774556?v=4",
-      "profile": "http://shanalikhan.github.io",
-      "contributions": [
-        "ideas"
-      ]
-    },
-    {
-      "login": "dxman",
-      "name": "dxman",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/10678981?v=4",
-      "profile": "https://github.com/dxman",
-      "contributions": [
-        "userTesting",
-        "bug"
-      ]
-    },
-    {
-      "login": "everito",
-      "name": "everito",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/31976784?v=4",
-      "profile": "https://github.com/everito",
-      "contributions": [
-        "userTesting",
-        "bug"
-      ]
-    },
-    {
-      "login": "allenyllee",
-      "name": "Allen.YL",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/3991134?v=4",
-      "profile": "https://allenyllee.gitlab.io/",
-      "contributions": [
-        "userTesting"
-      ]
-    },
-    {
-      "login": "frankhommers",
-      "name": "Frank Hommers",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/7355878?v=4",
-      "profile": "http://frank.hommers.nl/",
-      "contributions": [
-        "bug"
-      ]
-    },
-    {
-      "login": "nawordar",
-      "name": "Cezary Drożak",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/26769700?v=4",
-      "profile": "https://github.com/nawordar",
-      "contributions": [
-        "ideas"
-      ]
-    }
-  ],
-  "contributorsPerLine": 7,
-  "skipCi": true
+	"projectName": "vscode-syncify",
+	"projectOwner": "arnohovhannisyan",
+	"repoType": "github",
+	"repoHost": "https://github.com",
+	"files": [
+		"README.md"
+	],
+	"imageSize": 100,
+	"commit": false,
+	"commitConvention": "none",
+	"contributors": [
+		{
+			"login": "clawoflight",
+			"name": "Bennett Piater",
+			"avatar_url": "https://avatars3.githubusercontent.com/u/1181744?v=4",
+			"profile": "http://bennett.piater.name",
+			"contributions": [
+				"code"
+			]
+		},
+		{
+			"login": "shanalikhan",
+			"name": "Shan Khan",
+			"avatar_url": "https://avatars0.githubusercontent.com/u/8774556?v=4",
+			"profile": "http://shanalikhan.github.io",
+			"contributions": [
+				"ideas"
+			]
+		},
+		{
+			"login": "dxman",
+			"name": "dxman",
+			"avatar_url": "https://avatars2.githubusercontent.com/u/10678981?v=4",
+			"profile": "https://github.com/dxman",
+			"contributions": [
+				"userTesting",
+				"bug"
+			]
+		},
+		{
+			"login": "everito",
+			"name": "everito",
+			"avatar_url": "https://avatars3.githubusercontent.com/u/31976784?v=4",
+			"profile": "https://github.com/everito",
+			"contributions": [
+				"userTesting",
+				"bug"
+			]
+		},
+		{
+			"login": "allenyllee",
+			"name": "Allen.YL",
+			"avatar_url": "https://avatars3.githubusercontent.com/u/3991134?v=4",
+			"profile": "https://allenyllee.gitlab.io/",
+			"contributions": [
+				"userTesting"
+			]
+		},
+		{
+			"login": "frankhommers",
+			"name": "Frank Hommers",
+			"avatar_url": "https://avatars2.githubusercontent.com/u/7355878?v=4",
+			"profile": "http://frank.hommers.nl/",
+			"contributions": [
+				"bug"
+			]
+		},
+		{
+			"login": "nawordar",
+			"name": "Cezary Drożak",
+			"avatar_url": "https://avatars2.githubusercontent.com/u/26769700?v=4",
+			"profile": "https://github.com/nawordar",
+			"contributions": [
+				"ideas"
+			]
+		}
+	],
+	"contributorsPerLine": 7,
+	"skipCi": true
 }

@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: master
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        uses: borales/actions-yarn@v2.1.0
+        with:
+          cmd: install
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "travis@travis-ci.com"
+          git config --global user.name "Travis"
+
+      - name: Test
+        uses: borales/actions-yarn@v2.1.0
+        with:
+          cmd: test

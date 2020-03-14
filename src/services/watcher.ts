@@ -4,80 +4,80 @@ import chokidar, { FSWatcher } from "vscode-chokidar";
 import { Environment, localize, Logger, Settings } from "~/services";
 import { sleep } from "~/utilities";
 
-export class Watcher {
-  public static init(ignoredItems: string[]) {
-    if (this.watcher) this.watcher.close();
+export namespace Watcher {
+	let disposable: Disposable | undefined;
+	let watcher: FSWatcher | undefined;
 
-    this.watcher = chokidar.watch([], {
-      ignored: ignoredItems
-    });
-  }
+	export function init(ignoredItems: string[]) {
+		if (watcher) watcher.close();
 
-  public static start() {
-    if (!this.watcher) return;
+		watcher = chokidar.watch([], {
+			ignored: ignoredItems
+		});
+	}
 
-    this.stop();
+	export function start() {
+		if (!watcher) return;
 
-    this.watcher.add(Environment.userFolder);
-    this.watcher.on("change", path => {
-      Logger.debug(`File change: ${relative(Environment.userFolder, path)}`);
+		stop();
 
-      return this.upload();
-    });
+		watcher.add(Environment.userFolder);
+		watcher.on("change", async path => {
+			Logger.debug(`File change: ${relative(Environment.userFolder, path)}`);
 
-    this.disposable = extensions.onDidChange(() => {
-      Logger.debug("Extension installed/uninstalled");
+			return upload();
+		});
 
-      return this.upload();
-    });
-  }
+		disposable = extensions.onDidChange(async () => {
+			Logger.debug("Extension installed/uninstalled");
 
-  public static stop() {
-    if (this.watcher) this.watcher.close();
+			return upload();
+		});
+	}
 
-    if (this.disposable) {
-      this.disposable.dispose();
-      this.disposable = undefined;
-    }
-  }
+	export function stop() {
+		if (watcher) watcher.close();
 
-  private static disposable?: Disposable = undefined;
-  private static watcher?: FSWatcher = undefined;
+		if (disposable) {
+			disposable.dispose();
+			disposable = undefined;
+		}
+	}
 
-  private static async upload() {
-    if (!window.state.focused) return;
+	async function upload() {
+		if (!window.state.focused) return;
 
-    const cmds = await commands.getCommands();
+		const cmds = await commands.getCommands();
 
-    if (cmds.includes("syncify.cancelUpload")) return;
+		if (cmds.includes("syncify.cancelUpload")) return;
 
-    const delay = await Settings.get(s => s.autoUploadDelay);
+		const delay = await Settings.get(s => s.autoUploadDelay);
 
-    let shouldUpload = true;
+		let shouldUpload = true;
 
-    const message = window.setStatusBarMessage(
-      localize("(info) watcher -> initiating", delay.toString()),
-      5000
-    );
+		const message = window.setStatusBarMessage(
+			localize("(info) watcher -> initiating", delay.toString()),
+			5000
+		);
 
-    const btn = window.createStatusBarItem(1);
+		const btn = window.createStatusBarItem(1);
 
-    const disposable = commands.registerCommand("syncify.cancelUpload", () => {
-      shouldUpload = false;
-      disposable.dispose();
-      btn.dispose();
-      message.dispose();
-    });
+		const disposable = commands.registerCommand("syncify.cancelUpload", () => {
+			shouldUpload = false;
+			disposable.dispose();
+			btn.dispose();
+			message.dispose();
+		});
 
-    btn.command = "syncify.cancelUpload";
-    btn.text = `$(x) ${localize("(command) cancelUpload")}`;
-    btn.show();
+		btn.command = "syncify.cancelUpload";
+		btn.text = `$(x) ${localize("(command) cancelUpload")}`;
+		btn.show();
 
-    await sleep(delay * 1000);
+		await sleep(delay * 1000);
 
-    disposable.dispose();
-    btn.dispose();
+		disposable.dispose();
+		btn.dispose();
 
-    if (shouldUpload) commands.executeCommand("syncify.upload");
-  }
+		if (shouldUpload) commands.executeCommand("syncify.upload");
+	}
 }

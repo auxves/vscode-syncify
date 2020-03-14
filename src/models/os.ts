@@ -1,5 +1,5 @@
 export enum OperatingSystem {
-  Windows = "win32",
-  Mac = "darwin",
-  Linux = "linux"
+	Windows = "win32",
+	Mac = "darwin",
+	Linux = "linux"
 }

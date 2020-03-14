@@ -1,19 +1,19 @@
 {
-  "compilerOptions": {
-    "baseUrl": "src",
-    "paths": {
-      "~/*": ["./*"]
-    },
-    "module": "commonjs",
-    "target": "ES5",
-    "outDir": "out",
-    "lib": ["esnext"],
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "rootDirs": ["src", "assets"],
-    "strict": true
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "**/__mocks__/**/*"]
+	"compilerOptions": {
+		"baseUrl": "src",
+		"paths": {
+			"~/*": ["./*"]
+		},
+		"module": "commonjs",
+		"target": "ES5",
+		"outDir": "out",
+		"lib": ["esnext"],
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"rootDirs": ["src", "assets"],
+		"strict": true
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules", "**/__mocks__/**/*"]
 }

@@ -1,4 +1,4 @@
 export enum Syncers {
-  Repo = "repo",
-  File = "file"
+	Repo = "repo",
+	File = "file"
 }

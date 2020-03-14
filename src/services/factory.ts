@@ -1,15 +1,13 @@
 import { Syncer, Syncers } from "~/models";
 import { FileSyncer, RepoSyncer } from "~/syncers";
 
-export class Factory {
-  public static generate(syncer: Syncers): Syncer {
-    return new this.syncers[syncer]();
-  }
+export namespace Factory {
+	export function generate(syncer: Syncers): Syncer {
+		return new syncers[syncer]();
+	}
 
-  private static get syncers() {
-    return {
-      [Syncers.Repo]: RepoSyncer,
-      [Syncers.File]: FileSyncer
-    };
-  }
+	const syncers = {
+		[Syncers.Repo]: RepoSyncer,
+		[Syncers.File]: FileSyncer
+	};
 }

@@ -1,24 +1,24 @@
 ## ![Syncify][img:banner]
 
 <p align="center">
-  <a href="https://travis-ci.com/arnohovhannisyan/vscode-syncify">
-    <img src="https://img.shields.io/travis/com/arnohovhannisyan/vscode-syncify" alt="Travis">
-  </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=arnohovhannisyan.syncify">
-    <img src="https://vsmarketplacebadge.apphb.com/version/arnohovhannisyan.syncify.svg" alt="Version">
-  </a>
-  <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues">
-    <img src="https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify.svg" alt="Issues">
-  </a>
-  <a href="https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/arnohovhannisyan/vscode-syncify" alt="License">
-  </a>
-  <a href="https://david-dm.org/arnohovhannisyan/vscode-syncify">
-    <img src="https://img.shields.io/david/arnohovhannisyan/vscode-syncify" alt="Deps">
-  </a>
-  <a href="https://codecov.io/gh/arnohovhannisyan/vscode-syncify">
-    <img src="https://img.shields.io/codecov/c/github/arnohovhannisyan/vscode-syncify" alt="Coverage">
-  </a>
+	<a href="https://travis-ci.com/arnohovhannisyan/vscode-syncify">
+		<img src="https://img.shields.io/travis/com/arnohovhannisyan/vscode-syncify" alt="Travis">
+	</a>
+	<a href="https://marketplace.visualstudio.com/items?itemName=arnohovhannisyan.syncify">
+		<img src="https://vsmarketplacebadge.apphb.com/version/arnohovhannisyan.syncify.svg" alt="Version">
+	</a>
+	<a href="https://github.com/arnohovhannisyan/vscode-syncify/issues">
+		<img src="https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify.svg" alt="Issues">
+	</a>
+	<a href="https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE">
+		<img src="https://img.shields.io/github/license/arnohovhannisyan/vscode-syncify" alt="License">
+	</a>
+	<a href="https://david-dm.org/arnohovhannisyan/vscode-syncify">
+		<img src="https://img.shields.io/david/arnohovhannisyan/vscode-syncify" alt="Deps">
+	</a>
+	<a href="https://codecov.io/gh/arnohovhannisyan/vscode-syncify">
+		<img src="https://img.shields.io/codecov/c/github/arnohovhannisyan/vscode-syncify" alt="Coverage">
+	</a>
 </p>
 
 Syncify can sync your VSCode settings and extensions across all your devices using multiple methods.
@@ -35,9 +35,7 @@ The documentation can be found [here][link:docs].
 - Multiple profiles with support for hot-switching (currently only supported on `Git` method)
 - Simpler settings with intellisense
 - Debug mode for quickly resolving issues
-- Multiple sync methods
-  - `Git` — sync using a git repository
-  - `File` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc...)
+- Multiple sync methods - `Git` — sync using a git repository - `File` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc...)
 - `Sync` command that automatically uploads or downloads if there are changes locally or remotely (only supported on `Git` method)
 - More intuitive custom file registration and importing
 - Notification for extension installation/uninstallation progress
@@ -53,19 +51,20 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="http://bennett.piater.name"><img src="https://avatars3.githubusercontent.com/u/1181744?v=4" width="100px;" alt=""/><br /><sub><b>Bennett Piater</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/commits?author=clawoflight" title="Code">💻</a></td>
-    <td align="center"><a href="http://shanalikhan.github.io"><img src="https://avatars0.githubusercontent.com/u/8774556?v=4" width="100px;" alt=""/><br /><sub><b>Shan Khan</b></sub></a><br /><a href="#ideas-shanalikhan" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/dxman"><img src="https://avatars2.githubusercontent.com/u/10678981?v=4" width="100px;" alt=""/><br /><sub><b>dxman</b></sub></a><br /><a href="#userTesting-dxman" title="User Testing">📓</a> <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Adxman" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/everito"><img src="https://avatars3.githubusercontent.com/u/31976784?v=4" width="100px;" alt=""/><br /><sub><b>everito</b></sub></a><br /><a href="#userTesting-everito" title="User Testing">📓</a> <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Aeverito" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://allenyllee.gitlab.io/"><img src="https://avatars3.githubusercontent.com/u/3991134?v=4" width="100px;" alt=""/><br /><sub><b>Allen.YL</b></sub></a><br /><a href="#userTesting-allenyllee" title="User Testing">📓</a></td>
-    <td align="center"><a href="http://frank.hommers.nl/"><img src="https://avatars2.githubusercontent.com/u/7355878?v=4" width="100px;" alt=""/><br /><sub><b>Frank Hommers</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Afrankhommers" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/nawordar"><img src="https://avatars2.githubusercontent.com/u/26769700?v=4" width="100px;" alt=""/><br /><sub><b>Cezary Drożak</b></sub></a><br /><a href="#ideas-nawordar" title="Ideas, Planning, & Feedback">🤔</a></td>
-  </tr>
+	<tr>
+		<td align="center"><a href="http://bennett.piater.name"><img src="https://avatars3.githubusercontent.com/u/1181744?v=4" width="100px;" alt=""/><br /><sub><b>Bennett Piater</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/commits?author=clawoflight" title="Code">💻</a></td>
+		<td align="center"><a href="http://shanalikhan.github.io"><img src="https://avatars0.githubusercontent.com/u/8774556?v=4" width="100px;" alt=""/><br /><sub><b>Shan Khan</b></sub></a><br /><a href="#ideas-shanalikhan" title="Ideas, Planning, & Feedback">🤔</a></td>
+		<td align="center"><a href="https://github.com/dxman"><img src="https://avatars2.githubusercontent.com/u/10678981?v=4" width="100px;" alt=""/><br /><sub><b>dxman</b></sub></a><br /><a href="#userTesting-dxman" title="User Testing">📓</a> <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Adxman" title="Bug reports">🐛</a></td>
+		<td align="center"><a href="https://github.com/everito"><img src="https://avatars3.githubusercontent.com/u/31976784?v=4" width="100px;" alt=""/><br /><sub><b>everito</b></sub></a><br /><a href="#userTesting-everito" title="User Testing">📓</a> <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Aeverito" title="Bug reports">🐛</a></td>
+		<td align="center"><a href="https://allenyllee.gitlab.io/"><img src="https://avatars3.githubusercontent.com/u/3991134?v=4" width="100px;" alt=""/><br /><sub><b>Allen.YL</b></sub></a><br /><a href="#userTesting-allenyllee" title="User Testing">📓</a></td>
+		<td align="center"><a href="http://frank.hommers.nl/"><img src="https://avatars2.githubusercontent.com/u/7355878?v=4" width="100px;" alt=""/><br /><sub><b>Frank Hommers</b></sub></a><br /><a href="https://github.com/arnohovhannisyan/vscode-syncify/issues?q=author%3Afrankhommers" title="Bug reports">🐛</a></td>
+		<td align="center"><a href="https://github.com/nawordar"><img src="https://avatars2.githubusercontent.com/u/26769700?v=4" width="100px;" alt=""/><br /><sub><b>Cezary Drożak</b></sub></a><br /><a href="#ideas-nawordar" title="Ideas, Planning, & Feedback">🤔</a></td>
+	</tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

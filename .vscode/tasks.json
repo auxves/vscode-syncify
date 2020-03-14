@@ -1,19 +1,19 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Watch",
-      "type": "shell",
-      "command": "rm -rf /tmp/vscode-syncify && mkdir -p /tmp/vscode-syncify/{extensions,user-data} && yarn start",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Test",
-      "type": "shell",
-      "command": "yarn test"
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Watch",
+			"type": "shell",
+			"command": "rm -rf /tmp/vscode-syncify && mkdir -p /tmp/vscode-syncify/{extensions,user-data} && yarn start",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Test",
+			"type": "shell",
+			"command": "yarn test"
+		}
+	]
 }

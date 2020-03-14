@@ -21,91 +21,91 @@ const pathToExportSettings = resolve(pathToExport, "settings.json");
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 
 jest
-  .spyOn(Environment, "globalStoragePath", "get")
-  .mockReturnValue(pathToGlobalStoragePath);
+	.spyOn(Environment, "globalStoragePath", "get")
+	.mockReturnValue(pathToGlobalStoragePath);
 
 const currentSettings = {
-  syncer: Syncers.File,
-  file: {
-    path: pathToExport
-  }
+	syncer: Syncers.File,
+	file: {
+		path: pathToExport
+	}
 };
 
-beforeEach(() => Promise.all(paths.map(FS.mkdir)));
+beforeEach(async () => Promise.all(paths.map(FS.mkdir)));
 
-afterEach(() => FS.delete(cleanupPath));
+afterEach(async () => FS.remove(cleanupPath));
 
 describe("upload", () => {
-  test("basic functionality", async () => {
-    await Settings.set(currentSettings);
+	test("basic functionality", async () => {
+		await Settings.set(currentSettings);
 
-    const userData = stringifyPretty({
-      "test.key": true
-    });
+		const userData = stringifyPretty({
+			"test.key": true
+		});
 
-    await FS.write(pathToSettings, userData);
+		await FS.write(pathToSettings, userData);
 
-    const fileSyncer = new FileSyncer();
-    await fileSyncer.upload();
+		const fileSyncer = new FileSyncer();
+		await fileSyncer.upload();
 
-    const uploadedData = await FS.read(pathToExportSettings);
-    expect(uploadedData).toBe(userData);
-  });
+		const uploadedData = await FS.read(pathToExportSettings);
+		expect(uploadedData).toBe(userData);
+	});
 
-  test("binary files", async () => {
-    await Settings.set(currentSettings);
+	test("binary files", async () => {
+		await Settings.set(currentSettings);
 
-    const buffer = Buffer.alloc(2).fill(1);
+		const buffer = Buffer.alloc(2).fill(1);
 
-    await FS.write(resolve(pathToUser, "buffer"), buffer);
+		await FS.write(resolve(pathToUser, "buffer"), buffer);
 
-    const fileSyncer = new FileSyncer();
-    await fileSyncer.upload();
+		const fileSyncer = new FileSyncer();
+		await fileSyncer.upload();
 
-    const uploadedBuffer = await FS.read(resolve(pathToExport, "buffer"), true);
+		const uploadedBuffer = await FS.read(resolve(pathToExport, "buffer"), true);
 
-    expect(Buffer.compare(buffer, uploadedBuffer)).toBe(0);
-  });
+		expect(Buffer.compare(buffer, uploadedBuffer)).toBe(0);
+	});
 });
 
 describe("download", () => {
-  test("basic functionality", async () => {
-    await Settings.set(currentSettings);
+	test("basic functionality", async () => {
+		await Settings.set(currentSettings);
 
-    const settings = stringifyPretty({
-      "test.key": true
-    });
+		const settings = stringifyPretty({
+			"test.key": true
+		});
 
-    const extensions = stringifyPretty(["1", "2", "3"]);
+		const extensions = stringifyPretty(["1", "2", "3"]);
 
-    await FS.write(pathToExportSettings, settings);
-    await FS.write(resolve(pathToExport, "extensions.json"), extensions);
+		await FS.write(pathToExportSettings, settings);
+		await FS.write(resolve(pathToExport, "extensions.json"), extensions);
 
-    const fileSyncer = new FileSyncer();
-    await fileSyncer.download();
+		const fileSyncer = new FileSyncer();
+		await fileSyncer.download();
 
-    const downloadedSettings = await FS.read(pathToSettings);
+		const downloadedSettings = await FS.read(pathToSettings);
 
-    const downloadedExtensions = await FS.read(
-      resolve(pathToUser, "extensions.json")
-    );
+		const downloadedExtensions = await FS.read(
+			resolve(pathToUser, "extensions.json")
+		);
 
-    expect(downloadedSettings).toBe(settings);
-    expect(downloadedExtensions).toBe(extensions);
-  });
+		expect(downloadedSettings).toBe(settings);
+		expect(downloadedExtensions).toBe(extensions);
+	});
 
-  test("binary files", async () => {
-    await Settings.set(currentSettings);
+	test("binary files", async () => {
+		await Settings.set(currentSettings);
 
-    const buffer = Buffer.alloc(2).fill(1);
+		const buffer = Buffer.alloc(2).fill(1);
 
-    await FS.write(resolve(pathToExport, "buffer"), buffer);
+		await FS.write(resolve(pathToExport, "buffer"), buffer);
 
-    const fileSyncer = new FileSyncer();
-    await fileSyncer.download();
+		const fileSyncer = new FileSyncer();
+		await fileSyncer.download();
 
-    const downloadedBuffer = await FS.read(resolve(pathToUser, "buffer"), true);
+		const downloadedBuffer = await FS.read(resolve(pathToUser, "buffer"), true);
 
-    expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
-  });
+		expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
+	});
 });

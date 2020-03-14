@@ -1,3 +1,3 @@
 export interface LanguagePack {
-  [key: string]: string | undefined;
+	[key: string]: string | undefined;
 }

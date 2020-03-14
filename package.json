@@ -1,167 +1,180 @@
 {
-  "name": "syncify",
-  "displayName": "Syncify",
-  "publisher": "arnohovhannisyan",
-  "description": "A reliable way of syncing your VSCode settings and extensions",
-  "license": "MIT",
-  "version": "3.14.2",
-  "main": "./dist/main.js",
-  "scripts": {
-    "start": "webpack --config .webpack/development.ts --watch",
-    "build": "webpack --config .webpack/production.ts",
-    "test": "jest",
-    "schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
-    "vscode:prepublish": "yarn schema && yarn build"
-  },
-  "dependencies": {
-    "axios": "^0.19.2",
-    "express": "^4.17.1",
-    "fast-glob": "^3.2.2",
-    "fs-extra": "^8.1.0",
-    "jsonc-parser": "^2.2.1",
-    "lodash": "^4.17.15",
-    "semver": "^7.1.3",
-    "simple-git": "^1.131.0",
-    "vscode-chokidar": "^2.1.7"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.2",
-    "@types/fs-extra": "^8.1.0",
-    "@types/jest": "^25.1.3",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^13.7.7",
-    "@types/semver": "^7.1.0",
-    "@types/terser-webpack-plugin": "^2.2.0",
-    "@types/vscode": "1.41.0",
-    "@types/webpack": "^4.41.7",
-    "@types/webpack-merge": "^4.1.5",
-    "all-contributors-cli": "^6.14.0",
-    "awesome-typescript-loader": "^5.2.1",
-    "clean-webpack-plugin": "^3.0.0",
-    "codecov": "^3.6.5",
-    "jest": "^25.1.0",
-    "jest-raw-loader": "^1.0.1",
-    "raw-loader": "^4.0.0",
-    "shx": "^0.3.2",
-    "terser-webpack-plugin": "^2.3.5",
-    "ts-jest": "^25.2.1",
-    "ts-loader": "^6.2.1",
-    "ts-node": "^8.6.2",
-    "tslint": "^6.0.0",
-    "tslint-config-airbnb": "^5.11.2",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.8.3",
-    "typescript-json-schema": "^0.42.0",
-    "utility-types": "^3.10.0",
-    "vsce": "^1.74.0",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-merge": "^4.2.2"
-  },
-  "engines": {
-    "vscode": "^1.41.0"
-  },
-  "icon": "assets/logo.png",
-  "homepage": "https://arnohovhannisyan.space/vscode-syncify",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/arnohovhannisyan/vscode-syncify"
-  },
-  "bugs": {
-    "url": "https://github.com/arnohovhannisyan/vscode-syncify/issues",
-    "email": "arnohovhannisyan0@gmail.com"
-  },
-  "extensionKind": [
-    "ui"
-  ],
-  "categories": [
-    "Other"
-  ],
-  "keywords": [
-    "sync",
-    "vscode-sync",
-    "settings-sync",
-    "syncify",
-    "vscode-syncify"
-  ],
-  "activationEvents": [
-    "*"
-  ],
-  "contributes": {
-    "commands": [
-      {
-        "command": "syncify.sync",
-        "title": "%(command) sync%"
-      },
-      {
-        "command": "syncify.upload",
-        "title": "%(command) upload%"
-      },
-      {
-        "command": "syncify.download",
-        "title": "%(command) download%"
-      },
-      {
-        "command": "syncify.reset",
-        "title": "%(command) reset%"
-      },
-      {
-        "command": "syncify.openSettings",
-        "title": "%(command) openSettings%"
-      },
-      {
-        "command": "syncify.reinitialize",
-        "title": "%(command) reinitialize%"
-      },
-      {
-        "command": "syncify.registerCustomFile",
-        "title": "%(command) registerCustomFile%"
-      },
-      {
-        "command": "syncify.importCustomFile",
-        "title": "%(command) importCustomFile%"
-      },
-      {
-        "command": "syncify.switchProfile",
-        "title": "%(command) switchProfile%"
-      },
-      {
-        "command": "syncify.enableDebugMode",
-        "title": "%(command) enableDebugMode%"
-      },
-      {
-        "command": "syncify.disableDebugMode",
-        "title": "%(command) disableDebugMode%"
-      }
-    ],
-    "jsonValidation": [
-      {
-        "fileMatch": "arnohovhannisyan.syncify/settings.json",
-        "url": "./assets/settings.schema.json"
-      }
-    ],
-    "menus": {
-      "explorer/context": [
-        {
-          "command": "syncify.registerCustomFile",
-          "when": "!explorerResourceIsFolder"
-        },
-        {
-          "command": "syncify.importCustomFile",
-          "when": "explorerResourceIsFolder"
-        }
-      ]
-    }
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "moduleNameMapper": {
-      "^~/(.*)": "<rootDir>/src/$1"
-    },
-    "transform": {
-      "\\.html$": "jest-raw-loader"
-    },
-    "globalTeardown": "<rootDir>/src/tests/teardown.ts"
-  }
+	"name": "syncify",
+	"displayName": "Syncify",
+	"publisher": "arnohovhannisyan",
+	"description": "A reliable way of syncing your VSCode settings and extensions",
+	"license": "MIT",
+	"version": "3.14.2",
+	"main": "./dist/main.js",
+	"scripts": {
+		"start": "webpack --config .webpack/development.ts --watch",
+		"build": "webpack --config .webpack/production.ts",
+		"test": "xo 'src/**/*.ts' && jest",
+		"schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
+		"vscode:prepublish": "yarn schema && yarn build"
+	},
+	"dependencies": {
+		"axios": "^0.19.2",
+		"express": "^4.17.1",
+		"fast-glob": "^3.2.2",
+		"fs-extra": "^8.1.0",
+		"jsonc-parser": "^2.2.1",
+		"lodash": "^4.17.15",
+		"semver": "^7.1.3",
+		"simple-git": "^1.131.0",
+		"vscode-chokidar": "^2.1.7"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.2",
+		"@types/fs-extra": "^8.1.0",
+		"@types/jest": "^25.1.3",
+		"@types/lodash": "^4.14.149",
+		"@types/node": "^13.7.7",
+		"@types/semver": "^7.1.0",
+		"@types/terser-webpack-plugin": "^2.2.0",
+		"@types/vscode": "1.41.0",
+		"@types/webpack": "^4.41.7",
+		"@types/webpack-merge": "^4.1.5",
+		"all-contributors-cli": "^6.14.0",
+		"awesome-typescript-loader": "^5.2.1",
+		"clean-webpack-plugin": "^3.0.0",
+		"codecov": "^3.6.5",
+		"jest": "^25.1.0",
+		"jest-raw-loader": "^1.0.1",
+		"raw-loader": "^4.0.0",
+		"shx": "^0.3.2",
+		"terser-webpack-plugin": "^2.3.5",
+		"ts-jest": "^25.2.1",
+		"ts-loader": "^6.2.1",
+		"ts-node": "^8.6.2",
+		"typescript": "^3.8.3",
+		"typescript-json-schema": "^0.42.0",
+		"utility-types": "^3.10.0",
+		"vsce": "^1.74.0",
+		"webpack": "^4.42.0",
+		"webpack-cli": "^3.3.11",
+		"webpack-merge": "^4.2.2",
+		"xo": "^0.27.2"
+	},
+	"engines": {
+		"vscode": "^1.41.0"
+	},
+	"icon": "assets/logo.png",
+	"homepage": "https://arnohovhannisyan.space/vscode-syncify",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/arnohovhannisyan/vscode-syncify"
+	},
+	"bugs": {
+		"url": "https://github.com/arnohovhannisyan/vscode-syncify/issues",
+		"email": "arnohovhannisyan0@gmail.com"
+	},
+	"extensionKind": [
+		"ui"
+	],
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"sync",
+		"vscode-sync",
+		"settings-sync",
+		"syncify",
+		"vscode-syncify"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"contributes": {
+		"commands": [
+			{
+				"command": "syncify.sync",
+				"title": "%(command) sync%"
+			},
+			{
+				"command": "syncify.upload",
+				"title": "%(command) upload%"
+			},
+			{
+				"command": "syncify.download",
+				"title": "%(command) download%"
+			},
+			{
+				"command": "syncify.reset",
+				"title": "%(command) reset%"
+			},
+			{
+				"command": "syncify.openSettings",
+				"title": "%(command) openSettings%"
+			},
+			{
+				"command": "syncify.reinitialize",
+				"title": "%(command) reinitialize%"
+			},
+			{
+				"command": "syncify.registerCustomFile",
+				"title": "%(command) registerCustomFile%"
+			},
+			{
+				"command": "syncify.importCustomFile",
+				"title": "%(command) importCustomFile%"
+			},
+			{
+				"command": "syncify.switchProfile",
+				"title": "%(command) switchProfile%"
+			},
+			{
+				"command": "syncify.enableDebugMode",
+				"title": "%(command) enableDebugMode%"
+			},
+			{
+				"command": "syncify.disableDebugMode",
+				"title": "%(command) disableDebugMode%"
+			}
+		],
+		"jsonValidation": [
+			{
+				"fileMatch": "arnohovhannisyan.syncify/settings.json",
+				"url": "./assets/settings.schema.json"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "syncify.registerCustomFile",
+					"when": "!explorerResourceIsFolder"
+				},
+				{
+					"command": "syncify.importCustomFile",
+					"when": "explorerResourceIsFolder"
+				}
+			]
+		}
+	},
+	"jest": {
+		"preset": "ts-jest",
+		"testEnvironment": "node",
+		"moduleNameMapper": {
+			"^~/(.*)": "<rootDir>/src/$1"
+		},
+		"transform": {
+			"\\.html$": "jest-raw-loader"
+		},
+		"globalTeardown": "<rootDir>/src/tests/teardown.ts"
+	},
+	"xo": {
+		"prettier": true,
+		"rules": {
+			"unicorn/filename-case": 0,
+			"no-undef": 0,
+			"@typescript-eslint/explicit-function-return-type": 0,
+			"@typescript-eslint/return-await": 0,
+			"@typescript-eslint/restrict-template-expressions": 0,
+			"@typescript-eslint/restrict-plus-operands": 0,
+			"no-implicit-coercion": 0,
+			"promise/param-names": 0,
+			"no-inner-declarations": 0,
+			"import/extensions": 0
+		}
+	}
 }

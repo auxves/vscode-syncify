@@ -3,85 +3,85 @@ import { DeepPartial } from "utility-types";
 import { commands, ViewColumn, window, workspace } from "vscode";
 import { defaultSettings, ISettings } from "~/models";
 import {
-  Environment,
-  FS,
-  localize,
-  Logger,
-  Watcher,
-  Webview
+	Environment,
+	FS,
+	localize,
+	Logger,
+	Watcher,
+	Webview
 } from "~/services";
 import { confirm, merge, stringifyPretty } from "~/utilities";
 
-export class Settings {
-  public static async get(): Promise<ISettings>;
-  public static async get<T>(selector: (s: ISettings) => T): Promise<T>;
-  public static async get<T>(selector?: (s: ISettings) => T): Promise<T> {
-    const exists = await FS.exists(Environment.settings);
+export namespace Settings {
+	export async function get(): Promise<ISettings>;
+	export async function get<T>(selector: (s: ISettings) => T): Promise<T>;
+	export async function get<T>(selector?: (s: ISettings) => T): Promise<T> {
+		const exists = await FS.exists(Environment.settings);
 
-    if (!exists) {
-      await FS.mkdir(Environment.globalStoragePath);
-      await FS.write(Environment.settings, stringifyPretty(defaultSettings));
+		if (!exists) {
+			await FS.mkdir(Environment.globalStoragePath);
+			await FS.write(Environment.settings, stringifyPretty(defaultSettings));
 
-      if (selector) return cloneDeep(selector(defaultSettings));
+			if (selector) return cloneDeep(selector(defaultSettings));
 
-      return cloneDeep<any>(defaultSettings);
-    }
+			return cloneDeep<any>(defaultSettings);
+		}
 
-    try {
-      const contents = await FS.read(Environment.settings);
-      const settings = JSON.parse(contents);
+		try {
+			const contents = await FS.read(Environment.settings);
+			const settings = JSON.parse(contents);
 
-      const merged = merge(defaultSettings, settings);
+			const merged = merge(defaultSettings, settings);
 
-      if (selector) return cloneDeep(selector(merged));
+			if (selector) return cloneDeep(selector(merged));
 
-      return cloneDeep(merged);
-    } catch (err) {
-      Logger.error(err);
+			return cloneDeep(merged);
+		} catch (error) {
+			Logger.error(error);
 
-      if (selector) return cloneDeep(selector(defaultSettings));
+			if (selector) return cloneDeep(selector(defaultSettings));
 
-      return cloneDeep<any>(defaultSettings);
-    }
-  }
+			return cloneDeep<any>(defaultSettings);
+		}
+	}
 
-  public static async set(settings: DeepPartial<ISettings>): Promise<void> {
-    const exists = await FS.exists(Environment.globalStoragePath);
-    if (!exists) await FS.mkdir(Environment.globalStoragePath);
+	export async function set(settings: DeepPartial<ISettings>): Promise<void> {
+		const exists = await FS.exists(Environment.globalStoragePath);
+		if (!exists) await FS.mkdir(Environment.globalStoragePath);
 
-    const currentSettings = await Settings.get();
+		const currentSettings = await get();
 
-    await FS.write(
-      Environment.settings,
-      stringifyPretty(merge(currentSettings, settings))
-    );
+		await FS.write(
+			Environment.settings,
+			stringifyPretty(merge(currentSettings, settings))
+		);
 
-    await commands.executeCommand("syncify.reinitialize");
-  }
+		await commands.executeCommand("syncify.reinitialize");
+	}
 
-  public static async open() {
-    return Webview.openSettingsPage(await Settings.get());
-  }
+	export async function open() {
+		return Webview.openSettingsPage(await get());
+	}
 
-  public static async openFile() {
-    await window.showTextDocument(
-      await workspace.openTextDocument(Environment.settings),
-      ViewColumn.One,
-      true
-    );
-  }
+	export async function openFile() {
+		await window.showTextDocument(
+			await workspace.openTextDocument(Environment.settings),
+			ViewColumn.One,
+			true
+		);
+	}
 
-  public static async reset(): Promise<void> {
-    const userIsSure = await confirm("settings -> reset");
+	export async function reset(): Promise<void> {
+		const userIsSure = await confirm("settings -> reset");
 
-    if (!userIsSure) return;
+		if (!userIsSure) return;
 
-    Watcher.stop();
+		Watcher.stop();
 
-    await FS.delete(Environment.globalStoragePath);
+		await FS.remove(Environment.globalStoragePath);
 
-    await commands.executeCommand("syncify.reinitialize");
+		await commands.executeCommand("syncify.reinitialize");
 
-    window.showInformationMessage(localize("(info) reset -> complete"));
-  }
+		window.showInformationMessage(localize("(info) reset -> complete"));
+	}
 }

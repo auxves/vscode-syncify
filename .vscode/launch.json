@@ -1,17 +1,17 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Run Extension",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--user-data-dir=/tmp/vscode-syncify/user-data",
-        "--extensions-dir=/tmp/vscode-syncify/extensions"
-      ],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
-    }
-  ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Run Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--user-data-dir=/tmp/vscode-syncify/user-data",
+				"--extensions-dir=/tmp/vscode-syncify/extensions"
+			],
+			"outFiles": ["${workspaceFolder}/dist/**/*.js"]
+		}
+	]
 }

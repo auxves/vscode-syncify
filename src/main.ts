@@ -4,11 +4,11 @@ import state from "~/state";
 import migrations from "~/migrations";
 
 export async function activate(context: ExtensionContext) {
-  state.context = context;
+	state.context = context;
 
-  await initLocalization();
+	await initLocalization();
 
-  await migrate(migrations);
+	await migrate(migrations);
 
-  await init();
+	await init();
 }

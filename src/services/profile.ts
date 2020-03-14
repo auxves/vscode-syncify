@@ -1,45 +1,45 @@
 import { commands, QuickPickItem, window } from "vscode";
 import { localize, Logger, Settings } from "~/services";
 
-export class Profile {
-  public static async switch(profile?: string): Promise<void> {
-    const { profiles, currentProfile } = await Settings.get(s => s.repo);
+export namespace Profile {
+	export async function switchProfile(profile?: string): Promise<void> {
+		const { profiles, currentProfile } = await Settings.get(s => s.repo);
 
-    const newProfile = await (async () => {
-      if (profile) {
-        return profiles.find(p => p.name === profile);
-      }
+		const newProfile = await (async () => {
+			if (profile) {
+				return profiles.find(p => p.name === profile);
+			}
 
-      const selected = await window.showQuickPick(
-        profiles.map<QuickPickItem>(p => ({
-          label: p.name === currentProfile ? `${p.name} [current]` : p.name,
-          description: p.branch
-        })),
-        {
-          placeHolder: localize("(prompt) profile -> switch -> placeholder")
-        }
-      );
+			const selected = await window.showQuickPick(
+				profiles.map<QuickPickItem>(p => ({
+					label: p.name === currentProfile ? `${p.name} [current]` : p.name,
+					description: p.branch
+				})),
+				{
+					placeHolder: localize("(prompt) profile -> switch -> placeholder")
+				}
+			);
 
-      if (!selected) return;
+			if (!selected) return;
 
-      return profiles.find(p => p.name === selected.label);
-    })();
+			return profiles.find(p => p.name === selected.label);
+		})();
 
-    if (!newProfile) return;
+		if (!newProfile) return;
 
-    Logger.debug(`Switching to profile:`, newProfile.name);
+		Logger.debug(`Switching to profile:`, newProfile.name);
 
-    await Settings.set({
-      repo: {
-        currentProfile: newProfile.name
-      }
-    });
+		await Settings.set({
+			repo: {
+				currentProfile: newProfile.name
+			}
+		});
 
-    const res = await window.showInformationMessage(
-      localize("(info) repo -> switchedProfile", newProfile.name),
-      localize("(label) yes")
-    );
+		const res = await window.showInformationMessage(
+			localize("(info) repo -> switchedProfile", newProfile.name),
+			localize("(label) yes")
+		);
 
-    if (res) await commands.executeCommand("syncify.download");
-  }
+		if (res) await commands.executeCommand("syncify.download");
+	}
 }
