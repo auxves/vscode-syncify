@@ -1,7 +1,7 @@
 import { Migrations } from "~/models";
 import state from "~/state";
 import { Environment, Logger } from "~/services";
-import { gt, lte, validRange, satisfies } from "semver";
+import { validRange, satisfies } from "semver";
 
 function shouldMigrate(candidate: string, previous: string): boolean {
 	if (validRange(candidate)) {
@@ -9,10 +9,7 @@ function shouldMigrate(candidate: string, previous: string): boolean {
 		return satisfies(Environment.version, candidate);
 	}
 
-	if (lte(candidate, previous)) return false;
-	if (gt(candidate, Environment.version)) return false;
-
-	return true;
+	return false;
 }
 
 export async function migrate(migrations: Migrations): Promise<void> {
