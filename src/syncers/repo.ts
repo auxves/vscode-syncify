@@ -415,7 +415,7 @@ export class RepoSyncer implements Syncer {
 					let contents = await FS.read(file, true);
 
 					const hasConflict = (c: string) => {
-						const regexes = [/^<<<<<<<$/, /^=======$/, /^>>>>>>>$/];
+						const regexes = [/^<{7}$/, /^={7}$/, /^>{7}$/];
 
 						return !c.split("\n").every(v => regexes.every(r => !r.test(v)));
 					};
@@ -423,30 +423,33 @@ export class RepoSyncer implements Syncer {
 					if (hasConflict(contents.toString())) {
 						await FS.mkdir(Environment.conflictsFolder);
 
-						const tmpPath = resolve(
+						const temporaryPath = resolve(
 							Environment.conflictsFolder,
 							`${Math.random()}-${basename(file)}`
 						);
 
-						await FS.copy(file, tmpPath);
+						await FS.copy(file, temporaryPath);
 
-						const doc = await workspace.openTextDocument(tmpPath);
+						const doc = await workspace.openTextDocument(temporaryPath);
 
 						await window.showTextDocument(doc, ViewColumn.One, true);
 
-						await new Promise(res => {
-							const d = workspace.onDidSaveTextDocument(e => {
-								if (e.fileName === doc.fileName && !hasConflict(e.getText())) {
+						await new Promise(resolve => {
+							const d = workspace.onDidSaveTextDocument(document => {
+								if (
+									document.fileName === doc.fileName &&
+									!hasConflict(document.getText())
+								) {
 									commands.executeCommand("workbench.action.closeActiveEditor");
 									d.dispose();
-									res();
+									resolve();
 								}
 							});
 						});
 
-						contents = await FS.read(tmpPath, true);
+						contents = await FS.read(temporaryPath, true);
 
-						await FS.remove(tmpPath);
+						await FS.remove(temporaryPath);
 					}
 
 					const newPath = resolve(

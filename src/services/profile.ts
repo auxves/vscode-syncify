@@ -35,11 +35,11 @@ export namespace Profile {
 			}
 		});
 
-		const res = await window.showInformationMessage(
+		const result = await window.showInformationMessage(
 			localize("(info) repo -> switchedProfile", newProfile.name),
 			localize("(label) yes")
 		);
 
-		if (res) await commands.executeCommand("syncify.download");
+		if (result) await commands.executeCommand("syncify.download");
 	}
 }

@@ -12,14 +12,14 @@ const cleanupPath = getCleanupPath("syncers/repo");
 
 const pathToRemote = resolve(cleanupPath, "remote");
 const pathToRepo = resolve(cleanupPath, "repo");
-const pathToTmpRepo = resolve(cleanupPath, "tmpRepo");
+const pathToTemporaryRepo = resolve(cleanupPath, "tmpRepo");
 const pathToUser = resolve(cleanupPath, "user");
 const pathToGlobalStoragePath = resolve(cleanupPath, "globalStoragePath");
 
 const paths = [
 	pathToRemote,
 	pathToRepo,
-	pathToTmpRepo,
+	pathToTemporaryRepo,
 	pathToUser,
 	pathToGlobalStoragePath
 ];
@@ -81,12 +81,12 @@ describe("upload", () => {
 			"test.key": false
 		});
 
-		const git = createSimpleGit(pathToTmpRepo);
+		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "master", { "--force": null });
 
-		await FS.write(resolve(pathToTmpRepo, "settings.json"), expected);
+		await FS.write(resolve(pathToTemporaryRepo, "settings.json"), expected);
 
 		await git.add(".");
 		await git.commit("Testing");
@@ -96,7 +96,9 @@ describe("upload", () => {
 
 		await git.pull("origin", "master", { "--force": null });
 
-		const syncedData = await FS.read(resolve(pathToTmpRepo, "settings.json"));
+		const syncedData = await FS.read(
+			resolve(pathToTemporaryRepo, "settings.json")
+		);
 		expect(syncedData).toBe(expected);
 	});
 
@@ -155,13 +157,13 @@ describe("upload", () => {
 		const repoSyncer = new RepoSyncer();
 		await repoSyncer.upload();
 
-		const git = createSimpleGit(pathToTmpRepo);
+		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "master", { "--force": null });
 
 		const downloadedBuffer = await FS.read(
-			resolve(pathToTmpRepo, "buffer"),
+			resolve(pathToTemporaryRepo, "buffer"),
 			true
 		);
 
@@ -186,12 +188,12 @@ describe("download", () => {
 			"test.key": false
 		});
 
-		const git = createSimpleGit(pathToTmpRepo);
+		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "master", { "--force": null });
 
-		await FS.write(resolve(pathToTmpRepo, "settings.json"), expected);
+		await FS.write(resolve(pathToTemporaryRepo, "settings.json"), expected);
 
 		await git.add(".");
 		await git.commit("Testing");
@@ -304,14 +306,14 @@ describe("download", () => {
 			"test.key": 2
 		});
 
-		const git = createSimpleGit(pathToTmpRepo);
+		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "test1", { "--force": null });
 
 		await git.checkout(["-b", "test2"]);
 
-		await FS.write(resolve(pathToTmpRepo, "settings.json"), newUserData);
+		await FS.write(resolve(pathToTemporaryRepo, "settings.json"), newUserData);
 
 		await git.add(".");
 		await git.commit("Testing");
@@ -363,12 +365,12 @@ describe("download", () => {
 			"test.key": false
 		});
 
-		const git = createSimpleGit(pathToTmpRepo);
+		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "master", { "--force": null });
 
-		await FS.write(resolve(pathToTmpRepo, "settings.json"), expected);
+		await FS.write(resolve(pathToTemporaryRepo, "settings.json"), expected);
 
 		await git.add(".");
 		await git.commit("Testing");
@@ -398,14 +400,14 @@ describe("download", () => {
 		const repoSyncer = new RepoSyncer();
 		await repoSyncer.upload();
 
-		const git = createSimpleGit(pathToTmpRepo);
+		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "master", { "--force": null });
 
 		const buffer = Buffer.alloc(2).fill(1);
 
-		await FS.write(resolve(pathToTmpRepo, "buffer"), buffer);
+		await FS.write(resolve(pathToTemporaryRepo, "buffer"), buffer);
 
 		await git.add(".");
 		await git.commit("Testing");
@@ -487,12 +489,12 @@ describe("sync", () => {
 			"test.key": false
 		});
 
-		const git = createSimpleGit(pathToTmpRepo);
+		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "master", { "--force": null });
 
-		await FS.write(resolve(pathToTmpRepo, "settings.json"), expected);
+		await FS.write(resolve(pathToTemporaryRepo, "settings.json"), expected);
 
 		await git.add(".");
 		await git.commit("Testing");

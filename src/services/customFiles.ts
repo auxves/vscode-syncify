@@ -122,13 +122,13 @@ export namespace CustomFiles {
 			const newPath = resolve(Environment.customFilesFolder, filename);
 
 			if (await FS.exists(newPath)) {
-				const res = await window.showWarningMessage(
+				const result = await window.showWarningMessage(
 					localize("(prompt) customFiles -> register -> exists"),
 					localize("(label) no"),
 					localize("(label) yes")
 				);
 
-				if (res !== localize("(label) yes")) return;
+				if (result !== localize("(label) yes")) return;
 			}
 
 			const contents = await FS.read(filepath, true);

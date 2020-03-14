@@ -15,8 +15,8 @@ export namespace OAuth {
 
 			const server = app.listen(port);
 
-			app.get("/implicit", async req => {
-				const token = req.query.token;
+			app.get("/implicit", async request => {
+				const token = request.query.token;
 				const user = await getUser(token, provider);
 
 				if (!user) return;
@@ -24,11 +24,11 @@ export namespace OAuth {
 				Webview.openRepositoryCreationPage({ token, user, provider });
 			});
 
-			app.get("/callback", async (req, res) => {
+			app.get("/callback", async (request, response) => {
 				try {
-					const data = await handleRequest(req, provider);
+					const data = await handleRequest(request, provider);
 
-					res.send(`
+					response.send(`
           <!doctype html>
           <html lang="en">
             <head><meta charset="utf-8"></head>
@@ -111,10 +111,10 @@ export namespace OAuth {
 		}
 	}
 
-	async function handleRequest(req: Request, provider: Provider) {
+	async function handleRequest(request: Request, provider: Provider) {
 		if (provider !== "github") return;
 
-		const token = await getToken(req.query.code);
+		const token = await getToken(request.query.code);
 
 		if (!token) return;
 

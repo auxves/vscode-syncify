@@ -166,7 +166,7 @@ export namespace Webview {
 			return page;
 		}
 
-		const defaultOpts = {
+		const defaultOptions = {
 			retainContextWhenHidden: true,
 			enableScripts: true
 		};
@@ -175,7 +175,7 @@ export namespace Webview {
 			id,
 			options.title,
 			options.viewColumn ?? ViewColumn.One,
-			merge(defaultOpts, options.options ?? {})
+			merge(defaultOptions, options.options ?? {})
 		);
 
 		const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));

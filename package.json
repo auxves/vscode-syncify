@@ -166,6 +166,7 @@
 		"prettier": true,
 		"rules": {
 			"unicorn/filename-case": 0,
+			"unicorn/string-content": 0,
 			"no-undef": 0,
 			"@typescript-eslint/explicit-function-return-type": 0,
 			"@typescript-eslint/return-await": 0,

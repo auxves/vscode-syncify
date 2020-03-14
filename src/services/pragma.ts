@@ -72,7 +72,7 @@ export namespace Pragma {
 
 		if (ignoredBlocks) {
 			result = result.replace(
-				/(\s*)\}(?![\s\S]*\s*\})/,
+				/(\s*)}(?![\s\S]*\s*})/,
 				`\n\n\n${ignoredBlocks}$1}`
 			);
 		}

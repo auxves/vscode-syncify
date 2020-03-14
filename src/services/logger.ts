@@ -11,8 +11,8 @@ export namespace Logger {
 				localize("(error) default"),
 				localize("(label) showDetails")
 			)
-			.then(res => {
-				if (res) Webview.openErrorPage(error);
+			.then(result => {
+				if (result) Webview.openErrorPage(error);
 			});
 	}
 
