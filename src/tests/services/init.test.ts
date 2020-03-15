@@ -41,6 +41,18 @@ test("command registration", async () => {
 	spy.mockRestore();
 });
 
+test("command disposal", async () => {
+	const fn = jest.fn();
+
+	(state.context as any) = {
+		subscriptions: [{ dispose: fn }]
+	};
+
+	await init();
+
+	expect(fn).toHaveBeenCalled();
+});
+
 test("watch settings", async () => {
 	await Settings.set({ watchSettings: true });
 

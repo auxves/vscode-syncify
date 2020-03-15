@@ -34,6 +34,6 @@ export async function migrate(migrations: Migrations): Promise<void> {
 			await migrations[version]();
 		}
 	} catch (error) {
-		return Logger.error(error);
+		Logger.error(error);
 	}
 }

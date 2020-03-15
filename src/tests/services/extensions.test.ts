@@ -1,5 +1,7 @@
-import { extensions } from "vscode";
-import { Extensions } from "~/services";
+import { extensions, Uri, commands } from "vscode";
+import { Extensions, Environment, FS } from "~/services";
+import { getCleanupPath } from "~/tests/getCleanupPath";
+import { resolve } from "path";
 
 function setExtensions(exts: string[]): void {
 	(extensions.all as any) = exts.map(ext => ({
@@ -11,6 +13,12 @@ function setExtensions(exts: string[]): void {
 		activate: async () => Promise.resolve()
 	}));
 }
+
+const cleanupPath = getCleanupPath("services/extensions");
+
+const pathToVsix = resolve(cleanupPath, "vsix");
+
+jest.spyOn(Environment, "vsixFolder", "get").mockReturnValue(pathToVsix);
 
 test("missing extensions", () => {
 	setExtensions(["publisher1.extension1"]);
@@ -38,4 +46,51 @@ test("unneeded extensions", () => {
 	const expected = ["publisher2.extension2", "publisher3.extension3"];
 
 	expect(unneeded).toStrictEqual(expected);
+});
+
+describe("install", () => {
+	test("marketplace", async () => {
+		const spy = jest.spyOn(commands, "executeCommand");
+
+		await Extensions.install("test.extension");
+
+		expect(spy).toHaveBeenCalledWith(
+			"workbench.extensions.installExtension",
+			"test.extension"
+		);
+
+		spy.mockRestore();
+	});
+
+	test("vsix", async () => {
+		await FS.mkdir(pathToVsix);
+
+		const spy = jest.spyOn(commands, "executeCommand");
+
+		await FS.write(resolve(pathToVsix, "test.extension.vsix"), "test");
+
+		await Extensions.install("test.extension");
+
+		expect(spy).toHaveBeenCalledWith(
+			"workbench.extensions.installExtension",
+			Uri.file("")
+		);
+
+		spy.mockRestore();
+
+		await FS.remove(pathToVsix);
+	});
+});
+
+test("uninstall", async () => {
+	const spy = jest.spyOn(commands, "executeCommand");
+
+	await Extensions.uninstall("test.extension");
+
+	expect(spy).toHaveBeenCalledWith(
+		"workbench.extensions.uninstallExtension",
+		"test.extension"
+	);
+
+	spy.mockRestore();
 });

@@ -15,10 +15,10 @@ export namespace Extensions {
 
 				return Promise.all(
 					ids.map(async ext => {
-						const matchingVsix = `${ext.toLowerCase()}.vsix`;
+						const matchingVsix = `${ext}.vsix`;
 
 						const vsix = vsixFiles.find(
-							file => basename(file).toLowerCase() === matchingVsix
+							file => basename(file) === matchingVsix
 						);
 
 						await commands.executeCommand(

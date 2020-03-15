@@ -3,17 +3,15 @@ import { localize, Webview } from "~/services";
 import state from "~/state";
 
 export namespace Logger {
-	export function error(error: Error): void {
+	export async function error(error: Error): Promise<void> {
 		console.error(error);
 
-		window
-			.showErrorMessage(
-				localize("(error) default"),
-				localize("(label) showDetails")
-			)
-			.then(result => {
-				if (result) Webview.openErrorPage(error);
-			});
+		const result = await window.showErrorMessage(
+			localize("(error) default"),
+			localize("(label) showDetails")
+		);
+
+		if (result) Webview.openErrorPage(error);
 	}
 
 	export function debug(...args: any[]): void {
