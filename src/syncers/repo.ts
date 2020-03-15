@@ -83,9 +83,9 @@ export class RepoSyncer implements Syncer {
 
 			const diff = await this.git.diff();
 
-			if (diff && status !== "behind") return this.upload();
+			if (diff && status !== "behind") return await this.upload();
 
-			if (status === "behind") return this.download();
+			if (status === "behind") return await this.download();
 
 			window.setStatusBarMessage(localize("(info) sync -> nothingToDo"), 2000);
 		} catch (error) {
@@ -353,9 +353,9 @@ export class RepoSyncer implements Syncer {
 		const { currentProfile, profiles, url } = await Settings.get(s => s.repo);
 
 		return (
-			!!url &&
-			!!currentProfile &&
-			!!profiles.find(({ name }) => name === currentProfile)
+			Boolean(url) &&
+			Boolean(currentProfile) &&
+			Boolean(profiles.find(({ name }) => name === currentProfile))
 		);
 	}
 

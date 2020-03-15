@@ -9,7 +9,8 @@
 	"scripts": {
 		"start": "webpack --config .webpack/development.ts --watch",
 		"build": "webpack --config .webpack/production.ts",
-		"test": "xo 'src/**/*.ts' && jest",
+		"test": "jest",
+		"lint": "xo 'src/**/*'",
 		"schema": "typescript-json-schema tsconfig.json ISettings -o assets/settings.schema.json --noExtraProps",
 		"vscode:prepublish": "yarn schema && yarn build"
 	},
@@ -39,6 +40,7 @@
 		"awesome-typescript-loader": "^5.2.1",
 		"clean-webpack-plugin": "^3.0.0",
 		"codecov": "^3.6.5",
+		"eslint-plugin-jest": "^23.8.2",
 		"jest": "^25.1.0",
 		"jest-raw-loader": "^1.0.1",
 		"raw-loader": "^4.0.0",
@@ -161,21 +163,5 @@
 			"\\.html$": "jest-raw-loader"
 		},
 		"globalTeardown": "<rootDir>/src/tests/teardown.ts"
-	},
-	"xo": {
-		"prettier": true,
-		"rules": {
-			"unicorn/filename-case": 0,
-			"unicorn/string-content": 0,
-			"no-undef": 0,
-			"@typescript-eslint/explicit-function-return-type": 0,
-			"@typescript-eslint/return-await": 0,
-			"@typescript-eslint/restrict-template-expressions": 0,
-			"@typescript-eslint/restrict-plus-operands": 0,
-			"no-implicit-coercion": 0,
-			"promise/param-names": 0,
-			"no-inner-declarations": 0,
-			"import/extensions": 0
-		}
 	}
 }

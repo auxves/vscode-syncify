@@ -14,7 +14,7 @@ beforeEach(async () => Promise.all(paths.map(FS.mkdir)));
 
 afterEach(async () => FS.remove(cleanupPath));
 
-it("regular files", async () => {
+test("regular files", async () => {
 	const filepath = resolve(pathToTest, "file");
 	await FS.write(filepath, "test");
 
@@ -23,7 +23,7 @@ it("regular files", async () => {
 	expect(files.includes(filepath)).toBeFalsy();
 });
 
-it("ignored files", async () => {
+test("ignored files", async () => {
 	const filepath = resolve(pathToTest, "file");
 	await FS.write(filepath, "test");
 

@@ -23,7 +23,7 @@ test("basic functionality", async () => {
 		"1.1.0": fn
 	});
 
-	expect(fn).toBeCalled();
+	expect(fn).toHaveBeenCalled();
 });
 
 test("range", async () => {
@@ -37,7 +37,7 @@ test("range", async () => {
 			">= 1.1.0": fn
 		});
 
-		expect(fn).toBeCalled();
+		expect(fn).toHaveBeenCalled();
 	}
 
 	{
@@ -50,7 +50,7 @@ test("range", async () => {
 			">= 1.1.0": fn
 		});
 
-		expect(fn).not.toBeCalled();
+		expect(fn).not.toHaveBeenCalled();
 	}
 });
 
@@ -64,7 +64,7 @@ test("skip", async () => {
 		"1.1.0": fn
 	});
 
-	expect(fn).not.toBeCalled();
+	expect(fn).not.toHaveBeenCalled();
 });
 
 test("invalid", async () => {
@@ -77,7 +77,7 @@ test("invalid", async () => {
 		hello: fn
 	});
 
-	expect(fn).not.toBeCalled();
+	expect(fn).not.toHaveBeenCalled();
 });
 
 test("no context", async () => {
@@ -89,5 +89,5 @@ test("no context", async () => {
 		"0.0.0": fn
 	});
 
-	expect(fn).not.toBeCalled();
+	expect(fn).not.toHaveBeenCalled();
 });

@@ -36,7 +36,7 @@ test("command registration", async () => {
 
 	await init();
 
-	expect(spy).toBeCalled();
+	expect(spy).toHaveBeenCalled();
 
 	spy.mockRestore();
 });
@@ -48,7 +48,7 @@ test("watch settings", async () => {
 
 	await init();
 
-	expect(spy).toBeCalled();
+	expect(spy).toHaveBeenCalled();
 
 	spy.mockRestore();
 });
@@ -60,7 +60,7 @@ test("sync on startup", async () => {
 
 	await init();
 
-	expect(spy).toBeCalledWith("syncify.sync");
+	expect(spy).toHaveBeenCalledWith("syncify.sync");
 
 	spy.mockRestore();
 });
