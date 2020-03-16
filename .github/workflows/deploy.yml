@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout Submodules
+        run: git submodule update --init --recursive
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn vsce package
+
+      - name: Publish
+        run: yarn vsce publish -p ${{ secrets.VS_TOKEN }}
+
+      - name: Setup Environment
+        run: |
+          echo "::set-env name=RELEASE_TAG::${GITHUB_REF//refs\/tags\/}"
+
+      - uses: AButler/upload-release-assets@v2.0
+        with:
+          files: syncify-*.vsix
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ env.RELEASE_TAG }}

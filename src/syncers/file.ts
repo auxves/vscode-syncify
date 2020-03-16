@@ -166,10 +166,7 @@ export class FileSyncer implements Syncer {
 					await FS.mkdir(dirname(newPath));
 
 					if (file.endsWith(".json")) {
-						return FS.write(
-							newPath,
-							Pragma.processOutgoing(await FS.read(file))
-						);
+						return FS.write(newPath, Pragma.outgoing(await FS.read(file)));
 					}
 
 					return FS.copy(file, newPath);
@@ -205,10 +202,9 @@ export class FileSyncer implements Syncer {
 							return "{}";
 						})();
 
-						const afterPragma = Pragma.processIncoming(
-							settings.hostname,
+						const afterPragma = Pragma.incoming(
 							await FS.read(file),
-							currentContents
+							settings.hostname
 						);
 
 						if (currentContents !== afterPragma) {
