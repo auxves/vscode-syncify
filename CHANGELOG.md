@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.14.3
+
+- No changes, just getting ready for `v4` by making sure the migration version is configured
+
 ## v3.14.2
 
 - Remove version from `vsix` filenames
