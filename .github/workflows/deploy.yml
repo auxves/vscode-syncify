@@ -21,15 +21,31 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
+      - name: Setup Environment
+        run: |
+          echo "::set-env name=RELEASE_TAG::${GITHUB_REF//refs\/tags\/}"
+          echo "::set-env name=RAW_VERSION::${GITHUB_REF//refs\/tags\/v}"
+
+      - name: Increment Version
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+
+          yarn version --new-version $RAW_VERSION --no-git-tag-version
+
+          git add package.json
+          git commit -m "Increment version to $RELEASE_TAG"
+
+      - name: Push Version
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build
         run: yarn vsce package
 
       - name: Publish
         run: yarn vsce publish -p ${{ secrets.VS_TOKEN }}
-
-      - name: Setup Environment
-        run: |
-          echo "::set-env name=RELEASE_TAG::${GITHUB_REF//refs\/tags\/}"
 
       - uses: AButler/upload-release-assets@v2.0
         with:
