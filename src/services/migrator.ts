@@ -31,7 +31,7 @@ export async function migrate(migrations: Migrations): Promise<void> {
 
 	try {
 		for await (const version of newerVersions) {
-			await migrations[version]();
+			await migrations[version](previous);
 		}
 	} catch (error) {
 		Logger.error(error);
