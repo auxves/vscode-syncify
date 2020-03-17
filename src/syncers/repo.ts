@@ -463,7 +463,10 @@ export class RepoSyncer implements Syncer {
 							return "{}";
 						})();
 
-						const afterPragma = Pragma.incoming(contents, settings.hostname);
+						const afterPragma = Pragma.incoming(
+							contents.toString(),
+							settings.hostname
+						);
 
 						if (currentContents !== afterPragma) {
 							return FS.write(newPath, afterPragma);

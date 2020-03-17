@@ -2,11 +2,8 @@ import { uncomment, comment } from "jsonc-pragma";
 import { Environment } from "~/services";
 
 export namespace Pragma {
-	export function incoming(
-		content: string | Buffer,
-		hostname?: string
-	): string {
-		return uncomment(content.toString(), section => {
+	export function incoming(content: string, hostname?: string): string {
+		return uncomment(content, section => {
 			if (section.name !== "sync") return false;
 
 			const checks: boolean[] = [];
@@ -21,7 +18,7 @@ export namespace Pragma {
 		});
 	}
 
-	export function outgoing(content: string | Buffer): string {
-		return comment(content.toString(), section => section.name === "sync");
+	export function outgoing(content: string): string {
+		return comment(content, section => section.name === "sync");
 	}
 }
