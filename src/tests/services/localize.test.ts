@@ -69,19 +69,8 @@ test("returns requested language pack", async () => {
 test("basic functionality", async () => {
 	await initLocalization("en-us");
 
-	const installed = {
-		expected: "Syncify: Installed 5",
-		result: localize("(info) extensions -> installed", "5")
-	};
-
-	expect(installed.result).toBe(installed.expected);
-
-	const uninstalled = {
-		expected: "Syncify: Uninstalled 10",
-		result: localize("(info) extensions -> uninstalled", "10")
-	};
-
-	expect(uninstalled.result).toBe(uninstalled.expected);
+	expect(localize("(info) extensions -> installed", "5")).toMatchSnapshot();
+	expect(localize("(info) extensions -> uninstalled", "10")).toMatchSnapshot();
 });
 
 test("invalid key", async () => {

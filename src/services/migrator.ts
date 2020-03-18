@@ -1,4 +1,4 @@
-import { Migrations } from "~/models";
+import { Migration } from "~/models";
 import state from "~/state";
 import { Environment, Logger } from "~/services";
 import { validRange, satisfies } from "semver";
@@ -12,7 +12,9 @@ function shouldMigrate(candidate: string, previous: string): boolean {
 	return false;
 }
 
-export async function migrate(migrations: Migrations): Promise<void> {
+export async function migrate(
+	migrations: Map<string, Migration>
+): Promise<void> {
 	const globalState = state.context?.globalState;
 
 	if (!globalState) return;
@@ -23,7 +25,7 @@ export async function migrate(migrations: Migrations): Promise<void> {
 		await globalState.update("version", Environment.version);
 	}
 
-	const newerVersions = Object.keys(migrations).filter(candidate =>
+	const newerVersions = Array.from(migrations.keys()).filter(candidate =>
 		shouldMigrate(candidate, previous)
 	);
 
@@ -31,7 +33,7 @@ export async function migrate(migrations: Migrations): Promise<void> {
 
 	try {
 		for await (const version of newerVersions) {
-			await migrations[version]();
+			await migrations.get(version)!(previous);
 		}
 	} catch (error) {
 		Logger.error(error);

@@ -29,9 +29,7 @@ test("missing extensions", () => {
 		"publisher3.extension3"
 	]);
 
-	const expected = ["publisher2.extension2", "publisher3.extension3"];
-
-	expect(missing).toStrictEqual(expected);
+	expect(missing).toMatchSnapshot();
 });
 
 test("unneeded extensions", () => {
@@ -43,9 +41,7 @@ test("unneeded extensions", () => {
 
 	const unneeded = Extensions.getUnneeded(["publisher1.extension1"]);
 
-	const expected = ["publisher2.extension2", "publisher3.extension3"];
-
-	expect(unneeded).toStrictEqual(expected);
+	expect(unneeded).toMatchSnapshot();
 });
 
 describe("install", () => {

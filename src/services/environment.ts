@@ -1,6 +1,5 @@
 import { resolve } from "path";
 import pkg from "~/../package.json";
-import { OperatingSystem } from "~/models";
 import state from "~/state";
 
 export const Environment = {
@@ -42,7 +41,11 @@ export const Environment = {
 		return state.context?.extensionPath ?? "";
 	},
 
-	os: process.platform as OperatingSystem,
+	get os() {
+		if (process.platform === "win32") return "windows";
+		if (process.platform === "darwin") return "mac";
+		return "linux";
+	},
 
 	version: pkg.version,
 

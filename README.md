@@ -2,7 +2,7 @@
 
 <p align="center">
 	<a href="https://github.com/arnohovhannisyan/vscode-syncify/actions">
-		<img src="https://img.shields.io/github/workflow/status/arnohovhannisyan/vscode-syncify/CI" alt="Travis">
+		<img src="https://img.shields.io/github/workflow/status/arnohovhannisyan/vscode-syncify/Tests" alt="Tests">
 	</a>
 	<a href="https://marketplace.visualstudio.com/items?itemName=arnohovhannisyan.syncify">
 		<img src="https://img.shields.io/visual-studio-marketplace/v/arnohovhannisyan.syncify" alt="Version">

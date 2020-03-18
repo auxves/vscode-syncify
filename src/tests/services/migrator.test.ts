@@ -19,9 +19,7 @@ test("basic functionality", async () => {
 
 	const fn = jest.fn();
 
-	await migrate({
-		"1.1.0": fn
-	});
+	await migrate(new Map([["1.1.0", fn]]));
 
 	expect(fn).toHaveBeenCalled();
 });
@@ -33,9 +31,7 @@ test("range", async () => {
 
 		const fn = jest.fn();
 
-		await migrate({
-			">= 1.1.0": fn
-		});
+		await migrate(new Map([[">= 1.1.0", fn]]));
 
 		expect(fn).toHaveBeenCalled();
 	}
@@ -46,9 +42,7 @@ test("range", async () => {
 
 		const fn = jest.fn();
 
-		await migrate({
-			">= 1.1.0": fn
-		});
+		await migrate(new Map([[">= 1.1.0", fn]]));
 
 		expect(fn).not.toHaveBeenCalled();
 	}
@@ -60,9 +54,7 @@ test("skip", async () => {
 
 	const fn = jest.fn();
 
-	await migrate({
-		"1.1.0": fn
-	});
+	await migrate(new Map([["1.1.0", fn]]));
 
 	expect(fn).not.toHaveBeenCalled();
 });
@@ -73,9 +65,7 @@ test("invalid", async () => {
 
 	const fn = jest.fn();
 
-	await migrate({
-		hello: fn
-	});
+	await migrate(new Map([["hello", fn]]));
 
 	expect(fn).not.toHaveBeenCalled();
 });
@@ -85,9 +75,7 @@ test("no context", async () => {
 
 	const fn = jest.fn();
 
-	await migrate({
-		"0.0.0": fn
-	});
+	await migrate(new Map([["0.0.0", fn]]));
 
 	expect(fn).not.toHaveBeenCalled();
 });

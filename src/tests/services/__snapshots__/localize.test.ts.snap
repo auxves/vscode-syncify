@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic functionality 1`] = `"Syncify: Installed 5"`;
+
+exports[`basic functionality 2`] = `"Syncify: Uninstalled 10"`;

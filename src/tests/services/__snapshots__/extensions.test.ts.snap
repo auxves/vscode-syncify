@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`missing extensions 1`] = `
+Array [
+  "publisher2.extension2",
+  "publisher3.extension3",
+]
+`;
+
+exports[`unneeded extensions 1`] = `
+Array [
+  "publisher2.extension2",
+  "publisher3.extension3",
+]
+`;

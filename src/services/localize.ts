@@ -40,9 +40,8 @@ export async function initLocalization(lang?: string) {
 	})();
 }
 
+const formatRegex = /{(\d+?)}/g;
+
 export function localize(key: string, ...args: string[]): string {
-	return args.reduce(
-		(acc, v, i) => acc.replace(new RegExp(`\\{${i}\\}`, "g"), v),
-		pack[key] ?? key
-	);
+	return pack[key]?.replace(formatRegex, (_, index) => args[index]) ?? key;
 }

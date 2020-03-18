@@ -1,5 +1,18 @@
-import { Migrations } from "~/models";
+import { Migration } from "~/models";
+import { showAnnouncement } from "~/services";
 
-const migrations: Migrations = {};
+const migrations = new Map<string, Migration>([
+	[
+		"4.0.0",
+		previousVersion => {
+			if (previousVersion === "0.0.0") return;
+
+			const url =
+				"https://arnohovhannisyan.space/vscode-syncify/blog/2020/03/15/breaking-changes-in-v4";
+
+			showAnnouncement(url);
+		}
+	]
+]);
 
 export default migrations;
