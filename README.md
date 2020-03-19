@@ -27,6 +27,11 @@ Syncify can sync your VSCode settings and extensions across all your devices usi
 
 The documentation can be found [here][link:docs].
 
+## Need Help?
+
+- Join the [Spectrum][link:spectrum] community
+- Join the [Discord][link:discord] server
+
 ## Advantages over Settings Sync
 
 - No annoying popups
@@ -70,4 +75,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 [link:docs]: https://arnohovhannisyan.space/vscode-syncify
+[link:spectrum]: https://spectrum.chat/vscode-syncify
+[link:discord]: https://discord.gg/DwFKj57
 [img:banner]: https://arnohovhannisyan.space/vscode-syncify/img/banner.jpg
