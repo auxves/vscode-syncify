@@ -6,9 +6,11 @@ labels: bug
 assignees: arnohovhannisyan
 ---
 
-### Syncify Version
+### Syncify Version and Operating System
 
-I am using Syncify `vX.X.X`
+I am using Syncify `vX.X.X` on Windows/Mac/Linux/Other
+
+<!-- Please fill in your version and OS -->
 
 ### Describe the bug
 
