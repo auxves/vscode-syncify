@@ -2,20 +2,18 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Prepare",
+			"label": "Watch",
 			"type": "shell",
-			"command": "node ${workspaceFolder}/scripts/prepare.js"
-		},
-		{
-			"label": "Start",
-			"type": "shell",
-			"command": "node",
-			"args": ["${workspaceFolder}/scripts/run.js", "${execPath}"],
+			"command": "rm -rf /tmp/vscode-syncify && mkdir -p /tmp/vscode-syncify/{extensions,user-data} && yarn start",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"dependsOn": ["Prepare"]
+			}
+		},
+		{
+			"label": "Test",
+			"type": "shell",
+			"command": "yarn test"
 		}
 	]
 }
