@@ -1,4 +1,8 @@
+// Place your settings in this file to overwrite default and user settings.
 {
+	"files.exclude": {
+		"dist": false
+	},
 	"files.associations": {
 		".all-contributorsrc": "json"
 	},
