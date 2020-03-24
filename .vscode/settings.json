@@ -4,7 +4,9 @@
 		"dist": false
 	},
 	"files.associations": {
-		".all-contributorsrc": "json"
+		".all-contributorsrc": "json",
+		".lintstagedrc": "json",
+		".huskyrc": "json"
 	},
 	"search.exclude": {
 		"dist": true
