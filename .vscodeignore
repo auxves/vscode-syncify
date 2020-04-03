@@ -6,17 +6,19 @@
 src
 node_modules
 coverage
-__mocks__
 
 # Files
 
 .all-contributorsrc
+.xo-config.json
+.huskyrc
+.lintstagedrc
+.prettierrc
+codecov.yml
 .gitignore
 .gitmodules
 tsconfig.json
-tslint.json
 assets/ui/.git
 assets/ui/index.html
-translocalizer.json
 *.map
 *.log

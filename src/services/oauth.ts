@@ -99,7 +99,9 @@ export namespace OAuth {
 					method: "POST",
 					data: {
 						code,
+						// eslint-disable-next-line camelcase
 						client_id: Environment.oauthClientIds.github,
+						// eslint-disable-next-line camelcase
 						client_secret: "3ac123310971a75f0a26e979ce0030467fc32682"
 					}
 				}

@@ -4,10 +4,9 @@
 		"paths": {
 			"~/*": ["./*"]
 		},
-		"module": "commonjs",
+		"module": "CommonJS",
 		"target": "ES5",
-		"outDir": "out",
-		"lib": ["esnext"],
+		"lib": ["ESNext"],
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
 		"sourceMap": true,

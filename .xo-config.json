@@ -5,6 +5,13 @@
 		"unicorn/filename-case": 0,
 		"unicorn/string-content": 0,
 		"@typescript-eslint/explicit-function-return-type": 0,
+		"no-unused-expressions": 0,
+		"@typescript-eslint/no-unused-expressions": [
+			2,
+			{
+				"allowShortCircuit": true
+			}
+		],
 		"import/extensions": 0,
 		"no-inner-declarations": 0
 	}
