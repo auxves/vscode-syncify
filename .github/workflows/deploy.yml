@@ -46,11 +46,15 @@ jobs:
       - name: Build
         run: yarn vsce package
 
-      - name: Publish
+      - name: Generate Checksum
+        run: sha256sum syncify-*.vsix > syncify-${RAW_VERSION}.vsix.sha256
+
+      - name: Publish to Marketplace
         run: yarn vsce publish -p ${{ secrets.VS_TOKEN }}
 
-      - uses: AButler/upload-release-assets@v2.0
+      - name: Publish to GitHub Releases
+        uses: AButler/upload-release-assets@v2.0
         with:
-          files: syncify-*.vsix
+          files: syncify-*.vsix*
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           release-tag: ${{ env.RELEASE_TAG }}
