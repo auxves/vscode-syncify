@@ -1,26 +1,19 @@
 import glob from "fast-glob";
-import {
-	copy as fseCopy,
-	ensureDir as fseEnsureDir,
-	pathExists as fsePathExists,
-	readFile as fseReadFile,
-	remove as fseRemove,
-	writeFile as fseWriteFile
-} from "fs-extra";
+import fse from "fs-extra";
 import { normalize } from "path";
 import { Settings } from "~/services";
 
 export namespace FS {
 	export async function exists(path: string): Promise<boolean> {
-		return fsePathExists(path);
+		return fse.pathExists(path);
 	}
 
 	export async function mkdir(path: string): Promise<void> {
-		return fseEnsureDir(path);
+		return fse.ensureDir(path);
 	}
 
 	export async function copy(src: string, dest: string): Promise<void> {
-		return fseCopy(src, dest, {
+		return fse.copy(src, dest, {
 			overwrite: true,
 			recursive: true,
 			preserveTimestamps: true
@@ -33,17 +26,17 @@ export namespace FS {
 		path: string,
 		asBuffer?: boolean
 	): Promise<string | Buffer> {
-		if (asBuffer) return fseReadFile(path);
+		if (asBuffer) return fse.readFile(path);
 
-		return fseReadFile(path, "utf-8");
+		return fse.readFile(path, "utf-8");
 	}
 
 	export async function write(path: string, data: any): Promise<void> {
-		return fseWriteFile(path, data);
+		return fse.writeFile(path, data);
 	}
 
 	export async function remove(...paths: string[]): Promise<void> {
-		await Promise.all(paths.map(async path => fseRemove(path)));
+		await Promise.all(paths.map(async path => fse.remove(path)));
 	}
 
 	export async function listFiles(

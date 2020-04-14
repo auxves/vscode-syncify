@@ -60,7 +60,7 @@ export namespace Settings {
 	}
 
 	export async function open() {
-		return Webview.openSettingsPage(await get());
+		Webview.openSettingsPage(await get());
 	}
 
 	export async function openFile() {

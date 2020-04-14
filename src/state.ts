@@ -1,6 +1,11 @@
 import { ExtensionContext } from "vscode";
 
-const state: { context?: ExtensionContext; isDebugMode: boolean } = {
+interface IState {
+	context?: ExtensionContext;
+	isDebugMode: boolean;
+}
+
+const state: IState = {
 	isDebugMode: false
 };
 

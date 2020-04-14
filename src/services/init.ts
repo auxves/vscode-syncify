@@ -1,4 +1,4 @@
-import { commands, Uri } from "vscode";
+import { commands } from "vscode";
 import { CustomFiles, Factory, Profile, Settings, Watcher } from "~/services";
 import state from "~/state";
 
@@ -16,15 +16,15 @@ export async function init() {
 	state.context?.subscriptions.forEach(d => d.dispose());
 
 	const cmds = {
-		sync: async () => syncer.sync(),
-		upload: async () => syncer.upload(),
-		download: async () => syncer.download(),
-		reset: async () => Settings.reset(),
-		openSettings: async () => Settings.open(),
-		reinitialize: async () => init(),
-		importCustomFile: async (uri?: Uri) => CustomFiles.importFile(uri),
-		registerCustomFile: async (uri?: Uri) => CustomFiles.registerFile(uri),
-		switchProfile: async () => Profile.switchProfile(),
+		sync: syncer.sync.bind(syncer),
+		upload: syncer.upload.bind(syncer),
+		download: syncer.download.bind(syncer),
+		reset: Settings.reset,
+		openSettings: Settings.open,
+		reinitialize: init,
+		importCustomFile: CustomFiles.importFile,
+		registerCustomFile: CustomFiles.registerFile,
+		switchProfile: Profile.switchProfile,
 		enableDebugMode: () => {
 			state.isDebugMode = true;
 		},
