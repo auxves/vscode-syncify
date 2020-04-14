@@ -16,7 +16,7 @@ export namespace OAuth {
 			const server = app.listen(port);
 
 			app.get("/implicit", async request => {
-				const token = request.query.token;
+				const token = request.params.token;
 				const user = await getUser(token, provider);
 
 				if (!user) return;
@@ -99,9 +99,7 @@ export namespace OAuth {
 					method: "POST",
 					data: {
 						code,
-						// eslint-disable-next-line camelcase
 						client_id: Environment.oauthClientIds.github,
-						// eslint-disable-next-line camelcase
 						client_secret: "3ac123310971a75f0a26e979ce0030467fc32682"
 					}
 				}
@@ -116,7 +114,7 @@ export namespace OAuth {
 	async function handleRequest(request: Request, provider: Provider) {
 		if (provider !== "github") return;
 
-		const token = await getToken(request.query.code);
+		const token = await getToken(request.params.code);
 
 		if (!token) return;
 
