@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: Report a bug to help improve Syncify
-title: "[BUG] "
+title: ""
 labels: bug
 assignees: arnohovhannisyan
 ---
