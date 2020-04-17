@@ -39,7 +39,7 @@ The documentation can be found [here][link:docs].
 - Merge conflict resolution supported
 - Multiple profiles with support for hot-switching (currently only supported on `Git` method)
 - Simpler settings with intellisense
-- Debug mode for quickly resolving issues
+- Debug logging for quickly resolving issues
 - Multiple sync methods
   - `repo` — sync using a git repository
   - `file` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc)

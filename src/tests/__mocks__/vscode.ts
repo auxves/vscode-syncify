@@ -1,6 +1,7 @@
 import { resolve } from "path";
 
 export const window = {
+	createOutputChannel: () => ({ appendLine: () => null }),
 	setStatusBarMessage: () => null,
 	withProgress: (_: any, fn: any) => fn({ report: () => null }),
 	showInformationMessage: () => null,
