@@ -125,14 +125,6 @@
 			{
 				"command": "syncify.switchProfile",
 				"title": "%(command) switchProfile%"
-			},
-			{
-				"command": "syncify.enableDebugMode",
-				"title": "%(command) enableDebugMode%"
-			},
-			{
-				"command": "syncify.disableDebugMode",
-				"title": "%(command) disableDebugMode%"
 			}
 		],
 		"jsonValidation": [

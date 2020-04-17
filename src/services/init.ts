@@ -24,13 +24,7 @@ export async function init() {
 		reinitialize: init,
 		importCustomFile: CustomFiles.importFile,
 		registerCustomFile: CustomFiles.registerFile,
-		switchProfile: Profile.switchProfile,
-		enableDebugMode: () => {
-			state.isDebugMode = true;
-		},
-		disableDebugMode: () => {
-			state.isDebugMode = false;
-		}
+		switchProfile: Profile.switchProfile
 	};
 
 	state.context?.subscriptions.push(

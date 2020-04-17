@@ -1,8 +1,6 @@
 {
 	"(command) cancelUpload": "Cancel Upload",
-	"(command) disableDebugMode": "Syncify: Disable Debug Mode",
 	"(command) download": "Syncify: Download",
-	"(command) enableDebugMode": "Syncify: Enable Debug Mode",
 	"(command) importCustomFile": "Syncify: Import Custom File",
 	"(command) openSettings": "Syncify: Open Settings",
 	"(command) registerCustomFile": "Syncify: Register Custom File",
