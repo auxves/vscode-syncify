@@ -1,3 +1,3 @@
-export interface LanguagePack {
+export type LanguagePack = {
 	[key: string]: string | undefined;
-}
+};

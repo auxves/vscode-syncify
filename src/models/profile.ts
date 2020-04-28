@@ -1,4 +1,4 @@
-export interface Profile {
+export type Profile = {
 	/**
 	 * The Git branch used to store the settings
 	 */
@@ -8,4 +8,4 @@ export interface Profile {
 	 * The name of the profile
 	 */
 	name: string;
-}
+};

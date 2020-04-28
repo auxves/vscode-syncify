@@ -1,5 +1,5 @@
 export type Migration = (previousVersion: string) => void | Promise<void>;
 
-export interface Migrations {
+export type Migrations = {
 	[key: string]: Migration;
-}
+};

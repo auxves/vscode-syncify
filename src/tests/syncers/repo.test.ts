@@ -42,7 +42,7 @@ const currentSettings = {
 };
 
 beforeEach(async () => {
-	await Promise.all(paths.map(FS.mkdir));
+	await Promise.all(paths.map(async p => FS.mkdir(p)));
 	return createSimpleGit(pathToRemote).init(true);
 });
 
@@ -162,9 +162,8 @@ describe("upload", () => {
 		await git.addRemote("origin", pathToRemote);
 		await git.pull("origin", "master", { "--force": null });
 
-		const downloadedBuffer = await FS.read(
-			resolve(pathToTemporaryRepo, "buffer"),
-			true
+		const downloadedBuffer = await FS.readBuffer(
+			resolve(pathToTemporaryRepo, "buffer")
 		);
 
 		expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
@@ -415,7 +414,7 @@ describe("download", () => {
 
 		await repoSyncer.download();
 
-		const downloadedBuffer = await FS.read(pathToBuffer, true);
+		const downloadedBuffer = await FS.readBuffer(pathToBuffer);
 
 		expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
 	});

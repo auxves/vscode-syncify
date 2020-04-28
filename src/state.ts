@@ -1,9 +1,9 @@
 import { ExtensionContext } from "vscode";
 
-interface IState {
+type State = {
 	context?: ExtensionContext;
-}
+};
 
-const state: IState = {};
+const state: State = {};
 
 export default state;

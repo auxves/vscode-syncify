@@ -9,7 +9,7 @@ function setExtensions(exts: string[]): void {
 		packageJSON: { isBuiltin: false },
 		extensionPath: "",
 		isActive: false,
-		exports: null,
+		exports: undefined,
 		activate: async () => Promise.resolve()
 	}));
 }

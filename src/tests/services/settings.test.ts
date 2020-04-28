@@ -17,7 +17,7 @@ const pathToSettings = resolve(pathToTest, "settings.json");
 jest.spyOn(Environment, "settings", "get").mockReturnValue(pathToSettings);
 jest.spyOn(Environment, "globalStoragePath", "get").mockReturnValue(pathToTest);
 
-beforeEach(async () => Promise.all(paths.map(FS.mkdir)));
+beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
 
 afterEach(async () => FS.remove(cleanupPath));
 

@@ -17,7 +17,7 @@ jest
 	.spyOn(Environment, "customFilesFolder", "get")
 	.mockReturnValue(pathToRegistered);
 
-beforeEach(async () => Promise.all(paths.map(FS.mkdir)));
+beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
 
 afterEach(async () => FS.remove(cleanupPath));
 

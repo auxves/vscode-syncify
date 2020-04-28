@@ -6,7 +6,7 @@ import { Environment, Logger, Webview } from "~/services";
 type Provider = "github" | "gitlab" | "bitbucket";
 
 export namespace OAuth {
-	export async function listen(port: number, provider: Provider) {
+	export const listen = async (port: number, provider: Provider) => {
 		try {
 			const app = express().use(
 				express.json(),
@@ -56,9 +56,9 @@ export namespace OAuth {
 		} catch (error) {
 			Logger.error(error);
 		}
-	}
+	};
 
-	async function getUser(token: string, provider: Provider) {
+	const getUser = async (token: string, provider: Provider) => {
 		try {
 			const urls = {
 				github: `https://api.github.com/user`,
@@ -89,9 +89,9 @@ export namespace OAuth {
 		} catch (error) {
 			Logger.error(error);
 		}
-	}
+	};
 
-	async function getToken(code: string) {
+	const getToken = async (code: string) => {
 		try {
 			const { data } = await axios(
 				`https://github.com/login/oauth/access_token`,
@@ -109,9 +109,9 @@ export namespace OAuth {
 		} catch (error) {
 			Logger.error(error);
 		}
-	}
+	};
 
-	async function handleRequest(request: Request, provider: Provider) {
+	const handleRequest = async (request: Request, provider: Provider) => {
 		if (provider !== "github") return;
 
 		const token = await getToken(request.params.code);
@@ -121,5 +121,5 @@ export namespace OAuth {
 		const user = await getUser(token, provider);
 
 		return { token, user };
-	}
+	};
 }

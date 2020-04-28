@@ -31,7 +31,7 @@ const currentSettings = {
 	}
 };
 
-beforeEach(async () => Promise.all(paths.map(FS.mkdir)));
+beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
 
 afterEach(async () => FS.remove(cleanupPath));
 
@@ -62,7 +62,7 @@ describe("upload", () => {
 		const fileSyncer = new FileSyncer();
 		await fileSyncer.upload();
 
-		const uploadedBuffer = await FS.read(resolve(pathToExport, "buffer"), true);
+		const uploadedBuffer = await FS.readBuffer(resolve(pathToExport, "buffer"));
 
 		expect(Buffer.compare(buffer, uploadedBuffer)).toBe(0);
 	});
@@ -104,7 +104,7 @@ describe("download", () => {
 		const fileSyncer = new FileSyncer();
 		await fileSyncer.download();
 
-		const downloadedBuffer = await FS.read(resolve(pathToUser, "buffer"), true);
+		const downloadedBuffer = await FS.readBuffer(resolve(pathToUser, "buffer"));
 
 		expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
 	});

@@ -20,7 +20,7 @@ beforeEach(async () => {
 		subscriptions: []
 	};
 
-	return Promise.all(paths.map(FS.mkdir));
+	return Promise.all(paths.map(async p => FS.mkdir(p)));
 });
 
 afterEach(async () => {

@@ -1,6 +1,6 @@
 import { Profile, Syncers } from "~/models";
 
-export interface ISettings {
+export type ISettings = {
 	/**
 	 * The method used to sync your settings.
 	 */
@@ -74,7 +74,7 @@ export interface ISettings {
 	 * Controls whether or not remote settings will be forcefully downloaded, even if local settings are up to date.
 	 */
 	forceDownload: boolean;
-}
+};
 
 export const defaultSettings: ISettings = {
 	syncer: Syncers.Repo,
