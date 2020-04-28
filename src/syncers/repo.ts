@@ -25,7 +25,7 @@ import { checkGit, sleep, stringifyPretty } from "~/utilities";
 export class RepoSyncer implements Syncer {
 	private readonly git: SimpleGit = createSimpleGit().silent(true);
 
-	public async init(): Promise<void> {
+	async init(): Promise<void> {
 		try {
 			await FS.mkdir(Environment.repoFolder);
 
@@ -61,7 +61,7 @@ export class RepoSyncer implements Syncer {
 		}
 	}
 
-	public async sync(): Promise<void> {
+	async sync(): Promise<void> {
 		try {
 			if (!(await this.isConfigured())) {
 				Webview.openLandingPage();
@@ -93,7 +93,7 @@ export class RepoSyncer implements Syncer {
 		}
 	}
 
-	public async upload(): Promise<void> {
+	async upload(): Promise<void> {
 		const settings = await Settings.get();
 		Watcher.stop();
 
@@ -182,7 +182,7 @@ export class RepoSyncer implements Syncer {
 		if (settings.watchSettings) Watcher.start();
 	}
 
-	public async download(): Promise<void> {
+	async download(): Promise<void> {
 		const settings = await Settings.get();
 		Watcher.stop();
 
@@ -349,7 +349,7 @@ export class RepoSyncer implements Syncer {
 		if (settings.watchSettings) Watcher.start();
 	}
 
-	public async isConfigured(): Promise<boolean> {
+	async isConfigured(): Promise<boolean> {
 		const { currentProfile, profiles, url } = await Settings.get(s => s.repo);
 
 		return (
@@ -409,7 +409,7 @@ export class RepoSyncer implements Syncer {
 
 			await Promise.all(
 				files.map(async file => {
-					let contents = await FS.read(file, true);
+					let contents = await FS.readBuffer(file);
 
 					const hasConflict = (c: string) => {
 						const regexes = [/^<{7}$/, /^={7}$/, /^>{7}$/];
@@ -444,7 +444,7 @@ export class RepoSyncer implements Syncer {
 							});
 						});
 
-						contents = await FS.read(temporaryPath, true);
+						contents = await FS.readBuffer(temporaryPath);
 
 						await FS.remove(temporaryPath);
 					}

@@ -3,7 +3,7 @@ import { commands, extensions, ProgressLocation, Uri, window } from "vscode";
 import { Environment, FS, localize } from "~/services";
 
 export namespace Extensions {
-	export async function install(...ids: string[]): Promise<void> {
+	export const install = async (...ids: string[]): Promise<void> => {
 		const vsixFiles = await FS.listFiles(Environment.vsixFolder, []);
 
 		await window.withProgress(
@@ -34,9 +34,9 @@ export namespace Extensions {
 				);
 			}
 		);
-	}
+	};
 
-	export async function uninstall(...ids: string[]): Promise<void> {
+	export const uninstall = async (...ids: string[]): Promise<void> => {
 		await window.withProgress(
 			{
 				location: ProgressLocation.Notification
@@ -59,20 +59,20 @@ export namespace Extensions {
 				);
 			}
 		);
-	}
+	};
 
-	export function get(): string[] {
+	export const get = () => {
 		return extensions.all
 			.filter(ext => !ext.packageJSON.isBuiltin)
 			.map(ext => ext.id);
-	}
+	};
 
-	export function getMissing(downloadedExtensions: string[]): string[] {
+	export const getMissing = (downloadedExtensions: string[]) => {
 		const installed = get();
 		return downloadedExtensions.filter(ext => !installed.includes(ext));
-	}
+	};
 
-	export function getUnneeded(downloadedExtensions: string[]): string[] {
+	export const getUnneeded = (downloadedExtensions: string[]) => {
 		return get().filter(ext => !downloadedExtensions.includes(ext));
-	}
+	};
 }

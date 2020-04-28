@@ -1,13 +1,13 @@
 import { resolve } from "path";
 
 export const window = {
-	createOutputChannel: () => ({ appendLine: () => null }),
-	setStatusBarMessage: () => null,
-	withProgress: (_: any, fn: any) => fn({ report: () => null }),
-	showInformationMessage: () => null,
-	showWarningMessage: () => null,
-	showErrorMessage: () => null,
-	showInputBox: () => null
+	createOutputChannel: () => ({ appendLine: () => undefined }),
+	setStatusBarMessage: () => undefined,
+	withProgress: (_: any, fn: any) => fn({ report: () => undefined }),
+	showInformationMessage: () => undefined,
+	showWarningMessage: () => undefined,
+	showErrorMessage: () => undefined,
+	showInputBox: () => undefined
 };
 
 export const extensions = {
@@ -23,12 +23,12 @@ export const extensions = {
 			version: ""
 		}
 	}),
-	onDidChange: () => null
+	onDidChange: () => undefined
 };
 
 export const commands = {
-	registerCommand: () => ({ dispose: () => null }),
-	executeCommand: () => null,
+	registerCommand: () => ({ dispose: () => undefined }),
+	executeCommand: () => undefined,
 	getCommands: () => []
 };
 

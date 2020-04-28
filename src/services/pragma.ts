@@ -2,7 +2,7 @@ import { uncomment, comment } from "jsonc-pragma";
 import { Environment } from "~/services";
 
 export namespace Pragma {
-	export function incoming(content: string, hostname?: string): string {
+	export const incoming = (content: string, hostname?: string): string => {
 		return uncomment(content, section => {
 			if (section.name !== "sync") return false;
 
@@ -16,9 +16,9 @@ export namespace Pragma {
 
 			return checks.every(Boolean);
 		});
-	}
+	};
 
-	export function outgoing(content: string): string {
+	export const outgoing = (content: string): string => {
 		return comment(content, section => section.name === "sync");
-	}
+	};
 }

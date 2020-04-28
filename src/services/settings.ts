@@ -13,9 +13,12 @@ import {
 import { confirm, merge, stringifyPretty } from "~/utilities";
 
 export namespace Settings {
-	export async function get(): Promise<ISettings>;
-	export async function get<T>(selector: (s: ISettings) => T): Promise<T>;
-	export async function get<T>(selector?: (s: ISettings) => T): Promise<T> {
+	type SettingsGet = {
+		(): Promise<ISettings>;
+		<T>(selector: (s: ISettings) => T): Promise<T>;
+	};
+
+	export const get: SettingsGet = async <T>(selector?: (s: ISettings) => T) => {
 		const exists = await FS.exists(Environment.settings);
 
 		if (!exists) {
@@ -43,9 +46,9 @@ export namespace Settings {
 
 			return cloneDeep<any>(defaultSettings);
 		}
-	}
+	};
 
-	export async function set(settings: DeepPartial<ISettings>): Promise<void> {
+	export const set = async (settings: DeepPartial<ISettings>) => {
 		const exists = await FS.exists(Environment.globalStoragePath);
 		if (!exists) await FS.mkdir(Environment.globalStoragePath);
 
@@ -57,21 +60,21 @@ export namespace Settings {
 		);
 
 		await commands.executeCommand("syncify.reinitialize");
-	}
+	};
 
-	export async function open() {
+	export const open = async () => {
 		Webview.openSettingsPage(await get());
-	}
+	};
 
-	export async function openFile() {
+	export const openFile = async () => {
 		await window.showTextDocument(
 			await workspace.openTextDocument(Environment.settings),
 			ViewColumn.One,
 			true
 		);
-	}
+	};
 
-	export async function reset(): Promise<void> {
+	export const reset = async () => {
 		const userIsSure = await confirm("settings -> reset");
 
 		if (!userIsSure) return;
@@ -83,5 +86,5 @@ export namespace Settings {
 		await commands.executeCommand("syncify.reinitialize");
 
 		window.showInformationMessage(localize("(info) reset -> complete"));
-	}
+	};
 }

@@ -2,7 +2,7 @@ import { commands, QuickPickItem, window } from "vscode";
 import { localize, Logger, Settings } from "~/services";
 
 export namespace Profile {
-	export async function switchProfile(profile?: string): Promise<void> {
+	export const switchProfile = async (profile?: string): Promise<void> => {
 		const { profiles, currentProfile } = await Settings.get(s => s.repo);
 
 		const newProfile = await (async () => {
@@ -41,5 +41,5 @@ export namespace Profile {
 		);
 
 		if (result) await commands.executeCommand("syncify.download");
-	}
+	};
 }

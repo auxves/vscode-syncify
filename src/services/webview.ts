@@ -23,7 +23,7 @@ import {
 import { merge } from "~/utilities";
 
 export namespace Webview {
-	export function openSettingsPage(settings: ISettings) {
+	export const openSettingsPage = (settings: ISettings) => {
 		const content = generateContent({
 			"@SETTINGS": JSON.stringify(settings),
 			"@SECTIONS": JSON.stringify(generateSections(settings))
@@ -41,9 +41,9 @@ export namespace Webview {
 				return Settings.set(set(curSettings, message.setting, message.value));
 			}
 		});
-	}
+	};
 
-	export function openErrorPage(error: Error) {
+	export const openErrorPage = (error: Error) => {
 		const content = generateContent({
 			"@ERROR": JSON.stringify(error.message)
 		});
@@ -53,9 +53,9 @@ export namespace Webview {
 			id: "error",
 			title: "Syncify Error"
 		});
-	}
+	};
 
-	export function openLandingPage() {
+	export const openLandingPage = () => {
 		const content = generateContent();
 
 		return createPanel({
@@ -116,13 +116,13 @@ export namespace Webview {
 				}
 			}
 		});
-	}
+	};
 
-	export function openRepositoryCreationPage(options: {
+	export const openRepositoryCreationPage = (options: {
 		token: string;
 		user: string;
 		provider: string;
-	}) {
+	}) => {
 		const content = generateContent({ "@AUTH": JSON.stringify(options) });
 
 		return createPanel({
@@ -139,23 +139,23 @@ export namespace Webview {
 				});
 			}
 		});
-	}
-
-	const pages = {
-		landing: null as WebviewPanel | null,
-		repo: null as WebviewPanel | null,
-		settings: null as WebviewPanel | null,
-		error: null as WebviewPanel | null
 	};
 
-	function createPanel(options: {
+	const pages = {
+		landing: undefined as WebviewPanel | undefined,
+		repo: undefined as WebviewPanel | undefined,
+		settings: undefined as WebviewPanel | undefined,
+		error: undefined as WebviewPanel | undefined
+	};
+
+	const createPanel = (options: {
 		id: keyof typeof pages;
 		content: string;
 		title: string;
 		viewColumn?: ViewColumn;
 		options?: WebviewPanelOptions & WebviewOptions;
 		onMessage?: (message: any) => any;
-	}): WebviewPanel {
+	}): WebviewPanel => {
 		const { id, content } = options;
 
 		const page = pages[id];
@@ -187,14 +187,14 @@ export namespace Webview {
 		if (options.onMessage) panel.webview.onDidReceiveMessage(options.onMessage);
 
 		panel.onDidDispose(() => {
-			pages[id] = null;
+			pages[id] = undefined;
 		});
 
 		pages[id] = panel;
 		return panel;
-	}
+	};
 
-	function generateContent(items: { [key: string]: string } = {}) {
+	const generateContent = (items: { [key: string]: string } = {}) => {
 		const toReplace = Object.entries(items).map<[string, string]>(
 			([find, replace]) => [find, encodeURIComponent(replace)]
 		);
@@ -203,9 +203,9 @@ export namespace Webview {
 			(acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
 			WebviewPage
 		);
-	}
+	};
 
-	function generateSections(settings: ISettings): WebviewSection[] {
+	const generateSections = (settings: ISettings): WebviewSection[] => {
 		return [
 			{
 				name: "General",
@@ -323,5 +323,5 @@ export namespace Webview {
 				]
 			}
 		];
-	}
+	};
 }

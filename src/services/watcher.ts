@@ -8,15 +8,15 @@ export namespace Watcher {
 	let disposable: Disposable | undefined;
 	let watcher: FSWatcher | undefined;
 
-	export function init(ignoredItems: string[]) {
+	export const init = (ignoredItems: string[]) => {
 		if (watcher) watcher.close();
 
 		watcher = chokidar.watch([], {
 			ignored: ignoredItems
 		});
-	}
+	};
 
-	export function start() {
+	export const start = () => {
 		if (!watcher) return;
 
 		stop();
@@ -33,18 +33,18 @@ export namespace Watcher {
 
 			return upload();
 		});
-	}
+	};
 
-	export function stop() {
+	export const stop = () => {
 		if (watcher) watcher.close();
 
 		if (disposable) {
 			disposable.dispose();
 			disposable = undefined;
 		}
-	}
+	};
 
-	async function upload() {
+	const upload = async () => {
 		if (!window.state.focused) return;
 
 		const cmds = await commands.getCommands();
@@ -79,5 +79,5 @@ export namespace Watcher {
 		btn.dispose();
 
 		if (shouldUpload) commands.executeCommand("syncify.upload");
-	}
+	};
 }

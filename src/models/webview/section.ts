@@ -1,6 +1,6 @@
 import { WebviewSetting } from "~/models";
 
-export interface WebviewSection {
+export type WebviewSection = {
 	name: string;
 	settings: WebviewSetting[];
-}
+};

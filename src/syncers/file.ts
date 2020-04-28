@@ -15,13 +15,13 @@ import {
 import { sleep, stringifyPretty } from "~/utilities";
 
 export class FileSyncer implements Syncer {
-	public async sync(): Promise<void> {
+	async sync(): Promise<void> {
 		window.showInformationMessage(
 			"Syncify: Sync is not available for File Syncer yet"
 		);
 	}
 
-	public async upload(): Promise<void> {
+	async upload(): Promise<void> {
 		const settings = await Settings.get();
 		Watcher.stop();
 
@@ -60,7 +60,7 @@ export class FileSyncer implements Syncer {
 		if (settings.watchSettings) Watcher.start();
 	}
 
-	public async download(): Promise<void> {
+	async download(): Promise<void> {
 		const settings = await Settings.get();
 		Watcher.stop();
 
@@ -137,7 +137,7 @@ export class FileSyncer implements Syncer {
 		if (settings.watchSettings) Watcher.start();
 	}
 
-	public async isConfigured(): Promise<boolean> {
+	async isConfigured(): Promise<boolean> {
 		const path = await Settings.get(s => s.file.path);
 
 		if (!path) return false;

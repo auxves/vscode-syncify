@@ -3,7 +3,7 @@ import { QuickPickItem, Uri, window, workspace } from "vscode";
 import { Environment, FS, localize, Logger } from "~/services";
 
 export namespace CustomFiles {
-	export async function importFile(uri?: Uri): Promise<void> {
+	export const importFile = async (uri?: Uri): Promise<void> => {
 		try {
 			const folderExists = await FS.exists(Environment.customFilesFolder);
 
@@ -76,14 +76,14 @@ export namespace CustomFiles {
 				return selectedFile;
 			})();
 
-			const contents = await FS.read(filepath, true);
+			const contents = await FS.readBuffer(filepath);
 			await FS.write(resolve(folder, filename), contents);
 		} catch (error) {
 			Logger.error(error);
 		}
-	}
+	};
 
-	export async function registerFile(uri?: Uri) {
+	export const registerFile = async (uri?: Uri): Promise<void> => {
 		try {
 			const folderExists = await FS.exists(Environment.customFilesFolder);
 
@@ -131,7 +131,7 @@ export namespace CustomFiles {
 				if (result !== localize("(label) yes")) return;
 			}
 
-			const contents = await FS.read(filepath, true);
+			const contents = await FS.readBuffer(filepath);
 
 			await FS.write(newPath, contents);
 
@@ -141,5 +141,5 @@ export namespace CustomFiles {
 		} catch (error) {
 			Logger.error(error);
 		}
-	}
+	};
 }

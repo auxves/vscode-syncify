@@ -10,7 +10,7 @@ const pathToTest = resolve(cleanupPath, "test");
 
 const paths = [pathToTest];
 
-beforeEach(async () => Promise.all(paths.map(FS.mkdir)));
+beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
 
 afterEach(async () => FS.remove(cleanupPath));
 

@@ -7,7 +7,6 @@ const config = merge(common, {
 	devtool: "source-map",
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({
-			filename: null,
 			exclude: /node_modules/,
 			test: /\.ts($|\?)/i
 		})

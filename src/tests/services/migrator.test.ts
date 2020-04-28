@@ -5,7 +5,7 @@ function setPreviousVersion(version: string) {
 	(state.context as any) = {};
 	(state.context!.globalState as any) = {
 		get: () => version,
-		update: () => null
+		update: () => undefined
 	};
 }
 
