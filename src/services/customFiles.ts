@@ -15,7 +15,7 @@ export namespace CustomFiles {
 
 			if (allFiles.length === 0) {
 				await window.showInformationMessage(
-					localize("(info) customFiles -> noFilesAvailable")
+					localize("(info) customFiles -> noFilesAvailable"),
 				);
 				return;
 			}
@@ -32,17 +32,17 @@ export namespace CustomFiles {
 				const result = await window.showQuickPick(
 					workspace.workspaceFolders.map<QuickPickItem>(f => ({
 						label: f.name,
-						description: f.uri.fsPath
+						description: f.uri.fsPath,
 					})),
 					{
 						placeHolder: localize(
-							"(prompt) customFiles -> import -> folder -> placeholder"
-						)
-					}
+							"(prompt) customFiles -> import -> folder -> placeholder",
+						),
+					},
 				);
 
 				const selectedWorkspace = workspace.workspaceFolders.find(
-					f => f.uri.fsPath === result?.description
+					f => f.uri.fsPath === result?.description,
 				);
 
 				if (!selectedWorkspace) return;
@@ -56,9 +56,9 @@ export namespace CustomFiles {
 				allFiles.map(f => basename(f)),
 				{
 					placeHolder: localize(
-						"(prompt) customFiles -> import -> file -> placeholder"
-					)
-				}
+						"(prompt) customFiles -> import -> file -> placeholder",
+					),
+				},
 			);
 
 			if (!selectedFile) return;
@@ -68,7 +68,7 @@ export namespace CustomFiles {
 			const filename = await (async () => {
 				const newName = await window.showInputBox({
 					prompt: localize("(prompt) customFiles -> import -> file -> name"),
-					value: selectedFile
+					value: selectedFile,
 				});
 
 				if (newName?.length) return newName;
@@ -96,7 +96,7 @@ export namespace CustomFiles {
 				: await (async () => {
 						const result = await window.showOpenDialog({
 							canSelectMany: false,
-							openLabel: localize("(label) customFiles -> selectFile")
+							openLabel: localize("(label) customFiles -> selectFile"),
 						});
 
 						if (!result) return;
@@ -111,7 +111,7 @@ export namespace CustomFiles {
 
 				const newName = await window.showInputBox({
 					prompt: localize("(prompt) customFiles -> register -> name"),
-					value: original
+					value: original,
 				});
 
 				if (newName?.length) return newName;
@@ -125,7 +125,7 @@ export namespace CustomFiles {
 				const result = await window.showWarningMessage(
 					localize("(prompt) customFiles -> register -> exists"),
 					localize("(label) no"),
-					localize("(label) yes")
+					localize("(label) yes"),
 				);
 
 				if (result !== localize("(label) yes")) return;
@@ -136,7 +136,7 @@ export namespace CustomFiles {
 			await FS.write(newPath, contents);
 
 			await window.showInformationMessage(
-				localize("(info) customFiles -> registered", filename)
+				localize("(info) customFiles -> registered", filename),
 			);
 		} catch (error) {
 			Logger.error(error);

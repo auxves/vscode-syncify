@@ -9,7 +9,7 @@ export namespace Logger {
 
 		const result = await window.showErrorMessage(
 			localize("(error) default"),
-			localize("(label) showDetails")
+			localize("(label) showDetails"),
 		);
 
 		if (result) Webview.openErrorPage(error);
@@ -24,7 +24,7 @@ export namespace Logger {
 			`[debug] ${args
 				.map(a => debugMapper(a))
 				.join(" ")
-				.trim()}`
+				.trim()}`,
 		);
 	};
 }

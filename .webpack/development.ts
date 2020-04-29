@@ -8,9 +8,9 @@ const config = merge(common, {
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({
 			exclude: /node_modules/,
-			test: /\.ts($|\?)/i
-		})
-	]
+			test: /\.ts($|\?)/i,
+		}),
+	],
 });
 
 export default config;

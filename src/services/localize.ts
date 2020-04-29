@@ -19,13 +19,13 @@ export async function initLocalization(lang?: string) {
 
 			const languagePackPath = resolve(
 				Environment.extensionPath,
-				`package.nls.${language}.json`
+				`package.nls.${language}.json`,
 			);
 
 			const languageExists = await FS.exists(languagePackPath);
 
 			const defaultPack = JSON.parse(
-				await FS.read(resolve(Environment.extensionPath, "package.nls.json"))
+				await FS.read(resolve(Environment.extensionPath, "package.nls.json")),
 			);
 
 			if (!languageExists || language === "en-us") {

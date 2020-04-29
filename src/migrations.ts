@@ -11,8 +11,8 @@ const migrations = new Map<string, Migration>([
 				"https://arnohovhannisyan.space/vscode-syncify/blog/2020/03/15/breaking-changes-in-v4";
 
 			showAnnouncement(url);
-		}
-	]
+		},
+	],
 ]);
 
 export default migrations;

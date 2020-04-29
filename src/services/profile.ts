@@ -13,11 +13,11 @@ export namespace Profile {
 			const selected = await window.showQuickPick(
 				profiles.map<QuickPickItem>(p => ({
 					label: p.name === currentProfile ? `${p.name} [current]` : p.name,
-					description: p.branch
+					description: p.branch,
 				})),
 				{
-					placeHolder: localize("(prompt) profile -> switch -> placeholder")
-				}
+					placeHolder: localize("(prompt) profile -> switch -> placeholder"),
+				},
 			);
 
 			if (!selected) return;
@@ -31,13 +31,13 @@ export namespace Profile {
 
 		await Settings.set({
 			repo: {
-				currentProfile: newProfile.name
-			}
+				currentProfile: newProfile.name,
+			},
 		});
 
 		const result = await window.showInformationMessage(
 			localize("(info) repo -> switchedProfile", newProfile.name),
-			localize("(label) yes")
+			localize("(label) yes"),
 		);
 
 		if (result) await commands.executeCommand("syncify.download");

@@ -12,7 +12,7 @@ export namespace Watcher {
 		if (watcher) watcher.close();
 
 		watcher = chokidar.watch([], {
-			ignored: ignoredItems
+			ignored: ignoredItems,
 		});
 	};
 
@@ -57,7 +57,7 @@ export namespace Watcher {
 
 		const message = window.setStatusBarMessage(
 			localize("(info) watcher -> initiating", delay.toString()),
-			5000
+			5000,
 		);
 
 		const btn = window.createStatusBarItem(1);

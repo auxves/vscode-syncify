@@ -5,7 +5,7 @@ import simplegit from "simple-git/promise";
 
 test("invalid version", async () => {
 	(simplegit as any).mockImplementationOnce(() => ({
-		raw: () => "invalid version"
+		raw: () => "invalid version",
 	}));
 
 	const result = await checkGit("1.0.0");

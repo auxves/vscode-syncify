@@ -8,7 +8,7 @@ export namespace Extensions {
 
 		await window.withProgress(
 			{
-				location: ProgressLocation.Notification
+				location: ProgressLocation.Notification,
 			},
 			async progress => {
 				const increment = 100 / ids.length;
@@ -18,28 +18,28 @@ export namespace Extensions {
 						const matchingVsix = `${ext}.vsix`;
 
 						const vsix = vsixFiles.find(
-							file => basename(file) === matchingVsix
+							file => basename(file) === matchingVsix,
 						);
 
 						await commands.executeCommand(
 							"workbench.extensions.installExtension",
-							vsix ? Uri.file(vsix) : ext
+							vsix ? Uri.file(vsix) : ext,
 						);
 
 						progress.report({
 							increment,
-							message: localize("(info) extensions -> installed", ext)
+							message: localize("(info) extensions -> installed", ext),
 						});
-					})
+					}),
 				);
-			}
+			},
 		);
 	};
 
 	export const uninstall = async (...ids: string[]): Promise<void> => {
 		await window.withProgress(
 			{
-				location: ProgressLocation.Notification
+				location: ProgressLocation.Notification,
 			},
 			async progress => {
 				const increment = 100 / ids.length;
@@ -48,16 +48,16 @@ export namespace Extensions {
 					ids.map(async ext => {
 						await commands.executeCommand(
 							"workbench.extensions.uninstallExtension",
-							ext
+							ext,
 						);
 
 						progress.report({
 							increment,
-							message: localize("(info) extensions -> uninstalled", ext)
+							message: localize("(info) extensions -> uninstalled", ext),
 						});
-					})
+					}),
 				);
-			}
+			},
 		);
 	};
 

@@ -24,13 +24,13 @@ export async function init() {
 		reinitialize: init,
 		importCustomFile: CustomFiles.importFile,
 		registerCustomFile: CustomFiles.registerFile,
-		switchProfile: Profile.switchProfile
+		switchProfile: Profile.switchProfile,
 	};
 
 	state.context?.subscriptions.push(
 		...Object.entries(cmds).map(([name, fn]) =>
-			commands.registerCommand(`syncify.${name}`, fn)
-		)
+			commands.registerCommand(`syncify.${name}`, fn),
+		),
 	);
 
 	if (settings.syncOnStartup) await commands.executeCommand("syncify.sync");

@@ -83,24 +83,24 @@ export const defaultSettings: ISettings = {
 		profiles: [
 			{
 				branch: "master",
-				name: "main"
-			}
+				name: "main",
+			},
 		],
-		currentProfile: "main"
+		currentProfile: "main",
 	},
 	file: {
-		path: ""
+		path: "",
 	},
 	ignoredItems: [
 		"**/workspaceStorage",
 		"**/globalStorage/state.vscdb*",
 		"**/globalStorage/arnohovhannisyan.syncify",
-		"**/.git"
+		"**/.git",
 	],
 	autoUploadDelay: 20,
 	watchSettings: false,
 	syncOnStartup: false,
 	hostname: "",
 	forceDownload: false,
-	forceUpload: false
+	forceUpload: false,
 };

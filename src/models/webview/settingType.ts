@@ -4,5 +4,5 @@ export enum UISettingType {
 	Checkbox = "boolean",
 	TextArea = "string[]",
 	Select = "enum",
-	ObjectArray = "object[]"
+	ObjectArray = "object[]",
 }

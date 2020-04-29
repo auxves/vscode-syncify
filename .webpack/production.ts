@@ -14,11 +14,11 @@ const config = merge(common, {
 					ecma: 2017,
 					mangle: false,
 					keep_classnames: true,
-					keep_fnames: true
-				}
-			})
-		]
-	}
+					keep_fnames: true,
+				},
+			}),
+		],
+	},
 });
 
 export default config;

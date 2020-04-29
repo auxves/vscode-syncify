@@ -10,7 +10,7 @@ function setExtensions(exts: string[]): void {
 		extensionPath: "",
 		isActive: false,
 		exports: undefined,
-		activate: async () => Promise.resolve()
+		activate: async () => Promise.resolve(),
 	}));
 }
 
@@ -26,7 +26,7 @@ test("missing extensions", () => {
 	const missing = Extensions.getMissing([
 		"publisher1.extension1",
 		"publisher2.extension2",
-		"publisher3.extension3"
+		"publisher3.extension3",
 	]);
 
 	expect(missing).toMatchSnapshot();
@@ -36,7 +36,7 @@ test("unneeded extensions", () => {
 	setExtensions([
 		"publisher1.extension1",
 		"publisher2.extension2",
-		"publisher3.extension3"
+		"publisher3.extension3",
 	]);
 
 	const unneeded = Extensions.getUnneeded(["publisher1.extension1"]);
@@ -52,7 +52,7 @@ describe("install", () => {
 
 		expect(spy).toHaveBeenCalledWith(
 			"workbench.extensions.installExtension",
-			"test.extension"
+			"test.extension",
 		);
 
 		spy.mockRestore();
@@ -69,7 +69,7 @@ describe("install", () => {
 
 		expect(spy).toHaveBeenCalledWith(
 			"workbench.extensions.installExtension",
-			Uri.file("")
+			Uri.file(""),
 		);
 
 		spy.mockRestore();
@@ -85,7 +85,7 @@ test("uninstall", async () => {
 
 	expect(spy).toHaveBeenCalledWith(
 		"workbench.extensions.uninstallExtension",
-		"test.extension"
+		"test.extension",
 	);
 
 	spy.mockRestore();

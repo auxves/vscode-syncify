@@ -17,7 +17,7 @@ const paths = [pathToUser, pathToGlobalStoragePath];
 
 beforeEach(async () => {
 	(state.context as any) = {
-		subscriptions: []
+		subscriptions: [],
 	};
 
 	return Promise.all(paths.map(async p => FS.mkdir(p)));
@@ -45,7 +45,7 @@ test("command disposal", async () => {
 	const fn = jest.fn();
 
 	(state.context as any) = {
-		subscriptions: [{ dispose: fn }]
+		subscriptions: [{ dispose: fn }],
 	};
 
 	await init();
