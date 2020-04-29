@@ -15,7 +15,7 @@ export namespace OAuth {
 
 			const server = app.listen(port);
 
-			app.get("/implicit", async request => {
+			app.get("/implicit", async (request) => {
 				const token = request.params.token;
 				const user = await getUser(token, provider);
 

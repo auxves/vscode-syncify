@@ -27,7 +27,7 @@ export class FileSyncer implements Syncer {
 
 		await window.withProgress(
 			{ location: ProgressLocation.Window },
-			async progress => {
+			async (progress) => {
 				try {
 					const configured = await this.isConfigured();
 					if (!configured) {
@@ -66,7 +66,7 @@ export class FileSyncer implements Syncer {
 
 		await window.withProgress(
 			{ location: ProgressLocation.Window },
-			async progress => {
+			async (progress) => {
 				try {
 					const configured = await this.isConfigured();
 					if (!configured) {
@@ -101,7 +101,7 @@ export class FileSyncer implements Syncer {
 
 					if (toDelete.length !== 0) {
 						const needToReload = toDelete.some(
-							name => extensions.getExtension(name)?.isActive ?? false,
+							(name) => extensions.getExtension(name)?.isActive ?? false,
 						);
 
 						Logger.debug("Need to reload:", needToReload);
@@ -138,7 +138,7 @@ export class FileSyncer implements Syncer {
 	}
 
 	async isConfigured(): Promise<boolean> {
-		const path = await Settings.get(s => s.file.path);
+		const path = await Settings.get((s) => s.file.path);
 
 		if (!path) return false;
 
@@ -153,11 +153,11 @@ export class FileSyncer implements Syncer {
 
 			Logger.debug(
 				"Files to copy to folder:",
-				files.map(f => relative(Environment.userFolder, f)),
+				files.map((f) => relative(Environment.userFolder, f)),
 			);
 
 			await Promise.all(
-				files.map(async file => {
+				files.map(async (file) => {
 					const newPath = resolve(
 						settings.file.path,
 						relative(Environment.userFolder, file),
@@ -183,11 +183,11 @@ export class FileSyncer implements Syncer {
 
 			Logger.debug(
 				"Files to copy from folder:",
-				files.map(f => relative(settings.file.path, f)),
+				files.map((f) => relative(settings.file.path, f)),
 			);
 
 			await Promise.all(
-				files.map(async file => {
+				files.map(async (file) => {
 					const newPath = resolve(
 						Environment.userFolder,
 						relative(settings.file.path, file),

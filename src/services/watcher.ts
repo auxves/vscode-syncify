@@ -22,7 +22,7 @@ export namespace Watcher {
 		stop();
 
 		watcher.add(Environment.userFolder);
-		watcher.on("change", async path => {
+		watcher.on("change", async (path) => {
 			Logger.debug(`File change: ${relative(Environment.userFolder, path)}`);
 
 			return upload();
@@ -51,7 +51,7 @@ export namespace Watcher {
 
 		if (cmds.includes("syncify.cancelUpload")) return;
 
-		const delay = await Settings.get(s => s.autoUploadDelay);
+		const delay = await Settings.get((s) => s.autoUploadDelay);
 
 		let shouldUpload = true;
 

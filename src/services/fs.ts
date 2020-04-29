@@ -33,7 +33,7 @@ export namespace FS {
 	};
 
 	export const remove = async (...paths: string[]): Promise<void> => {
-		await Promise.all(paths.map(async path => fse.remove(path)));
+		await Promise.all(paths.map(async (path) => fse.remove(path)));
 	};
 
 	export const listFiles = async (
@@ -42,11 +42,11 @@ export namespace FS {
 	): Promise<string[]> => {
 		const files = await glob("**/*", {
 			dot: true,
-			ignore: ignoredItems ?? (await Settings.get(s => s.ignoredItems)),
+			ignore: ignoredItems ?? (await Settings.get((s) => s.ignoredItems)),
 			absolute: true,
 			cwd: path,
 		});
 
-		return files.map(f => normalize(f));
+		return files.map((f) => normalize(f));
 	};
 }

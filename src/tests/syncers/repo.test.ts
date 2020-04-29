@@ -42,7 +42,7 @@ const currentSettings = {
 };
 
 beforeEach(async () => {
-	await Promise.all(paths.map(async p => FS.mkdir(p)));
+	await Promise.all(paths.map(async (p) => FS.mkdir(p)));
 	return createSimpleGit(pathToRemote).init(true);
 });
 

@@ -35,7 +35,7 @@ export namespace Webview {
 			content,
 			id: "settings",
 			title: "Syncify Settings",
-			onMessage: async message => {
+			onMessage: async (message) => {
 				if (message === "edit") return Settings.openFile();
 
 				const curSettings = await Settings.get();
@@ -131,7 +131,7 @@ export namespace Webview {
 			content,
 			id: "repo",
 			title: "Configure Repository",
-			onMessage: async message => {
+			onMessage: async (message) => {
 				if (message.close && pages.repo) return pages.repo.dispose();
 
 				await Settings.set({
@@ -275,7 +275,7 @@ export namespace Webview {
 						name: localize("(setting) repo.currentProfile -> name"),
 						correspondingSetting: "repo.currentProfile",
 						type: UISettingType.Select,
-						options: settings.repo.profiles.map(p => ({
+						options: settings.repo.profiles.map((p) => ({
 							name: `${p.name} [branch: ${p.branch}]`,
 							value: p.name,
 						})),

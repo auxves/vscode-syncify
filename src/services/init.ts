@@ -13,7 +13,7 @@ export async function init() {
 
 	if (settings.watchSettings) Watcher.start();
 
-	state.context?.subscriptions.forEach(d => d.dispose());
+	state.context?.subscriptions.forEach((d) => d.dispose());
 
 	const cmds = {
 		sync: syncer.sync.bind(syncer),

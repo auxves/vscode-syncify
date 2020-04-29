@@ -30,7 +30,7 @@ export namespace CustomFiles {
 				}
 
 				const result = await window.showQuickPick(
-					workspace.workspaceFolders.map<QuickPickItem>(f => ({
+					workspace.workspaceFolders.map<QuickPickItem>((f) => ({
 						label: f.name,
 						description: f.uri.fsPath,
 					})),
@@ -42,7 +42,7 @@ export namespace CustomFiles {
 				);
 
 				const selectedWorkspace = workspace.workspaceFolders.find(
-					f => f.uri.fsPath === result?.description,
+					(f) => f.uri.fsPath === result?.description,
 				);
 
 				if (!selectedWorkspace) return;
@@ -53,7 +53,7 @@ export namespace CustomFiles {
 			if (!folder) return;
 
 			const selectedFile = await window.showQuickPick(
-				allFiles.map(f => basename(f)),
+				allFiles.map((f) => basename(f)),
 				{
 					placeHolder: localize(
 						"(prompt) customFiles -> import -> file -> placeholder",

@@ -12,7 +12,7 @@ export namespace Logger {
 				localize("(error) default"),
 				localize("(label) showDetails"),
 			)
-			.then(result => result && Webview.openErrorPage(err), error);
+			.then((result) => result && Webview.openErrorPage(err), error);
 	};
 
 	const debugMapper = (value: unknown) => {
@@ -22,7 +22,7 @@ export namespace Logger {
 	export const debug = (...args: any[]): void => {
 		output.appendLine(
 			`[debug] ${args
-				.map(a => debugMapper(a))
+				.map((a) => debugMapper(a))
 				.join(" ")
 				.trim()}`,
 		);
