@@ -17,7 +17,7 @@ const pathToSettings = resolve(pathToTest, "settings.json");
 jest.spyOn(Environment, "settings", "get").mockReturnValue(pathToSettings);
 jest.spyOn(Environment, "globalStoragePath", "get").mockReturnValue(pathToTest);
 
-beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
+beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
 
 afterEach(async () => FS.remove(cleanupPath));
 
@@ -37,7 +37,7 @@ test("get", async () => {
 
 	await FS.write(Environment.settings, JSON.stringify(newSettings));
 
-	const watchSettings = await Settings.get(s => s.watchSettings);
+	const watchSettings = await Settings.get((s) => s.watchSettings);
 
 	expect(watchSettings).toBeTruthy();
 });

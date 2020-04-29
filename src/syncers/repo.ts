@@ -40,9 +40,9 @@ export class RepoSyncer implements Syncer {
 			}
 
 			const remotes = await this.git.getRemotes(true);
-			const origin = remotes.find(remote => remote.name === "origin");
+			const origin = remotes.find((remote) => remote.name === "origin");
 
-			const repoUrl = await Settings.get(s => s.repo.url);
+			const repoUrl = await Settings.get((s) => s.repo.url);
 
 			if (!origin) {
 				Logger.debug(`Adding new remote "origin" at "${repoUrl}"`);
@@ -99,7 +99,7 @@ export class RepoSyncer implements Syncer {
 
 		await window.withProgress(
 			{ location: ProgressLocation.Window },
-			async progress => {
+			async (progress) => {
 				try {
 					if (!(await this.isConfigured())) {
 						Webview.openLandingPage();
@@ -188,7 +188,7 @@ export class RepoSyncer implements Syncer {
 
 		await window.withProgress(
 			{ location: ProgressLocation.Window },
-			async progress => {
+			async (progress) => {
 				try {
 					if (!(await this.isConfigured())) {
 						Webview.openLandingPage();
@@ -312,7 +312,7 @@ export class RepoSyncer implements Syncer {
 
 					if (toDelete.length !== 0) {
 						const needToReload = toDelete.some(
-							name => extensions.getExtension(name)?.isActive ?? false,
+							(name) => extensions.getExtension(name)?.isActive ?? false,
 						);
 
 						Logger.debug("Need to reload:", needToReload);
@@ -327,7 +327,7 @@ export class RepoSyncer implements Syncer {
 							);
 
 							if (result === yes) {
-								commands.executeCommand("workbench.action.reloadWindow");
+								await commands.executeCommand("workbench.action.reloadWindow");
 							}
 						}
 					}
@@ -350,7 +350,7 @@ export class RepoSyncer implements Syncer {
 	}
 
 	async isConfigured(): Promise<boolean> {
-		const { currentProfile, profiles, url } = await Settings.get(s => s.repo);
+		const { currentProfile, profiles, url } = await Settings.get((s) => s.repo);
 
 		return (
 			Boolean(url) &&
@@ -360,7 +360,7 @@ export class RepoSyncer implements Syncer {
 	}
 
 	private async getProfile(): Promise<Profile> {
-		const { currentProfile, profiles } = await Settings.get(s => s.repo);
+		const { currentProfile, profiles } = await Settings.get((s) => s.repo);
 
 		return profiles.find(({ name }) => name === currentProfile) ?? profiles[0];
 	}
@@ -371,11 +371,11 @@ export class RepoSyncer implements Syncer {
 
 			Logger.debug(
 				"Files to copy to repo:",
-				files.map(f => relative(Environment.userFolder, f)),
+				files.map((f) => relative(Environment.userFolder, f)),
 			);
 
 			await Promise.all(
-				files.map(async file => {
+				files.map(async (file) => {
 					const newPath = resolve(
 						Environment.repoFolder,
 						relative(Environment.userFolder, file),
@@ -399,22 +399,26 @@ export class RepoSyncer implements Syncer {
 		try {
 			const files = await FS.listFiles(
 				Environment.repoFolder,
-				settings.ignoredItems.filter(i => !i.includes(Environment.extensionId)),
+				settings.ignoredItems.filter(
+					(i) => !i.includes(Environment.extensionId),
+				),
 			);
 
 			Logger.debug(
 				"Files to copy from repo:",
-				files.map(f => relative(Environment.repoFolder, f)),
+				files.map((f) => relative(Environment.repoFolder, f)),
 			);
 
 			await Promise.all(
-				files.map(async file => {
+				files.map(async (file) => {
 					let contents = await FS.readBuffer(file);
 
 					const hasConflict = (c: string) => {
 						const regexes = [/^<{7}$/, /^={7}$/, /^>{7}$/];
 
-						return !c.split("\n").every(v => regexes.every(r => !r.test(v)));
+						return !c
+							.split("\n")
+							.every((v) => regexes.every((r) => !r.test(v)));
 					};
 
 					if (hasConflict(contents.toString())) {
@@ -431,15 +435,17 @@ export class RepoSyncer implements Syncer {
 
 						await window.showTextDocument(doc, ViewColumn.One, true);
 
-						await new Promise(resolve => {
-							const d = workspace.onDidSaveTextDocument(document => {
+						await new Promise((resolve) => {
+							const d = workspace.onDidSaveTextDocument((document) => {
 								if (
 									document.fileName === doc.fileName &&
 									!hasConflict(document.getText())
 								) {
-									commands.executeCommand("workbench.action.closeActiveEditor");
 									d.dispose();
 									resolve();
+									return commands.executeCommand(
+										"workbench.action.closeActiveEditor",
+									);
 								}
 							});
 						});
@@ -492,15 +498,15 @@ export class RepoSyncer implements Syncer {
 
 			Logger.debug(
 				"Files in the repo folder:",
-				repoFiles.map(f => relative(Environment.repoFolder, f)),
+				repoFiles.map((f) => relative(Environment.repoFolder, f)),
 			);
 
 			Logger.debug(
 				"Files in the user folder:",
-				userFiles.map(f => relative(Environment.userFolder, f)),
+				userFiles.map((f) => relative(Environment.userFolder, f)),
 			);
 
-			const unneeded = repoFiles.filter(f => {
+			const unneeded = repoFiles.filter((f) => {
 				const correspondingFile = resolve(
 					Environment.userFolder,
 					relative(Environment.repoFolder, f),
@@ -525,15 +531,15 @@ export class RepoSyncer implements Syncer {
 
 			Logger.debug(
 				"Files in the repo folder:",
-				repoFiles.map(f => relative(Environment.repoFolder, f)),
+				repoFiles.map((f) => relative(Environment.repoFolder, f)),
 			);
 
 			Logger.debug(
 				"Files in the user folder:",
-				userFiles.map(f => relative(Environment.userFolder, f)),
+				userFiles.map((f) => relative(Environment.userFolder, f)),
 			);
 
-			const unneeded = userFiles.filter(f => {
+			const unneeded = userFiles.filter((f) => {
 				const correspondingFile = resolve(
 					Environment.repoFolder,
 					relative(Environment.userFolder, f),

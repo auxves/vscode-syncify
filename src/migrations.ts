@@ -4,7 +4,7 @@ import { showAnnouncement } from "~/services";
 const migrations = new Map<string, Migration>([
 	[
 		"4.0.0",
-		previousVersion => {
+		(previousVersion) => {
 			if (previousVersion === "0.0.0") return;
 
 			const url =

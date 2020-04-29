@@ -3,7 +3,7 @@ import { Environment } from "~/services";
 
 export namespace Pragma {
 	export const incoming = (content: string, hostname?: string): string => {
-		return uncomment(content, section => {
+		return uncomment(content, (section) => {
 			if (section.name !== "sync") return false;
 
 			const checks: boolean[] = [];
@@ -19,6 +19,6 @@ export namespace Pragma {
 	};
 
 	export const outgoing = (content: string): string => {
-		return comment(content, section => section.name === "sync");
+		return comment(content, (section) => section.name === "sync");
 	};
 }

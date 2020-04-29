@@ -31,7 +31,7 @@ const currentSettings = {
 	},
 };
 
-beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
+beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
 
 afterEach(async () => FS.remove(cleanupPath));
 

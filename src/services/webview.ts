@@ -10,7 +10,6 @@ import {
 	WebviewPanelOptions,
 	window,
 } from "vscode";
-import WebviewPage from "~/../assets/ui/index.html";
 import { ISettings, WebviewSection, Syncers, UISettingType } from "~/models";
 import {
 	Environment,
@@ -21,6 +20,9 @@ import {
 	Watcher,
 } from "~/services";
 import { merge } from "~/utilities";
+
+// eslint-disable-next-line import/extensions
+import WebviewPage from "~/../assets/ui/index.html";
 
 export namespace Webview {
 	export const openSettingsPage = (settings: ISettings) => {
@@ -33,7 +35,7 @@ export namespace Webview {
 			content,
 			id: "settings",
 			title: "Syncify Settings",
-			onMessage: async message => {
+			onMessage: async (message) => {
 				if (message === "edit") return Settings.openFile();
 
 				const curSettings = await Settings.get();
@@ -129,7 +131,7 @@ export namespace Webview {
 			content,
 			id: "repo",
 			title: "Configure Repository",
-			onMessage: async message => {
+			onMessage: async (message) => {
 				if (message.close && pages.repo) return pages.repo.dispose();
 
 				await Settings.set({
@@ -273,7 +275,7 @@ export namespace Webview {
 						name: localize("(setting) repo.currentProfile -> name"),
 						correspondingSetting: "repo.currentProfile",
 						type: UISettingType.Select,
-						options: settings.repo.profiles.map(p => ({
+						options: settings.repo.profiles.map((p) => ({
 							name: `${p.name} [branch: ${p.branch}]`,
 							value: p.name,
 						})),

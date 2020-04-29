@@ -14,7 +14,7 @@ jest
 	.spyOn(Environment, "settings", "get")
 	.mockReturnValue(resolve(pathToTest, "settings.json"));
 
-beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
+beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
 
 afterEach(async () => FS.remove(cleanupPath));
 
@@ -37,7 +37,7 @@ test("switch", async () => {
 
 	await Profile.switchProfile("2");
 
-	const currentProfile = await Settings.get(s => s.repo.currentProfile);
+	const currentProfile = await Settings.get((s) => s.repo.currentProfile);
 
 	expect(currentProfile).toBe("2");
 });

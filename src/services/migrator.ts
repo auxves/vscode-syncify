@@ -25,7 +25,7 @@ export async function migrate(
 		await globalState.update("version", Environment.version);
 	}
 
-	const newerVersions = Array.from(migrations.keys()).filter(candidate =>
+	const newerVersions = Array.from(migrations.keys()).filter((candidate) =>
 		shouldMigrate(candidate, previous),
 	);
 

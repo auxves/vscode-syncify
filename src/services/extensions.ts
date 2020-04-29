@@ -10,15 +10,15 @@ export namespace Extensions {
 			{
 				location: ProgressLocation.Notification,
 			},
-			async progress => {
+			async (progress) => {
 				const increment = 100 / ids.length;
 
 				return Promise.all(
-					ids.map(async ext => {
+					ids.map(async (ext) => {
 						const matchingVsix = `${ext}.vsix`;
 
 						const vsix = vsixFiles.find(
-							file => basename(file) === matchingVsix,
+							(file) => basename(file) === matchingVsix,
 						);
 
 						await commands.executeCommand(
@@ -41,11 +41,11 @@ export namespace Extensions {
 			{
 				location: ProgressLocation.Notification,
 			},
-			async progress => {
+			async (progress) => {
 				const increment = 100 / ids.length;
 
 				return Promise.all(
-					ids.map(async ext => {
+					ids.map(async (ext) => {
 						await commands.executeCommand(
 							"workbench.extensions.uninstallExtension",
 							ext,
@@ -63,16 +63,16 @@ export namespace Extensions {
 
 	export const get = () => {
 		return extensions.all
-			.filter(ext => !ext.packageJSON.isBuiltin)
-			.map(ext => ext.id);
+			.filter((ext) => !ext.packageJSON.isBuiltin)
+			.map((ext) => ext.id);
 	};
 
 	export const getMissing = (downloadedExtensions: string[]) => {
 		const installed = get();
-		return downloadedExtensions.filter(ext => !installed.includes(ext));
+		return downloadedExtensions.filter((ext) => !installed.includes(ext));
 	};
 
 	export const getUnneeded = (downloadedExtensions: string[]) => {
-		return get().filter(ext => !downloadedExtensions.includes(ext));
+		return get().filter((ext) => !downloadedExtensions.includes(ext));
 	};
 }

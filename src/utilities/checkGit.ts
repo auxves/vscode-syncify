@@ -8,7 +8,7 @@ export async function checkGit(required: string) {
 	const version = versionString
 		.trim()
 		.split(" ")
-		.find(s => /^\d+?\.\d+?\.\d+?$/.test(s));
+		.find((s) => /^\d+?\.\d+?\.\d+?$/.test(s));
 
 	if (!version) return false;
 

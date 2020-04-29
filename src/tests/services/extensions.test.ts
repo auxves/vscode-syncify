@@ -4,7 +4,7 @@ import { getCleanupPath } from "~/tests/getCleanupPath";
 import { resolve } from "path";
 
 function setExtensions(exts: string[]): void {
-	(extensions.all as any) = exts.map(ext => ({
+	(extensions.all as any) = exts.map((ext) => ({
 		id: ext,
 		packageJSON: { isBuiltin: false },
 		extensionPath: "",

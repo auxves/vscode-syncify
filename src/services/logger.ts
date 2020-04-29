@@ -4,15 +4,15 @@ import { localize, Webview } from "~/services";
 export namespace Logger {
 	const output = window.createOutputChannel("Syncify");
 
-	export const error = async (error: Error): Promise<void> => {
-		output.appendLine(`[error] ${error.message.trim()}`);
+	export const error = (err: Error): void => {
+		output.appendLine(`[error] ${err.message.trim()}`);
 
-		const result = await window.showErrorMessage(
-			localize("(error) default"),
-			localize("(label) showDetails"),
-		);
-
-		if (result) Webview.openErrorPage(error);
+		window
+			.showErrorMessage(
+				localize("(error) default"),
+				localize("(label) showDetails"),
+			)
+			.then((result) => result && Webview.openErrorPage(err), error);
 	};
 
 	const debugMapper = (value: unknown) => {
@@ -22,7 +22,7 @@ export namespace Logger {
 	export const debug = (...args: any[]): void => {
 		output.appendLine(
 			`[debug] ${args
-				.map(a => debugMapper(a))
+				.map((a) => debugMapper(a))
 				.join(" ")
 				.trim()}`,
 		);
