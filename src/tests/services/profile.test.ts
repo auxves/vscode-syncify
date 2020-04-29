@@ -24,15 +24,15 @@ test("switch", async () => {
 			profiles: [
 				{
 					name: "1",
-					branch: "1"
+					branch: "1",
 				},
 				{
 					name: "2",
-					branch: "2"
-				}
+					branch: "2",
+				},
 			],
-			currentProfile: "1"
-		}
+			currentProfile: "1",
+		},
 	});
 
 	await Profile.switchProfile("2");

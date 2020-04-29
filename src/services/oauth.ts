@@ -10,7 +10,7 @@ export namespace OAuth {
 		try {
 			const app = express().use(
 				express.json(),
-				express.urlencoded({ extended: false })
+				express.urlencoded({ extended: false }),
 			);
 
 			const server = app.listen(port);
@@ -63,18 +63,18 @@ export namespace OAuth {
 			const urls = {
 				github: `https://api.github.com/user`,
 				gitlab: `https://gitlab.com/api/v4/user`,
-				bitbucket: `https://api.bitbucket.org/2.0/user`
+				bitbucket: `https://api.bitbucket.org/2.0/user`,
 			};
 
 			const authHeader = {
 				github: `token ${token}`,
 				gitlab: `Bearer ${token}`,
-				bitbucket: `Bearer ${token}`
+				bitbucket: `Bearer ${token}`,
 			};
 
 			const { data } = await axios(urls[provider], {
 				method: "GET",
-				headers: { Authorization: authHeader[provider] }
+				headers: { Authorization: authHeader[provider] },
 			});
 
 			switch (provider) {
@@ -100,9 +100,9 @@ export namespace OAuth {
 					data: {
 						code,
 						client_id: Environment.oauthClientIds.github,
-						client_secret: "3ac123310971a75f0a26e979ce0030467fc32682"
-					}
-				}
+						client_secret: "3ac123310971a75f0a26e979ce0030467fc32682",
+					},
+				},
 			);
 
 			return new URLSearchParams(data).get("access_token");

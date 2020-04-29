@@ -6,7 +6,7 @@ import {
 	ProgressLocation,
 	ViewColumn,
 	window,
-	workspace
+	workspace,
 } from "vscode";
 import { Profile, ISettings, Syncer } from "~/models";
 import {
@@ -18,7 +18,7 @@ import {
 	Pragma,
 	Settings,
 	Watcher,
-	Webview
+	Webview,
 } from "~/services";
 import { checkGit, sleep, stringifyPretty } from "~/utilities";
 
@@ -50,7 +50,7 @@ export class RepoSyncer implements Syncer {
 				await this.git.addRemote("origin", repoUrl);
 			} else if (origin.refs.push !== repoUrl) {
 				Logger.debug(
-					`Wrong remote url for "origin", removing and adding new origin at "${repoUrl}"`
+					`Wrong remote url for "origin", removing and adding new origin at "${repoUrl}"`,
 				);
 
 				await this.git.removeRemote("origin");
@@ -74,7 +74,7 @@ export class RepoSyncer implements Syncer {
 				this.getProfile(),
 				Settings.get(),
 				this.git.fetch(),
-				this.copyFilesToRepo()
+				this.copyFilesToRepo(),
 			]);
 
 			const status = await this.getStatus(settings, profile);
@@ -125,7 +125,7 @@ export class RepoSyncer implements Syncer {
 
 						return window.setStatusBarMessage(
 							localize("(info) repo -> remoteChanges"),
-							2000
+							2000,
 						);
 					}
 
@@ -133,7 +133,7 @@ export class RepoSyncer implements Syncer {
 
 					if (!branchExists) {
 						Logger.debug(
-							`Branch "${profile.branch}" does not exist, creating new branch...`
+							`Branch "${profile.branch}" does not exist, creating new branch...`,
 						);
 
 						await this.git.checkout(["-b", profile.branch]);
@@ -148,7 +148,7 @@ export class RepoSyncer implements Syncer {
 
 					await FS.write(
 						resolve(Environment.repoFolder, "extensions.json"),
-						stringifyPretty(installedExtensions)
+						stringifyPretty(installedExtensions),
 					);
 
 					const currentChanges = await this.git.diff();
@@ -160,7 +160,7 @@ export class RepoSyncer implements Syncer {
 
 						return window.setStatusBarMessage(
 							localize("(info) repo -> remoteUpToDate"),
-							2000
+							2000,
 						);
 					}
 
@@ -176,7 +176,7 @@ export class RepoSyncer implements Syncer {
 				} catch (error) {
 					Logger.error(error);
 				}
-			}
+			},
 		);
 
 		if (settings.watchSettings) Watcher.start();
@@ -198,7 +198,7 @@ export class RepoSyncer implements Syncer {
 					await this.init();
 
 					progress.report({
-						message: localize("(info) sync -> downloading")
+						message: localize("(info) sync -> downloading"),
 					});
 
 					const profile = await this.getProfile();
@@ -216,7 +216,7 @@ export class RepoSyncer implements Syncer {
 
 						return window.setStatusBarMessage(
 							localize("(info) repo -> noRemoteBranches"),
-							2000
+							2000,
 						);
 					}
 
@@ -229,7 +229,7 @@ export class RepoSyncer implements Syncer {
 
 						return window.setStatusBarMessage(
 							localize("(info) repo -> upToDate"),
-							2000
+							2000,
 						);
 					}
 
@@ -239,7 +239,7 @@ export class RepoSyncer implements Syncer {
 
 					await FS.write(
 						resolve(Environment.repoFolder, "extensions.json"),
-						stringifyPretty(installedExtensions)
+						stringifyPretty(installedExtensions),
 					);
 
 					const branches = await this.git.branchLocal();
@@ -255,7 +255,7 @@ export class RepoSyncer implements Syncer {
 						await this.git.checkout(["-f", profile.branch]);
 					} else if (!branches.all.includes(profile.branch)) {
 						Logger.debug(
-							`Checking out remote branch "origin/${profile.branch}"`
+							`Checking out remote branch "origin/${profile.branch}"`,
 						);
 
 						await this.git.clean("f");
@@ -263,7 +263,7 @@ export class RepoSyncer implements Syncer {
 							"-f",
 							"-b",
 							profile.branch,
-							`origin/${profile.branch}`
+							`origin/${profile.branch}`,
 						]);
 					} else if (branches.current !== profile.branch) {
 						Logger.debug(`Branch exists, switching to ${profile.branch}`);
@@ -294,16 +294,16 @@ export class RepoSyncer implements Syncer {
 					await this.cleanUpUser();
 
 					const extensionsFromFile = JSON.parse(
-						await FS.read(resolve(Environment.userFolder, "extensions.json"))
+						await FS.read(resolve(Environment.userFolder, "extensions.json")),
 					);
 
 					Logger.debug(
 						"Extensions parsed from downloaded file:",
-						extensionsFromFile
+						extensionsFromFile,
 					);
 
 					await Extensions.install(
-						...Extensions.getMissing(extensionsFromFile)
+						...Extensions.getMissing(extensionsFromFile),
 					);
 
 					const toDelete = Extensions.getUnneeded(extensionsFromFile);
@@ -312,7 +312,7 @@ export class RepoSyncer implements Syncer {
 
 					if (toDelete.length !== 0) {
 						const needToReload = toDelete.some(
-							name => extensions.getExtension(name)?.isActive ?? false
+							name => extensions.getExtension(name)?.isActive ?? false,
 						);
 
 						Logger.debug("Need to reload:", needToReload);
@@ -323,7 +323,7 @@ export class RepoSyncer implements Syncer {
 							const yes = localize("(label) yes");
 							const result = await window.showInformationMessage(
 								localize("(info) sync -> needToReload"),
-								yes
+								yes,
 							);
 
 							if (result === yes) {
@@ -338,12 +338,12 @@ export class RepoSyncer implements Syncer {
 
 					window.setStatusBarMessage(
 						localize("(info) sync -> downloaded"),
-						2000
+						2000,
 					);
 				} catch (error) {
 					Logger.error(error);
 				}
-			}
+			},
 		);
 
 		if (settings.watchSettings) Watcher.start();
@@ -371,14 +371,14 @@ export class RepoSyncer implements Syncer {
 
 			Logger.debug(
 				"Files to copy to repo:",
-				files.map(f => relative(Environment.userFolder, f))
+				files.map(f => relative(Environment.userFolder, f)),
 			);
 
 			await Promise.all(
 				files.map(async file => {
 					const newPath = resolve(
 						Environment.repoFolder,
-						relative(Environment.userFolder, file)
+						relative(Environment.userFolder, file),
 					);
 
 					await FS.mkdir(dirname(newPath));
@@ -388,7 +388,7 @@ export class RepoSyncer implements Syncer {
 					}
 
 					return FS.copy(file, newPath);
-				})
+				}),
 			);
 		} catch (error) {
 			Logger.error(error);
@@ -399,12 +399,12 @@ export class RepoSyncer implements Syncer {
 		try {
 			const files = await FS.listFiles(
 				Environment.repoFolder,
-				settings.ignoredItems.filter(i => !i.includes(Environment.extensionId))
+				settings.ignoredItems.filter(i => !i.includes(Environment.extensionId)),
 			);
 
 			Logger.debug(
 				"Files to copy from repo:",
-				files.map(f => relative(Environment.repoFolder, f))
+				files.map(f => relative(Environment.repoFolder, f)),
 			);
 
 			await Promise.all(
@@ -422,7 +422,7 @@ export class RepoSyncer implements Syncer {
 
 						const temporaryPath = resolve(
 							Environment.conflictsFolder,
-							`${Math.random()}-${basename(file)}`
+							`${Math.random()}-${basename(file)}`,
 						);
 
 						await FS.copy(file, temporaryPath);
@@ -451,7 +451,7 @@ export class RepoSyncer implements Syncer {
 
 					const newPath = resolve(
 						Environment.userFolder,
-						relative(Environment.repoFolder, file)
+						relative(Environment.repoFolder, file),
 					);
 
 					await FS.mkdir(dirname(newPath));
@@ -465,7 +465,7 @@ export class RepoSyncer implements Syncer {
 
 						const afterPragma = Pragma.incoming(
 							contents.toString(),
-							settings.hostname
+							settings.hostname,
 						);
 
 						if (currentContents !== afterPragma) {
@@ -476,7 +476,7 @@ export class RepoSyncer implements Syncer {
 					}
 
 					return FS.write(newPath, contents);
-				})
+				}),
 			);
 		} catch (error) {
 			Logger.error(error);
@@ -487,23 +487,23 @@ export class RepoSyncer implements Syncer {
 		try {
 			const [repoFiles, userFiles] = await Promise.all([
 				FS.listFiles(Environment.repoFolder),
-				FS.listFiles(Environment.userFolder)
+				FS.listFiles(Environment.userFolder),
 			]);
 
 			Logger.debug(
 				"Files in the repo folder:",
-				repoFiles.map(f => relative(Environment.repoFolder, f))
+				repoFiles.map(f => relative(Environment.repoFolder, f)),
 			);
 
 			Logger.debug(
 				"Files in the user folder:",
-				userFiles.map(f => relative(Environment.userFolder, f))
+				userFiles.map(f => relative(Environment.userFolder, f)),
 			);
 
 			const unneeded = repoFiles.filter(f => {
 				const correspondingFile = resolve(
 					Environment.userFolder,
-					relative(Environment.repoFolder, f)
+					relative(Environment.repoFolder, f),
 				);
 				return !userFiles.includes(correspondingFile);
 			});
@@ -520,23 +520,23 @@ export class RepoSyncer implements Syncer {
 		try {
 			const [repoFiles, userFiles] = await Promise.all([
 				FS.listFiles(Environment.repoFolder),
-				FS.listFiles(Environment.userFolder)
+				FS.listFiles(Environment.userFolder),
 			]);
 
 			Logger.debug(
 				"Files in the repo folder:",
-				repoFiles.map(f => relative(Environment.repoFolder, f))
+				repoFiles.map(f => relative(Environment.repoFolder, f)),
 			);
 
 			Logger.debug(
 				"Files in the user folder:",
-				userFiles.map(f => relative(Environment.userFolder, f))
+				userFiles.map(f => relative(Environment.userFolder, f)),
 			);
 
 			const unneeded = userFiles.filter(f => {
 				const correspondingFile = resolve(
 					Environment.repoFolder,
-					relative(Environment.userFolder, f)
+					relative(Environment.userFolder, f),
 				);
 				return !repoFiles.includes(correspondingFile);
 			});
@@ -551,7 +551,7 @@ export class RepoSyncer implements Syncer {
 
 	private async getStatus(
 		settings: ISettings,
-		profile: Profile
+		profile: Profile,
 	): Promise<"ahead" | "behind" | "up-to-date"> {
 		const { branch } = profile;
 		const { url } = settings.repo;
@@ -565,7 +565,7 @@ export class RepoSyncer implements Syncer {
 		const mergeBase = await this.git.raw([
 			`merge-base`,
 			branch,
-			`origin/${branch}`
+			`origin/${branch}`,
 		]);
 
 		const revLocal = await this.git.raw([`rev-parse`, branch]);

@@ -17,7 +17,7 @@ test("language detection", async () => {
 
 		const expected = resolve(
 			Environment.extensionPath,
-			`package.nls.fake-locale.json`
+			`package.nls.fake-locale.json`,
 		);
 
 		expect(spy).toHaveBeenCalledWith(expected);
@@ -30,7 +30,7 @@ test("language detection", async () => {
 
 		const expected = resolve(
 			Environment.extensionPath,
-			`package.nls.en-us.json`
+			`package.nls.en-us.json`,
 		);
 
 		expect(spy).toHaveBeenCalledWith(expected);
@@ -53,8 +53,8 @@ test("returns requested language pack", async () => {
 	await FS.write(
 		resolve(cleanupPath, "package.nls.lang.json"),
 		stringifyPretty({
-			key: "value"
-		})
+			key: "value",
+		}),
 	);
 
 	await initLocalization("lang");

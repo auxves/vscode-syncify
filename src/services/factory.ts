@@ -8,6 +8,6 @@ export namespace Factory {
 
 	const syncers = {
 		[Syncers.Repo]: RepoSyncer,
-		[Syncers.File]: FileSyncer
+		[Syncers.File]: FileSyncer,
 	};
 }

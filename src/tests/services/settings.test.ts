@@ -32,7 +32,7 @@ test("set", async () => {
 test("get", async () => {
 	const newSettings: ISettings = {
 		...defaultSettings,
-		watchSettings: true
+		watchSettings: true,
 	};
 
 	await FS.write(Environment.settings, JSON.stringify(newSettings));

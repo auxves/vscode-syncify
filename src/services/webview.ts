@@ -8,7 +8,7 @@ import {
 	WebviewOptions,
 	WebviewPanel,
 	WebviewPanelOptions,
-	window
+	window,
 } from "vscode";
 import WebviewPage from "~/../assets/ui/index.html";
 import { ISettings, WebviewSection, Syncers, UISettingType } from "~/models";
@@ -18,7 +18,7 @@ import {
 	localize,
 	OAuth,
 	Settings,
-	Watcher
+	Watcher,
 } from "~/services";
 import { merge } from "~/utilities";
 
@@ -26,7 +26,7 @@ export namespace Webview {
 	export const openSettingsPage = (settings: ISettings) => {
 		const content = generateContent({
 			"@SETTINGS": JSON.stringify(settings),
-			"@SECTIONS": JSON.stringify(generateSections(settings))
+			"@SECTIONS": JSON.stringify(generateSections(settings)),
 		});
 
 		return createPanel({
@@ -39,19 +39,19 @@ export namespace Webview {
 				const curSettings = await Settings.get();
 
 				return Settings.set(set(curSettings, message.setting, message.value));
-			}
+			},
 		});
 	};
 
 	export const openErrorPage = (error: Error) => {
 		const content = generateContent({
-			"@ERROR": JSON.stringify(error.message)
+			"@ERROR": JSON.stringify(error.message),
 		});
 
 		return createPanel({
 			content,
 			id: "error",
-			title: "Syncify Error"
+			title: "Syncify Error",
 		});
 	};
 
@@ -74,7 +74,7 @@ export namespace Webview {
 						const authUrls = {
 							github: `https://github.com/login/oauth/authorize?scope=repo%20read:user&client_id=${clientIds.github}`,
 							gitlab: `https://gitlab.com/oauth/authorize?client_id=${clientIds.gitlab}&redirect_uri=http://localhost:37468/callback&response_type=token&scope=api+read_repository+read_user+write_repository`,
-							bitbucket: `https://bitbucket.org/site/oauth2/authorize?client_id=${clientIds.bitbucket}&response_type=token`
+							bitbucket: `https://bitbucket.org/site/oauth2/authorize?client_id=${clientIds.bitbucket}&response_type=token`,
 						};
 
 						await OAuth.listen(37468, message);
@@ -88,8 +88,8 @@ export namespace Webview {
 					case "nologin": {
 						const result = await window.showInputBox({
 							placeHolder: localize(
-								"(prompt) webview -> landingPage -> nologin"
-							)
+								"(prompt) webview -> landingPage -> nologin",
+							),
 						});
 
 						if (!result) return;
@@ -114,7 +114,7 @@ export namespace Webview {
 					default:
 						break;
 				}
-			}
+			},
 		});
 	};
 
@@ -134,10 +134,10 @@ export namespace Webview {
 
 				await Settings.set({
 					repo: {
-						url: message
-					}
+						url: message,
+					},
 				});
-			}
+			},
 		});
 	};
 
@@ -145,7 +145,7 @@ export namespace Webview {
 		landing: undefined as WebviewPanel | undefined,
 		repo: undefined as WebviewPanel | undefined,
 		settings: undefined as WebviewPanel | undefined,
-		error: undefined as WebviewPanel | undefined
+		error: undefined as WebviewPanel | undefined,
 	};
 
 	const createPanel = (options: {
@@ -168,14 +168,14 @@ export namespace Webview {
 
 		const defaultOptions = {
 			retainContextWhenHidden: true,
-			enableScripts: true
+			enableScripts: true,
 		};
 
 		const panel = window.createWebviewPanel(
 			id,
 			options.title,
 			options.viewColumn ?? ViewColumn.One,
-			merge(defaultOptions, options.options ?? {})
+			merge(defaultOptions, options.options ?? {}),
 		);
 
 		const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));
@@ -196,12 +196,12 @@ export namespace Webview {
 
 	const generateContent = (items: { [key: string]: string } = {}) => {
 		const toReplace = Object.entries(items).map<[string, string]>(
-			([find, replace]) => [find, encodeURIComponent(replace)]
+			([find, replace]) => [find, encodeURIComponent(replace)],
 		);
 
 		return toReplace.reduce(
 			(acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
-			WebviewPage
+			WebviewPage,
 		);
 	};
 
@@ -216,49 +216,49 @@ export namespace Webview {
 						type: UISettingType.Select,
 						options: Object.entries(Syncers).map(([key, value]) => ({
 							value,
-							name: key
-						}))
+							name: key,
+						})),
 					},
 					{
 						name: localize("(setting) hostname -> name"),
 						placeholder: localize("(setting) hostname -> placeholder"),
 						correspondingSetting: "hostname",
-						type: UISettingType.TextInput
+						type: UISettingType.TextInput,
 					},
 					{
 						name: localize("(setting) ignoredItems -> name"),
 						placeholder: localize("(setting) ignoredItems -> placeholder"),
 						correspondingSetting: "ignoredItems",
-						type: UISettingType.TextArea
+						type: UISettingType.TextArea,
 					},
 					{
 						name: localize("(setting) autoUploadDelay -> name"),
 						placeholder: localize("(setting) autoUploadDelay -> placeholder"),
 						correspondingSetting: "autoUploadDelay",
 						type: UISettingType.NumberInput,
-						min: 0
+						min: 0,
 					},
 					{
 						name: localize("(setting) watchSettings -> name"),
 						correspondingSetting: "watchSettings",
-						type: UISettingType.Checkbox
+						type: UISettingType.Checkbox,
 					},
 					{
 						name: localize("(setting) syncOnStartup -> name"),
 						correspondingSetting: "syncOnStartup",
-						type: UISettingType.Checkbox
+						type: UISettingType.Checkbox,
 					},
 					{
 						name: localize("(setting) forceUpload -> name"),
 						correspondingSetting: "forceUpload",
-						type: UISettingType.Checkbox
+						type: UISettingType.Checkbox,
 					},
 					{
 						name: localize("(setting) forceDownload -> name"),
 						correspondingSetting: "forceDownload",
-						type: UISettingType.Checkbox
-					}
-				]
+						type: UISettingType.Checkbox,
+					},
+				],
 			},
 			{
 				name: "Repo Syncer",
@@ -267,7 +267,7 @@ export namespace Webview {
 						name: localize("(setting) repo.url -> name"),
 						placeholder: localize("(setting) repo.url -> placeholder"),
 						correspondingSetting: "repo.url",
-						type: UISettingType.TextInput
+						type: UISettingType.TextInput,
 					},
 					{
 						name: localize("(setting) repo.currentProfile -> name"),
@@ -275,8 +275,8 @@ export namespace Webview {
 						type: UISettingType.Select,
 						options: settings.repo.profiles.map(p => ({
 							name: `${p.name} [branch: ${p.branch}]`,
-							value: p.name
-						}))
+							value: p.name,
+						})),
 					},
 					{
 						name: localize("(setting) repo.profiles -> name"),
@@ -284,32 +284,32 @@ export namespace Webview {
 						type: UISettingType.ObjectArray,
 						newTemplate: {
 							branch: "",
-							name: ""
+							name: "",
 						},
 						schema: [
 							{
 								name: localize(
-									"(setting) repo.profiles.properties.name -> name"
+									"(setting) repo.profiles.properties.name -> name",
 								),
 								placeholder: localize(
-									"(setting) repo.profiles.properties.name -> placeholder"
+									"(setting) repo.profiles.properties.name -> placeholder",
 								),
 								correspondingSetting: "name",
-								type: UISettingType.TextInput
+								type: UISettingType.TextInput,
 							},
 							{
 								name: localize(
-									"(setting) repo.profiles.properties.branch -> name"
+									"(setting) repo.profiles.properties.branch -> name",
 								),
 								placeholder: localize(
-									"(setting) repo.profiles.properties.branch -> placeholder"
+									"(setting) repo.profiles.properties.branch -> placeholder",
 								),
 								correspondingSetting: "branch",
-								type: UISettingType.TextInput
-							}
-						]
-					}
-				]
+								type: UISettingType.TextInput,
+							},
+						],
+					},
+				],
 			},
 			{
 				name: "File Syncer",
@@ -318,10 +318,10 @@ export namespace Webview {
 						name: localize("(setting) file.path -> name"),
 						placeholder: localize("(setting) file.path -> placeholder"),
 						correspondingSetting: "file.path",
-						type: UISettingType.TextInput
-					}
-				]
-			}
+						type: UISettingType.TextInput,
+					},
+				],
+			},
 		];
 	};
 }

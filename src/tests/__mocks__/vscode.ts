@@ -7,35 +7,35 @@ export const window = {
 	showInformationMessage: () => undefined,
 	showWarningMessage: () => undefined,
 	showErrorMessage: () => undefined,
-	showInputBox: () => undefined
+	showInputBox: () => undefined,
 };
 
 export const extensions = {
 	all: [
 		{
 			id: "arnohovhannisyan.syncify",
-			packageJSON: { isBuiltin: false }
-		}
+			packageJSON: { isBuiltin: false },
+		},
 	],
 	getExtension: () => ({
 		extensionPath: resolve("."),
 		packageJSON: {
-			version: ""
-		}
+			version: "",
+		},
 	}),
-	onDidChange: () => undefined
+	onDidChange: () => undefined,
 };
 
 export const commands = {
 	registerCommand: () => ({ dispose: () => undefined }),
 	executeCommand: () => undefined,
-	getCommands: () => []
+	getCommands: () => [],
 };
 
 export enum ProgressLocation {
-	Notification = 1
+	Notification = 1,
 }
 
 export const Uri = {
-	file: () => "file:///"
+	file: () => "file:///",
 };

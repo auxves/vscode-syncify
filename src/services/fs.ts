@@ -16,7 +16,7 @@ export namespace FS {
 		return fse.copy(src, dest, {
 			overwrite: true,
 			recursive: true,
-			preserveTimestamps: true
+			preserveTimestamps: true,
 		});
 	};
 
@@ -38,13 +38,13 @@ export namespace FS {
 
 	export const listFiles = async (
 		path: string,
-		ignoredItems?: string[]
+		ignoredItems?: string[],
 	): Promise<string[]> => {
 		const files = await glob("**/*", {
 			dot: true,
 			ignore: ignoredItems ?? (await Settings.get(s => s.ignoredItems)),
 			absolute: true,
-			cwd: path
+			cwd: path,
 		});
 
 		return files.map(f => normalize(f));

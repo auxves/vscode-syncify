@@ -4,7 +4,7 @@ import { localize } from "~/services";
 export async function showAnnouncement(url: string): Promise<void> {
 	return new Promise(resolve => {
 		const message = window.setStatusBarMessage(
-			localize("(info) announcementAvailable")
+			localize("(info) announcementAvailable"),
 		);
 
 		const openBtn = window.createStatusBarItem(1);
@@ -26,12 +26,12 @@ export async function showAnnouncement(url: string): Promise<void> {
 				env.openExternal(Uri.parse(url));
 
 				dispose();
-			}
+			},
 		);
 
 		const dismissDisposable = commands.registerCommand(
 			"syncify.dismissAnnouncement",
-			dispose
+			dispose,
 		);
 
 		openBtn.command = "syncify.openAnnouncement";

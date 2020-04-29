@@ -8,7 +8,7 @@ import {
 	localize,
 	Logger,
 	Watcher,
-	Webview
+	Webview,
 } from "~/services";
 import { confirm, merge, stringifyPretty } from "~/utilities";
 
@@ -56,7 +56,7 @@ export namespace Settings {
 
 		await FS.write(
 			Environment.settings,
-			stringifyPretty(merge(currentSettings, settings))
+			stringifyPretty(merge(currentSettings, settings)),
 		);
 
 		await commands.executeCommand("syncify.reinitialize");
@@ -70,7 +70,7 @@ export namespace Settings {
 		await window.showTextDocument(
 			await workspace.openTextDocument(Environment.settings),
 			ViewColumn.One,
-			true
+			true,
 		);
 	};
 

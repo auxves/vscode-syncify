@@ -13,7 +13,7 @@ function shouldMigrate(candidate: string, previous: string): boolean {
 }
 
 export async function migrate(
-	migrations: Map<string, Migration>
+	migrations: Map<string, Migration>,
 ): Promise<void> {
 	const globalState = state.context?.globalState;
 
@@ -26,7 +26,7 @@ export async function migrate(
 	}
 
 	const newerVersions = Array.from(migrations.keys()).filter(candidate =>
-		shouldMigrate(candidate, previous)
+		shouldMigrate(candidate, previous),
 	);
 
 	if (newerVersions.length === 0) return;

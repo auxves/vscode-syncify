@@ -10,14 +10,14 @@ import {
 	Pragma,
 	Settings,
 	Watcher,
-	Webview
+	Webview,
 } from "~/services";
 import { sleep, stringifyPretty } from "~/utilities";
 
 export class FileSyncer implements Syncer {
 	async sync(): Promise<void> {
 		window.showInformationMessage(
-			"Syncify: Sync is not available for File Syncer yet"
+			"Syncify: Sync is not available for File Syncer yet",
 		);
 	}
 
@@ -41,7 +41,7 @@ export class FileSyncer implements Syncer {
 
 					await FS.write(
 						resolve(settings.file.path, "extensions.json"),
-						stringifyPretty(installedExtensions)
+						stringifyPretty(installedExtensions),
 					);
 
 					await this.copyFilesToPath(settings);
@@ -54,7 +54,7 @@ export class FileSyncer implements Syncer {
 				} catch (error) {
 					Logger.error(error);
 				}
-			}
+			},
 		);
 
 		if (settings.watchSettings) Watcher.start();
@@ -90,18 +90,18 @@ export class FileSyncer implements Syncer {
 
 					Logger.debug(
 						"Extensions parsed from downloaded file:",
-						extensionsFromFile
+						extensionsFromFile,
 					);
 
 					await Extensions.install(
-						...Extensions.getMissing(extensionsFromFile)
+						...Extensions.getMissing(extensionsFromFile),
 					);
 
 					const toDelete = Extensions.getUnneeded(extensionsFromFile);
 
 					if (toDelete.length !== 0) {
 						const needToReload = toDelete.some(
-							name => extensions.getExtension(name)?.isActive ?? false
+							name => extensions.getExtension(name)?.isActive ?? false,
 						);
 
 						Logger.debug("Need to reload:", needToReload);
@@ -111,7 +111,7 @@ export class FileSyncer implements Syncer {
 						if (needToReload) {
 							const result = await window.showInformationMessage(
 								localize("(info) sync -> needToReload"),
-								localize("(label) yes")
+								localize("(label) yes"),
 							);
 
 							if (result) {
@@ -126,12 +126,12 @@ export class FileSyncer implements Syncer {
 
 					window.setStatusBarMessage(
 						localize("(info) sync -> downloaded"),
-						2000
+						2000,
 					);
 				} catch (error) {
 					Logger.error(error);
 				}
-			}
+			},
 		);
 
 		if (settings.watchSettings) Watcher.start();
@@ -153,14 +153,14 @@ export class FileSyncer implements Syncer {
 
 			Logger.debug(
 				"Files to copy to folder:",
-				files.map(f => relative(Environment.userFolder, f))
+				files.map(f => relative(Environment.userFolder, f)),
 			);
 
 			await Promise.all(
 				files.map(async file => {
 					const newPath = resolve(
 						settings.file.path,
-						relative(Environment.userFolder, file)
+						relative(Environment.userFolder, file),
 					);
 
 					await FS.mkdir(dirname(newPath));
@@ -170,7 +170,7 @@ export class FileSyncer implements Syncer {
 					}
 
 					return FS.copy(file, newPath);
-				})
+				}),
 			);
 		} catch (error) {
 			Logger.error(error);
@@ -183,14 +183,14 @@ export class FileSyncer implements Syncer {
 
 			Logger.debug(
 				"Files to copy from folder:",
-				files.map(f => relative(settings.file.path, f))
+				files.map(f => relative(settings.file.path, f)),
 			);
 
 			await Promise.all(
 				files.map(async file => {
 					const newPath = resolve(
 						Environment.userFolder,
-						relative(settings.file.path, file)
+						relative(settings.file.path, file),
 					);
 
 					await FS.mkdir(dirname(newPath));
@@ -204,7 +204,7 @@ export class FileSyncer implements Syncer {
 
 						const afterPragma = Pragma.incoming(
 							await FS.read(file),
-							settings.hostname
+							settings.hostname,
 						);
 
 						if (currentContents !== afterPragma) {
@@ -215,7 +215,7 @@ export class FileSyncer implements Syncer {
 					}
 
 					return FS.copy(file, newPath);
-				})
+				}),
 			);
 		} catch (error) {
 			Logger.error(error);

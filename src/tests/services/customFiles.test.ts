@@ -28,7 +28,7 @@ test("register", async () => {
 	await FS.write(testPath, data);
 
 	const uri = {
-		fsPath: testPath
+		fsPath: testPath,
 	};
 
 	await CustomFiles.registerFile(uri as Uri);

@@ -21,7 +21,7 @@ const paths = [
 	pathToRepo,
 	pathToTemporaryRepo,
 	pathToUser,
-	pathToGlobalStoragePath
+	pathToGlobalStoragePath,
 ];
 
 const pathToSettings = resolve(pathToUser, "settings.json");
@@ -37,8 +37,8 @@ jest.setTimeout(15000);
 
 const currentSettings = {
 	repo: {
-		url: pathToRemote
-	}
+		url: pathToRemote,
+	},
 };
 
 beforeEach(async () => {
@@ -53,7 +53,7 @@ describe("upload", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -69,7 +69,7 @@ describe("upload", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -78,7 +78,7 @@ describe("upload", () => {
 		await repoSyncer.upload();
 
 		const expected = stringifyPretty({
-			"test.key": false
+			"test.key": false,
 		});
 
 		const git = createSimpleGit(pathToTemporaryRepo);
@@ -97,7 +97,7 @@ describe("upload", () => {
 		await git.pull("origin", "master", { "--force": null });
 
 		const syncedData = await FS.read(
-			resolve(pathToTemporaryRepo, "settings.json")
+			resolve(pathToTemporaryRepo, "settings.json"),
 		);
 		expect(syncedData).toBe(expected);
 	});
@@ -106,7 +106,7 @@ describe("upload", () => {
 		await Settings.set(currentSettings);
 
 		const expected = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, expected);
@@ -125,7 +125,7 @@ describe("upload", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -139,7 +139,7 @@ describe("upload", () => {
 
 		expect(spy).toHaveBeenCalledWith(
 			localize("(info) repo -> remoteUpToDate"),
-			2000
+			2000,
 		);
 
 		spy.mockRestore();
@@ -163,7 +163,7 @@ describe("upload", () => {
 		await git.pull("origin", "master", { "--force": null });
 
 		const downloadedBuffer = await FS.readBuffer(
-			resolve(pathToTemporaryRepo, "buffer")
+			resolve(pathToTemporaryRepo, "buffer"),
 		);
 
 		expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
@@ -175,7 +175,7 @@ describe("download", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -184,7 +184,7 @@ describe("download", () => {
 		await repoSyncer.upload();
 
 		const expected = stringifyPretty({
-			"test.key": false
+			"test.key": false,
 		});
 
 		const git = createSimpleGit(pathToTemporaryRepo);
@@ -209,7 +209,7 @@ describe("download", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -229,7 +229,7 @@ describe("download", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -246,15 +246,15 @@ describe("download", () => {
 				repo: {
 					profiles: [
 						{ branch: "test1", name: "test1" },
-						{ branch: "test2", name: "test2" }
+						{ branch: "test2", name: "test2" },
 					],
-					currentProfile: "test1"
-				}
-			})
+					currentProfile: "test1",
+				},
+			}),
 		);
 
 		const userData = stringifyPretty({
-			"test.key": 1
+			"test.key": 1,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -265,7 +265,7 @@ describe("download", () => {
 		await Profile.switchProfile("test2");
 
 		const newUserData = stringifyPretty({
-			"test.key": 2
+			"test.key": 2,
 		});
 
 		await FS.write(pathToSettings, newUserData);
@@ -285,15 +285,15 @@ describe("download", () => {
 				repo: {
 					profiles: [
 						{ branch: "test1", name: "test1" },
-						{ branch: "test2", name: "test2" }
+						{ branch: "test2", name: "test2" },
 					],
-					currentProfile: "test1"
-				}
-			})
+					currentProfile: "test1",
+				},
+			}),
 		);
 
 		const userData = stringifyPretty({
-			"test.key": 1
+			"test.key": 1,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -302,7 +302,7 @@ describe("download", () => {
 		await repoSyncer.upload();
 
 		const newUserData = stringifyPretty({
-			"test.key": 2
+			"test.key": 2,
 		});
 
 		const git = createSimpleGit(pathToTemporaryRepo);
@@ -331,7 +331,7 @@ describe("download", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -352,7 +352,7 @@ describe("download", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -361,7 +361,7 @@ describe("download", () => {
 		await repoSyncer.upload();
 
 		const expected = stringifyPretty({
-			"test.key": false
+			"test.key": false,
 		});
 
 		const git = createSimpleGit(pathToTemporaryRepo);
@@ -425,7 +425,7 @@ describe("sync", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -434,7 +434,7 @@ describe("sync", () => {
 		await repoSyncer.upload();
 
 		const newUserData = stringifyPretty({
-			"test.key": false
+			"test.key": false,
 		});
 
 		await FS.write(pathToSettings, newUserData);
@@ -452,7 +452,7 @@ describe("sync", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -476,7 +476,7 @@ describe("sync", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -485,7 +485,7 @@ describe("sync", () => {
 		await repoSyncer.upload();
 
 		const expected = stringifyPretty({
-			"test.key": false
+			"test.key": false,
 		});
 
 		const git = createSimpleGit(pathToTemporaryRepo);

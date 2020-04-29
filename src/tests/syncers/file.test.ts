@@ -27,8 +27,8 @@ jest
 const currentSettings = {
 	syncer: Syncers.File,
 	file: {
-		path: pathToExport
-	}
+		path: pathToExport,
+	},
 };
 
 beforeEach(async () => Promise.all(paths.map(async p => FS.mkdir(p))));
@@ -40,7 +40,7 @@ describe("upload", () => {
 		await Settings.set(currentSettings);
 
 		const userData = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		await FS.write(pathToSettings, userData);
@@ -73,7 +73,7 @@ describe("download", () => {
 		await Settings.set(currentSettings);
 
 		const settings = stringifyPretty({
-			"test.key": true
+			"test.key": true,
 		});
 
 		const extensions = stringifyPretty(["1", "2", "3"]);
@@ -87,7 +87,7 @@ describe("download", () => {
 		const downloadedSettings = await FS.read(pathToSettings);
 
 		const downloadedExtensions = await FS.read(
-			resolve(pathToUser, "extensions.json")
+			resolve(pathToUser, "extensions.json"),
 		);
 
 		expect(downloadedSettings).toBe(settings);
