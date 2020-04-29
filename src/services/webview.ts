@@ -10,7 +10,6 @@ import {
 	WebviewPanelOptions,
 	window,
 } from "vscode";
-import WebviewPage from "~/../assets/ui/index.html";
 import { ISettings, WebviewSection, Syncers, UISettingType } from "~/models";
 import {
 	Environment,
@@ -21,6 +20,9 @@ import {
 	Watcher,
 } from "~/services";
 import { merge } from "~/utilities";
+
+// eslint-disable-next-line import/extensions
+import WebviewPage from "~/../assets/ui/index.html";
 
 export namespace Webview {
 	export const openSettingsPage = (settings: ISettings) => {

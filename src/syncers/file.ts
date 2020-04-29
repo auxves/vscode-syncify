@@ -16,7 +16,7 @@ import { sleep, stringifyPretty } from "~/utilities";
 
 export class FileSyncer implements Syncer {
 	async sync(): Promise<void> {
-		window.showInformationMessage(
+		await window.showInformationMessage(
 			"Syncify: Sync is not available for File Syncer yet",
 		);
 	}
@@ -115,7 +115,7 @@ export class FileSyncer implements Syncer {
 							);
 
 							if (result) {
-								commands.executeCommand("workbench.action.reloadWindow");
+								await commands.executeCommand("workbench.action.reloadWindow");
 							}
 						}
 					}

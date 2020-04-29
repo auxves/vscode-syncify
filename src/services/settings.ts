@@ -85,6 +85,6 @@ export namespace Settings {
 
 		await commands.executeCommand("syncify.reinitialize");
 
-		window.showInformationMessage(localize("(info) reset -> complete"));
+		await window.showInformationMessage(localize("(info) reset -> complete"));
 	};
 }

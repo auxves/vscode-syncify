@@ -78,6 +78,6 @@ export namespace Watcher {
 		disposable.dispose();
 		btn.dispose();
 
-		if (shouldUpload) commands.executeCommand("syncify.upload");
+		if (shouldUpload) await commands.executeCommand("syncify.upload");
 	};
 }

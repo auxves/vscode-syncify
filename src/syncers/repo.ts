@@ -327,7 +327,7 @@ export class RepoSyncer implements Syncer {
 							);
 
 							if (result === yes) {
-								commands.executeCommand("workbench.action.reloadWindow");
+								await commands.executeCommand("workbench.action.reloadWindow");
 							}
 						}
 					}
@@ -437,9 +437,11 @@ export class RepoSyncer implements Syncer {
 									document.fileName === doc.fileName &&
 									!hasConflict(document.getText())
 								) {
-									commands.executeCommand("workbench.action.closeActiveEditor");
 									d.dispose();
 									resolve();
+									return commands.executeCommand(
+										"workbench.action.closeActiveEditor",
+									);
 								}
 							});
 						});
