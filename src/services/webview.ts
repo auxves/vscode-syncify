@@ -22,17 +22,15 @@ import {
 import { merge } from "~/utilities";
 
 // eslint-disable-next-line import/extensions
-import WebviewPage from "~/../assets/ui/index.html";
+import webviewContent from "~/../assets/ui/index.html";
 
 export namespace Webview {
 	export const openSettingsPage = (settings: ISettings) => {
-		const content = generateContent({
-			"@SETTINGS": JSON.stringify(settings),
-			"@SECTIONS": JSON.stringify(generateSections(settings)),
-		});
-
 		return createPanel({
-			content,
+			data: {
+				settings,
+				sections: generateSections(settings),
+			},
 			id: "settings",
 			title: "Syncify Settings",
 			onMessage: async (message) => {
@@ -46,22 +44,15 @@ export namespace Webview {
 	};
 
 	export const openErrorPage = (error: Error) => {
-		const content = generateContent({
-			"@ERROR": JSON.stringify(error.message),
-		});
-
 		return createPanel({
-			content,
+			data: error.message,
 			id: "error",
 			title: "Syncify Error",
 		});
 	};
 
 	export const openLandingPage = () => {
-		const content = generateContent();
-
 		return createPanel({
-			content,
 			id: "landing",
 			title: "Welcome to Syncify",
 			onMessage: async (message: string) => {
@@ -125,12 +116,10 @@ export namespace Webview {
 		user: string;
 		provider: string;
 	}) => {
-		const content = generateContent({ "@AUTH": JSON.stringify(options) });
-
 		return createPanel({
-			content,
 			id: "repo",
 			title: "Configure Repository",
+			data: options,
 			onMessage: async (message) => {
 				if (message.close && pages.repo) return pages.repo.dispose();
 
@@ -152,18 +141,25 @@ export namespace Webview {
 
 	const createPanel = (options: {
 		id: keyof typeof pages;
-		content: string;
+		data?: any;
 		title: string;
 		viewColumn?: ViewColumn;
 		options?: WebviewPanelOptions & WebviewOptions;
 		onMessage?: (message: any) => any;
 	}): WebviewPanel => {
-		const { id, content } = options;
+		const { id, data = "" } = options;
 
 		const page = pages[id];
 
+		const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));
+
 		if (page) {
-			page.webview.html = content;
+			page.webview.html = generateContent(
+				page.webview.asWebviewUri(pwdUri).toString(),
+				id,
+				data,
+			);
+
 			page.reveal();
 			return page;
 		}
@@ -180,11 +176,11 @@ export namespace Webview {
 			merge(defaultOptions, options.options ?? {}),
 		);
 
-		const pwdUri = Uri.file(resolve(Environment.extensionPath, "assets/ui"));
-
-		panel.webview.html = content
-			.replace(/@PWD/g, panel.webview.asWebviewUri(pwdUri).toString())
-			.replace(/@PAGE/g, id);
+		panel.webview.html = generateContent(
+			panel.webview.asWebviewUri(pwdUri).toString(),
+			id,
+			data,
+		);
 
 		if (options.onMessage) panel.webview.onDidReceiveMessage(options.onMessage);
 
@@ -196,15 +192,11 @@ export namespace Webview {
 		return panel;
 	};
 
-	const generateContent = (items: { [key: string]: string } = {}) => {
-		const toReplace = Object.entries(items).map<[string, string]>(
-			([find, replace]) => [find, encodeURIComponent(replace)],
-		);
-
-		return toReplace.reduce(
-			(acc, [find, replace]) => acc.replace(new RegExp(find, "g"), replace),
-			WebviewPage,
-		);
+	const generateContent = (pwd: string, id: string, data: any) => {
+		return webviewContent
+			.replace(/@PWD/g, pwd)
+			.replace(/@PAGE/g, id)
+			.replace(/@DATA/g, encodeURIComponent(JSON.stringify(data)));
 	};
 
 	const generateSections = (settings: ISettings): WebviewSection[] => {
