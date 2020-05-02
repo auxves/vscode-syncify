@@ -1,4 +1,4 @@
-import axios from "axios";
+import got from "got";
 import express, { Request } from "express";
 import { URLSearchParams } from "url";
 import { Environment, Logger, Webview } from "~/services";
@@ -16,7 +16,7 @@ export namespace OAuth {
 			const server = app.listen(port);
 
 			app.get("/implicit", async (request) => {
-				const token = request.params.token;
+				const token = request.query.token as string;
 				const user = await getUser(token, provider);
 
 				if (!user) return;
@@ -72,10 +72,9 @@ export namespace OAuth {
 				bitbucket: `Bearer ${token}`,
 			};
 
-			const { data } = await axios(urls[provider], {
-				method: "GET",
+			const data = await got(urls[provider], {
 				headers: { Authorization: authHeader[provider] },
-			});
+			}).json<any>();
 
 			switch (provider) {
 				case "github":
@@ -93,17 +92,15 @@ export namespace OAuth {
 
 	const getToken = async (code: string) => {
 		try {
-			const { data } = await axios(
-				`https://github.com/login/oauth/access_token`,
-				{
-					method: "POST",
-					data: {
+			const data = await got
+				.post(`https://github.com/login/oauth/access_token`, {
+					json: {
 						code,
 						client_id: Environment.oauthClientIds.github,
 						client_secret: "3ac123310971a75f0a26e979ce0030467fc32682",
 					},
-				},
-			);
+				})
+				.text();
 
 			return new URLSearchParams(data).get("access_token");
 		} catch (error) {
@@ -114,7 +111,7 @@ export namespace OAuth {
 	const handleRequest = async (request: Request, provider: Provider) => {
 		if (provider !== "github") return;
 
-		const token = await getToken(request.params.code);
+		const token = await getToken(request.query.code as string);
 
 		if (!token) return;
 
