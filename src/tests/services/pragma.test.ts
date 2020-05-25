@@ -18,7 +18,7 @@ describe("incoming", () => {
 	test("operating system", () => {
 		const spy = jest.spyOn(Environment, "os", "get");
 
-		const testOS = (os: string) => {
+		const testOS = (os: string): void => {
 			spy.mockReturnValueOnce("windows");
 
 			const initial = `{
@@ -41,7 +41,7 @@ describe("incoming", () => {
 	test("host", () => {
 		const validHostname = "pc";
 
-		const testHostname = (hostname: string) => {
+		const testHostname = (hostname: string): void => {
 			const initial = `{
 				// @sync host=${hostname}
 				// "key": "value"
@@ -57,7 +57,7 @@ describe("incoming", () => {
 	});
 
 	test("env", () => {
-		const testEnv = (value?: string) => {
+		const testEnv = (value?: string): void => {
 			if (value) {
 				process.env.ENV_TEST_KEY = value;
 			}

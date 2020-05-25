@@ -25,7 +25,7 @@ import { merge } from "~/utilities";
 import webviewContent from "~/../assets/ui/index.html";
 
 export namespace Webview {
-	export const openSettingsPage = (settings: ISettings) => {
+	export const openSettingsPage = (settings: ISettings): WebviewPanel => {
 		return createPanel({
 			data: {
 				settings,
@@ -43,7 +43,7 @@ export namespace Webview {
 		});
 	};
 
-	export const openErrorPage = (error: Error) => {
+	export const openErrorPage = (error: Error): WebviewPanel => {
 		return createPanel({
 			data: error.message,
 			id: "error",
@@ -51,7 +51,7 @@ export namespace Webview {
 		});
 	};
 
-	export const openLandingPage = () => {
+	export const openLandingPage = (): WebviewPanel => {
 		return createPanel({
 			id: "landing",
 			title: "Welcome to Syncify",
@@ -115,7 +115,7 @@ export namespace Webview {
 		token: string;
 		user: string;
 		provider: string;
-	}) => {
+	}): WebviewPanel => {
 		return createPanel({
 			id: "repo",
 			title: "Configure Repository",
@@ -156,6 +156,7 @@ export namespace Webview {
 		if (page) {
 			page.webview.html = generateContent(
 				page.webview.asWebviewUri(pwdUri).toString(),
+				page.webview.cspSource,
 				id,
 				data,
 			);
@@ -178,6 +179,7 @@ export namespace Webview {
 
 		panel.webview.html = generateContent(
 			panel.webview.asWebviewUri(pwdUri).toString(),
+			panel.webview.cspSource,
 			id,
 			data,
 		);
@@ -192,9 +194,15 @@ export namespace Webview {
 		return panel;
 	};
 
-	const generateContent = (pwd: string, id: string, data: any) => {
+	const generateContent = (
+		pwd: string,
+		csp: string,
+		id: string,
+		data: any,
+	): string => {
 		return webviewContent
 			.replace(/@PWD/g, pwd)
+			.replace(/@CSP/g, csp)
 			.replace(/@PAGE/g, id)
 			.replace(/@DATA/g, encodeURIComponent(JSON.stringify(data)));
 	};

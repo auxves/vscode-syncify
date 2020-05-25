@@ -2,7 +2,7 @@ import { gte } from "semver";
 import { tmpdir } from "os";
 import createGit from "simple-git/promise";
 
-export async function checkGit(required: string) {
+export async function checkGit(required: string): Promise<boolean> {
 	const git = createGit(tmpdir());
 	const versionString = await git.raw(["--version"]);
 	const version = versionString

@@ -1,1 +1,1 @@
-export const confirm = () => true;
+export const confirm = (): true => true;

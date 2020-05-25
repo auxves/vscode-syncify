@@ -15,7 +15,7 @@ export namespace Logger {
 			.then((result) => result && Webview.openErrorPage(err), error);
 	};
 
-	const debugMapper = (value: unknown) => {
+	const debugMapper = (value: unknown): unknown => {
 		return Array.isArray(value) ? JSON.stringify(value, undefined, 2) : value;
 	};
 

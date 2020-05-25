@@ -6,7 +6,10 @@ import { Environment, Logger, Webview } from "~/services";
 type Provider = "github" | "gitlab" | "bitbucket";
 
 export namespace OAuth {
-	export const listen = async (port: number, provider: Provider) => {
+	export const listen = async (
+		port: number,
+		provider: Provider,
+	): Promise<void> => {
 		try {
 			const app = express().use(
 				express.json(),
@@ -58,7 +61,10 @@ export namespace OAuth {
 		}
 	};
 
-	const getUser = async (token: string, provider: Provider) => {
+	const getUser = async (
+		token: string,
+		provider: Provider,
+	): Promise<string> => {
 		try {
 			const urls = {
 				github: `https://api.github.com/user`,
@@ -78,19 +84,20 @@ export namespace OAuth {
 
 			switch (provider) {
 				case "github":
-					return data.login as string;
+					return data.login;
 				case "gitlab":
 				case "bitbucket":
-					return data.username as string;
+					return data.username;
 				default:
-					return;
+					return "";
 			}
 		} catch (error) {
 			Logger.error(error);
+			return "";
 		}
 	};
 
-	const getToken = async (code: string) => {
+	const getToken = async (code: string): Promise<string> => {
 		try {
 			const data = await got
 				.post(`https://github.com/login/oauth/access_token`, {
@@ -102,13 +109,17 @@ export namespace OAuth {
 				})
 				.text();
 
-			return new URLSearchParams(data).get("access_token");
+			return new URLSearchParams(data).get("access_token")!;
 		} catch (error) {
 			Logger.error(error);
+			return "";
 		}
 	};
 
-	const handleRequest = async (request: Request, provider: Provider) => {
+	const handleRequest = async (
+		request: Request,
+		provider: Provider,
+	): Promise<{ token?: string; user?: string } | undefined> => {
 		if (provider !== "github") return;
 
 		const token = await getToken(request.query.code as string);
