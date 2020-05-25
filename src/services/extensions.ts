@@ -61,18 +61,18 @@ export namespace Extensions {
 		);
 	};
 
-	export const get = () => {
+	export const get = (): string[] => {
 		return extensions.all
 			.filter((ext) => !ext.packageJSON.isBuiltin)
 			.map((ext) => ext.id);
 	};
 
-	export const getMissing = (downloadedExtensions: string[]) => {
+	export const getMissing = (downloadedExtensions: string[]): string[] => {
 		const installed = get();
 		return downloadedExtensions.filter((ext) => !installed.includes(ext));
 	};
 
-	export const getUnneeded = (downloadedExtensions: string[]) => {
+	export const getUnneeded = (downloadedExtensions: string[]): string[] => {
 		return get().filter((ext) => !downloadedExtensions.includes(ext));
 	};
 }

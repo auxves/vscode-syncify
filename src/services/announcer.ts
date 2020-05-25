@@ -9,7 +9,7 @@ export function showAnnouncement(url: string): void {
 	const openBtn = window.createStatusBarItem(1);
 	const dismissBtn = window.createStatusBarItem(1);
 
-	const dispose = () => {
+	const dispose = (): void => {
 		openDisposable.dispose();
 		dismissDisposable.dispose();
 		openBtn.dispose();

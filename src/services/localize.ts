@@ -4,10 +4,10 @@ import { Environment, FS, Logger } from "~/services";
 
 let pack: LanguagePack = {};
 
-export async function initLocalization(lang?: string) {
-	pack = await (async () => {
+export async function initLocalization(lang?: string): Promise<void> {
+	pack = await (async (): Promise<LanguagePack> => {
 		try {
-			const language: string = (() => {
+			const language = ((): string => {
 				if (lang) return lang;
 
 				if (process.env.VSCODE_NLS_CONFIG) {

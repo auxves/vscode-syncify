@@ -2,7 +2,7 @@ import { commands } from "vscode";
 import { CustomFiles, Factory, Profile, Settings, Watcher } from "~/services";
 import state from "~/state";
 
-export async function init() {
+export async function init(): Promise<void> {
 	const settings = await Settings.get();
 
 	const syncer = Factory.generate(settings.syncer);

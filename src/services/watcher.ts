@@ -8,7 +8,7 @@ export namespace Watcher {
 	let disposable: Disposable | undefined;
 	let watcher: FSWatcher | undefined;
 
-	export const init = (ignoredItems: string[]) => {
+	export const init = (ignoredItems: string[]): void => {
 		if (watcher) watcher.close();
 
 		watcher = chokidar.watch([], {
@@ -16,7 +16,7 @@ export namespace Watcher {
 		});
 	};
 
-	export const start = () => {
+	export const start = (): void => {
 		if (!watcher) return;
 
 		stop();
@@ -35,7 +35,7 @@ export namespace Watcher {
 		});
 	};
 
-	export const stop = () => {
+	export const stop = (): void => {
 		if (watcher) watcher.close();
 
 		if (disposable) {
@@ -44,7 +44,7 @@ export namespace Watcher {
 		}
 	};
 
-	const upload = async () => {
+	const upload = async (): Promise<void> => {
 		if (!window.state.focused) return;
 
 		const cmds = await commands.getCommands();

@@ -413,7 +413,7 @@ export class RepoSyncer implements Syncer {
 				files.map(async (file) => {
 					let contents = await FS.readBuffer(file);
 
-					const hasConflict = (c: string) => {
+					const hasConflict = (c: string): boolean => {
 						const regexes = [/^<{7}$/, /^={7}$/, /^>{7}$/];
 
 						return !c

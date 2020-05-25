@@ -1,7 +1,7 @@
 import { migrate, Environment } from "~/services";
 import state from "~/state";
 
-function setPreviousVersion(version: string) {
+function setPreviousVersion(version: string): void {
 	(state.context as any) = {};
 	(state.context!.globalState as any) = {
 		get: () => version,
@@ -9,7 +9,7 @@ function setPreviousVersion(version: string) {
 	};
 }
 
-function setVersion(version: string) {
+function setVersion(version: string): void {
 	Environment.version = version;
 }
 

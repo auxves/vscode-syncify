@@ -18,7 +18,9 @@ export namespace Settings {
 		<T>(selector: (s: ISettings) => T): Promise<T>;
 	};
 
-	export const get: SettingsGet = async <T>(selector?: (s: ISettings) => T) => {
+	export const get: SettingsGet = async <T>(
+		selector?: (s: ISettings) => T,
+	): Promise<T> => {
 		const exists = await FS.exists(Environment.settings);
 
 		if (!exists) {
@@ -48,7 +50,9 @@ export namespace Settings {
 		}
 	};
 
-	export const set = async (settings: DeepPartial<ISettings>) => {
+	export const set = async (
+		settings: DeepPartial<ISettings>,
+	): Promise<void> => {
 		const exists = await FS.exists(Environment.globalStoragePath);
 		if (!exists) await FS.mkdir(Environment.globalStoragePath);
 
@@ -62,11 +66,11 @@ export namespace Settings {
 		await commands.executeCommand("syncify.reinitialize");
 	};
 
-	export const open = async () => {
+	export const open = async (): Promise<void> => {
 		Webview.openSettingsPage(await get());
 	};
 
-	export const openFile = async () => {
+	export const openFile = async (): Promise<void> => {
 		await window.showTextDocument(
 			await workspace.openTextDocument(Environment.settings),
 			ViewColumn.One,
@@ -74,7 +78,7 @@ export namespace Settings {
 		);
 	};
 
-	export const reset = async () => {
+	export const reset = async (): Promise<void> => {
 		const userIsSure = await confirm("settings -> reset");
 
 		if (!userIsSure) return;

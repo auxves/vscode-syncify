@@ -1,3 +1,3 @@
-export function stringifyPretty(object: any) {
+export function stringifyPretty(object: any): string {
 	return JSON.stringify(object, undefined, "\t");
 }
