@@ -61,7 +61,7 @@
 		"xo": "^0.30.0"
 	},
 	"engines": {
-		"vscode": "^1.41.0"
+		"vscode": "^1.45.1"
 	},
 	"icon": "assets/logo.png",
 	"homepage": "https://arnohovhannisyan.space/vscode-syncify",
