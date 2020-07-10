@@ -44,13 +44,16 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        run: yarn vsce package
+        run: yarn vsce package --yarn
 
       - name: Generate Checksum
         run: sha256sum syncify-*.vsix > syncify-${RAW_VERSION}.vsix.sha256
 
-      - name: Publish to Marketplace
-        run: yarn vsce publish -p ${{ secrets.VS_TOKEN }}
+      - name: Publish to VSCode Marketplace
+        run: yarn vsce publish --yarn -p ${{ secrets.VS_TOKEN }}
+
+      - name: Publish to Open VSX Registry
+        run: yarn ovsx publish syncify-${RAW_VERSION}.vsix -p ${{ secrets.OVSX_TOKEN }}
 
       - name: Publish to GitHub Releases
         uses: AButler/upload-release-assets@v2.0

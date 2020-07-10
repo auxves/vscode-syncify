@@ -44,6 +44,7 @@
 		"jest": "^26.0.1",
 		"jest-raw-loader": "^1.0.1",
 		"lint-staged": "^10.2.6",
+		"ovsx": "^0.1.0-next.9b4e999",
 		"prettier": "2.0.4",
 		"raw-loader": "^4.0.1",
 		"shx": "^0.3.2",
