@@ -8,9 +8,7 @@ import {
 import { Environment, FS, localize, Logger } from "~/services";
 import { commands, window, workspace } from "vscode";
 
-function stringify(object: any): string {
-	return JSON.stringify(object, undefined, 2);
-}
+const stringify = (object: any) => JSON.stringify(object, undefined, 2);
 
 export namespace Settings {
 	export namespace local {

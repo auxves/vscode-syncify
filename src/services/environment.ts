@@ -3,9 +3,9 @@ import { Profiles, Settings } from "~/services";
 import pkg from "~/../package.json";
 import state from "~/state";
 
-async function resolvePromise(...args: Array<string | Promise<string>>) {
+const resolvePromise = async (...args: Array<string | Promise<string>>) => {
 	return resolve(...(await Promise.all(args)));
-}
+};
 
 export const Environment = {
 	get userFolder() {

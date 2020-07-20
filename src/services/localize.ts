@@ -5,7 +5,7 @@ type LanguagePack = { [key: string]: string | undefined };
 
 let pack: LanguagePack = {};
 
-export async function initLocalization(lang?: string): Promise<void> {
+export const initLocalization = async (lang?: string) => {
 	try {
 		const language = ((): string => {
 			if (lang) return lang;
@@ -34,10 +34,10 @@ export async function initLocalization(lang?: string): Promise<void> {
 	} catch (error) {
 		void Logger.error(error);
 	}
-}
+};
 
 const formatRegex = /{(\d+?)}/g;
 
-export function localize(key: string, ...args: string[]) {
+export const localize = (key: string, ...args: string[]) => {
 	return pack[key]?.replace(formatRegex, (_, index) => args[index]) ?? key;
-}
+};

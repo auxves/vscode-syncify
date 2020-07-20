@@ -3,12 +3,12 @@ import { Extensions, Environment, FS } from "~/services";
 import { getCleanupPath } from "~/tests/get-cleanup-path";
 import { resolve } from "path";
 
-function setExtensions(exts: string[]): void {
+const setExtensions = (exts: string[]) => {
 	(extensions.all as any) = exts.map((ext) => ({
 		id: ext,
 		packageJSON: { isBuiltin: false },
 	}));
-}
+};
 
 const cleanupPath = getCleanupPath("services/extensions");
 

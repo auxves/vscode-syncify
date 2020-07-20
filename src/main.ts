@@ -3,7 +3,7 @@ import { ExtensionContext, commands } from "vscode";
 import { RootSyncer } from "~/syncers";
 import state from "~/state";
 
-export async function activate(context: ExtensionContext) {
+export const activate = async (context: ExtensionContext) => {
 	state.context = context;
 
 	await initLocalization();
@@ -33,4 +33,4 @@ export async function activate(context: ExtensionContext) {
 	state.context.subscriptions.push(...disposables);
 
 	await init();
-}
+};
