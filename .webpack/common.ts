@@ -4,9 +4,6 @@ import { Configuration } from "webpack";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
 const config: Configuration = {
-	stats: {
-		warningsFilter: /(Critical dependency: the request of a dependency is an expression|Can't resolve 'original-fs')/,
-	},
 	target: "node",
 	entry: "./src/main.ts",
 	output: {
@@ -26,17 +23,11 @@ const config: Configuration = {
 				exclude: /node_modules/,
 				loader: "ts-loader",
 			},
-			{
-				test: /\.html$/,
-				exclude: /node_modules/,
-				use: "raw-loader",
-			},
 		],
 	},
 	plugins: [new CleanWebpackPlugin()],
 	externals: {
 		vscode: "commonjs vscode",
-		"vscode-fsevents": "commonjs vscode-fsevents",
 	},
 };
 

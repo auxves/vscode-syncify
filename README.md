@@ -10,18 +10,12 @@
   <a href="https://github.com/arnohovhannisyan/vscode-syncify/issues">
     <img src="https://img.shields.io/github/issues/arnohovhannisyan/vscode-syncify" alt="Issues">
   </a>
-  <a href="https://github.com/arnohovhannisyan/vscode-syncify/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/arnohovhannisyan/vscode-syncify" alt="License">
-  </a>
-  <a href="https://david-dm.org/arnohovhannisyan/vscode-syncify">
-    <img src="https://img.shields.io/david/arnohovhannisyan/vscode-syncify" alt="Deps">
-  </a>
   <a href="https://codecov.io/gh/arnohovhannisyan/vscode-syncify">
     <img src="https://img.shields.io/codecov/c/github/arnohovhannisyan/vscode-syncify" alt="Coverage">
   </a>
 </p>
 
-Syncify can sync your VSCode settings and extensions across all your devices using multiple methods.
+Syncify is a fast, reliable, and versatile way of syncing your VSCode settings and extensions across multiple devices.
 
 ## Documentation
 
@@ -37,16 +31,14 @@ The documentation can be found [here][link:docs].
 - No annoying popups
 - Quick setup with GitHub, GitLab, or BitBucket
 - Merge conflict resolution supported
-- Multiple profiles with support for hot-switching (currently only supported on `Git` method)
+- Multiple profiles with support for hot-switching
 - Simpler settings with intellisense
 - Debug logging for quickly resolving issues
 - Multiple sync methods
-  - `repo` — sync using a git repository
+  - `git` — sync using a git repository
   - `file` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc)
-- `Sync` command that automatically uploads or downloads if there are changes locally or remotely (only supported on `repo` method)
-- More intuitive custom file registration and importing
+- Intuitive custom file registration and importing
 - Notification for extension installation/uninstallation progress
-- Status bar button to cancel auto-upload
 - Descriptive errors with possible causes and solutions
 - Support for syncing custom extensions that are not from the VSCode Marketplace
 
@@ -76,7 +68,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-[link:docs]: https://arnohovhannisyan.space/vscode-syncify
+[img:banner]: https://raw.githubusercontent.com/arnohovhannisyan/vscode-syncify/master/assets/banner.jpg
+[link:docs]: https://github.com/arnohovhannisyan/vscode-syncify/wiki/Getting-Started
 [link:spectrum]: https://spectrum.chat/vscode-syncify
 [link:discord]: https://discord.gg/DwFKj57
-[img:banner]: https://arnohovhannisyan.space/vscode-syncify/img/banner.jpg

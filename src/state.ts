@@ -1,8 +1,6 @@
 import { ExtensionContext } from "vscode";
 
-type State = {
-	context?: ExtensionContext;
-};
+type State = { context?: ExtensionContext };
 
 const state: State = {};
 

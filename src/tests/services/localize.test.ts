@@ -1,7 +1,6 @@
 import { initLocalization, localize, FS, Environment } from "~/services";
 import { resolve } from "path";
-import { getCleanupPath } from "~/tests/getCleanupPath";
-import { stringifyPretty } from "~/utilities";
+import { getCleanupPath } from "~/tests/get-cleanup-path";
 
 test("language detection", async () => {
 	const spy = jest.spyOn(FS, "exists");
@@ -28,10 +27,7 @@ test("language detection", async () => {
 	{
 		await initLocalization();
 
-		const expected = resolve(
-			Environment.extensionPath,
-			`package.nls.en-us.json`,
-		);
+		const expected = resolve(Environment.extensionPath, `package.nls.en.json`);
 
 		expect(spy).toHaveBeenCalledWith(expected);
 
@@ -52,9 +48,7 @@ test("returns requested language pack", async () => {
 
 	await FS.write(
 		resolve(cleanupPath, "package.nls.lang.json"),
-		stringifyPretty({
-			key: "value",
-		}),
+		JSON.stringify({ key: "value" }),
 	);
 
 	await initLocalization("lang");
@@ -67,14 +61,18 @@ test("returns requested language pack", async () => {
 });
 
 test("basic functionality", async () => {
-	await initLocalization("en-us");
+	await initLocalization("en");
 
-	expect(localize("(info) extensions -> installed", "5")).toMatchSnapshot();
-	expect(localize("(info) extensions -> uninstalled", "10")).toMatchSnapshot();
+	expect(
+		localize("(info) Extensions.install -> installed", "5"),
+	).toMatchSnapshot();
+	expect(
+		localize("(info) Extensions.uninstall -> uninstalled", "10"),
+	).toMatchSnapshot();
 });
 
 test("invalid key", async () => {
-	await initLocalization("en-us");
+	await initLocalization("en");
 
 	expect(localize("")).toBe("");
 

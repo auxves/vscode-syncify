@@ -1,19 +1,7 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-	"files.exclude": {
-		"dist": false
-	},
-	"files.associations": {
-		".all-contributorsrc": "json",
-		".lintstagedrc": "json",
-		".huskyrc": "json"
-	},
 	"search.exclude": {
 		"dist": true
 	},
-	"typescript.tsc.autoDetect": "off",
-	"npm.autoDetect": "off",
-	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"typescript.tsdk": "node_modules/typescript/lib",
-	"xo.enable": true
+	"typescript.preferences.importModuleSpecifier": "non-relative"
 }

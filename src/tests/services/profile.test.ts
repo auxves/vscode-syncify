@@ -1,6 +1,6 @@
 import { resolve } from "path";
-import { Environment, FS, Profile, Settings } from "~/services";
-import { getCleanupPath } from "~/tests/getCleanupPath";
+import { Environment, FS, Profiles, Settings } from "~/services";
+import { getCleanupPath } from "~/tests/get-cleanup-path";
 
 jest.mock("~/services/localize.ts");
 
@@ -11,33 +11,33 @@ const pathToTest = resolve(cleanupPath, "test");
 const paths = [pathToTest];
 
 jest
-	.spyOn(Environment, "settings", "get")
+	.spyOn(Environment, "localSettings", "get")
 	.mockReturnValue(resolve(pathToTest, "settings.json"));
 
-beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
+jest
+	.spyOn(Environment, "sharedSettings", "get")
+	.mockReturnValue(Promise.resolve(resolve(pathToTest, "syncify.json")));
+
+beforeEach(async () => Promise.all(paths.map(async (path) => FS.mkdir(path))));
 
 afterEach(async () => FS.remove(cleanupPath));
 
 test("switch", async () => {
-	await Settings.set({
-		repo: {
-			profiles: [
-				{
-					name: "1",
-					branch: "1",
-				},
-				{
-					name: "2",
-					branch: "2",
-				},
-			],
-			currentProfile: "1",
-		},
+	await Settings.local.set({
+		syncer: "git",
+		currentProfile: "1",
 	});
 
-	await Profile.switchProfile("2");
+	await Settings.shared.set({
+		profiles: [
+			{ name: "1", extensions: [] },
+			{ name: "2", extensions: [] },
+		],
+	});
 
-	const currentProfile = await Settings.get((s) => s.repo.currentProfile);
+	await Profiles.switchProfile("2");
+
+	const { currentProfile } = await Settings.local.get();
 
 	expect(currentProfile).toBe("2");
 });

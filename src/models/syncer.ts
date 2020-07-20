@@ -1,5 +1,5 @@
 export type Syncer = {
-	sync: () => Promise<void>;
+	init: () => Promise<void>;
 	upload: () => Promise<void>;
 	download: () => Promise<void>;
 	isConfigured: () => Promise<boolean>;

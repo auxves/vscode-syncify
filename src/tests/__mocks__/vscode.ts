@@ -18,7 +18,7 @@ export const extensions = {
 		},
 	],
 	getExtension: () => ({
-		extensionPath: resolve("."),
+		extensionPath: resolve(),
 		packageJSON: {
 			version: "",
 		},
@@ -36,6 +36,4 @@ export enum ProgressLocation {
 	Notification = 1,
 }
 
-export const Uri = {
-	file: () => "file:///",
-};
+export const Uri = { file: () => "file:///" };

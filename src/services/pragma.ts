@@ -6,9 +6,9 @@ export namespace Pragma {
 		return uncomment(content, (section) => {
 			if (section.name !== "sync") return false;
 
-			const checks: boolean[] = [];
-
 			const { host, os, env } = section.args;
+
+			const checks: boolean[] = [];
 
 			if (host) checks.push(host === hostname);
 			if (os) checks.push(os === Environment.os);

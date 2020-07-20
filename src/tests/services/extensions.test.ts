@@ -1,16 +1,12 @@
 import { extensions, Uri, commands } from "vscode";
 import { Extensions, Environment, FS } from "~/services";
-import { getCleanupPath } from "~/tests/getCleanupPath";
+import { getCleanupPath } from "~/tests/get-cleanup-path";
 import { resolve } from "path";
 
 function setExtensions(exts: string[]): void {
 	(extensions.all as any) = exts.map((ext) => ({
 		id: ext,
 		packageJSON: { isBuiltin: false },
-		extensionPath: "",
-		isActive: false,
-		exports: undefined,
-		activate: async () => Promise.resolve(),
 	}));
 }
 
@@ -18,7 +14,9 @@ const cleanupPath = getCleanupPath("services/extensions");
 
 const pathToVsix = resolve(cleanupPath, "vsix");
 
-jest.spyOn(Environment, "vsixFolder", "get").mockReturnValue(pathToVsix);
+jest
+	.spyOn(Environment, "vsixFolder", "get")
+	.mockReturnValue(Promise.resolve(pathToVsix));
 
 test("missing extensions", () => {
 	setExtensions(["publisher1.extension1"]);

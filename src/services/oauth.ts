@@ -1,7 +1,7 @@
-import got from "got";
+/* import got from "got";
 import express, { Request } from "express";
 import { URLSearchParams } from "url";
-import { Environment, Logger, Webview } from "~/services";
+import { Environment, Logger } from "~/services";
 
 type Provider = "github" | "gitlab" | "bitbucket";
 
@@ -131,3 +131,4 @@ export namespace OAuth {
 		return { token, user };
 	};
 }
+ */

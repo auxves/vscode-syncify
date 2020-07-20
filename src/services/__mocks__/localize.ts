@@ -1,1 +1,1 @@
-export const localize = (key: string): string => key;
+export const localize = (key: string) => key;

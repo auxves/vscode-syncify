@@ -1,10 +1,4 @@
-export * from "~/models/syncers";
-export * from "~/models/languagePack";
-export * from "~/models/profile";
-export * from "~/models/migrations";
-export * from "~/models/settings";
-export * from "~/models/syncer";
-export * from "~/models/webview/settingType";
-export * from "~/models/webview/section";
-export * from "~/models/webview/setting";
-export * from "~/models/webview/selectOption";
+export { Profile } from "./profile";
+export { Syncer } from "./syncer";
+export { LocalSettings, defaultLocalSettings } from "./local-settings";
+export { SharedSettings, defaultSharedSettings } from "./shared-settings";
