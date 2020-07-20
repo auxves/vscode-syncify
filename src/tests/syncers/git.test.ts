@@ -1,27 +1,28 @@
 import { resolve } from "path";
-import createSimpleGit from "simple-git/promise";
+import createSimpleGit from "simple-git";
 import { window } from "vscode";
-import { Environment, FS, localize, Profile, Settings } from "~/services";
-import { RepoSyncer } from "~/syncers";
+import { LocalSettings } from "~/models";
+import { Environment, FS, localize, Profiles, Settings } from "~/services";
+import { GitSyncer } from "~/syncers";
 import { getCleanupPath } from "~/tests/getCleanupPath";
-import { merge, stringifyPretty } from "~/utilities";
+import { stringifyPretty } from "~/utilities";
 
 jest.mock("~/services/localize.ts");
 
-const cleanupPath = getCleanupPath("syncers/repo");
+const cleanupPath = getCleanupPath("syncers/git");
 
 const pathToRemote = resolve(cleanupPath, "remote");
 const pathToRepo = resolve(cleanupPath, "repo");
 const pathToTemporaryRepo = resolve(cleanupPath, "tmpRepo");
 const pathToUser = resolve(cleanupPath, "user");
-const pathToGlobalStoragePath = resolve(cleanupPath, "globalStoragePath");
+const pathToGlobalStorage = resolve(cleanupPath, "globalStoragePath");
 
 const paths = [
 	pathToRemote,
 	pathToRepo,
 	pathToTemporaryRepo,
 	pathToUser,
-	pathToGlobalStoragePath,
+	pathToGlobalStorage,
 ];
 
 const pathToSettings = resolve(pathToUser, "settings.json");
@@ -31,26 +32,24 @@ jest.spyOn(Environment, "repoFolder", "get").mockReturnValue(pathToRepo);
 
 jest
 	.spyOn(Environment, "globalStoragePath", "get")
-	.mockReturnValue(pathToGlobalStoragePath);
+	.mockReturnValue(pathToGlobalStorage);
 
 jest.setTimeout(15000);
 
-const currentSettings = {
-	repo: {
-		url: pathToRemote,
-	},
+const currentSettings: Partial<LocalSettings> = {
+	exportPath: pathToRemote,
 };
 
 beforeEach(async () => {
-	await Promise.all(paths.map(async (p) => FS.mkdir(p)));
+	await Promise.all(paths.map(FS.mkdir));
 	return createSimpleGit(pathToRemote).init(true);
 });
 
-afterEach(async () => FS.remove(cleanupPath));
+afterEach(() => FS.remove(cleanupPath));
 
 describe("upload", () => {
 	test("basic functionality", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -58,15 +57,15 @@ describe("upload", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const uploadedData = await FS.read(pathToSettings);
 		expect(uploadedData).toBe(userData);
 	});
 
 	test("behind remote", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -74,8 +73,8 @@ describe("upload", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const expected = stringifyPretty({
 			"test.key": false,
@@ -92,7 +91,7 @@ describe("upload", () => {
 		await git.commit("Testing");
 		await git.push("origin", "master", { "--force": null });
 
-		await repoSyncer.upload();
+		await gitSyncer.upload();
 
 		await git.pull("origin", "master", { "--force": null });
 
@@ -103,7 +102,7 @@ describe("upload", () => {
 	});
 
 	test("ignore items", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const expected = stringifyPretty({
 			"test.key": true,
@@ -111,8 +110,8 @@ describe("upload", () => {
 
 		await FS.write(pathToSettings, expected);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const exists = await FS.exists(resolve(pathToRepo, "workspaceStorage"));
 		expect(exists).toBeFalsy();
@@ -122,7 +121,7 @@ describe("upload", () => {
 	});
 
 	test("up to date", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -130,12 +129,12 @@ describe("upload", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const spy = jest.spyOn(window, "setStatusBarMessage");
 
-		await repoSyncer.upload();
+		await gitSyncer.upload();
 
 		expect(spy).toHaveBeenCalledWith(
 			localize("(info) repo -> remoteUpToDate"),
@@ -146,7 +145,7 @@ describe("upload", () => {
 	});
 
 	test("binary files", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const pathToBuffer = resolve(pathToUser, "buffer");
 
@@ -154,8 +153,8 @@ describe("upload", () => {
 
 		await FS.write(pathToBuffer, buffer);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
@@ -172,7 +171,7 @@ describe("upload", () => {
 
 describe("download", () => {
 	test("basic functionality", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -180,8 +179,8 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const expected = stringifyPretty({
 			"test.key": false,
@@ -198,7 +197,7 @@ describe("download", () => {
 		await git.commit("Testing");
 		await git.push("origin", "master", { "--force": null });
 
-		await repoSyncer.download();
+		await gitSyncer.download();
 
 		const downloadedData = await FS.read(pathToSettings);
 
@@ -206,7 +205,7 @@ describe("download", () => {
 	});
 
 	test("create branch if first download", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -214,11 +213,11 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		await new RepoSyncer().upload();
+		await new GitSyncer().upload();
 
 		await FS.remove(pathToRepo);
 
-		await new RepoSyncer().download();
+		await new GitSyncer().download();
 
 		const downloadedData = await FS.read(pathToSettings);
 
@@ -226,7 +225,7 @@ describe("download", () => {
 	});
 
 	test("ahead of remote", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -234,24 +233,21 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		await new RepoSyncer().download();
+		await new GitSyncer().download();
 
 		const currentData = await FS.read(pathToSettings);
 		expect(currentData).toBe(userData);
 	});
 
 	test("switch profiles", async () => {
-		await Settings.set(
-			merge(currentSettings, {
-				repo: {
-					profiles: [
-						{ branch: "test1", name: "test1" },
-						{ branch: "test2", name: "test2" },
-					],
-					currentProfile: "test1",
-				},
-			}),
-		);
+		await Settings.shared.set({
+			profiles: [
+				{ name: "test1", extensions: [] },
+				{ name: "test2", extensions: [] },
+			],
+		});
+
+		await Settings.local.set({ ...currentSettings, currentProfile: "test1" });
 
 		const userData = stringifyPretty({
 			"test.key": 1,
@@ -259,10 +255,10 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
-		await Profile.switchProfile("test2");
+		await Profiles.switchProfile("test2");
 
 		const newUserData = stringifyPretty({
 			"test.key": 2,
@@ -270,9 +266,9 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, newUserData);
 
-		await repoSyncer.upload();
-		await Profile.switchProfile("test1");
-		await repoSyncer.download();
+		await gitSyncer.upload();
+		await Profiles.switchProfile("test1");
+		await gitSyncer.download();
 
 		const downloadedData = await FS.read(pathToSettings);
 
@@ -280,17 +276,14 @@ describe("download", () => {
 	});
 
 	test("download new profile", async () => {
-		await Settings.set(
-			merge(currentSettings, {
-				repo: {
-					profiles: [
-						{ branch: "test1", name: "test1" },
-						{ branch: "test2", name: "test2" },
-					],
-					currentProfile: "test1",
-				},
-			}),
-		);
+		await Settings.shared.set({
+			profiles: [
+				{ name: "test1", extensions: [] },
+				{ name: "test2", extensions: [] },
+			],
+		});
+
+		await Settings.local.set({ ...currentSettings, currentProfile: "test1" });
 
 		const userData = stringifyPretty({
 			"test.key": 1,
@@ -298,8 +291,8 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const newUserData = stringifyPretty({
 			"test.key": 2,
@@ -318,9 +311,9 @@ describe("download", () => {
 		await git.commit("Testing");
 		await git.push("origin", "test2");
 
-		await Profile.switchProfile("test2");
+		await Profiles.switchProfile("test2");
 
-		await repoSyncer.download();
+		await gitSyncer.download();
 
 		const downloadedData = await FS.read(pathToSettings);
 
@@ -328,7 +321,7 @@ describe("download", () => {
 	});
 
 	test("up to date", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -336,12 +329,12 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const spy = jest.spyOn(window, "setStatusBarMessage");
 
-		await repoSyncer.download();
+		await gitSyncer.download();
 
 		expect(spy).toHaveBeenCalledWith(localize("(info) repo -> upToDate"), 2000);
 
@@ -349,7 +342,7 @@ describe("download", () => {
 	});
 
 	test("merge if dirty", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -357,8 +350,8 @@ describe("download", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const expected = stringifyPretty({
 			"test.key": false,
@@ -380,7 +373,7 @@ describe("download", () => {
 
 		await FS.write(pathToKeybindings, keybindings);
 
-		await repoSyncer.download();
+		await gitSyncer.download();
 
 		const downloadedData = await FS.read(pathToSettings);
 		expect(downloadedData.replace(/\r\n/g, "\n")).toBe(expected);
@@ -390,14 +383,14 @@ describe("download", () => {
 	});
 
 	test("binary files", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const pathToBuffer = resolve(pathToUser, "buffer");
 
 		await FS.write(pathToBuffer, Buffer.alloc(2).fill(0));
 
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
+		const gitSyncer = new GitSyncer();
+		await gitSyncer.upload();
 
 		const git = createSimpleGit(pathToTemporaryRepo);
 		await git.init();
@@ -412,129 +405,10 @@ describe("download", () => {
 		await git.commit("Testing");
 		await git.push("origin", "master", { "--force": null });
 
-		await repoSyncer.download();
+		await gitSyncer.download();
 
 		const downloadedBuffer = await FS.readBuffer(pathToBuffer);
 
 		expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
-	});
-});
-
-describe("sync", () => {
-	test("dirty and not behind", async () => {
-		await Settings.set(currentSettings);
-
-		const userData = stringifyPretty({
-			"test.key": true,
-		});
-
-		await FS.write(pathToSettings, userData);
-
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
-
-		const newUserData = stringifyPretty({
-			"test.key": false,
-		});
-
-		await FS.write(pathToSettings, newUserData);
-
-		const spy = jest.spyOn(repoSyncer, "upload");
-
-		await repoSyncer.sync();
-
-		expect(spy).toHaveBeenCalled();
-
-		spy.mockRestore();
-	});
-
-	test("clean and not behind", async () => {
-		await Settings.set(currentSettings);
-
-		const userData = stringifyPretty({
-			"test.key": true,
-		});
-
-		await FS.write(pathToSettings, userData);
-
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
-
-		const uploadSpy = jest.spyOn(repoSyncer, "upload");
-		const downloadSpy = jest.spyOn(repoSyncer, "download");
-
-		await repoSyncer.sync();
-
-		expect(uploadSpy).not.toHaveBeenCalled();
-		expect(downloadSpy).not.toHaveBeenCalled();
-
-		uploadSpy.mockRestore();
-		downloadSpy.mockRestore();
-	});
-
-	test("behind remote", async () => {
-		await Settings.set(currentSettings);
-
-		const userData = stringifyPretty({
-			"test.key": true,
-		});
-
-		await FS.write(pathToSettings, userData);
-
-		const repoSyncer = new RepoSyncer();
-		await repoSyncer.upload();
-
-		const expected = stringifyPretty({
-			"test.key": false,
-		});
-
-		const git = createSimpleGit(pathToTemporaryRepo);
-		await git.init();
-		await git.addRemote("origin", pathToRemote);
-		await git.pull("origin", "master", { "--force": null });
-
-		await FS.write(resolve(pathToTemporaryRepo, "settings.json"), expected);
-
-		await git.add(".");
-		await git.commit("Testing");
-		await git.push("origin", "master", { "--force": null });
-
-		await repoSyncer.sync();
-
-		const syncedData = await FS.read(pathToSettings);
-		expect(syncedData.replace(/\r\n/g, "\n")).toBe(expected);
-	});
-});
-
-describe("init", () => {
-	test("basic functionality", async () => {
-		await Settings.set(currentSettings);
-
-		await new RepoSyncer().init();
-
-		const git = createSimpleGit(pathToRepo);
-
-		expect(await git.checkIsRepo()).toBeTruthy();
-
-		const remotes = await git.getRemotes(true);
-
-		expect(remotes[0].name).toBe("origin");
-		expect(remotes[0].refs.push).toBe(pathToRemote);
-	});
-
-	test("update remote if not correct", async () => {
-		const git = createSimpleGit(pathToRepo);
-
-		await git.init();
-		await git.addRemote("origin", "test");
-
-		await Settings.set(currentSettings);
-
-		await new RepoSyncer().init();
-
-		const remotes = await git.getRemotes(true);
-
-		expect(remotes[0].name).toBe("origin");
-		expect(remotes[0].refs.push).toBe(pathToRemote);
 	});
 });

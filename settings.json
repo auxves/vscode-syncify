@@ -1,0 +1,13 @@
+{
+	"syncer": "git",
+	"currentProfile": "main",
+	"exportPath": "",
+	"filesToInclude": [
+		"**/*",
+		"!workspaceStorage",
+		"!globalStorage"
+	],
+	"hostname": "",
+	"forceDownload": false,
+	"forceUpload": false
+}

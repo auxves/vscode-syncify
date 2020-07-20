@@ -10,15 +10,15 @@ const pathToTest = resolve(cleanupPath, "test");
 
 const paths = [pathToTest];
 
-beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
-afterEach(async () => FS.remove(cleanupPath));
+afterEach(() => FS.remove(cleanupPath));
 
 test("regular files", async () => {
 	const filepath = resolve(pathToTest, "file");
 	await FS.write(filepath, "test");
 
-	const files = await FS.listFiles(pathToTest, ["**/file"]);
+	const files = await FS.listFiles(pathToTest, ["!file"]);
 
 	expect(files.includes(filepath)).toBeFalsy();
 });
@@ -27,7 +27,7 @@ test("ignored files", async () => {
 	const filepath = resolve(pathToTest, "file");
 	await FS.write(filepath, "test");
 
-	const files = await FS.listFiles(pathToTest, ["**/fole"]);
+	const files = await FS.listFiles(pathToTest, ["!fole"]);
 
 	expect(files.includes(filepath)).toBeTruthy();
 });

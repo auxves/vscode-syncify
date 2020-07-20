@@ -1,94 +1,108 @@
-import cloneDeep from "lodash/cloneDeep";
-import { DeepPartial } from "utility-types";
-import { commands, ViewColumn, window, workspace } from "vscode";
-import { defaultSettings, ISettings } from "~/models";
+import { dirname } from "path";
+import { commands, window, workspace } from "vscode";
+import { stringifyPretty } from "~/utilities";
+import { Environment, FS, localize, Logger } from "~/services";
 import {
-	Environment,
-	FS,
-	localize,
-	Logger,
-	Watcher,
-	Webview,
-} from "~/services";
-import { confirm, merge, stringifyPretty } from "~/utilities";
+	defaultLocalSettings,
+	defaultSharedSettings,
+	LocalSettings,
+	SharedSettings,
+} from "~/models";
 
 export namespace Settings {
-	type SettingsGet = {
-		(): Promise<ISettings>;
-		<T>(selector: (s: ISettings) => T): Promise<T>;
-	};
+	export namespace local {
+		export const get = async (): Promise<LocalSettings> => {
+			const settingsPath = Environment.localSettings;
 
-	export const get: SettingsGet = async <T>(
-		selector?: (s: ISettings) => T,
-	): Promise<T> => {
-		const exists = await FS.exists(Environment.settings);
+			const exists = await FS.exists(settingsPath);
 
-		if (!exists) {
-			await FS.mkdir(Environment.globalStoragePath);
-			await FS.write(Environment.settings, stringifyPretty(defaultSettings));
+			if (!exists) {
+				await FS.mkdir(dirname(settingsPath));
+				await FS.write(settingsPath, stringifyPretty(defaultLocalSettings));
+				return defaultLocalSettings;
+			}
 
-			if (selector) return cloneDeep(selector(defaultSettings));
+			try {
+				return JSON.parse(await FS.read(settingsPath));
+			} catch (error) {
+				Logger.error(error);
+				return defaultLocalSettings;
+			}
+		};
 
-			return cloneDeep<any>(defaultSettings);
-		}
+		export const set = async (settings: Partial<LocalSettings>) => {
+			const settingsPath = Environment.localSettings;
 
-		try {
-			const contents = await FS.read(Environment.settings);
-			const settings = JSON.parse(contents);
+			await FS.mkdir(dirname(settingsPath));
 
-			const merged = merge(defaultSettings, settings);
+			const currentSettings = await get();
 
-			if (selector) return cloneDeep(selector(merged));
+			await FS.write(
+				settingsPath,
+				stringifyPretty({ ...currentSettings, ...settings }),
+			);
 
-			return cloneDeep(merged);
-		} catch (error) {
-			Logger.error(error);
+			await commands.executeCommand("syncify.reinitialize");
+		};
+	}
 
-			if (selector) return cloneDeep(selector(defaultSettings));
+	export namespace shared {
+		export const get = async (): Promise<SharedSettings> => {
+			const settingsPath = await Environment.sharedSettings;
 
-			return cloneDeep<any>(defaultSettings);
-		}
-	};
+			const exists = await FS.exists(settingsPath);
 
-	export const set = async (
-		settings: DeepPartial<ISettings>,
-	): Promise<void> => {
-		const exists = await FS.exists(Environment.globalStoragePath);
-		if (!exists) await FS.mkdir(Environment.globalStoragePath);
+			if (!exists) {
+				await FS.mkdir(dirname(settingsPath));
+				await FS.write(settingsPath, stringifyPretty(defaultSharedSettings));
+				return defaultSharedSettings;
+			}
 
-		const currentSettings = await get();
+			try {
+				return JSON.parse(await FS.read(settingsPath));
+			} catch (error) {
+				Logger.error(error);
+				return defaultSharedSettings;
+			}
+		};
 
-		await FS.write(
-			Environment.settings,
-			stringifyPretty(merge(currentSettings, settings)),
-		);
+		export const set = async (settings: Partial<SharedSettings>) => {
+			const settingsPath = await Environment.sharedSettings;
 
-		await commands.executeCommand("syncify.reinitialize");
-	};
+			await FS.mkdir(dirname(settingsPath));
 
-	export const open = async (): Promise<void> => {
-		Webview.openSettingsPage(await get());
-	};
+			const currentSettings = await get();
 
-	export const openFile = async (): Promise<void> => {
+			await FS.write(
+				settingsPath,
+				stringifyPretty({ ...currentSettings, ...settings }),
+			);
+
+			await commands.executeCommand("syncify.reinitialize");
+		};
+	}
+
+	export const open = async () => {
 		await window.showTextDocument(
-			await workspace.openTextDocument(Environment.settings),
-			ViewColumn.One,
-			true,
+			await workspace.openTextDocument(Environment.localSettings),
 		);
 	};
 
-	export const reset = async (): Promise<void> => {
-		const userIsSure = await confirm("settings -> reset");
+	export const reset = async () => {
+		const response = await window.showWarningMessage(
+			localize("(label) Settings.reset -> confirmation"),
+			localize("(label) yes"),
+			localize("(label) no"),
+		);
 
-		if (!userIsSure) return;
-
-		Watcher.stop();
+		if (response !== localize("(label) yes")) return;
 
 		await FS.remove(Environment.globalStoragePath);
 
 		await commands.executeCommand("syncify.reinitialize");
 
-		await window.showInformationMessage(localize("(info) reset -> complete"));
+		await window.showInformationMessage(
+			localize("(info) Settings.reset -> complete"),
+		);
 	};
 }

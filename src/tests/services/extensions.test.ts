@@ -10,7 +10,7 @@ function setExtensions(exts: string[]): void {
 		extensionPath: "",
 		isActive: false,
 		exports: undefined,
-		activate: async () => Promise.resolve(),
+		activate: () => Promise.resolve(),
 	}));
 }
 
@@ -18,7 +18,9 @@ const cleanupPath = getCleanupPath("services/extensions");
 
 const pathToVsix = resolve(cleanupPath, "vsix");
 
-jest.spyOn(Environment, "vsixFolder", "get").mockReturnValue(pathToVsix);
+jest
+	.spyOn(Environment, "vsixFolder", "get")
+	.mockReturnValue(Promise.resolve(pathToVsix));
 
 test("missing extensions", () => {
 	setExtensions(["publisher1.extension1"]);

@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { Syncers } from "~/models";
+import { LocalSettings } from "~/models";
 import { Environment, FS, Settings } from "~/services";
 import { FileSyncer } from "~/syncers";
 import { getCleanupPath } from "~/tests/getCleanupPath";
@@ -11,33 +11,31 @@ const cleanupPath = getCleanupPath("syncers/file");
 
 const pathToExport = resolve(cleanupPath, "export");
 const pathToUser = resolve(cleanupPath, "user");
-const pathToGlobalStoragePath = resolve(cleanupPath, "globalStoragePath");
+const pathToGlobalStorage = resolve(cleanupPath, "globalStoragePath");
 
-const paths = [pathToExport, pathToUser, pathToGlobalStoragePath];
+const paths = [pathToExport, pathToUser, pathToGlobalStorage];
 
 const pathToSettings = resolve(pathToUser, "settings.json");
-const pathToExportSettings = resolve(pathToExport, "settings.json");
+const pathToExportSettings = resolve(pathToExport, "main/settings.json");
 
 jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
 
 jest
 	.spyOn(Environment, "globalStoragePath", "get")
-	.mockReturnValue(pathToGlobalStoragePath);
+	.mockReturnValue(pathToGlobalStorage);
 
-const currentSettings = {
-	syncer: Syncers.File,
-	file: {
-		path: pathToExport,
-	},
+const currentSettings: Partial<LocalSettings> = {
+	syncer: "file",
+	exportPath: pathToExport,
 };
 
-beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
-afterEach(async () => FS.remove(cleanupPath));
+afterEach(() => FS.remove(cleanupPath));
 
 describe("upload", () => {
 	test("basic functionality", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const userData = stringifyPretty({
 			"test.key": true,
@@ -53,7 +51,7 @@ describe("upload", () => {
 	});
 
 	test("binary files", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const buffer = Buffer.alloc(2).fill(1);
 
@@ -64,13 +62,13 @@ describe("upload", () => {
 
 		const uploadedBuffer = await FS.readBuffer(resolve(pathToExport, "buffer"));
 
-		expect(Buffer.compare(buffer, uploadedBuffer)).toBe(0);
+		expect(buffer.compare(uploadedBuffer)).toBe(0);
 	});
 });
 
 describe("download", () => {
 	test("basic functionality", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const settings = stringifyPretty({
 			"test.key": true,
@@ -95,7 +93,7 @@ describe("download", () => {
 	});
 
 	test("binary files", async () => {
-		await Settings.set(currentSettings);
+		await Settings.local.set(currentSettings);
 
 		const buffer = Buffer.alloc(2).fill(1);
 
@@ -106,6 +104,6 @@ describe("download", () => {
 
 		const downloadedBuffer = await FS.readBuffer(resolve(pathToUser, "buffer"));
 
-		expect(Buffer.compare(buffer, downloadedBuffer)).toBe(0);
+		expect(buffer.compare(downloadedBuffer)).toBe(0);
 	});
 });

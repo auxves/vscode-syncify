@@ -1,4 +1,0 @@
-[submodule "assets/ui"]
-	path = assets/ui
-	url = https://github.com/arnohovhannisyan/syncify-webviews
-	branch = dist

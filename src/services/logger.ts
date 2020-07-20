@@ -1,30 +1,54 @@
-import { window } from "vscode";
-import { localize, Webview } from "~/services";
+import { window, workspace } from "vscode";
+import { localize } from "~/services";
+import fetch from "node-fetch";
 
 export namespace Logger {
 	const output = window.createOutputChannel("Syncify");
 
-	export const error = (err: Error): void => {
-		output.appendLine(`[error] ${err.message.trim()}`);
+	const fetchDescription = async (message: string) => {
+		const body = await fetch("https://pastebin.com/raw/cu5vtiAL")
+			.then((res) => res.text())
+			.then((res) => res.replace(/\r/g, ""));
 
-		window
-			.showErrorMessage(
-				localize("(error) default"),
-				localize("(label) showDetails"),
-			)
-			.then((result) => result && Webview.openErrorPage(err), error);
+		const matchers = body.split(/\n+---\n+/).map((str) => {
+			const description = str.slice(str.indexOf("\n\n") + 2);
+			const matcher = str.split("\n\n")[0].match(/^Matcher: \/(.*)\/$/)![1];
+
+			return {
+				description,
+				regex: new RegExp(matcher, "gi"),
+			};
+		});
+
+		return matchers.find(({ regex }) => regex.test(message))?.description;
 	};
 
-	const debugMapper = (value: unknown): unknown => {
+	export const error = async ({ message }: Error): Promise<void> => {
+		output.appendLine(`[error] ${message.trim()}`);
+
+		const result = await window.showErrorMessage(
+			localize("(info) Logger.error -> show details"),
+			localize("(label) Logger.error -> show details"),
+		);
+
+		if (result) {
+			output.show();
+
+			const content = await fetchDescription(message);
+
+			if (content) {
+				await window.showTextDocument(
+					await workspace.openTextDocument({ content, language: "markdown" }),
+				);
+			}
+		}
+	};
+
+	const stringify = (value: any) => {
 		return Array.isArray(value) ? JSON.stringify(value, undefined, 2) : value;
 	};
 
-	export const debug = (...args: any[]): void => {
-		output.appendLine(
-			`[debug] ${args
-				.map((a) => debugMapper(a))
-				.join(" ")
-				.trim()}`,
-		);
+	export const info = (...args: any[]): void => {
+		output.appendLine(`[info] ${args.map(stringify).join(" ").trim()}`);
 	};
 }

@@ -69,8 +69,12 @@ test("returns requested language pack", async () => {
 test("basic functionality", async () => {
 	await initLocalization("en-us");
 
-	expect(localize("(info) extensions -> installed", "5")).toMatchSnapshot();
-	expect(localize("(info) extensions -> uninstalled", "10")).toMatchSnapshot();
+	expect(
+		localize("(info) Extensions.install -> installed", "5"),
+	).toMatchSnapshot();
+	expect(
+		localize("(info) Extensions.uninstall -> uninstalled", "10"),
+	).toMatchSnapshot();
 });
 
 test("invalid key", async () => {

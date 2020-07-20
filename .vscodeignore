@@ -11,14 +11,9 @@ coverage
 
 .all-contributorsrc
 .xo-config.json
-.huskyrc
-.lintstagedrc
 .prettierrc
 codecov.yml
 .gitignore
-.gitmodules
 tsconfig.json
-assets/ui/.git
-assets/ui/index.html
 *.map
 *.log

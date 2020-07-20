@@ -1,6 +1,3 @@
-import { dirname, relative, resolve } from "path";
-import { commands, extensions, ProgressLocation, window } from "vscode";
-import { ISettings, Syncer } from "~/models";
 import {
 	Environment,
 	Extensions,
@@ -8,217 +5,140 @@ import {
 	localize,
 	Logger,
 	Pragma,
+	Profiles,
 	Settings,
-	Watcher,
-	Webview,
 } from "~/services";
-import { sleep, stringifyPretty } from "~/utilities";
+import { dirname, relative, resolve } from "path";
+import { commands, extensions, window } from "vscode";
+import { Syncer } from "~/models";
 
 export class FileSyncer implements Syncer {
-	async sync(): Promise<void> {
-		await window.showInformationMessage(
-			"Syncify: Sync is not available for File Syncer yet",
-		);
+	async init() {
+		await FS.mkdir(await Environment.currentProfileFolder);
 	}
 
-	async upload(): Promise<void> {
-		const settings = await Settings.get();
-		Watcher.stop();
+	async upload() {
+		const profile = (await Profiles.getCurrent())!;
+		const currentProfileFolder = await Environment.currentProfileFolder;
 
-		await window.withProgress(
-			{ location: ProgressLocation.Window },
-			async (progress) => {
-				try {
-					const configured = await this.isConfigured();
-					if (!configured) {
-						Webview.openLandingPage();
-						return;
-					}
+		const installedExtensions = Extensions.get();
 
-					progress.report({ message: localize("(info) sync -> uploading") });
+		await Profiles.updateProfile(profile.name, {
+			extensions: installedExtensions,
+		});
 
-					const installedExtensions = Extensions.get();
+		await this.copyFilesToPath(currentProfileFolder);
+	}
 
-					await FS.write(
-						resolve(settings.file.path, "extensions.json"),
-						stringifyPretty(installedExtensions),
-					);
+	async download() {
+		const { hostname } = await Settings.local.get();
+		const currentProfileFolder = await Environment.currentProfileFolder;
 
-					await this.copyFilesToPath(settings);
+		await this.copyFilesFromPath(currentProfileFolder, hostname);
 
-					progress.report({ increment: 100 });
+		const profile = (await Profiles.getCurrent())!;
 
-					await sleep(10);
+		Logger.info(
+			"Extensions parsed from downloaded settings:",
+			profile.extensions,
+		);
 
-					window.setStatusBarMessage(localize("(info) sync -> uploaded"), 2000);
-				} catch (error) {
-					Logger.error(error);
+		await Extensions.install(...Extensions.getMissing(profile.extensions));
+
+		const toDelete = Extensions.getUnneeded(profile.extensions);
+
+		if (toDelete.length !== 0) {
+			const needToReload = toDelete.some(
+				(name) => extensions.getExtension(name)?.isActive ?? false,
+			);
+
+			Logger.info("Need to reload:", needToReload);
+
+			await Extensions.uninstall(...toDelete);
+
+			if (needToReload) {
+				const result = await window.showInformationMessage(
+					localize("(info) Syncer.download -> reload confirmation"),
+					localize("(label) yes"),
+				);
+
+				if (result) {
+					await commands.executeCommand("workbench.action.reloadWindow");
 				}
-			},
-		);
-
-		if (settings.watchSettings) Watcher.start();
+			}
+		}
 	}
 
-	async download(): Promise<void> {
-		const settings = await Settings.get();
-		Watcher.stop();
+	async isConfigured() {
+		const { exportPath } = await Settings.local.get();
+		const profile = await Profiles.getCurrent();
 
-		await window.withProgress(
-			{ location: ProgressLocation.Window },
-			async (progress) => {
-				try {
-					const configured = await this.isConfigured();
-					if (!configured) {
-						Webview.openLandingPage();
-						return;
-					}
+		return !!(exportPath && profile);
+	}
 
-					progress.report({ message: localize("(info) sync -> downloading") });
+	private async copyFilesToPath(exportPath: string): Promise<void> {
+		const files = await FS.listFiles(Environment.userFolder);
 
-					await this.copyFilesFromPath(settings);
+		Logger.info(
+			"Files to copy to folder:",
+			files.map((f) => relative(Environment.userFolder, f)),
+		);
 
-					const extensionsFromFile = await (async () => {
-						const path = resolve(settings.file.path, "extensions.json");
+		await Promise.all(
+			files.map(async (file) => {
+				const newPath = resolve(
+					exportPath,
+					relative(Environment.userFolder, file),
+				);
 
-						const extensionsExist = await FS.exists(path);
+				await FS.mkdir(dirname(newPath));
 
-						if (!extensionsExist) return [];
+				if (file.endsWith(".json")) {
+					return FS.write(newPath, Pragma.outgoing(await FS.read(file)));
+				}
 
-						return JSON.parse(await FS.read(path));
+				return FS.copy(file, newPath);
+			}),
+		);
+	}
+
+	private async copyFilesFromPath(
+		exportPath: string,
+		hostname: string,
+	): Promise<void> {
+		const files = await FS.listFiles(exportPath);
+
+		Logger.info(
+			"Files to copy from folder:",
+			files.map((f) => relative(exportPath, f)),
+		);
+
+		await Promise.all(
+			files.map(async (file) => {
+				const newPath = resolve(
+					Environment.userFolder,
+					relative(exportPath, file),
+				);
+
+				await FS.mkdir(dirname(newPath));
+
+				if (file.endsWith(".json")) {
+					const currentContents = await (async () => {
+						if (await FS.exists(newPath)) return FS.read(newPath);
+						return "{}";
 					})();
 
-					Logger.debug(
-						"Extensions parsed from downloaded file:",
-						extensionsFromFile,
-					);
+					const afterPragma = Pragma.incoming(await FS.read(file), hostname);
 
-					await Extensions.install(
-						...Extensions.getMissing(extensionsFromFile),
-					);
-
-					const toDelete = Extensions.getUnneeded(extensionsFromFile);
-
-					if (toDelete.length !== 0) {
-						const needToReload = toDelete.some(
-							(name) => extensions.getExtension(name)?.isActive ?? false,
-						);
-
-						Logger.debug("Need to reload:", needToReload);
-
-						await Extensions.uninstall(...toDelete);
-
-						if (needToReload) {
-							const result = await window.showInformationMessage(
-								localize("(info) sync -> needToReload"),
-								localize("(label) yes"),
-							);
-
-							if (result) {
-								await commands.executeCommand("workbench.action.reloadWindow");
-							}
-						}
+					if (currentContents !== afterPragma) {
+						return FS.write(newPath, afterPragma);
 					}
 
-					progress.report({ increment: 100 });
-
-					await sleep(10);
-
-					window.setStatusBarMessage(
-						localize("(info) sync -> downloaded"),
-						2000,
-					);
-				} catch (error) {
-					Logger.error(error);
+					return;
 				}
-			},
+
+				return FS.copy(file, newPath);
+			}),
 		);
-
-		if (settings.watchSettings) Watcher.start();
-	}
-
-	async isConfigured(): Promise<boolean> {
-		const path = await Settings.get((s) => s.file.path);
-
-		if (!path) return false;
-
-		await FS.mkdir(path);
-
-		return true;
-	}
-
-	private async copyFilesToPath(settings: ISettings): Promise<void> {
-		try {
-			const files = await FS.listFiles(Environment.userFolder);
-
-			Logger.debug(
-				"Files to copy to folder:",
-				files.map((f) => relative(Environment.userFolder, f)),
-			);
-
-			await Promise.all(
-				files.map(async (file) => {
-					const newPath = resolve(
-						settings.file.path,
-						relative(Environment.userFolder, file),
-					);
-
-					await FS.mkdir(dirname(newPath));
-
-					if (file.endsWith(".json")) {
-						return FS.write(newPath, Pragma.outgoing(await FS.read(file)));
-					}
-
-					return FS.copy(file, newPath);
-				}),
-			);
-		} catch (error) {
-			Logger.error(error);
-		}
-	}
-
-	private async copyFilesFromPath(settings: ISettings): Promise<void> {
-		try {
-			const files = await FS.listFiles(settings.file.path);
-
-			Logger.debug(
-				"Files to copy from folder:",
-				files.map((f) => relative(settings.file.path, f)),
-			);
-
-			await Promise.all(
-				files.map(async (file) => {
-					const newPath = resolve(
-						Environment.userFolder,
-						relative(settings.file.path, file),
-					);
-
-					await FS.mkdir(dirname(newPath));
-
-					if (file.endsWith(".json")) {
-						const currentContents = await (async () => {
-							if (await FS.exists(newPath)) return FS.read(newPath);
-
-							return "{}";
-						})();
-
-						const afterPragma = Pragma.incoming(
-							await FS.read(file),
-							settings.hostname,
-						);
-
-						if (currentContents !== afterPragma) {
-							return FS.write(newPath, afterPragma);
-						}
-
-						return;
-					}
-
-					return FS.copy(file, newPath);
-				}),
-			);
-		} catch (error) {
-			Logger.error(error);
-		}
 	}
 }

@@ -1,7 +1,7 @@
+import { Settings } from "~/services";
+import { normalize } from "path";
 import glob from "fast-glob";
 import fse from "fs-extra";
-import { normalize } from "path";
-import { Settings } from "~/services";
 
 export namespace FS {
 	export const exists = async (path: string): Promise<boolean> => {
@@ -33,20 +33,12 @@ export namespace FS {
 	};
 
 	export const remove = async (...paths: string[]): Promise<void> => {
-		await Promise.all(paths.map(async (path) => fse.remove(path)));
+		await Promise.all(paths.map(fse.remove));
 	};
 
-	export const listFiles = async (
-		path: string,
-		ignoredItems?: string[],
-	): Promise<string[]> => {
-		const files = await glob("**/*", {
-			dot: true,
-			ignore: ignoredItems ?? (await Settings.get((s) => s.ignoredItems)),
-			absolute: true,
-			cwd: path,
-		});
-
-		return files.map((f) => normalize(f));
+	export const listFiles = async (path: string, filesToInclude?: string[]) => {
+		const src = filesToInclude ?? (await Settings.local.get()).filesToInclude;
+		const files = await glob(src, { absolute: true, cwd: path });
+		return files.map(normalize);
 	};
 }

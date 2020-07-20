@@ -18,7 +18,7 @@ export const extensions = {
 		},
 	],
 	getExtension: () => ({
-		extensionPath: resolve("."),
+		extensionPath: resolve(),
 		packageJSON: {
 			version: "",
 		},

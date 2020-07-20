@@ -1,21 +1,19 @@
+import { Environment, FS, localize, Logger } from "~/services";
 import { basename, resolve } from "path";
 import { QuickPickItem, Uri, window, workspace } from "vscode";
-import { Environment, FS, localize, Logger } from "~/services";
 
 export namespace CustomFiles {
 	export const importFile = async (uri?: Uri): Promise<void> => {
 		try {
-			const folderExists = await FS.exists(Environment.customFilesFolder);
+			const customFilesFolder = await Environment.customFilesFolder;
 
-			if (!folderExists) {
-				await FS.mkdir(Environment.customFilesFolder);
-			}
+			await FS.mkdir(customFilesFolder);
 
-			const allFiles = await FS.listFiles(Environment.customFilesFolder);
+			const allFiles = await FS.listFiles(customFilesFolder, ["**/*"]);
 
 			if (allFiles.length === 0) {
 				await window.showInformationMessage(
-					localize("(info) customFiles -> noFilesAvailable"),
+					localize("(info) CustomFiles.import -> noFiles"),
 				);
 				return;
 			}
@@ -36,18 +34,18 @@ export namespace CustomFiles {
 					})),
 					{
 						placeHolder: localize(
-							"(prompt) customFiles -> import -> folder -> placeholder",
+							"(prompt) CustomFiles.import -> folder placeholder",
 						),
 					},
 				);
 
+				if (!result) return;
+
 				const selectedWorkspace = workspace.workspaceFolders.find(
-					(f) => f.uri.fsPath === result?.description,
+					(f) => f.uri.fsPath === result.description,
 				);
 
-				if (!selectedWorkspace) return;
-
-				return selectedWorkspace.uri.fsPath;
+				return selectedWorkspace?.uri.fsPath ?? undefined;
 			})();
 
 			if (!folder) return;
@@ -56,18 +54,18 @@ export namespace CustomFiles {
 				allFiles.map((f) => basename(f)),
 				{
 					placeHolder: localize(
-						"(prompt) customFiles -> import -> file -> placeholder",
+						"(prompt) CustomFiles.import -> file placeholder",
 					),
 				},
 			);
 
 			if (!selectedFile) return;
 
-			const filepath = resolve(Environment.customFilesFolder, selectedFile);
+			const filepath = resolve(customFilesFolder, selectedFile);
 
 			const filename = await (async () => {
 				const newName = await window.showInputBox({
-					prompt: localize("(prompt) customFiles -> import -> file -> name"),
+					prompt: localize("(prompt) CustomFiles.import -> file name"),
 					value: selectedFile,
 				});
 
@@ -85,18 +83,18 @@ export namespace CustomFiles {
 
 	export const registerFile = async (uri?: Uri): Promise<void> => {
 		try {
-			const folderExists = await FS.exists(Environment.customFilesFolder);
+			const customFilesFolder = await Environment.customFilesFolder;
 
-			if (!folderExists) {
-				await FS.mkdir(Environment.customFilesFolder);
-			}
+			await FS.mkdir(customFilesFolder);
 
 			const filepath = uri
 				? uri.fsPath
 				: await (async () => {
 						const result = await window.showOpenDialog({
 							canSelectMany: false,
-							openLabel: localize("(label) customFiles -> selectFile"),
+							openLabel: localize(
+								"(label) CustomFiles.register -> select file",
+							),
 						});
 
 						if (!result) return;
@@ -110,7 +108,7 @@ export namespace CustomFiles {
 				const original = basename(filepath);
 
 				const newName = await window.showInputBox({
-					prompt: localize("(prompt) customFiles -> register -> name"),
+					prompt: localize("(prompt) CustomFiles.register -> name"),
 					value: original,
 				});
 
@@ -119,11 +117,11 @@ export namespace CustomFiles {
 				return original;
 			})();
 
-			const newPath = resolve(Environment.customFilesFolder, filename);
+			const newPath = resolve(customFilesFolder, filename);
 
 			if (await FS.exists(newPath)) {
 				const result = await window.showWarningMessage(
-					localize("(prompt) customFiles -> register -> exists"),
+					localize("(prompt) CustomFiles.register -> file exists"),
 					localize("(label) no"),
 					localize("(label) yes"),
 				);
@@ -136,7 +134,7 @@ export namespace CustomFiles {
 			await FS.write(newPath, contents);
 
 			await window.showInformationMessage(
-				localize("(info) customFiles -> registered", filename),
+				localize("(info) CustomFiles.register -> registered", filename),
 			);
 		} catch (error) {
 			Logger.error(error);

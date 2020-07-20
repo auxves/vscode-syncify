@@ -15,11 +15,11 @@ const paths = [pathToSource, pathToRegistered];
 
 jest
 	.spyOn(Environment, "customFilesFolder", "get")
-	.mockReturnValue(pathToRegistered);
+	.mockReturnValue(Promise.resolve(pathToRegistered));
 
-beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
-afterEach(async () => FS.remove(cleanupPath));
+afterEach(() => FS.remove(cleanupPath));
 
 test("register", async () => {
 	const testPath = resolve(pathToSource, "test.json");

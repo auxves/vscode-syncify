@@ -1,10 +1,15 @@
 import { resolve } from "path";
-import { defaultSettings, ISettings } from "~/models";
+import { window } from "vscode";
+import {
+	defaultLocalSettings,
+	defaultSharedSettings,
+	LocalSettings,
+	SharedSettings,
+} from "~/models";
 import { Environment, FS, Settings } from "~/services";
 import { getCleanupPath } from "~/tests/getCleanupPath";
 
 jest.mock("~/services/localize.ts");
-jest.mock("~/utilities/confirm.ts");
 
 const cleanupPath = getCleanupPath("services/settings");
 
@@ -12,49 +17,85 @@ const pathToTest = resolve(cleanupPath, "test");
 
 const paths = [pathToTest];
 
-const pathToSettings = resolve(pathToTest, "settings.json");
+jest
+	.spyOn(Environment, "localSettings", "get")
+	.mockReturnValue(resolve(pathToTest, "settings.json"));
 
-jest.spyOn(Environment, "settings", "get").mockReturnValue(pathToSettings);
+jest
+	.spyOn(Environment, "sharedSettings", "get")
+	.mockReturnValue(Promise.resolve(resolve(pathToTest, "syncify.json")));
+
 jest.spyOn(Environment, "globalStoragePath", "get").mockReturnValue(pathToTest);
 
-beforeEach(async () => Promise.all(paths.map(async (p) => FS.mkdir(p))));
+beforeEach(() => Promise.all(paths.map(FS.mkdir)));
 
-afterEach(async () => FS.remove(cleanupPath));
+afterEach(() => FS.remove(cleanupPath));
 
-test("set", async () => {
-	await Settings.set({ watchSettings: true });
+describe("local", () => {
+	test("set", async () => {
+		await Settings.local.set({ hostname: "x" });
 
-	const fetched: ISettings = JSON.parse(await FS.read(Environment.settings));
+		const fetched: LocalSettings = JSON.parse(
+			await FS.read(Environment.localSettings),
+		);
 
-	expect(fetched.watchSettings).toBeTruthy();
+		expect(fetched.hostname).toBe("x");
+	});
+
+	test("get", async () => {
+		const newSettings: LocalSettings = {
+			...defaultLocalSettings,
+			hostname: "y",
+		};
+
+		await FS.write(Environment.localSettings, JSON.stringify(newSettings));
+
+		const { hostname } = await Settings.local.get();
+
+		expect(hostname).toBe("y");
+	});
 });
 
-test("get", async () => {
-	const newSettings: ISettings = {
-		...defaultSettings,
-		watchSettings: true,
-	};
+describe("shared", () => {
+	test("set", async () => {
+		await Settings.shared.set({ profiles: [{ name: "x", extensions: [] }] });
 
-	await FS.write(Environment.settings, JSON.stringify(newSettings));
+		const { profiles }: SharedSettings = JSON.parse(
+			await FS.read(resolve(Environment.repoFolder, "syncify.json")),
+		);
 
-	const watchSettings = await Settings.get((s) => s.watchSettings);
+		expect(profiles[0].name).toBe("x");
+	});
 
-	expect(watchSettings).toBeTruthy();
-});
+	test("get", async () => {
+		const newSettings: SharedSettings = {
+			...defaultSharedSettings,
+			profiles: [{ name: "y", extensions: [] }],
+		};
 
-test("immutability", async () => {
-	const settings = await Settings.get();
+		await FS.write(
+			resolve(Environment.repoFolder, "syncify.json"),
+			JSON.stringify(newSettings),
+		);
 
-	expect(settings).toStrictEqual(defaultSettings);
-	expect(settings).not.toBe(defaultSettings);
+		const { profiles } = await Settings.shared.get();
+
+		expect(profiles[0].name).toBe("y");
+	});
 });
 
 test("reset", async () => {
-	await Settings.set({ watchSettings: true });
+	const spy = jest
+		.spyOn(window, "showWarningMessage")
+		.mockImplementationOnce(() => "(label) yes" as any);
+
+	await Settings.local.set({});
 
 	await Settings.reset();
 
-	const exists = await FS.exists(Environment.settings);
+	const exists = await FS.exists(Environment.localSettings);
 
 	expect(exists).toBeFalsy();
+
+	spy.mockRestore();
 });

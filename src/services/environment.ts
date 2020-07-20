@@ -1,10 +1,13 @@
 import { resolve } from "path";
+import { Profiles, Settings } from "~/services";
 import pkg from "~/../package.json";
 import state from "~/state";
 
-export const Environment = {
-	pkg,
+async function res(...args: Array<string | Promise<string>>) {
+	return resolve(...(await Promise.all(args)));
+}
 
+export const Environment = {
 	get userFolder() {
 		const path = process.env.VSCODE_PORTABLE
 			? resolve(process.env.VSCODE_PORTABLE, "user-data")
@@ -17,16 +20,36 @@ export const Environment = {
 		return resolve(Environment.globalStoragePath, "repo");
 	},
 
-	get settings() {
+	get localSettings() {
 		return resolve(Environment.globalStoragePath, "settings.json");
 	},
 
+	get localExportPath() {
+		return (async () => {
+			const { syncer, exportPath } = await Settings.local.get();
+			return syncer === "git" ? Environment.repoFolder : exportPath;
+		})();
+	},
+
+	get sharedSettings() {
+		return res(Environment.localExportPath, "syncify.json");
+	},
+
+	get currentProfileFolder() {
+		return (async () => {
+			const localExportPath = await Environment.localExportPath;
+			const profile = (await Profiles.getCurrent())!;
+
+			return resolve(localExportPath, profile.name);
+		})();
+	},
+
 	get customFilesFolder() {
-		return resolve(Environment.userFolder, "customFiles");
+		return res(Environment.currentProfileFolder, "customFiles");
 	},
 
 	get vsixFolder() {
-		return resolve(Environment.userFolder, "vsix");
+		return res(Environment.currentProfileFolder, "vsix");
 	},
 
 	get conflictsFolder() {
@@ -46,8 +69,6 @@ export const Environment = {
 		if (process.platform === "darwin") return "mac";
 		return "linux";
 	},
-
-	version: pkg.version,
 
 	extensionId: `${pkg.publisher}.${pkg.name}`,
 

@@ -1,8 +1,0 @@
-{
-	"prettier": true,
-	"extends": ["plugin:jest/recommended", "plugin:jest/style"],
-	"rules": {
-		"unicorn/filename-case": [1, { "case": "camelCase" }],
-		"@typescript-eslint/prefer-readonly-parameter-types": 0
-	}
-}
