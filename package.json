@@ -38,7 +38,7 @@
 		"@types/webpack-merge": "^4.1.5",
 		"awesome-typescript-loader": "^5.2.1",
 		"clean-webpack-plugin": "^3.0.0",
-		"codecov": "^3.7.0",
+		"codecov": "^3.7.1",
 		"eslint-plugin-jest": "^23.18.0",
 		"jest": "^26.1.0",
 		"jest-raw-loader": "^1.0.1",
