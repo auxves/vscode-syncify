@@ -14,12 +14,12 @@ import { Syncer } from "~/models";
 
 export class LocalSyncer implements Syncer {
 	async init() {
-		await FS.mkdir(await Environment.currentProfileFolder);
+		await FS.mkdir(await Environment.currentProfileFolder());
 	}
 
 	async upload() {
 		const profile = (await Profiles.getCurrent())!;
-		const currentProfileFolder = await Environment.currentProfileFolder;
+		const currentProfileFolder = await Environment.currentProfileFolder();
 
 		const installedExtensions = Extensions.get();
 
@@ -32,7 +32,7 @@ export class LocalSyncer implements Syncer {
 
 	async download() {
 		const { hostname } = await Settings.local.get();
-		const currentProfileFolder = await Environment.currentProfileFolder;
+		const currentProfileFolder = await Environment.currentProfileFolder();
 
 		await this.copyFilesFromPath(currentProfileFolder, hostname);
 
@@ -77,19 +77,18 @@ export class LocalSyncer implements Syncer {
 	}
 
 	private async copyFilesToPath(exportPath: string) {
-		const files = await FS.listFiles(Environment.userFolder);
+		const userFolder = Environment.userFolder();
+
+		const files = await FS.listFiles(userFolder);
 
 		Logger.info(
 			"Files to copy to folder:",
-			files.map((f) => relative(Environment.userFolder, f)),
+			files.map((f) => relative(userFolder, f)),
 		);
 
 		await Promise.all(
 			files.map(async (file) => {
-				const newPath = resolve(
-					exportPath,
-					relative(Environment.userFolder, file),
-				);
+				const newPath = resolve(exportPath, relative(userFolder, file));
 
 				await FS.mkdir(dirname(newPath));
 
@@ -113,7 +112,7 @@ export class LocalSyncer implements Syncer {
 		await Promise.all(
 			files.map(async (file) => {
 				const newPath = resolve(
-					Environment.userFolder,
+					Environment.userFolder(),
 					relative(exportPath, file),
 				);
 

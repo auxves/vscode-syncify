@@ -26,11 +26,11 @@ const paths = [
 
 const pathToSettings = resolve(pathToUser, "settings.json");
 
-jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
-jest.spyOn(Environment, "repoFolder", "get").mockReturnValue(pathToRepo);
+jest.spyOn(Environment, "userFolder").mockReturnValue(pathToUser);
+jest.spyOn(Environment, "repoFolder").mockReturnValue(pathToRepo);
 
 jest
-	.spyOn(Environment, "globalStoragePath", "get")
+	.spyOn(Environment, "globalStoragePath")
 	.mockReturnValue(pathToGlobalStorage);
 
 jest.setTimeout(15000);

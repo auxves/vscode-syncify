@@ -15,7 +15,7 @@ const cleanupPath = getCleanupPath("services/extensions");
 const pathToVsix = resolve(cleanupPath, "vsix");
 
 jest
-	.spyOn(Environment, "vsixFolder", "get")
+	.spyOn(Environment, "vsixFolder")
 	.mockReturnValue(Promise.resolve(pathToVsix));
 
 test("missing extensions", () => {

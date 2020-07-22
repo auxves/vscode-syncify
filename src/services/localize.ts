@@ -7,19 +7,22 @@ let pack: LanguagePack = {};
 
 export const initLocalization = async (lang?: string) => {
 	try {
+		const extensionPath = Environment.extensionPath();
+
 		const nlsConfig = process.env.VSCODE_NLS_CONFIG;
 
 		const language: string =
 			lang ?? (nlsConfig && JSON.parse(nlsConfig).locale) ?? "en";
 
 		const languagePackPath = resolve(
-			Environment.extensionPath,
+			extensionPath,
 			`package.nls.${language}.json`,
 		);
 
 		const languageExists = await FS.exists(languagePackPath);
 
-		const defaultPath = resolve(Environment.extensionPath, "package.nls.json");
+		const defaultPath = resolve(extensionPath, "package.nls.json");
+
 		const defaultPack = JSON.parse(await FS.read(defaultPath));
 
 		pack =

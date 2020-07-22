@@ -3,78 +3,67 @@ import { Profiles, Settings } from "~/services";
 import pkg from "~/../package.json";
 import state from "~/state";
 
-const resolvePromise = async (...args: Array<string | Promise<string>>) => {
-	return resolve(...(await Promise.all(args)));
+export const userFolder = () => {
+	const path = process.env.VSCODE_PORTABLE
+		? resolve(process.env.VSCODE_PORTABLE, "user-data")
+		: resolve(globalStoragePath(), "../../..");
+
+	return resolve(path, "User");
 };
 
-export const Environment = {
-	get userFolder() {
-		const path = process.env.VSCODE_PORTABLE
-			? resolve(process.env.VSCODE_PORTABLE, "user-data")
-			: resolve(Environment.globalStoragePath, "../../..");
+export const repoFolder = () => {
+	return resolve(globalStoragePath(), "repo");
+};
 
-		return resolve(path, "User");
-	},
+export const localSettings = () => {
+	return resolve(globalStoragePath(), "settings.json");
+};
 
-	get repoFolder() {
-		return resolve(Environment.globalStoragePath, "repo");
-	},
+export const localExportPath = async () => {
+	const { syncer, exportPath } = await Settings.local.get();
+	return syncer === "git" ? repoFolder() : exportPath;
+};
 
-	get localSettings() {
-		return resolve(Environment.globalStoragePath, "settings.json");
-	},
+export const sharedSettings = async () => {
+	return resolve(await localExportPath(), "syncify.json");
+};
 
-	get localExportPath() {
-		return (async () => {
-			const { syncer, exportPath } = await Settings.local.get();
-			return syncer === "git" ? Environment.repoFolder : exportPath;
-		})();
-	},
+export const currentProfileFolder = async () => {
+	const profile = (await Profiles.getCurrent())!;
 
-	get sharedSettings() {
-		return resolvePromise(Environment.localExportPath, "syncify.json");
-	},
+	return resolve(await localExportPath(), profile.name);
+};
 
-	get currentProfileFolder() {
-		return (async () => {
-			const localExportPath = await Environment.localExportPath;
-			const profile = (await Profiles.getCurrent())!;
+export const customFilesFolder = async () => {
+	return resolve(await currentProfileFolder(), "customFiles");
+};
 
-			return resolve(localExportPath, profile.name);
-		})();
-	},
+export const vsixFolder = async () => {
+	return resolve(await currentProfileFolder(), "vsix");
+};
 
-	get customFilesFolder() {
-		return resolvePromise(Environment.currentProfileFolder, "customFiles");
-	},
+export const conflictsFolder = () => {
+	return resolve(globalStoragePath(), "conflicts");
+};
 
-	get vsixFolder() {
-		return resolvePromise(Environment.currentProfileFolder, "vsix");
-	},
+export const globalStoragePath = () => {
+	return state.context?.globalStoragePath ?? "";
+};
 
-	get conflictsFolder() {
-		return resolve(Environment.globalStoragePath, "conflicts");
-	},
+export const extensionPath = () => {
+	return state.context?.extensionPath ?? "";
+};
 
-	get globalStoragePath() {
-		return state.context?.globalStoragePath ?? "";
-	},
+export const os = () => {
+	if (process.platform === "win32") return "windows";
+	if (process.platform === "darwin") return "mac";
+	return "linux";
+};
 
-	get extensionPath() {
-		return state.context?.extensionPath ?? "";
-	},
+export const extensionId = `${pkg.publisher}.${pkg.name}`;
 
-	get os() {
-		if (process.platform === "win32") return "windows";
-		if (process.platform === "darwin") return "mac";
-		return "linux";
-	},
-
-	extensionId: `${pkg.publisher}.${pkg.name}`,
-
-	oauthClientIds: {
-		github: "0b56a3589b5582d11832",
-		gitlab: "32c563edb04c312c7959fd1c4863e883878ed4af1f39d6d788c9758d4916a0db",
-		bitbucket: "zhkr5tYsZsUfN9KkDn",
-	},
+export const oauthClientIds = {
+	github: "0b56a3589b5582d11832",
+	gitlab: "32c563edb04c312c7959fd1c4863e883878ed4af1f39d6d788c9758d4916a0db",
+	bitbucket: "zhkr5tYsZsUfN9KkDn",
 };

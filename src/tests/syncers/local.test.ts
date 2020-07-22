@@ -17,10 +17,10 @@ const paths = [pathToExport, pathToUser, pathToGlobalStorage];
 const pathToSettings = resolve(pathToUser, "settings.json");
 const pathToExportSettings = resolve(pathToExport, "main/settings.json");
 
-jest.spyOn(Environment, "userFolder", "get").mockReturnValue(pathToUser);
+jest.spyOn(Environment, "userFolder").mockReturnValue(pathToUser);
 
 jest
-	.spyOn(Environment, "globalStoragePath", "get")
+	.spyOn(Environment, "globalStoragePath")
 	.mockReturnValue(pathToGlobalStorage);
 
 const currentSettings: Partial<LocalSettings> = {

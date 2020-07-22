@@ -2,58 +2,56 @@ import { window, workspace } from "vscode";
 import { localize } from "~/services";
 import fetch from "node-fetch";
 
-export namespace Logger {
-	const output = window.createOutputChannel("Syncify");
+const output = window.createOutputChannel("Syncify");
 
-	const fetchDescription = async (message: string) => {
-		const body = await fetch("https://pastebin.com/raw/cu5vtiAL")
-			.then(async (response) => response.text())
-			.then((response) => response.replace(/\r/g, ""));
+const fetchDescription = async (message: string) => {
+	const body = await fetch("https://pastebin.com/raw/cu5vtiAL")
+		.then(async (response) => response.text())
+		.then((response) => response.replace(/\r/g, ""));
 
-		const matchers = body.split(/\n+---\n+/).map((string) => {
-			const description = string.slice(string.indexOf("\n\n") + 2);
-			const matcher = /^Matcher: \/(.*)\/$/.exec(string.split("\n\n")[0])![1];
+	const matchers = body.split(/\n+---\n+/).map((string) => {
+		const description = string.slice(string.indexOf("\n\n") + 2);
+		const matcher = /^Matcher: \/(.*)\/$/.exec(string.split("\n\n")[0])![1];
 
-			return {
-				description,
-				regex: new RegExp(matcher, "gi"),
-			};
-		});
+		return {
+			description,
+			regex: new RegExp(matcher, "gi"),
+		};
+	});
 
-		return matchers.find(({ regex }) => regex.test(message))?.description;
-	};
+	return matchers.find(({ regex }) => regex.test(message))?.description;
+};
 
-	export const error = async ({ message }: Error): Promise<void> => {
-		output.appendLine(`[error] ${message.trim()}`);
+export const error = async ({ message }: Error): Promise<void> => {
+	output.appendLine(`[error] ${message.trim()}`);
 
-		const result = await window.showErrorMessage(
-			localize("(info) Logger.error -> show details"),
-			localize("(label) Logger.error -> show details"),
-		);
+	const result = await window.showErrorMessage(
+		localize("(info) Logger.error -> show details"),
+		localize("(label) Logger.error -> show details"),
+	);
 
-		if (result) {
-			output.show();
+	if (result) {
+		output.show();
 
-			const content = await fetchDescription(message);
+		const content = await fetchDescription(message);
 
-			if (content) {
-				await window.showTextDocument(
-					await workspace.openTextDocument({ content, language: "markdown" }),
-				);
-			}
+		if (content) {
+			await window.showTextDocument(
+				await workspace.openTextDocument({ content, language: "markdown" }),
+			);
 		}
-	};
+	}
+};
 
-	const stringify = (value: any) => {
-		return Array.isArray(value) ? JSON.stringify(value, undefined, 2) : value;
-	};
+const stringify = (value: any) => {
+	return Array.isArray(value) ? JSON.stringify(value, undefined, 2) : value;
+};
 
-	export const info = (...args: any[]): void => {
-		output.appendLine(
-			`[info] ${args
-				.map((argument) => stringify(argument))
-				.join(" ")
-				.trim()}`,
-		);
-	};
-}
+export const info = (...args: any[]): void => {
+	output.appendLine(
+		`[info] ${args
+			.map((argument) => stringify(argument))
+			.join(" ")
+			.trim()}`,
+	);
+};

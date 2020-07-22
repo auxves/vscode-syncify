@@ -15,7 +15,7 @@ test("language detection", async () => {
 		delete process.env.VSCODE_NLS_CONFIG;
 
 		const expected = resolve(
-			Environment.extensionPath,
+			Environment.extensionPath(),
 			`package.nls.fake-locale.json`,
 		);
 
@@ -27,7 +27,10 @@ test("language detection", async () => {
 	{
 		await initLocalization();
 
-		const expected = resolve(Environment.extensionPath, `package.nls.en.json`);
+		const expected = resolve(
+			Environment.extensionPath(),
+			`package.nls.en.json`,
+		);
 
 		expect(spy).toHaveBeenCalledWith(expected);
 
@@ -41,7 +44,7 @@ test("returns requested language pack", async () => {
 	const cleanupPath = getCleanupPath("services/localize");
 
 	const spy = jest
-		.spyOn(Environment, "extensionPath", "get")
+		.spyOn(Environment, "extensionPath")
 		.mockReturnValueOnce(cleanupPath);
 
 	await FS.mkdir(cleanupPath);

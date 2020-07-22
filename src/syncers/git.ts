@@ -17,9 +17,11 @@ export class GitSyncer implements Syncer {
 	private readonly git = createSimpleGit();
 
 	async init() {
-		await FS.mkdir(Environment.repoFolder);
+		const repoFolder = Environment.repoFolder();
 
-		await this.git.cwd(Environment.repoFolder);
+		await FS.mkdir(repoFolder);
+
+		await this.git.cwd(repoFolder);
 
 		const isRepo = await this.git.checkIsRepo();
 
@@ -120,20 +122,20 @@ export class GitSyncer implements Syncer {
 
 	private async copyFilesToRepo(): Promise<void> {
 		const profile = (await Profiles.getCurrent())!;
-
-		const files = await FS.listFiles(Environment.userFolder);
+		const userFolder = Environment.userFolder();
+		const files = await FS.listFiles(userFolder);
 
 		Logger.info(
 			"Files to copy to repo:",
-			files.map((f) => relative(Environment.userFolder, f)),
+			files.map((f) => relative(userFolder, f)),
 		);
 
 		await Promise.all(
 			files.map(async (file) => {
 				const newPath = resolve(
-					Environment.repoFolder,
+					userFolder,
 					profile.name,
-					relative(Environment.userFolder, file),
+					relative(userFolder, file),
 				);
 
 				await FS.mkdir(dirname(newPath));
@@ -149,8 +151,8 @@ export class GitSyncer implements Syncer {
 
 	private async copyFilesFromRepo(hostname: string): Promise<void> {
 		const profile = (await Profiles.getCurrent())!;
-
-		const exportPath = resolve(Environment.repoFolder, profile.name);
+		const repoFolder = Environment.repoFolder();
+		const exportPath = resolve(repoFolder, profile.name);
 
 		const files = await FS.listFiles(exportPath);
 
@@ -172,10 +174,12 @@ export class GitSyncer implements Syncer {
 				};
 
 				if (hasConflict(contents.toString())) {
-					await FS.mkdir(Environment.conflictsFolder);
+					const conflictsFolder = Environment.conflictsFolder();
+
+					await FS.mkdir(conflictsFolder);
 
 					const temporaryPath = resolve(
-						Environment.conflictsFolder,
+						conflictsFolder,
 						`${Math.random()}-${basename(file)}`,
 					);
 
@@ -206,7 +210,7 @@ export class GitSyncer implements Syncer {
 				}
 
 				const newPath = resolve(
-					Environment.userFolder,
+					Environment.userFolder(),
 					relative(exportPath, file),
 				);
 
@@ -222,23 +226,21 @@ export class GitSyncer implements Syncer {
 					if (currentContents !== afterPragma) {
 						return FS.write(newPath, afterPragma);
 					}
-
-					return;
+				} else {
+					return FS.write(newPath, contents);
 				}
-
-				return FS.write(newPath, contents);
 			}),
 		);
 	}
 
 	private async cleanUpRepo(): Promise<void> {
 		const profile = (await Profiles.getCurrent())!;
-
-		const exportPath = resolve(Environment.repoFolder, profile.name);
+		const userFolder = Environment.userFolder();
+		const exportPath = resolve(Environment.repoFolder(), profile.name);
 
 		const [repoFiles, userFiles] = await Promise.all([
 			FS.listFiles(exportPath),
-			FS.listFiles(Environment.userFolder),
+			FS.listFiles(userFolder),
 		]);
 
 		Logger.info(
@@ -248,15 +250,11 @@ export class GitSyncer implements Syncer {
 
 		Logger.info(
 			"Files in the user folder:",
-			userFiles.map((f) => relative(Environment.userFolder, f)),
+			userFiles.map((f) => relative(userFolder, f)),
 		);
 
 		const unneeded = repoFiles.filter((f) => {
-			const correspondingFile = resolve(
-				Environment.userFolder,
-				relative(exportPath, f),
-			);
-
+			const correspondingFile = resolve(userFolder, relative(exportPath, f));
 			return !userFiles.includes(correspondingFile);
 		});
 
@@ -267,12 +265,12 @@ export class GitSyncer implements Syncer {
 
 	private async cleanUpUser(): Promise<void> {
 		const profile = (await Profiles.getCurrent())!;
-
-		const exportPath = resolve(Environment.repoFolder, profile.name);
+		const userFolder = Environment.userFolder();
+		const exportPath = resolve(Environment.repoFolder(), profile.name);
 
 		const [repoFiles, userFiles] = await Promise.all([
 			FS.listFiles(exportPath),
-			FS.listFiles(Environment.userFolder),
+			FS.listFiles(userFolder),
 		]);
 
 		Logger.info(
@@ -282,15 +280,11 @@ export class GitSyncer implements Syncer {
 
 		Logger.info(
 			"Files in the user folder:",
-			userFiles.map((f) => relative(Environment.userFolder, f)),
+			userFiles.map((f) => relative(userFolder, f)),
 		);
 
 		const unneeded = userFiles.filter((f) => {
-			const correspondingFile = resolve(
-				exportPath,
-				relative(Environment.userFolder, f),
-			);
-
+			const correspondingFile = resolve(exportPath, relative(userFolder, f));
 			return !repoFiles.includes(correspondingFile);
 		});
 

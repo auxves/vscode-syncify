@@ -16,7 +16,7 @@ test("outgoing", () => {
 
 describe("incoming", () => {
 	test("operating system", () => {
-		const spy = jest.spyOn(Environment, "os", "get");
+		const spy = jest.spyOn(Environment, "os");
 
 		const testOS = (os: string): void => {
 			spy.mockReturnValueOnce("windows");

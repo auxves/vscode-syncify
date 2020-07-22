@@ -13,7 +13,7 @@ const pathToRegistered = resolve(cleanupPath, "registered");
 const paths = [pathToSource, pathToRegistered];
 
 jest
-	.spyOn(Environment, "customFilesFolder", "get")
+	.spyOn(Environment, "customFilesFolder")
 	.mockReturnValue(Promise.resolve(pathToRegistered));
 
 beforeEach(async () => Promise.all(paths.map(async (path) => FS.mkdir(path))));

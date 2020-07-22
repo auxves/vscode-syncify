@@ -11,11 +11,11 @@ const pathToTest = resolve(cleanupPath, "test");
 const paths = [pathToTest];
 
 jest
-	.spyOn(Environment, "localSettings", "get")
+	.spyOn(Environment, "localSettings")
 	.mockReturnValue(resolve(pathToTest, "settings.json"));
 
 jest
-	.spyOn(Environment, "sharedSettings", "get")
+	.spyOn(Environment, "sharedSettings")
 	.mockReturnValue(Promise.resolve(resolve(pathToTest, "syncify.json")));
 
 beforeEach(async () => Promise.all(paths.map(async (path) => FS.mkdir(path))));
