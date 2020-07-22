@@ -58,9 +58,7 @@ describe("incoming", () => {
 
 	test("env", () => {
 		const testEnv = (value?: string): void => {
-			if (value) {
-				process.env.ENV_TEST_KEY = value;
-			}
+			if (value) process.env.ENV_TEST_KEY = value;
 
 			const initial = `{
 				// @sync env=ENV_TEST_KEY

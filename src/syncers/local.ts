@@ -127,13 +127,11 @@ export class LocalSyncer implements Syncer {
 					const afterPragma = Pragma.incoming(await FS.read(file), hostname);
 
 					if (currentContents !== afterPragma) {
-						return FS.write(newPath, afterPragma);
+						await FS.write(newPath, afterPragma);
 					}
-
-					return;
+				} else {
+					await FS.copy(file, newPath);
 				}
-
-				return FS.copy(file, newPath);
 			}),
 		);
 	}
