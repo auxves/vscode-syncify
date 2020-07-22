@@ -34,13 +34,10 @@ export class GitSyncer implements Syncer {
 		const { exportPath } = await Settings.local.get();
 
 		if (!origin) {
-			Logger.info(`Adding new remote "origin" at "${exportPath}"`);
+			Logger.info("Adding new remote:", exportPath);
 			await this.git.addRemote("origin", exportPath);
 		} else if (origin.refs.push !== exportPath) {
-			Logger.info(
-				`Wrong remote url for "origin", removing and adding new origin at "${exportPath}"`,
-			);
-
+			Logger.info("Wrong remote url, changing to:", exportPath);
 			await this.git.removeRemote("origin");
 			await this.git.addRemote("origin", exportPath);
 		}
@@ -56,7 +53,7 @@ export class GitSyncer implements Syncer {
 
 		const profile = (await Profiles.getCurrent())!;
 
-		await Profiles.updateProfile(profile.name, {
+		await Profiles.update(profile.name, {
 			extensions: installedExtensions,
 		});
 

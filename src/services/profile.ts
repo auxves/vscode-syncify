@@ -1,6 +1,6 @@
-import { commands, QuickPickItem, window } from "vscode";
-import { Profile } from "~/models";
 import { localize, Logger, Settings } from "~/services";
+import { Profile } from "~/models";
+import { commands, window } from "vscode";
 
 export namespace Profiles {
 	export const switchProfile = async (profileName?: string): Promise<void> => {
@@ -8,27 +8,24 @@ export namespace Profiles {
 		const { currentProfile } = await Settings.local.get();
 
 		const profile = await (async () => {
-			if (profileName) {
-				return profiles.find((p) => p.name === profileName);
-			}
+			if (profileName) return profiles.find((p) => p.name === profileName);
 
-			const selected = await window.showQuickPick(
-				profiles.map<QuickPickItem>(({ name }) => ({
-					label: name === currentProfile ? `${name} [current]` : name,
-				})),
-				{
-					placeHolder: localize("(prompt) Profiles.switch -> placeholder"),
-				},
-			);
+			const quickPickItems = profiles
+				.map((profile) => profile.name)
+				.filter((name) => name !== currentProfile);
+
+			const selected = await window.showQuickPick(quickPickItems, {
+				placeHolder: localize("(prompt) Profiles.switch -> placeholder"),
+			});
 
 			if (!selected) return;
 
-			return profiles.find(({ name }) => name === selected.label);
+			return profiles.find(({ name }) => name === selected);
 		})();
 
 		if (!profile) return;
 
-		Logger.info(`Switching to profile:`, profile.name);
+		Logger.info("Switching to profile:", profile.name);
 
 		await Settings.local.set({ currentProfile: profile.name });
 
@@ -50,10 +47,7 @@ export namespace Profiles {
 		return profiles.find(({ name }) => name === currentProfile);
 	};
 
-	export const updateProfile = async (
-		name: string,
-		profile: Partial<Profile>,
-	) => {
+	export const update = async (name: string, profile: Partial<Profile>) => {
 		const { profiles } = await Settings.shared.get();
 
 		const newProfiles = profiles.map((p) => {

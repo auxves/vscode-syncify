@@ -23,7 +23,7 @@ export class FileSyncer implements Syncer {
 
 		const installedExtensions = Extensions.get();
 
-		await Profiles.updateProfile(profile.name, {
+		await Profiles.update(profile.name, {
 			extensions: installedExtensions,
 		});
 
