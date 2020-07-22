@@ -10,7 +10,7 @@ export namespace Extensions {
 
 		await window.withProgress(
 			{ location: ProgressLocation.Notification },
-			async (progress) => {
+			async ({ report }) => {
 				return Promise.all(
 					ids.map(async (id) => {
 						const matchingVsix = `${id}.vsix`;
@@ -24,7 +24,7 @@ export namespace Extensions {
 							vsix ? Uri.file(vsix) : id,
 						);
 
-						progress.report({
+						report({
 							increment,
 							message: localize("(info) Extensions.install -> installed", id),
 						});
@@ -39,7 +39,7 @@ export namespace Extensions {
 
 		await window.withProgress(
 			{ location: ProgressLocation.Notification },
-			async (progress) => {
+			async ({ report }) => {
 				return Promise.all(
 					ids.map(async (id) => {
 						await commands.executeCommand(
@@ -47,7 +47,7 @@ export namespace Extensions {
 							id,
 						);
 
-						progress.report({
+						report({
 							increment,
 							message: localize(
 								"(info) Extensions.uninstall -> uninstalled",

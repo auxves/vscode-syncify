@@ -7,15 +7,10 @@ let pack: LanguagePack = {};
 
 export const initLocalization = async (lang?: string) => {
 	try {
-		const language = ((): string => {
-			if (lang) return lang;
+		const nlsConfig = process.env.VSCODE_NLS_CONFIG;
 
-			if (process.env.VSCODE_NLS_CONFIG) {
-				return JSON.parse(process.env.VSCODE_NLS_CONFIG).locale;
-			}
-
-			return "en";
-		})();
+		const language: string =
+			lang ?? (nlsConfig && JSON.parse(nlsConfig).locale) ?? "en";
 
 		const languagePackPath = resolve(
 			Environment.extensionPath,

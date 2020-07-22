@@ -1,6 +1,13 @@
 import { Environment, FS, localize, Logger } from "~/services";
 import { basename, resolve } from "path";
-import { QuickPickItem, Uri, window, workspace } from "vscode";
+import {
+	InputBoxOptions,
+	OpenDialogOptions,
+	QuickPickItem,
+	Uri,
+	window,
+	workspace,
+} from "vscode";
 
 export namespace CustomFiles {
 	export const importFile = async (uri?: Uri): Promise<void> => {
@@ -15,6 +22,7 @@ export namespace CustomFiles {
 				await window.showInformationMessage(
 					localize("(info) CustomFiles.import -> noFiles"),
 				);
+
 				return;
 			}
 
@@ -45,7 +53,7 @@ export namespace CustomFiles {
 					(f) => f.uri.fsPath === result.description,
 				);
 
-				return selectedWorkspace?.uri.fsPath ?? undefined;
+				return selectedWorkspace?.uri.fsPath;
 			})();
 
 			if (!folder) return;
@@ -63,16 +71,14 @@ export namespace CustomFiles {
 
 			const filepath = resolve(customFilesFolder, selectedFile);
 
-			const filename = await (async () => {
-				const newName = await window.showInputBox({
-					prompt: localize("(prompt) CustomFiles.import -> file name"),
-					value: selectedFile,
-				});
+			const options: InputBoxOptions = {
+				prompt: localize("(prompt) CustomFiles.import -> file name"),
+				value: selectedFile,
+			};
 
-				if (newName?.length) return newName;
+			const filename = (await window.showInputBox(options)) ?? selectedFile;
 
-				return selectedFile;
-			})();
+			if (filename.length === 0) return;
 
 			const contents = await FS.readBuffer(filepath);
 			await FS.write(resolve(folder, filename), contents);
@@ -81,41 +87,33 @@ export namespace CustomFiles {
 		}
 	};
 
+	const registerDialogOptions: OpenDialogOptions = {
+		canSelectMany: false,
+		openLabel: localize("(label) CustomFiles.register -> select file"),
+	};
+
 	export const registerFile = async (uri?: Uri): Promise<void> => {
 		try {
 			const customFilesFolder = await Environment.customFilesFolder;
 
 			await FS.mkdir(customFilesFolder);
 
-			const filepath = uri
-				? uri.fsPath
-				: await (async () => {
-						const result = await window.showOpenDialog({
-							canSelectMany: false,
-							openLabel: localize(
-								"(label) CustomFiles.register -> select file",
-							),
-						});
-
-						if (!result) return;
-
-						return result[0].fsPath;
-				  })();
+			const filepath =
+				uri?.fsPath ??
+				(await window.showOpenDialog(registerDialogOptions))?.[0]?.fsPath;
 
 			if (!filepath) return;
 
-			const filename = await (async () => {
-				const original = basename(filepath);
+			const originalFilename = basename(filepath);
 
-				const newName = await window.showInputBox({
-					prompt: localize("(prompt) CustomFiles.register -> name"),
-					value: original,
-				});
+			const options: InputBoxOptions = {
+				prompt: localize("(prompt) CustomFiles.register -> name"),
+				value: originalFilename,
+			};
 
-				if (newName?.length) return newName;
+			const filename = (await window.showInputBox(options)) ?? originalFilename;
 
-				return original;
-			})();
+			if (filename.length === 0) return;
 
 			const newPath = resolve(customFilesFolder, filename);
 

@@ -120,10 +120,9 @@ export class LocalSyncer implements Syncer {
 				await FS.mkdir(dirname(newPath));
 
 				if (file.endsWith(".json")) {
-					const currentContents = await (async () => {
-						if (await FS.exists(newPath)) return FS.read(newPath);
-						return "{}";
-					})();
+					const currentContents = (await FS.exists(newPath))
+						? await FS.read(newPath)
+						: "{}";
 
 					const afterPragma = Pragma.incoming(await FS.read(file), hostname);
 
