@@ -1,12 +1,12 @@
 import { resolve } from "path";
 import { LocalSettings } from "~/models";
 import { Environment, FS, Settings } from "~/services";
-import { FileSyncer } from "~/syncers";
+import { LocalSyncer } from "~/syncers";
 import { getCleanupPath } from "~/tests/get-cleanup-path";
 
 jest.mock("~/services/localize.ts");
 
-const cleanupPath = getCleanupPath("syncers/file");
+const cleanupPath = getCleanupPath("syncers/local");
 
 const pathToExport = resolve(cleanupPath, "export");
 const pathToUser = resolve(cleanupPath, "user");
@@ -24,7 +24,7 @@ jest
 	.mockReturnValue(pathToGlobalStorage);
 
 const currentSettings: Partial<LocalSettings> = {
-	syncer: "file",
+	syncer: "local",
 	exportPath: pathToExport,
 };
 
@@ -40,8 +40,8 @@ describe("upload", () => {
 
 		await FS.write(pathToSettings, userData);
 
-		const fileSyncer = new FileSyncer();
-		await fileSyncer.upload();
+		const localSyncer = new LocalSyncer();
+		await localSyncer.upload();
 
 		const uploadedData = await FS.read(pathToExportSettings);
 		expect(uploadedData).toBe(userData);
@@ -54,8 +54,8 @@ describe("upload", () => {
 
 		await FS.write(resolve(pathToUser, "buffer"), buffer);
 
-		const fileSyncer = new FileSyncer();
-		await fileSyncer.upload();
+		const localSyncer = new LocalSyncer();
+		await localSyncer.upload();
 
 		const uploadedBuffer = await FS.readBuffer(resolve(pathToExport, "buffer"));
 
@@ -74,8 +74,8 @@ describe("download", () => {
 		await FS.write(pathToExportSettings, settings);
 		await FS.write(resolve(pathToExport, "extensions.json"), extensions);
 
-		const fileSyncer = new FileSyncer();
-		await fileSyncer.download();
+		const localSyncer = new LocalSyncer();
+		await localSyncer.download();
 
 		const downloadedSettings = await FS.read(pathToSettings);
 
@@ -94,8 +94,8 @@ describe("download", () => {
 
 		await FS.write(resolve(pathToExport, "buffer"), buffer);
 
-		const fileSyncer = new FileSyncer();
-		await fileSyncer.download();
+		const localSyncer = new LocalSyncer();
+		await localSyncer.download();
 
 		const downloadedBuffer = await FS.readBuffer(resolve(pathToUser, "buffer"));
 

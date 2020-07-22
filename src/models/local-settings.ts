@@ -2,7 +2,7 @@ export type LocalSettings = {
 	/**
 	 * The method used to sync your settings.
 	 */
-	syncer: "git" | "file";
+	syncer: "git" | "local";
 
 	/**
 	 * The profile currently being used.
@@ -14,7 +14,7 @@ export type LocalSettings = {
 	 *
 	 * - For the `git` syncer, this is the URI of the repository.
 	 *
-	 * - For the `file` syncer, this is the URI of your export folder.
+	 * - For the `local` syncer, this is the URI of your export folder.
 	 */
 	exportPath: string;
 

@@ -1,10 +1,10 @@
 import { LocalSettings, Syncer } from "~/models";
-import { FileSyncer, GitSyncer } from "~/syncers";
+import { LocalSyncer, GitSyncer } from "~/syncers";
 
 export namespace Factory {
 	const syncers = {
 		git: GitSyncer,
-		file: FileSyncer,
+		local: LocalSyncer,
 	};
 
 	export const generate = (type: LocalSettings["syncer"]): Syncer => {

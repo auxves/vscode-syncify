@@ -12,7 +12,7 @@ import { dirname, relative, resolve } from "path";
 import { commands, extensions, window } from "vscode";
 import { Syncer } from "~/models";
 
-export class FileSyncer implements Syncer {
+export class LocalSyncer implements Syncer {
 	async init() {
 		await FS.mkdir(await Environment.currentProfileFolder);
 	}

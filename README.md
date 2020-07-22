@@ -36,7 +36,7 @@ The documentation can be found [here][link:docs].
 - Debug logging for quickly resolving issues
 - Multiple sync methods
   - `git` — sync using a git repository
-  - `file` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc)
+  - `local` — sync to local folder, even when offline (can be used with Dropbox, zipped and emailed, etc)
 - Intuitive custom file registration and importing
 - Notification for extension installation/uninstallation progress
 - Descriptive errors with possible causes and solutions
