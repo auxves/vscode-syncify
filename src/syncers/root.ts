@@ -26,8 +26,11 @@ export class RootSyncer {
 				return;
 			}
 
-			await window.withProgress(progressOptions, async ({ report }) => {
-				report({ message: localize("(info) Syncer.download -> downloading") });
+			await window.withProgress(progressOptions, async (progress) => {
+				progress.report({
+					message: localize("(info) Syncer.download -> downloading"),
+				});
+
 				await this.syncer.download();
 			});
 
@@ -49,8 +52,11 @@ export class RootSyncer {
 				return;
 			}
 
-			await window.withProgress(progressOptions, async ({ report }) => {
-				report({ message: localize("(info) Syncer.upload -> uploading") });
+			await window.withProgress(progressOptions, async (progress) => {
+				progress.report({
+					message: localize("(info) Syncer.upload -> uploading"),
+				});
+
 				await this.syncer.upload();
 			});
 

@@ -56,7 +56,7 @@ export class GitSyncer implements Syncer {
 
 		await this.git.add(".");
 		await this.git.commit(`Update [${new Date().toLocaleString()}]`);
-		await this.git.push("origin", "master");
+		await this.git.push("origin", "master", { "--force": null });
 	}
 
 	async download() {
@@ -112,8 +112,8 @@ export class GitSyncer implements Syncer {
 	}
 
 	private async exportFiles(): Promise<void> {
-		const profile = await Profiles.getCurrent();
 		const userFolder = Environment.userFolder();
+		const currentProfileFolder = await Environment.currentProfileFolder();
 		const files = await FS.listFiles(userFolder);
 
 		Logger.info(
@@ -124,8 +124,7 @@ export class GitSyncer implements Syncer {
 		await Promise.all(
 			files.map(async (file) => {
 				const newPath = resolve(
-					userFolder,
-					profile.name,
+					currentProfileFolder,
 					relative(userFolder, file),
 				);
 
@@ -162,7 +161,7 @@ export class GitSyncer implements Syncer {
 				.some((v) => conflictRegexes.some((regex) => regex.test(v)));
 		};
 
-		const promises = files.map(async (file) => {
+		const promises = files.map((file) => async () => {
 			let contents = await FS.readBuffer(file);
 
 			if (hasConflict(contents.toString())) {
@@ -208,10 +207,7 @@ export class GitSyncer implements Syncer {
 			}
 		});
 
-		await promises.reduce(
-			(acc, next) => acc.then(() => next),
-			Promise.resolve(),
-		);
+		await promises.reduce((acc, next) => acc.then(next), Promise.resolve());
 	}
 
 	/** Deletes all files in `destination` that are not in `source`. */

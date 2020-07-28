@@ -9,7 +9,7 @@ export const install = async (...ids: string[]) => {
 
 	await window.withProgress(
 		{ location: ProgressLocation.Notification },
-		async ({ report }) => {
+		async (progress) => {
 			return Promise.all(
 				ids.map(async (id) => {
 					const matchingVsix = `${id}.vsix`;
@@ -23,7 +23,7 @@ export const install = async (...ids: string[]) => {
 						vsix ? Uri.file(vsix) : id,
 					);
 
-					report({
+					progress.report({
 						increment,
 						message: localize("(info) Extensions.install -> installed", id),
 					});
@@ -42,7 +42,7 @@ export const uninstall = async (...ids: string[]) => {
 
 	await window.withProgress(
 		{ location: ProgressLocation.Notification },
-		async ({ report }) => {
+		async (progress) => {
 			return Promise.all(
 				ids.map(async (id) => {
 					await commands.executeCommand(
@@ -50,7 +50,7 @@ export const uninstall = async (...ids: string[]) => {
 						id,
 					);
 
-					report({
+					progress.report({
 						increment,
 						message: localize("(info) Extensions.uninstall -> uninstalled", id),
 					});

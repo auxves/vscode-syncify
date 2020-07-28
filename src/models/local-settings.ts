@@ -27,16 +27,6 @@ export type LocalSettings = {
 	 * Hostnames are used by `Sync Pragmas` to differentiate between different computers.
 	 */
 	hostname: string;
-
-	/**
-	 * Controls whether or not local settings will be forcefully uploaded, even if remote settings are up to date or there are newer remote changes.
-	 */
-	forceUpload: boolean;
-
-	/**
-	 * Controls whether or not remote settings will be forcefully downloaded, even if local settings are up to date.
-	 */
-	forceDownload: boolean;
 };
 
 export const defaultLocalSettings: LocalSettings = {
@@ -45,6 +35,4 @@ export const defaultLocalSettings: LocalSettings = {
 	exportPath: "",
 	filesToInclude: ["**/*", "!workspaceStorage", "!globalStorage"],
 	hostname: "",
-	forceDownload: false,
-	forceUpload: false,
 };
