@@ -84,35 +84,49 @@
 		"commands": [
 			{
 				"command": "syncify.upload",
-				"title": "%(command) upload%"
+				"title": "%(command) upload%",
+				"category": "Syncify"
 			},
 			{
 				"command": "syncify.download",
-				"title": "%(command) download%"
+				"title": "%(command) download%",
+				"category": "Syncify"
 			},
 			{
 				"command": "syncify.reset",
-				"title": "%(command) reset%"
+				"title": "%(command) reset%",
+				"category": "Syncify"
 			},
 			{
 				"command": "syncify.openSettings",
-				"title": "%(command) openSettings%"
+				"title": "%(command) openSettings%",
+				"category": "Syncify"
 			},
 			{
 				"command": "syncify.reinitialize",
-				"title": "%(command) reinitialize%"
+				"title": "%(command) reinitialize%",
+				"category": "Syncify"
 			},
 			{
 				"command": "syncify.registerCustomFile",
-				"title": "%(command) registerCustomFile%"
+				"title": "%(command) registerCustomFile%",
+				"category": "Syncify"
 			},
 			{
 				"command": "syncify.importCustomFile",
-				"title": "%(command) importCustomFile%"
+				"title": "%(command) importCustomFile%",
+				"category": "Syncify"
 			},
 			{
 				"command": "syncify.switchProfile",
-				"title": "%(command) switchProfile%"
+				"title": "%(command) switchProfile%",
+				"category": "Syncify"
+			},
+			{
+				"command": "syncify.resolveConflict",
+				"title": "%(command) resolveConflict%",
+				"category": "Syncify",
+				"icon": "$(check)"
 			}
 		],
 		"jsonValidation": [
@@ -130,6 +144,13 @@
 				{
 					"command": "syncify.importCustomFile",
 					"when": "explorerResourceIsFolder"
+				}
+			],
+			"editor/title": [
+				{
+					"when": "resourceFilename =~ /^syncify-conflict:/",
+					"command": "syncify.resolveConflict",
+					"group": "navigation"
 				}
 			]
 		}

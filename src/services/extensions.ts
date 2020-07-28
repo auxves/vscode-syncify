@@ -1,4 +1,4 @@
-import { Environment, FS, localize } from "~/services";
+import { Environment, FS, localize, Logger } from "~/services";
 import { basename } from "path";
 import { commands, extensions, ProgressLocation, Uri, window } from "vscode";
 
@@ -36,6 +36,10 @@ export const install = async (...ids: string[]) => {
 export const uninstall = async (...ids: string[]) => {
 	const increment = 100 / ids.length;
 
+	const needToReload = ids.some(
+		(id) => extensions.getExtension(id)?.isActive ?? false,
+	);
+
 	await window.withProgress(
 		{ location: ProgressLocation.Notification },
 		async ({ report }) => {
@@ -54,6 +58,8 @@ export const uninstall = async (...ids: string[]) => {
 			);
 		},
 	);
+
+	return needToReload;
 };
 
 export const get = () => {

@@ -96,16 +96,12 @@ export class LocalSyncer implements Syncer {
 
 		await Extensions.install(...Extensions.getMissing(profile.extensions));
 
-		const toDelete = Extensions.getUnneeded(profile.extensions);
+		const toUninstall = Extensions.getUnneeded(profile.extensions);
 
-		if (toDelete.length !== 0) {
-			const needToReload = toDelete.some(
-				(name) => extensions.getExtension(name)?.isActive ?? false,
-			);
+		Logger.info("Extensions to uninstall:", toUninstall);
 
-			Logger.info("Need to reload:", needToReload);
-
-			await Extensions.uninstall(...toDelete);
+		if (toUninstall.length > 0) {
+			const needToReload = await Extensions.uninstall(...toUninstall);
 
 			if (needToReload) {
 				const result = await window.showInformationMessage(
