@@ -29,7 +29,7 @@ export const sharedSettings = async () => {
 };
 
 export const currentProfileFolder = async () => {
-	const profile = (await Profiles.getCurrent())!;
+	const profile = await Profiles.getCurrent();
 
 	return resolve(await localExportPath(), profile.name);
 };

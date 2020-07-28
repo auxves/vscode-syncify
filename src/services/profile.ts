@@ -36,14 +36,31 @@ export const switchProfile = async (profileName?: string): Promise<void> => {
 	if (result) await commands.executeCommand("syncify.download");
 };
 
-export const getCurrent = async (): Promise<Profile | undefined> => {
+export const isCurrentValid = async (): Promise<boolean> => {
+	try {
+		await getCurrent();
+		return true;
+	} catch {
+		return false;
+	}
+};
+
+export const getCurrent = async (): Promise<Profile> => {
 	const { currentProfile } = await Settings.local.get();
 	const { profiles } = await Settings.shared.get();
 
-	if (typeof currentProfile !== "string") return;
-	if (currentProfile.length <= 0) return;
+	try {
+		if (typeof currentProfile !== "string") throw true;
+		if (currentProfile.length <= 0) throw true;
 
-	return profiles.find(({ name }) => name === currentProfile);
+		const profile = profiles.find(({ name }) => name === currentProfile);
+
+		if (!profile) throw true;
+
+		return profile;
+	} catch {
+		throw new Error("invalid current profile");
+	}
 };
 
 export const update = async (name: string, profile: Partial<Profile>) => {

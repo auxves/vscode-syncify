@@ -35,9 +35,9 @@ export const importFile = async (uri?: Uri): Promise<void> => {
 			}
 
 			const result = await window.showQuickPick(
-				workspace.workspaceFolders.map<QuickPickItem>((f) => ({
-					label: f.name,
-					description: f.uri.fsPath,
+				workspace.workspaceFolders.map<QuickPickItem>((folder) => ({
+					label: folder.name,
+					description: folder.uri.fsPath,
 				})),
 				{
 					placeHolder: localize(
@@ -49,7 +49,7 @@ export const importFile = async (uri?: Uri): Promise<void> => {
 			if (!result) return;
 
 			const selectedWorkspace = workspace.workspaceFolders.find(
-				(f) => f.uri.fsPath === result.description,
+				(folder) => folder.uri.fsPath === result.description,
 			);
 
 			return selectedWorkspace?.uri.fsPath;
@@ -58,7 +58,7 @@ export const importFile = async (uri?: Uri): Promise<void> => {
 		if (!folder) return;
 
 		const selectedFile = await window.showQuickPick(
-			allFiles.map((f) => basename(f)),
+			allFiles.map((file) => basename(file)),
 			{
 				placeHolder: localize(
 					"(prompt) CustomFiles.import -> file placeholder",

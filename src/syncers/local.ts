@@ -18,8 +18,10 @@ export class LocalSyncer implements Syncer {
 	}
 
 	async upload() {
-		const profile = (await Profiles.getCurrent())!;
+		const userFolder = Environment.userFolder();
 		const currentProfileFolder = await Environment.currentProfileFolder();
+
+		const profile = await Profiles.getCurrent();
 
 		const installedExtensions = Extensions.get();
 
@@ -27,16 +29,65 @@ export class LocalSyncer implements Syncer {
 			extensions: installedExtensions,
 		});
 
-		await this.copyFilesToPath(currentProfileFolder);
+		const files = await FS.listFiles(userFolder);
+
+		Logger.info(
+			"Files to export:",
+			files.map((file) => relative(userFolder, file)),
+		);
+
+		await Promise.all(
+			files.map(async (file) => {
+				const newPath = resolve(
+					currentProfileFolder,
+					relative(userFolder, file),
+				);
+
+				await FS.mkdir(dirname(newPath));
+
+				if (file.endsWith(".json")) {
+					await FS.write(newPath, Pragma.outgoing(await FS.read(file)));
+				} else {
+					await FS.copy(file, newPath);
+				}
+			}),
+		);
 	}
 
 	async download() {
-		const { hostname } = await Settings.local.get();
+		const userFolder = Environment.userFolder();
 		const currentProfileFolder = await Environment.currentProfileFolder();
 
-		await this.copyFilesFromPath(currentProfileFolder, hostname);
+		const { hostname } = await Settings.local.get();
 
-		const profile = (await Profiles.getCurrent())!;
+		const files = await FS.listFiles(currentProfileFolder);
+
+		Logger.info(
+			"Files to import:",
+			files.map((file) => relative(currentProfileFolder, file)),
+		);
+
+		await Promise.all(
+			files.map(async (file) => {
+				const newPath = resolve(
+					userFolder,
+					relative(currentProfileFolder, file),
+				);
+
+				await FS.mkdir(dirname(newPath));
+
+				if (file.endsWith(".json")) {
+					await FS.write(
+						newPath,
+						Pragma.incoming(await FS.read(file), hostname),
+					);
+				} else {
+					await FS.copy(file, newPath);
+				}
+			}),
+		);
+
+		const profile = await Profiles.getCurrent();
 
 		Logger.info(
 			"Extensions parsed from downloaded settings:",
@@ -71,67 +122,8 @@ export class LocalSyncer implements Syncer {
 
 	async isConfigured() {
 		const { exportPath } = await Settings.local.get();
-		const profile = await Profiles.getCurrent();
+		const profileValid = await Profiles.isCurrentValid();
 
-		return Boolean(exportPath && profile);
-	}
-
-	private async copyFilesToPath(exportPath: string) {
-		const userFolder = Environment.userFolder();
-
-		const files = await FS.listFiles(userFolder);
-
-		Logger.info(
-			"Files to copy to folder:",
-			files.map((f) => relative(userFolder, f)),
-		);
-
-		await Promise.all(
-			files.map(async (file) => {
-				const newPath = resolve(exportPath, relative(userFolder, file));
-
-				await FS.mkdir(dirname(newPath));
-
-				if (file.endsWith(".json")) {
-					return FS.write(newPath, Pragma.outgoing(await FS.read(file)));
-				}
-
-				return FS.copy(file, newPath);
-			}),
-		);
-	}
-
-	private async copyFilesFromPath(exportPath: string, hostname: string) {
-		const files = await FS.listFiles(exportPath);
-
-		Logger.info(
-			"Files to copy from folder:",
-			files.map((f) => relative(exportPath, f)),
-		);
-
-		await Promise.all(
-			files.map(async (file) => {
-				const newPath = resolve(
-					Environment.userFolder(),
-					relative(exportPath, file),
-				);
-
-				await FS.mkdir(dirname(newPath));
-
-				if (file.endsWith(".json")) {
-					const currentContents = (await FS.exists(newPath))
-						? await FS.read(newPath)
-						: "{}";
-
-					const afterPragma = Pragma.incoming(await FS.read(file), hostname);
-
-					if (currentContents !== afterPragma) {
-						await FS.write(newPath, afterPragma);
-					}
-				} else {
-					await FS.copy(file, newPath);
-				}
-			}),
-		);
+		return Boolean(exportPath && profileValid);
 	}
 }
