@@ -21,10 +21,7 @@ export class RootSyncer {
 		try {
 			const configured = await this.syncer.isConfigured();
 
-			if (!configured) {
-				// TODO: prompt user to set up
-				return;
-			}
+			if (!configured) return;
 
 			await window.withProgress(progressOptions, async (progress) => {
 				progress.report({
@@ -47,10 +44,7 @@ export class RootSyncer {
 		try {
 			const configured = await this.syncer.isConfigured();
 
-			if (!configured) {
-				// TODO: prompt user to set up
-				return;
-			}
+			if (!configured) return;
 
 			await window.withProgress(progressOptions, async (progress) => {
 				progress.report({

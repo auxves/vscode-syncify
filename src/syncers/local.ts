@@ -9,7 +9,7 @@ import {
 	Settings,
 } from "~/services";
 import { dirname, relative, resolve } from "path";
-import { commands, extensions, window } from "vscode";
+import { commands, window } from "vscode";
 import { Syncer } from "~/models";
 
 export class LocalSyncer implements Syncer {

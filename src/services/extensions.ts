@@ -1,4 +1,4 @@
-import { Environment, FS, localize, Logger } from "~/services";
+import { Environment, FS, localize } from "~/services";
 import { basename } from "path";
 import { commands, extensions, ProgressLocation, Uri, window } from "vscode";
 

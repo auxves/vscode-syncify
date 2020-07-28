@@ -49,18 +49,15 @@ export const getCurrent = async (): Promise<Profile> => {
 	const { currentProfile } = await Settings.local.get();
 	const { profiles } = await Settings.shared.get();
 
-	try {
-		if (typeof currentProfile !== "string") throw true;
-		if (currentProfile.length <= 0) throw true;
-
-		const profile = profiles.find(({ name }) => name === currentProfile);
-
-		if (!profile) throw true;
-
-		return profile;
-	} catch {
+	if (typeof currentProfile !== "string" || currentProfile.length <= 0) {
 		throw new Error("invalid current profile");
 	}
+
+	const profile = profiles.find(({ name }) => name === currentProfile);
+
+	if (!profile) throw new Error("invalid current profile");
+
+	return profile;
 };
 
 export const update = async (name: string, profile: Partial<Profile>) => {

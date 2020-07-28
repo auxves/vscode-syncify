@@ -207,7 +207,11 @@ export class GitSyncer implements Syncer {
 			}
 		});
 
-		await promises.reduce((acc, next) => acc.then(next), Promise.resolve());
+		// eslint-disable-next-line unicorn/no-reduce
+		await promises.reduce(
+			async (acc, next) => acc.then(next),
+			Promise.resolve(),
+		);
 	}
 
 	/** Deletes all files in `destination` that are not in `source`. */
