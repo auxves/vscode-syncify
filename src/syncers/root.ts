@@ -21,7 +21,10 @@ export class RootSyncer {
 		try {
 			const configured = await this.syncer.isConfigured();
 
-			if (!configured) return;
+			if (!configured) {
+				// TODO: prompt user to set up
+				return;
+			}
 
 			await window.withProgress(progressOptions, async ({ report }) => {
 				report({ message: localize("(info) Syncer.download -> downloading") });
@@ -41,7 +44,10 @@ export class RootSyncer {
 		try {
 			const configured = await this.syncer.isConfigured();
 
-			if (!configured) return;
+			if (!configured) {
+				// TODO: prompt user to set up
+				return;
+			}
 
 			await window.withProgress(progressOptions, async ({ report }) => {
 				report({ message: localize("(info) Syncer.upload -> uploading") });
