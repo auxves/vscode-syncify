@@ -41,7 +41,7 @@ type ObjectArray = {
 	type: UISettingType.ObjectArray;
 	correspondingSetting: string;
 	schema: WebviewSetting[];
-	newTemplate: object;
+	newTemplate: Record<string, unknown>;
 };
 
 export type WebviewSetting =
