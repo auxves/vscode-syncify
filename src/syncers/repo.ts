@@ -31,13 +31,7 @@ export class RepoSyncer implements Syncer {
 
 			await this.git.cwd(Environment.repoFolder);
 
-			const isRepo = await this.git.checkIsRepo();
-
-			if (!isRepo) {
-				Logger.debug("Repo folder is not a git repo, initializing...");
-
-				await this.git.init();
-			}
+			await this.git.init();
 
 			const remotes = await this.git.getRemotes(true);
 			const origin = remotes.find((remote) => remote.name === "origin");
@@ -280,11 +274,13 @@ export class RepoSyncer implements Syncer {
 						}
 					}
 
-					const stash = await this.git.stash();
+					await this.git.stash();
 
 					await this.git.pull("origin", profile.branch);
 
-					if (stash.trim() !== "No local changes to save") {
+					const stashList = await this.git.stashList();
+
+					if (stashList.total > 0) {
 						Logger.debug("Reapplying local changes");
 
 						await this.git.stash(["pop"]);
